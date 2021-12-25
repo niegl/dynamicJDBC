@@ -1,5 +1,7 @@
 package flowdesigner.jdbc;
 
+import flowdesigner.jdbc.driver.DynamicDriver;
+
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
