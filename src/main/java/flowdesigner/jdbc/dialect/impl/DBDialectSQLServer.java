@@ -26,8 +26,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.sql.*;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/6/14
  * @desc : SQLServer数据库方言
  */
 public class DBDialectSQLServer extends DBDialect {

@@ -12,18 +12,18 @@ import java.util.Map;
 //        "body",
 //        "properties",
 //})
-public class ExecResult implements Serializable {
+public class ExecResult<T> implements Serializable {
     public static final String SUCCESS = "SUCCESS";
     public static final String FAILED = "FAILED";
 
     private String status = SUCCESS;
-    private Object body;
+    private T body;
     private Map<String,Object> properties = new HashMap<String,Object>();
 
     public ExecResult() {
     }
 
-    public ExecResult(String status, Object body) {
+    public ExecResult(String status, T body) {
         this.status = status;
         this.body = body;
     }
@@ -36,11 +36,11 @@ public class ExecResult implements Serializable {
         this.status = status;
     }
 
-    public Object getBody() {
+    public T getBody() {
         return body;
     }
 
-    public void setBody(Object body) {
+    public void setBody(T body) {
         this.body = body;
     }
 

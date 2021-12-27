@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/08/19
  * @desc : 人大金仓Kinbbase方言
  */
 public class DBDialectKingbase extends DBDialect {

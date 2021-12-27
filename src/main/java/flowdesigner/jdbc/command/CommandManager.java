@@ -1,5 +1,6 @@
 package flowdesigner.jdbc.command;
 
+import com.google.gson.Gson;
 import flowdesigner.jdbc.command.impl.*;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static flowdesigner.jdbc.command.ComandKey.*;
+import static flowdesigner.jdbc.command.CommandKey.*;
 
 /**
  * 后期尝试对commandManager进行修改，使其能够直接获取结果类型，不需要进行object转换。
@@ -20,7 +21,7 @@ public class CommandManager {
     /** 使用java自带的log工具 */
     private static final Logger logger = Logger.getLogger("CommandManager");
     /** 命令注册表*/
-    private static final Map<ComandKey, Class<?>> commandRegister = new HashMap<>() {{
+    private static final Map<CommandKey, Class<?>> commandRegister = new HashMap<>() {{
         put(CMD_DBReverseGetTypeInfo, DBReverseGetTypeInfoImpl.class);          //逆向解析，获取数据表清单
         put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);          //逆向解析，获取数据表清单
         put(CMD_DBReverseGetAllTablesList, DBReverseGetAllTablesListImpl.class);  //逆向解析，获取数据表清单
@@ -29,6 +30,18 @@ public class CommandManager {
         put(CMD_DBExecuteCommandImpl, DBExecuteCommandImpl.class);            //正向执行，获取SQL语句执行结果
     }};
 
+    /**
+     * 为了配合c++端调用，返回json数据格式。
+     * @param connection
+     * @param cmdText
+     * @param params
+     * @return String json
+     */
+    public static String exeCommandJson(Connection connection, CommandKey cmdText, Map<String, String> params) {
+        ExecResult result = exeCommand(connection, cmdText, params);
+        Gson gson = new Gson();
+        return gson.toJson(result);
+    }
     /***
      * 客户端调用命令的接口
      * @param connection jdbc连接
@@ -36,8 +49,7 @@ public class CommandManager {
      * @param params 命令参数，需要和具体命令相符合
      * @return
      */
-    //@SuppressWarnings("unchecked")
-    public static ExecResult exeCommand(Connection connection, ComandKey cmdText, Map<String, String> params) {
+    public static ExecResult exeCommand(Connection connection, CommandKey cmdText, Map<String, String> params) {
         ExecResult ret = new ExecResult(ExecResult.FAILED, "未知异常");
         try {
             if (connection == null) return ret;

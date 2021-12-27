@@ -86,6 +86,7 @@ public class ParseDDLToTableImpl implements Command<ExecResult> {
         stmt.execute(ddlScript);
     }
 
+    @SuppressWarnings("unchecked")
     private String getALLTablesString(Connection connection) throws SQLException {
         Map<String,String> params = new HashMap<>();
         DBReverseGetAllTablesListImpl cmd = new DBReverseGetAllTablesListImpl();

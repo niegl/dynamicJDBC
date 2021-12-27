@@ -4,14 +4,11 @@ import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.dialect.DBDialect;
 import flowdesigner.jdbc.dialect.DBDialectMatcher;
-import flowdesigner.jdbc.model.TableEntity;
 import flowdesigner.jdbc.model.TypeInfoEntity;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;

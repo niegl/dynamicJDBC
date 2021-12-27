@@ -19,9 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2019/12/28 22:56
- * @desc : 二进制输出流
+ * @desc : 二进制输入流
  */
 public class ByteInputStream extends InputStream {
     /**

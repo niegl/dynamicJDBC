@@ -24,8 +24,6 @@ import org.apache.commons.io.IOUtils;
 import java.io.*;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2019/12/28 22:55
  * @desc :
  */
 public abstract class IOKit extends IOUtils {

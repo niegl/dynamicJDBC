@@ -28,8 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/11/06
  * @desc : MySQL数据库方言
  */
 public class DBDialectSQLite extends DBDialect {

@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/6/14
  * @desc :
  */
 public class DBDialectMatcher {

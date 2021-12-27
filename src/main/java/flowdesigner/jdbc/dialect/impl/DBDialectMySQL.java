@@ -22,8 +22,6 @@ import java.sql.*;
 import java.util.Set;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/6/14
  * @desc : MySQL数据库方言
  */
 public class DBDialectMySQL extends DBDialect {

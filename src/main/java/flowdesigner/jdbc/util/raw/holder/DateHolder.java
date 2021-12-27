@@ -18,8 +18,6 @@ package flowdesigner.jdbc.util.raw.holder;
 import java.util.Date;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2019/12/28 22:50
  * @desc : 日期保持器，把当前系统时间绑定到线程上
  */
 public abstract class DateHolder {

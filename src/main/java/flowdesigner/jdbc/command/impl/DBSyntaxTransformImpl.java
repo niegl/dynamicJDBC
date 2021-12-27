@@ -5,7 +5,5 @@ package flowdesigner.jdbc.command.impl;
  * 具体功能的实现是依托DBDialect的继承关系实现的.
  */
 public class DBSyntaxTransformImpl {
-    public static void main(String[] args) {
 
-    }
 }
