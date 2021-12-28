@@ -51,39 +51,39 @@ public abstract class ValidateKit {
     private static final String DEFAULT_IS_INSTANCE_OF_EX_MESSAGE = "Expected type: {0}, actual: {1}";
 
     public static void isTrue(final boolean expression, final String message, final long value) {
-        if (expression == false) {
-            throw new IllegalArgumentException(format(message, Long.valueOf(value)));
+        if (!expression) {
+            throw new IllegalArgumentException(format(message, value));
         }
     }
 
     public static void isTrue(final boolean expression, final String message, final double value) {
-        if (expression == false) {
-            throw new IllegalArgumentException(format(message, Double.valueOf(value)));
+        if (!expression) {
+            throw new IllegalArgumentException(format(message, value));
         }
     }
 
 
     public static void isTrue(final boolean expression, final String message, final Object... values) {
-        if (expression == false) {
+        if (!expression) {
             throw new IllegalArgumentException(format(message, values));
         }
     }
 
 
     public static void isTrue(final boolean expression) {
-        if (expression == false) {
+        if (!expression) {
             throw new IllegalArgumentException(DEFAULT_IS_TRUE_EX_MESSAGE);
         }
     }
 
     public static void isFalse(final boolean expression, final String message, final Object... values) {
-        if (expression == true) {
+        if (expression) {
             throw new IllegalArgumentException(format(message, values));
         }
     }
 
     public static void isFalse(final boolean expression) {
-        if (expression == true) {
+        if (expression) {
             throw new IllegalArgumentException(DEFAULT_IS_TRUE_EX_MESSAGE);
         }
     }
@@ -204,7 +204,7 @@ public abstract class ValidateKit {
         int i = 0;
         for (final Iterator<?> it = iterable.iterator(); it.hasNext(); i++) {
             if (it.next() == null) {
-                final Object[] values2 = ArrayUtils.addAll(values, Integer.valueOf(i));
+                final Object[] values2 = ArrayUtils.addAll(values, i);
                 throw new IllegalArgumentException(format(message, values2));
             }
         }
@@ -227,7 +227,7 @@ public abstract class ValidateKit {
 
 
     public static <T> T[] validIndex(final T[] array, final int index) {
-        return validIndex(array, index, DEFAULT_VALID_INDEX_ARRAY_EX_MESSAGE, Integer.valueOf(index));
+        return validIndex(array, index, DEFAULT_VALID_INDEX_ARRAY_EX_MESSAGE, index);
     }
 
 
@@ -241,7 +241,7 @@ public abstract class ValidateKit {
 
 
     public static <T extends Collection<?>> T validIndex(final T collection, final int index) {
-        return validIndex(collection, index, DEFAULT_VALID_INDEX_COLLECTION_EX_MESSAGE, Integer.valueOf(index));
+        return validIndex(collection, index, DEFAULT_VALID_INDEX_COLLECTION_EX_MESSAGE, index);
     }
 
 
@@ -255,33 +255,33 @@ public abstract class ValidateKit {
 
 
     public static <T extends CharSequence> T validIndex(final T chars, final int index) {
-        return validIndex(chars, index, DEFAULT_VALID_INDEX_CHAR_SEQUENCE_EX_MESSAGE, Integer.valueOf(index));
+        return validIndex(chars, index, DEFAULT_VALID_INDEX_CHAR_SEQUENCE_EX_MESSAGE, index);
     }
 
 
     public static void validState(final boolean expression) {
-        if (expression == false) {
+        if (!expression) {
             throw new IllegalStateException(DEFAULT_VALID_STATE_EX_MESSAGE);
         }
     }
 
 
     public static void validState(final boolean expression, final String message, final Object... values) {
-        if (expression == false) {
+        if (!expression) {
             throw new IllegalStateException(format(message, values));
         }
     }
 
 
     public static void matchesPattern(final CharSequence input, final String pattern) {
-        if (Pattern.matches(pattern, input) == false) {
+        if (!Pattern.matches(pattern, input)) {
             throw new IllegalArgumentException(format(DEFAULT_MATCHES_PATTERN_EX, input, pattern));
         }
     }
 
 
     public static void matchesPattern(final CharSequence input, final String pattern, final String message, final Object... values) {
-        if (Pattern.matches(pattern, input) == false) {
+        if (!Pattern.matches(pattern, input)) {
             throw new IllegalArgumentException(format(message, values));
         }
     }
@@ -399,7 +399,7 @@ public abstract class ValidateKit {
     }
 
     public static void isInstanceOf(final Class<?> type, final Object obj) {
-        if (type.isInstance(obj) == false) {
+        if (!type.isInstance(obj)) {
             throw new IllegalArgumentException(format(DEFAULT_IS_INSTANCE_OF_EX_MESSAGE, type.getName(),
                     obj == null ? "null" : obj.getClass().getName()));
         }
@@ -407,14 +407,14 @@ public abstract class ValidateKit {
 
 
     public static void isInstanceOf(final Class<?> type, final Object obj, final String message, final Object... values) {
-        if (type.isInstance(obj) == false) {
+        if (!type.isInstance(obj)) {
             throw new IllegalArgumentException(format(message, values));
         }
     }
 
 
     public static void isAssignableFrom(final Class<?> superType, final Class<?> type) {
-        if (superType.isAssignableFrom(type) == false) {
+        if (!superType.isAssignableFrom(type)) {
             throw new IllegalArgumentException(format(DEFAULT_IS_ASSIGNABLE_EX_MESSAGE, type == null ? "null" : type.getName(),
                     superType.getName()));
         }
@@ -422,7 +422,7 @@ public abstract class ValidateKit {
 
 
     public static void isAssignableFrom(final Class<?> superType, final Class<?> type, final String message, final Object... values) {
-        if (superType.isAssignableFrom(type) == false) {
+        if (!superType.isAssignableFrom(type)) {
             throw new IllegalArgumentException(format(message, values));
         }
     }

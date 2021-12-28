@@ -23,7 +23,8 @@ import java.util.Properties;
 
 public class DynamicDriver {
     /** jar包驱动路径 */
-    private List<String> m_driverDir;
+    @Setter
+    private String m_driverDir;
     /** URL*/
     @Setter
     private String m_url;
@@ -33,8 +34,8 @@ public class DynamicDriver {
     /** 连接建立后返回的connection，用于以后的增删改查等操作.*/
     private Connection m_connection;
 
-    private DynamicDriver() {}
-    public DynamicDriver(List<String> driverDir) {
+    public DynamicDriver() {}
+    public DynamicDriver(String driverDir) {
         Objects.requireNonNull(driverDir);
         m_driverDir = driverDir;
     }
@@ -44,13 +45,7 @@ public class DynamicDriver {
      * @return 新建连接
      */
     public Connection reConnect() {
-        try {
-            if (m_connection != null && !m_connection.isClosed()) {
-                m_connection.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        closeConnection(null,m_connection);
 
         return getConnection();
     }
@@ -61,12 +56,16 @@ public class DynamicDriver {
      * @return
      */
     public Connection getConnection() {
-
+        System.out.println("get connection");
+        System.out.println(m_url);
+        System.out.println(m_driverDir);
+        System.out.println(m_propertyInfo);
         try {
             if (m_connection != null && !m_connection.isClosed()) {
                 return  m_connection;
             }
             Driver driver = loadDriver();
+            System.out.println(driver);
             if (driver != null) {
                 if (driver.acceptsURL(m_url)) {
                     DriverPropertyInfo[] propertyInfo = driver.getPropertyInfo(m_url, null);
@@ -99,8 +98,9 @@ public class DynamicDriver {
             e.printStackTrace();
         } finally {
             try {
-                if (connection != null && !connection.isClosed()) {
+                if (connection != null && connection.isValid(3)) {
                     try {
+                        connection.commit();
                         connection.close();
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -120,7 +120,7 @@ public class DynamicDriver {
         Driver driver = null;
 
         ArrayList<URL> arrayList = new ArrayList<>();
-        for (String path : m_driverDir) {
+        for (String path : m_driverDir.split(",")) {
             File file = new File(path);
             if (!file.exists()) continue;
 
@@ -168,5 +168,9 @@ public class DynamicDriver {
 
     private String getDriverClassName() {
         return m_propertyInfo.getProperty("DriverClassName");
+    }
+
+    public static void main(String[] args) {
+
     }
 }

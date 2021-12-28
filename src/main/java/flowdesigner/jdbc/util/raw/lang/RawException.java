@@ -18,8 +18,6 @@ package flowdesigner.jdbc.util.raw.lang;
 import java.text.MessageFormat;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2019/12/28 22:26
  * @desc :
  */
 public class RawException extends RuntimeException{

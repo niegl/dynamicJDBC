@@ -39,7 +39,6 @@ import java.util.zip.Checksum;
 
 
 public abstract class FileKit {
-    private FileUtils fileUtils = new FileUtils();
 
     private static DecimalFormat decimalFormat=(DecimalFormat) NumberFormat.getInstance();
     static{

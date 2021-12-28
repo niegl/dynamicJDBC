@@ -17,12 +17,11 @@ package flowdesigner.jdbc.command.kit;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.awt.*;
 import java.util.logging.Logger;
 
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/6/14
  * @desc : 连接以及解析处理工具类
  */
 public abstract class ConnParseKit {

@@ -18,7 +18,7 @@ class CommandManagerTest {
 
     @Test
     void exeCommand() {
-        DynamicDriver dynamicDriver = new DynamicDriver(List.of(new String[]{"C:\\文档\\历史\\历史资料\\hive"}));
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
         dynamicDriver.setM_url("jdbc:hive2://10.248.190.13:10000");
         Properties properties = new Properties();
         properties.setProperty("DriverClassName","org.apache.hive.jdbc.HiveDriver");

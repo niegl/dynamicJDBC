@@ -26,8 +26,6 @@ import java.sql.SQLException;
 import java.util.Set;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/6/14
  * @desc : ORACLE数据库方言
  */
 public class DBDialectOracle extends DBDialect {

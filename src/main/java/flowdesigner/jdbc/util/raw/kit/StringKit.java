@@ -19,7 +19,6 @@ import flowdesigner.jdbc.util.raw.RawConsts;
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
@@ -28,8 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2019/12/28 23:04
  * @desc : 字串操作
  */
 public abstract class StringKit extends StringUtils {

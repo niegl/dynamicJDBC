@@ -18,8 +18,6 @@ package flowdesigner.jdbc.util.raw.io;
 import java.io.OutputStream;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2019/12/28 22:57
  * @desc : 二进制输出流
  */
 public class ByteOutputStream extends OutputStream {

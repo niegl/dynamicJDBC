@@ -23,8 +23,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/6/19
  * @desc : DB2数据库方言
  */
 public class DBDialectDB2 extends DBDialect {

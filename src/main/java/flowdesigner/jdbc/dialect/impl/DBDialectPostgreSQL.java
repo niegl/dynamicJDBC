@@ -20,8 +20,6 @@ import flowdesigner.jdbc.dialect.DBDialect;
 import java.sql.*;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/7/20
  * @desc : PostgreSQL方言
  */
 public class DBDialectPostgreSQL extends DBDialect {

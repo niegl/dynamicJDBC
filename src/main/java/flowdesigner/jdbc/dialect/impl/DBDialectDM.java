@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author : 杨松<yangsong158@qq.com>
- * @date : 2021/6/19
  * @desc : 达梦数据库方言
  */
 public class DBDialectDM extends DBDialect {
