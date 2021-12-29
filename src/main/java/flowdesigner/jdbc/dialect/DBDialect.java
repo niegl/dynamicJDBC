@@ -15,7 +15,7 @@
  */
 package flowdesigner.jdbc.dialect;
 
-import flowdesigner.jdbc.command.kit.ConnParseKit;
+import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
 import flowdesigner.jdbc.model.*;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.raw.kit.StringKit;

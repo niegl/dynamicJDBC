@@ -21,7 +21,7 @@ public class CommandManager {
     /** 使用java自带的log工具 */
     private static final Logger logger = Logger.getLogger("CommandManager");
     /** 命令注册表*/
-    private static final Map<CommandKey, Class<?>> commandRegister = new HashMap<>() {{
+    private static final Map<CommandKey, Class<?>> commandRegister = new HashMap<CommandKey, Class<?>>() {{
         put(CMD_DBReverseGetTypeInfo, DBReverseGetTypeInfoImpl.class);          //逆向解析，获取数据表清单
         put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);          //逆向解析，获取数据表清单
         put(CMD_DBReverseGetAllTablesList, DBReverseGetAllTablesListImpl.class);  //逆向解析，获取数据表清单

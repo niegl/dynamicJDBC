@@ -4,6 +4,7 @@ import com.alibaba.druid.support.json.JSONUtils;
 import com.google.gson.Gson;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
+import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.driver.DynamicDriver;
 
 import java.sql.Connection;
@@ -21,11 +22,17 @@ class DynamicDriverTest {
     @org.junit.jupiter.api.Test
     void getConnection() throws SQLException {
         DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
-        dynamicDriver.setM_url("jdbc:hive2://10.248.190.13:10000");
         Properties properties = new Properties();
-        properties.setProperty("DriverClassName","org.apache.hive.jdbc.HiveDriver");
+        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
         dynamicDriver.setM_propertyInfo(properties);
-        Connection connection = dynamicDriver.getConnection();
+        Connection connection = null;
+        try {
+            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         assertNotNull(connection);
 
         DatabaseMetaData metaData = connection.getMetaData();
@@ -36,7 +43,7 @@ class DynamicDriverTest {
             System.out.println(type_name);
         }
         Gson gson = new Gson();
-        var cc = CommandManager.exeCommand(dynamicDriver.getConnection(), CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<>());
+        ExecResult cc = CommandManager.exeCommand(dynamicDriver.getConnection(), CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<>());
         String s = gson.toJson(cc);
         System.out.println(s);
     }

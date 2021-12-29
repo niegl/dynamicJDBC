@@ -1,15 +1,20 @@
 package flowdesigner.jdbc.driver;
 
+import com.alibaba.druid.pool.DruidDataSourceFactory;
 import lombok.Setter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.EmptyFileFilter;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 
+import javax.sql.DataSource;
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -22,17 +27,14 @@ import java.util.Properties;
  */
 
 public class DynamicDriver {
+    //定义连接池对象
+    private DataSource m_ds;
     /** jar包驱动路径 */
     @Setter
     private String m_driverDir;
-    /** URL*/
-    @Setter
-    private String m_url;
     /** jdbc连接时使用的动态属性配置,至少应该包括 DriverClassName，一般包括用户名和密码*/
     @Setter
     private Properties m_propertyInfo;
-    /** 连接建立后返回的connection，用于以后的增删改查等操作.*/
-    private Connection m_connection;
 
     public DynamicDriver() {}
     public DynamicDriver(String driverDir) {
@@ -40,137 +42,110 @@ public class DynamicDriver {
         m_driverDir = driverDir;
     }
 
-    /**
-     * 主要用于连接测试时进行多次连接需要关闭掉之前的连接
-     * @return 新建连接
-     */
-    public Connection reConnect() {
-        closeConnection(null,m_connection);
-
-        return getConnection();
-    }
-
-
-    /**
-     *  功能：获取指定数据库连接。通过getPropertyInfo来获取当前驱动连接需要传递的参数，然后将当前参数组装后传递给connect接口进行实际连接操作。
-     * @return
-     */
-    public Connection getConnection() {
-        System.out.println("get connection");
-        System.out.println(m_url);
-        System.out.println(m_driverDir);
-        System.out.println(m_propertyInfo);
+    public void createDataSource() {
         try {
-            if (m_connection != null && !m_connection.isClosed()) {
-                return  m_connection;
-            }
-            Driver driver = loadDriver();
-            System.out.println(driver);
-            if (driver != null) {
-                if (driver.acceptsURL(m_url)) {
-                    DriverPropertyInfo[] propertyInfo = driver.getPropertyInfo(m_url, null);
-                    Properties info = getProperties(propertyInfo);
-                    return driver.connect(m_url, info);
-                }
+            // 文件后缀为.java且不为空，读子文件夹
+            Collection<File> files = FileUtils.listFiles(new File(m_driverDir),
+                    FileFilterUtils.and(new SuffixFileFilter("jar"), EmptyFileFilter.NOT_EMPTY),
+                    DirectoryFileFilter.INSTANCE);
+            if (loadJar(files)) {
+                //通过prop创建连接池对象
+                m_ds = DruidDataSourceFactory.createDataSource(m_propertyInfo);
             }
         } catch (Exception e) {
-            System.out.println("connection exception: " + e.getMessage());
             e.printStackTrace();
         }
-
-        return null;
     }
 
-    public void closeConnection(Statement stmt) {
-        closeConnection(stmt,null);
+    /**
+     * 获取连接
+     */
+    public Connection getConnection() throws SQLException {
+        return m_ds.getConnection();
     }
     /**
-     * 关闭数据库连接
-     * @param
-     * @return
+     * 释放资源
      */
-    public void closeConnection(Statement stmt, Connection connection) {
-        try {
-            if (stmt != null && !stmt.isClosed()) {
-                stmt.close();
-            }
-        }catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
+    public static void close(Statement statement,Connection connection){
+        close(null,statement,connection);
+    }
+    /**
+     * 释放资源
+     */
+    public static void close(ResultSet resultSet, Statement statement, Connection connection){
+        if(resultSet!=null){
             try {
-                if (connection != null && connection.isValid(3)) {
-                    try {
-                        connection.commit();
-                        connection.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }
+                resultSet.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if(statement!=null){
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if(connection!=null){
+            try {
+                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-
     /**
-     * 动态获取数据库驱动
-     * @return
+     * 获取连接池对象
      */
-    private Driver loadDriver() throws NullPointerException, ClassNotFoundException, NoSuchMethodException, MalformedURLException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        Driver driver = null;
-
-        ArrayList<URL> arrayList = new ArrayList<>();
-        for (String path : m_driverDir.split(",")) {
-            File file = new File(path);
-            if (!file.exists()) continue;
-
-            if (file.isDirectory()) {
-                File[] subFiles = file.listFiles();
-                for (File subFile:
-                        subFiles) {
-                    if (subFile.getPath().contains(".jar")) {
-                        arrayList.add(subFile.toURI().toURL());
-                    }
-                }
-            } else if(file.isFile()) {
-                if (file.getPath().contains(".jar")) {
-                    arrayList.add(file.toURI().toURL());
-                }
-            }
-        }
-
-        int size = arrayList.size();
-        if (size > 0) {
-            URLClassLoader urlClassLoader = new URLClassLoader((URL[])arrayList.toArray(new URL[size]));
-            Class<?> aClass = urlClassLoader.loadClass(getDriverClassName());
-            driver = (Driver) aClass.getDeclaredConstructor().newInstance();
-        }
-
-        return driver;
+    public DataSource getDataSource(){
+        return m_ds;
     }
 
     /**
-     * 获取数据库连接时必须的参数设置。
-     * @param driverPropertyInfos 必须的参数列表。由 prop.required 标识.
-     * @return 必须的参数
+     * 动态加载Jar
+     * @param jarPath jar包文件路径列表
      */
-    private Properties getProperties(DriverPropertyInfo[] driverPropertyInfos) {
+    private static boolean loadJar(Collection<File> jarPath) {
 
-        Properties properties = new Properties();
-        for (var prop :
-                driverPropertyInfos) {
-            if (prop.required) {
-                properties.setProperty(prop.name,m_propertyInfo.getProperty(prop.name));
-            }
+        //文件存在
+        if (jarPath.isEmpty()) {
+            System.out.println("jar file is empty.");
+            return false;
         }
-        return properties;
+        //从URLClassLoader类加载器中获取类的addURL方法
+        Method method = null;
+        try {
+            method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+        } catch (NoSuchMethodException | SecurityException e1) {
+            e1.printStackTrace();
+            return false;
+        }
+        // 获取方法的访问权限
+        boolean accessible = method.isAccessible();
+        try {
+            //修改访问权限为可写
+            if (!accessible) {
+                method.setAccessible(true);
+            }
+            // 获取系统类加载器
+            URLClassLoader loader = (URLClassLoader) DynamicDriver.class.getClassLoader();
+            URLClassLoader classLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+            //获取jar文件的url路径
+            for (File jarFile :
+                    jarPath) {
+                URL url = jarFile.toURI().toURL();
+                //jar路径加入到系统url路径里
+                method.invoke(classLoader, url);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            method.setAccessible(accessible);
+        }
+
+        return true;
     }
 
-    private String getDriverClassName() {
-        return m_propertyInfo.getProperty("DriverClassName");
-    }
-
-    public static void main(String[] args) {
-
-    }
 }
