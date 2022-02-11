@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Properties;
@@ -34,7 +35,7 @@ public class DynamicDriver {
     //定义连接池对象
     private DataSource m_ds;
     /**
-     * jar包驱动路径
+     * jar包驱动路径,用;分隔多个路径
      */
     @Setter
     private String m_driverDir;
@@ -55,9 +56,17 @@ public class DynamicDriver {
     public void createDataSource() {
         try {
             // 文件后缀为.java且不为空，读子文件夹
-            Collection<File> files = FileUtils.listFiles(new File(m_driverDir),
-                    FileFilterUtils.and(new SuffixFileFilter("jar"), EmptyFileFilter.NOT_EMPTY),
-                    DirectoryFileFilter.INSTANCE);
+            Collection<File> files = new ArrayList<>();
+            for (String dir :
+                    m_driverDir.split(";")) {
+                Collection<File> listFiles = FileUtils.listFiles(new File(dir),
+                        FileFilterUtils.and(new SuffixFileFilter("jar"), EmptyFileFilter.NOT_EMPTY),
+                        DirectoryFileFilter.INSTANCE);
+                if (!listFiles.isEmpty()) {
+                    files.addAll(listFiles);
+                }
+            }
+
             if (loadJar(files)) {
                 //通过prop创建连接池对象
                 m_ds = DruidDataSourceFactory.createDataSource(m_propertyInfo);
