@@ -17,9 +17,6 @@ package flowdesigner.jdbc.util.sql.kit;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.awt.*;
-import java.util.logging.Logger;
-
 
 /**
  * @desc : 连接以及解析处理工具类
