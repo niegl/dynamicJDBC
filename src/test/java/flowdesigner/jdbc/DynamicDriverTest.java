@@ -25,12 +25,14 @@ class DynamicDriverTest {
         Properties properties = new Properties();
         properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
         properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("maxWait","3000");
         dynamicDriver.setM_propertyInfo(properties);
         Connection connection = null;
         try {
             dynamicDriver.createDataSource();
             connection = dynamicDriver.getConnection();
         } catch (SQLException e) {
+            System.out.println(dynamicDriver.get_errMessage());
             e.printStackTrace();
         }
         assertNotNull(connection);

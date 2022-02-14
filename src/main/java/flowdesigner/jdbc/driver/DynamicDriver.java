@@ -1,6 +1,7 @@
 package flowdesigner.jdbc.driver;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -33,7 +34,7 @@ import java.util.Properties;
 
 public class DynamicDriver {
     //定义连接池对象
-    private DataSource m_ds;
+    private DataSource m_ds = null;
     /**
      * jar包驱动路径,用;分隔多个路径
      */
@@ -44,6 +45,9 @@ public class DynamicDriver {
      */
     @Setter
     private Properties m_propertyInfo;
+
+    @Getter
+    private String _errMessage = "success";
 
     public DynamicDriver() {
     }
@@ -80,7 +84,17 @@ public class DynamicDriver {
      * 获取连接
      */
     public Connection getConnection() throws SQLException {
-        return m_ds.getConnection();
+        if (m_ds != null) {
+            createDataSource();
+        }
+        if (m_ds != null) {
+            try {
+                return m_ds.getConnection();
+            } catch (SQLException e) {
+                _errMessage = e.getMessage();
+            }
+        }
+        return null;
     }
 
     /**
@@ -184,10 +198,16 @@ public class DynamicDriver {
             e1.printStackTrace();
             return false;
         } finally {
-            method.setAccessible(accessible);
+            if (method != null) {
+                method.setAccessible(accessible);
+            }
         }
 
         return true;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("start");
     }
 
 }
