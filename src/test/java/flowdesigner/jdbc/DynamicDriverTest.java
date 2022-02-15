@@ -21,10 +21,15 @@ class DynamicDriverTest {
 
     @org.junit.jupiter.api.Test
     void getConnection() throws SQLException {
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
-        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+        properties.setProperty("url","jdbc:mysql://192.168.2.43:3306");
+        properties.setProperty("username","root");
+        properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
         dynamicDriver.setM_propertyInfo(properties);
         Connection connection = null;
@@ -42,10 +47,13 @@ class DynamicDriverTest {
         ResultSet typeInfo = metaData.getTypeInfo();
         while (typeInfo.next()) {
             String type_name = typeInfo.getString("TYPE_NAME");
-            System.out.println(type_name);
+            String DATA_TYPE = typeInfo.getString("DATA_TYPE");
+            System.out.println("TypeInfo.of(\"" + type_name + "\"," + DATA_TYPE + "),");
         }
         Gson gson = new Gson();
-        ExecResult cc = CommandManager.exeCommand(dynamicDriver.getConnection(), CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<>());
+        ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<>(){{
+            put("dbType","hive");
+        }});
         String s = gson.toJson(cc);
         System.out.println(s);
     }

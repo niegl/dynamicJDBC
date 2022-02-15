@@ -52,7 +52,8 @@ public class CommandManager {
     public static ExecResult exeCommand(Connection connection, CommandKey cmdText, Map<String, String> params) {
         ExecResult ret = new ExecResult(ExecResult.FAILED, "未知异常");
         try {
-            if (connection == null) return ret;
+            if (connection == null)
+                if (!cmdText.equals(CMD_DBReverseGetTypeInfo)) return ret;
 
             Class<?> cmdClass = commandRegister.get(cmdText);
             if (cmdClass == null) {

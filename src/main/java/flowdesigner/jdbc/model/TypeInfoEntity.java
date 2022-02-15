@@ -1,5 +1,6 @@
 package flowdesigner.jdbc.model;
 
+import flowdesigner.jdbc.command.impl.DBReverseGetTypeInfoImpl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,4 +12,8 @@ import lombok.Data;
 public class TypeInfoEntity {
     private String TYPE_NAME;//  => Type name
     private int DATA_TYPE;//  => SQL data type from java.sql.Types
+
+    public static TypeInfoEntity of(String TYPE_NAME, int DATA_TYPE) {
+        return new TypeInfoEntity(TYPE_NAME, DATA_TYPE);
+    }
 }

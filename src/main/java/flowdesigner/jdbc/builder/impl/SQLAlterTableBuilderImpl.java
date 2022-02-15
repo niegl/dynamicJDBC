@@ -5,7 +5,6 @@ import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
-import com.sun.org.omg.CORBA.AttrDescriptionSeqHelper;
 import flowdesigner.jdbc.builder.SQLAlterTableBuiler;
 
 /**
@@ -26,6 +25,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @param tableName 原表名
      * @return
      */
+    @Override
     public SQLAlterTableBuiler setName(String tableName) {
         stmt.setName(new SQLIdentifierExpr(tableName));
         return this;
@@ -36,6 +36,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @param toName 变更后的表名
      * @return
      */
+    @Override
     public SQLAlterTableBuiler renameTable(String toName) {
         SQLAlterTableRename alterTableRename = new SQLAlterTableRename(new SQLIdentifierExpr(toName));
         stmt.addItem(alterTableRename);
@@ -48,6 +49,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @param columnType 列类型
      * @return
      */
+    @Override
     public SQLAlterTableBuiler addColumn(String columnName, String columnType) {
         SQLAlterTableAddColumn alterTableAddColumn = new SQLAlterTableAddColumn();
         SQLColumnDefinition column = getColumn(columnName, columnType);
@@ -62,6 +64,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @param columnType 删除列类型（hive库需要）
      * @return
      */
+    @Override
     public SQLAlterTableBuiler dropColomn(String columnName, String columnType) {
         SQLColumnDefinition column = getColumn(columnName, columnType);
         switch (dbType) {
@@ -85,8 +88,9 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * 语法：Change Column Name/Type/Position/Comment
      * @return
      */
-    public SQLAlterTableBuiler alterColumn(String columnName,String toColumnName, String toColumnType, String toColumnComment,
-                                           String after,boolean first) {
+    @Override
+    public SQLAlterTableBuiler alterColumn(String columnName, String toColumnName, String toColumnType, String toColumnComment,
+                                           String after, boolean first) {
         SQLColumnDefinition column = getColumn(toColumnName, toColumnType);
         column.setComment(toColumnComment);
         switch (dbType) {
