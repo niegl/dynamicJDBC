@@ -2,17 +2,20 @@ package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
-import com.alibaba.druid.sql.ast.SQLExpr;
-import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.*;
 import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
-import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
-import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2CreateTableStatement;
 import com.alibaba.druid.sql.dialect.hive.stmt.HiveCreateTableStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
+import com.alibaba.druid.sql.dialect.mysql.ast.MySqlUnique;
+import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import com.alibaba.druid.sql.dialect.odps.ast.OdpsCreateTableStatement;
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleCreateTableStatement;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
+import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 
 import java.util.List;
@@ -111,14 +114,47 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         return this;
     }
 
+    /**
+     * 添加通用列
+     * @param columnName 列名
+     * @param dataType 列类型
+     * @return
+     */
     @Override
     public SQLCreateTableBuilder addColumn(String columnName, String dataType) {
+
+        addColumn(columnName, dataType, false, false, false);
+        return this;
+    }
+
+    /**
+     * 添加主键列.如 Id_P int NOT NULL PRIMARY KEY,
+     * @param columnName 列名
+     * @param dataType 列类型
+     * @param primary 是否主键列
+     * @param notNull 是否为空
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder addColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull) {
 
         SQLColumnDefinition column = new SQLColumnDefinition();
         column.setName(columnName);
         column.setDataType(
                 SQLParserUtils.createExprParser(dataType, dbType).parseDataType()
         );
+
+        if (notNull) {
+            SQLNotNullConstraint nullConstraint = new SQLNotNullConstraint();
+            column.addConstraint(nullConstraint);
+        }
+
+        if (primary) {
+            column.addConstraint(new SQLColumnPrimaryKey());
+        } else if (unique) {
+            column.addConstraint(new SQLColumnUniqueKey());
+        }
+
         addColumn(column);
         return this;
     }
@@ -132,6 +168,189 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         create.addColumn(column);
 
         return this;
+    }
+
+    /**
+     * 添加主键约束。适用于多个主键列，如 CONSTRAINT pk_PersonID PRIMARY KEY (Id_P,LastName)
+     * @param primaryKeyName 主键名
+     * @param columnNames 用于生成主键的列（一般为多个）
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder addPrimaryKey(String primaryKeyName, List<String> columnNames) {
+        SQLTableConstraint constraint = null;
+        boolean hasConstaint = false;
+        SQLName name = null;
+
+        if (primaryKeyName != null) {
+            name = new SQLIdentifierExpr(primaryKeyName);
+        }
+
+        switch (dbType) {
+            case mysql:
+                MySqlPrimaryKey pk = new MySqlPrimaryKey();
+                buildIndex(pk.getIndexDefinition(),Token.PRIMARY.name,"", Token.KEY.name,columnNames);
+                if (name != null) {
+                    pk.setName(name);
+                }
+                pk.setHasConstraint(hasConstaint);
+                constraint = pk;
+            default:
+                break;
+        }
+
+        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        constraint.setParent(create);
+
+        create.getTableElementList().add(constraint);
+
+        return this;
+    }
+
+    @Override
+    public SQLCreateTableBuilder addUniqueKey(String uniqueKeyName, List<String> columnNames) {
+        SQLTableConstraint constraint = null;
+        boolean hasConstaint = true;
+        SQLName name = null;
+
+        if (uniqueKeyName != null) {
+            name = new SQLIdentifierExpr(uniqueKeyName);
+        }
+
+        switch (dbType) {
+            case mysql:
+                MySqlUnique unique = new MySqlUnique();
+                if (name != null) {
+                    unique.setName(name);
+                }
+                buildIndex(unique.getIndexDefinition(),Token.UNIQUE.name,"", Token.KEY.name,columnNames);
+                unique.setHasConstraint(hasConstaint);
+                constraint = unique;
+            default:
+                break;
+        }
+
+        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        constraint.setParent(create);
+
+        create.getTableElementList().add(constraint);
+
+        return this;
+    }
+
+    /**
+     * 添加外键。
+     * 两种类型外键：1、foreignKeyName=null为单纯外键；2、foreignKeyName为外键键值时为外键约束。
+     * @param foreignKeyName 1、foreignKeyName=null为单纯外键；2、foreignKeyName为外键键值时为外键约束。
+     * @param referencingColumns 源表外键
+     * @param referencedTableName 目标表名
+     * @param referencedColumns 目标表参考键（一般为主键）
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder addForeignKey(String foreignKeyName, List<String> referencingColumns,
+                                               String referencedTableName, List<String> referencedColumns) {
+        SQLTableConstraint constraint = null;
+        boolean hasConstaint = false;
+        SQLName name = null;
+
+        if (foreignKeyName != null) {
+            name = new SQLIdentifierExpr(foreignKeyName);
+            hasConstaint = true;
+        }
+
+        switch (dbType) {
+            case mysql:
+                MysqlForeignKey pk = new MysqlForeignKey();
+                buildForeignKey(pk,referencingColumns,referencedTableName,referencedColumns);
+                if (name != null) {
+                    pk.setName(name);
+                }
+                pk.setHasConstraint(hasConstaint);
+                constraint = pk;
+            default:
+                break;
+        }
+
+        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        assert constraint != null;
+        constraint.setParent(create);
+
+        create.getTableElementList().add(constraint);
+
+        return this;
+    }
+
+    private void buildIndex(SQLIndexDefinition indexDefinition, String token, String globalOrLocal, String indexOrKey, List<String> columnNames) {
+        if (token.equalsIgnoreCase("FULLTEXT")
+                || token.equalsIgnoreCase("UNIQUE")
+                || token.equalsIgnoreCase("PRIMARY")
+                || token.equalsIgnoreCase("SPATIAL")
+                || token.equalsIgnoreCase("CLUSTERED")
+                || token.equalsIgnoreCase("CLUSTERING")
+                || token.equalsIgnoreCase("ANN")) {
+            indexDefinition.setType(token);
+        }
+
+        if (globalOrLocal.equalsIgnoreCase("GLOBAL")) {
+            indexDefinition.setGlobal(true);
+        } else if (globalOrLocal.equalsIgnoreCase("LOCAL")) {
+            indexDefinition.setLocal(true);
+        }
+
+        if (indexOrKey.equalsIgnoreCase("INDEX")) {
+            indexDefinition.setIndex(true);
+
+        } else if (indexOrKey.equalsIgnoreCase("KEY")) {
+            indexDefinition.setKey(true);
+        }
+
+        buildIndexRest(indexDefinition,indexDefinition.getParent(),columnNames);
+
+    }
+
+    public void buildIndexRest(SQLIndex idx, SQLObject parent, List<String> columnNames) {
+
+        for (String columnName :
+                columnNames) {
+            SQLSelectOrderByItem selectOrderByItem = buildSelectOrderByItem(columnName);
+            selectOrderByItem.setParent(parent);
+            idx.getColumns().add(selectOrderByItem);
+        }
+    }
+
+    public SQLSelectOrderByItem buildSelectOrderByItem(String columnName) {
+        SQLSelectOrderByItem item = new SQLSelectOrderByItem();
+        item.setExpr(new SQLIdentifierExpr(columnName));
+
+        return item;
+    }
+
+    public SQLForeignKeyImpl buildForeignKey(SQLForeignKeyImpl fk, List<String> referencingColumns,
+                                             String referencedTableName,List<String> referencedColumns) {
+//        MysqlForeignKey fk = new MysqlForeignKey();
+
+//        if (lexer.token() != Token.LPAREN) {
+//            SQLName indexName = name();
+//            fk.setIndexName(indexName);
+//        }
+        for (String col :
+                referencingColumns) {
+            SQLName name = new SQLIdentifierExpr(col);
+            name.setParent(fk);
+            fk.getReferencingColumns().add(new SQLIdentifierExpr(col));
+        }
+
+        fk.setReferencedTableName(new SQLIdentifierExpr(referencedTableName));
+
+        for (String col :
+                referencedColumns) {
+            SQLName name = new SQLIdentifierExpr(col);
+            name.setParent(fk);
+            fk.getReferencedColumns().add(new SQLIdentifierExpr(col));
+        }
+
+        return fk;
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 
+import java.util.List;
+
 public interface SQLCreateTableBuilder {
 
     SQLCreateTableBuilder setName(String name);
@@ -26,7 +28,16 @@ public interface SQLCreateTableBuilder {
 
     SQLCreateTableBuilder addColumn(String columnName, String dataType);
 
+    SQLCreateTableBuilder addColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull);
+
     SQLCreateTableBuilder addColumn(SQLColumnDefinition column);
+
+    SQLCreateTableBuilder addPrimaryKey(String primaryKeyName, List<String> columnNames);
+
+    SQLCreateTableBuilder addUniqueKey(String uniqueKeyName, List<String> columnNames);
+
+    SQLCreateTableBuilder addForeignKey(String foreignKeyName, List<String> referencingColumns,
+                                        String referencedTableName, List<String> referencedColumns);
 
     SQLCreateTableBuilder addPartitionColumn(String columnName);
 

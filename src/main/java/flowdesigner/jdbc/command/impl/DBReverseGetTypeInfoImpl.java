@@ -56,8 +56,8 @@ public class DBReverseGetTypeInfoImpl implements Command<ExecResult> {
 
     private static class TypeInfoConstant {
         @Getter
-        private static final Map<String, List<TypeInfoEntity>> _items = new HashMap<>(){{
-            put("hive", List.of(
+        private static final Map<String, List<TypeInfoEntity>> _items = new HashMap<String, List<TypeInfoEntity>>(){{
+            put("hive", Arrays.asList(
                     TypeInfoEntity.of("VOID",0),
                     TypeInfoEntity.of("BOOLEAN",16),
                     TypeInfoEntity.of("TINYINT",-6),
@@ -80,7 +80,7 @@ public class DBReverseGetTypeInfoImpl implements Command<ExecResult> {
                     TypeInfoEntity.of("STRUCT",2002),
                     TypeInfoEntity.of("UNIONTYPE",1111),
                     TypeInfoEntity.of("USER_DEFINED",1111)));
-            put("mysql", List.of(
+            put("mysql", Arrays.asList(
                     TypeInfoEntity.of("BIT",-7),
                     TypeInfoEntity.of("BOOL",16),
                     TypeInfoEntity.of("TINYINT",-6),

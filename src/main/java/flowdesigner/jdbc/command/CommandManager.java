@@ -53,7 +53,8 @@ public class CommandManager {
         ExecResult ret = new ExecResult(ExecResult.FAILED, "未知异常");
         try {
             if (connection == null)
-                if (!cmdText.equals(CMD_DBReverseGetTypeInfo)) return ret;
+                if (!cmdText.equals(CMD_DBReverseGetTypeInfo))
+                    return ret;
 
             Class<?> cmdClass = commandRegister.get(cmdText);
             if (cmdClass == null) {

@@ -51,7 +51,7 @@ class DynamicDriverTest {
             System.out.println("TypeInfo.of(\"" + type_name + "\"," + DATA_TYPE + "),");
         }
         Gson gson = new Gson();
-        ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<>(){{
+        ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
             put("dbType","hive");
         }});
         String s = gson.toJson(cc);
