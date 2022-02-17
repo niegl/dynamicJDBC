@@ -32,6 +32,17 @@ public class SQLCreateDatabaseBuilderImpl implements SQLCreateDatabaseBuilder {
     }
 
     @Override
+    public SQLCreateDatabaseBuilder setComment(String db_comment) {
+        // mysql数据库不支持注释
+        if (dbType.equals(DbType.mysql)) {
+            return this;
+        }
+        SQLCreateDatabaseStatement create = getSQLCreateDatabaseStatement();
+        create.setComment(new SQLIdentifierExpr(db_comment));
+        return this;
+    }
+
+    @Override
     public SQLCreateDatabaseBuilder setIfNotExists(boolean ifNotExists) {
         SQLCreateDatabaseStatement create = getSQLCreateDatabaseStatement();
         create.setIfNotExists(ifNotExists);

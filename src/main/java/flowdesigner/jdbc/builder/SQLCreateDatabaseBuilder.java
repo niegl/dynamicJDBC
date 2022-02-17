@@ -6,6 +6,8 @@ import java.util.Map;
 public interface SQLCreateDatabaseBuilder {
     SQLCreateDatabaseBuilder setName(String db_name);
 
+    SQLCreateDatabaseBuilder setComment(String db_comment);
+
     SQLCreateDatabaseBuilder setIfNotExists(boolean ifNotExists);
 
     SQLCreateDatabaseBuilder createDatabase(boolean ifNotExists, String db_name, List<String> create_option_key, List<String> create_option_value);

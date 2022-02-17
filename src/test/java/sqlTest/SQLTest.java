@@ -122,8 +122,8 @@ public class SQLTest {
 
     @org.junit.jupiter.api.Test
     void testDatabase() throws SQLSyntaxErrorException {
-        String dbType = "mysql";
-        String sql ="CREATE DATABASE IF NOT EXISTS db_name";
+        String dbType = "hive";
+        String sql ="CREATE DATABASE IF NOT EXISTS db_name COMMENT database_comment";
         SQLStatement statement = parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
