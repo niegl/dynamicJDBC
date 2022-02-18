@@ -1,7 +1,9 @@
 package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
@@ -28,6 +30,28 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
     @Override
     public SQLAlterTableBuiler setName(String tableName) {
         stmt.setName(new SQLIdentifierExpr(tableName));
+        return this;
+    }
+
+    /**
+     * 设置数据库名
+     */
+    public SQLAlterTableBuiler setSchema(String schemaName) {
+        if (schemaName == null) {
+            return null;
+        }
+        SQLName name = stmt.getName();
+        if (name == null) {
+            return null;
+        }
+        if (name instanceof SQLIdentifierExpr) {
+            SQLPropertyExpr propertyExpr = new SQLPropertyExpr();
+            propertyExpr.setName(((SQLIdentifierExpr) name).getName());
+            propertyExpr.setOwner(schemaName);
+        } else if (name instanceof SQLPropertyExpr) {
+            ((SQLPropertyExpr)name).setOwner(schemaName);
+        }
+
         return this;
     }
 
