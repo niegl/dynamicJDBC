@@ -414,6 +414,34 @@ public class DBDialect {
         return schemaEntities;
     }
 
+    public List<SchemaEntity> getAllCatalogs(Connection conn) throws SQLException {
+        DatabaseMetaData meta = conn.getMetaData();
+
+        ResultSet rs = meta.getCatalogs();
+        List<SchemaEntity> schemaEntities = new ArrayList<>();
+        while (rs.next()) {
+            String TABLE_CAT = rs.getString("TABLE_CAT");
+            /**
+             *  SQL Server系统保留表
+             *  trace_xe_action_map,trace_xe_event_map
+             */
+            if (!TABLE_CAT.equalsIgnoreCase("information_schema")
+                    && !TABLE_CAT.equalsIgnoreCase("performance_schema")
+                    && !TABLE_CAT.equalsIgnoreCase("mysql")
+                    && !TABLE_CAT.equalsIgnoreCase("sys")
+            ){
+                SchemaEntity entity = new SchemaEntity();
+                entity.setTABLE_CAT(TABLE_CAT);
+                // 对于mysql类数据库来说，CAT和SCHEMA相等---待测试其他库
+                entity.setTABLE_SCHEM(TABLE_CAT);
+                schemaEntities.add(entity);
+            }else{
+                continue;
+            }
+        }
+        return schemaEntities;
+    }
+
     /**
      * 取所有的数据表清单
      * @param conn

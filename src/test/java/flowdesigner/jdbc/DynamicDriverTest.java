@@ -52,7 +52,7 @@ class DynamicDriverTest {
         }
         Gson gson = new Gson();
         ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
-            put("dbType","hive");
+            put("dbType","mysql");
         }});
         String s = gson.toJson(cc);
         System.out.println(s);

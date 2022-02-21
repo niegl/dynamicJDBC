@@ -43,7 +43,17 @@ public class DBReverseGetSchemasImpl implements Command<ExecResult> {
         try {
             DBType dbType = DBTypeKit.getDBType(conn);
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
-            schemaEntities = dbDialect.getAllSchemas(conn, schemaPattern);
+
+            /*
+            * 有些传统关系型数据库可能不支持meta.getSchemas()接口，这时需要替换为getCatalogs接口。
+            * 目前通过support函数来判定是否支持接口.
+            */
+            boolean supportsSchemas = conn.getMetaData().supportsSchemasInTableDefinitions();
+            if (supportsSchemas) {
+                schemaEntities = dbDialect.getAllSchemas(conn, schemaPattern);
+            } else {
+                schemaEntities = dbDialect.getAllCatalogs(conn);
+            }
         } catch (SQLException e) {
             logger.severe("读取表清单出错"+ e.getMessage() );
             throw new RuntimeException(e);
