@@ -128,6 +128,16 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    @org.junit.jupiter.api.Test
+    void testSelectJoin() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="SELECT a.runoob_id, a.runoob_author, b.runoob_count " +
+                "FROM runoob_tbl a " +
+                "INNER JOIN tcount_tbl b ON a.runoob_author = b.runoob_author;";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         if (list.size() > 1) {

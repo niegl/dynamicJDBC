@@ -34,10 +34,10 @@ public abstract class ConnParseKit {
 
         //有括号的字段，不解析其中的注释了
         if (remarks.indexOf("(") > 0
-                && !remarks.contains(")")
+                //&& !remarks.contains(")")
                 && remarks.indexOf("(") < remarks.indexOf(")")
         ) {
-            return Pair.of(remarks, "");
+            return Pair.of("", remarks);
         }
 
 
@@ -55,7 +55,7 @@ public abstract class ConnParseKit {
             }
         }
         if (pair == null) {
-            pair = Pair.of(remarks, "");
+            pair = Pair.of("", remarks);
         }
         return pair;
     }
