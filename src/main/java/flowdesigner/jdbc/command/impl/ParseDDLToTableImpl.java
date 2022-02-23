@@ -62,7 +62,7 @@ public class ParseDDLToTableImpl implements Command<ExecResult> {
             ret.setStatus(ExecResult.FAILED);
             logger.log(Level.SEVERE,e.getMessage(),e);
         } finally {
-            IOKit.close(conn);
+//            IOKit.close(conn);
         }
         return ret;
     }

@@ -535,22 +535,20 @@ public class DBDialect {
         List<FKColumnField> tableEntities = new ArrayList<>();
         while (rs.next()) {
             FKColumnField fkColumnField = new FKColumnField();
-            if(fkColumnField != null) {
-                String PKTABLE_CAT = rs.getString("PKTABLE_CAT");
-                String PKTABLE_SCHEM = rs.getString("PKTABLE_SCHEM");
-                String PKTABLE_NAME = rs.getString("PKTABLE_NAME");
-                String PKCOLUMN_NAME = rs.getString("PKCOLUMN_NAME");
-                String FKCOLUMN_NAME = rs.getString("FKCOLUMN_NAME");
-                String FK_NAME = rs.getString("FK_NAME");
-                fkColumnField.setPKTABLE_CAT(PKTABLE_CAT);
-                fkColumnField.setPKTABLE_SCHEM(PKTABLE_SCHEM);
-                fkColumnField.setPKTABLE_NAME(PKTABLE_NAME);
-                fkColumnField.setPKCOLUMN_NAME(PKCOLUMN_NAME);
-                fkColumnField.setFKCOLUMN_NAME(FKCOLUMN_NAME);
-                fkColumnField.setFK_NAME(FK_NAME);
+            String PKTABLE_CAT = rs.getString("PKTABLE_CAT");
+            String PKTABLE_SCHEM = rs.getString("PKTABLE_SCHEM");
+            String PKTABLE_NAME = rs.getString("PKTABLE_NAME");
+            String PKCOLUMN_NAME = rs.getString("PKCOLUMN_NAME");
+            String FKCOLUMN_NAME = rs.getString("FKCOLUMN_NAME");
+            String FK_NAME = rs.getString("FK_NAME");
+            fkColumnField.setPKTABLE_CAT(PKTABLE_CAT);
+            fkColumnField.setPKTABLE_SCHEM(PKTABLE_SCHEM);
+            fkColumnField.setPKTABLE_NAME(PKTABLE_NAME);
+            fkColumnField.setPKCOLUMN_NAME(PKCOLUMN_NAME);
+            fkColumnField.setFKCOLUMN_NAME(FKCOLUMN_NAME);
+            fkColumnField.setFK_NAME(FK_NAME);
 
-                tableEntities.add(fkColumnField);
-            }
+            tableEntities.add(fkColumnField);
         }
         return tableEntities;
     }

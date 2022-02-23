@@ -59,9 +59,10 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult> {
             ret.setStatus(ExecResult.FAILED);
             ret.setBody(e.getMessage());
             logger.severe( e.getMessage());
-        } finally {
-            JdbcKit.close(conn);
         }
+//        finally {
+//            JdbcKit.close(conn);
+//        }
         return ret;
     }
 
