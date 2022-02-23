@@ -28,6 +28,7 @@ public class TableIndex implements Serializable,Cloneable {
     private boolean unique = false; //索引是否唯一
     private String defName;         //索引名称
     private String comment = "";    //索引注释说明
+    private String indexQualifier;  //INDEX_QUALIFIER String => index catalog (may be null);
     private List<TableIndexColumnField> fields = new ArrayList<>(); //索引下的字段明细
     /**
      * 查找索引

@@ -38,10 +38,11 @@ public class SQLAlterDatabaseBuilderImpl implements SQLAlterDatabaseBuilder {
     public SQLAlterDatabaseBuilder alter(String databaseName, Map<String, String> alterOption) {
         setName(databaseName);
 
-        SQLAlterCharacter alterCharacter = stmt.getCharacter();
+        SQLAlterDatabaseStatement statement = getSQLAlterDatabaseStatement();
+        SQLAlterCharacter alterCharacter = statement.getCharacter();
         if (alterCharacter == null) {
-            stmt.setCharacter(new SQLAlterCharacter());
-            alterCharacter = stmt.getCharacter();
+            statement.setCharacter(new SQLAlterCharacter());
+            alterCharacter = statement.getCharacter();
         }
 
         boolean bCharset = false;

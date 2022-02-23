@@ -2,6 +2,7 @@ package flowdesigner.jdbc.command;
 
 import com.google.gson.Gson;
 import flowdesigner.jdbc.driver.DynamicDriver;
+import flowdesigner.jdbc.model.FKColumnField;
 import flowdesigner.jdbc.model.SchemaEntity;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +28,7 @@ class CommandManagerTest {
 //        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
 //        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
         properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-        properties.setProperty("url","jdbc:mysql://192.168.101.105:3306");
+        properties.setProperty("url","jdbc:mysql://192.168.2.43:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
@@ -64,7 +65,7 @@ class CommandManagerTest {
 
 
     @Test
-    void testExeCommand() throws SQLException {
+    void testExeCommandGetSchemas() throws SQLException {
         Gson gson = new Gson();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetSchemas,new HashMap<String,String>());
         String s = gson.toJson(cc);
@@ -98,5 +99,66 @@ class CommandManagerTest {
             }
         }
 
+    }
+
+    @Test
+    void testExeCommandGetDDL() throws SQLException {
+        Gson gson = new Gson();
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
+//            put("schemaPattern","test");
+            put("tables","NewTable");
+        }});
+        String s = gson.toJson(cc);
+        System.out.println(s);
+
+        ResultSet tables = connection.getMetaData().getTables(null, null, "NewTable", new String[]{"TABLE"});
+        while (tables.next()) {
+            System.out.println(tables.getString("TABLE_NAME"));
+        }
+    }
+
+    @Test
+    void testExeCommandGetImportedKeys() throws SQLException {
+
+        Gson gson = new Gson();
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFKColumnFieldImpl,new HashMap<String,String>(){{
+            put("Table","NewTable");
+        }});
+        String s = gson.toJson(cc);
+        System.out.println(s);
+    }
+
+    @Test
+    void testExeCommandCrossReference() throws SQLException {
+
+//        Gson gson = new Gson();
+//        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFKColumnFieldImpl,new HashMap<String,String>(){{
+////            put("schemaPattern","test");
+//            String foreignCatalog = params.get("foreignCatalog").toUpperCase();
+//            String foreignSchema = params.get("foreignSchema").toUpperCase();
+//            String foreignTable = params.get("foreignTable").toUpperCase();
+//            put("foreignCatalog","NewTable");
+//            put("foreignSchema","NewTable");
+//            put("foreignTable","NewTable");
+//        }});
+//        String s = gson.toJson(cc);
+        ResultSet rs = connection.getMetaData().getCrossReference(null, null, "tb_emp3",
+                null,null,"NewTable");
+        while (rs.next()) {
+            FKColumnField fkColumnField = new FKColumnField();
+            String PKTABLE_CAT = rs.getString("PKTABLE_CAT");
+            String PKTABLE_SCHEM = rs.getString("PKTABLE_SCHEM");
+            String PKTABLE_NAME = rs.getString("PKTABLE_NAME");
+            String PKCOLUMN_NAME = rs.getString("PKCOLUMN_NAME");
+            String FKCOLUMN_NAME = rs.getString("FKCOLUMN_NAME");
+            String FK_NAME = rs.getString("FK_NAME");
+            fkColumnField.setPKTABLE_CAT(PKTABLE_CAT);
+            fkColumnField.setPKTABLE_SCHEM(PKTABLE_SCHEM);
+            fkColumnField.setPKTABLE_NAME(PKTABLE_NAME);
+            fkColumnField.setPKCOLUMN_NAME(PKCOLUMN_NAME);
+            fkColumnField.setFKCOLUMN_NAME(FKCOLUMN_NAME);
+            fkColumnField.setFK_NAME(FK_NAME);
+            System.out.println(fkColumnField);
+        }
     }
 }

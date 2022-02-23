@@ -22,13 +22,9 @@ public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult> {
 
     public ExecResult exec(Connection conn, Map<String, String> params) {
 
-        String foreignCatalog = params.get("foreignCatalog").toUpperCase();
-        String foreignSchema = params.get("foreignSchema").toUpperCase();
-        String foreignTable = params.get("foreignTable").toUpperCase();
-        if (StringKit.isBlank(foreignCatalog)
-                ||StringKit.isBlank(foreignSchema)
-                ||StringKit.isBlank(foreignTable)) {
-            throw new IllegalArgumentException("parameter [foreign*] not exists");
+        String table = params.get("Table");
+        if (StringKit.isBlank(table)) {
+            throw new IllegalArgumentException("Table not specified");
         }
 
         ExecResult ret = new ExecResult();
@@ -36,8 +32,7 @@ public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult> {
         //获取连接正常的情况下，进入下一步
         List<FKColumnField> tableEntities = null;
         try {
-            tableEntities = getCrossReference(conn
-                    ,foreignCatalog,foreignSchema,foreignTable);
+            tableEntities = getFKReference(conn, table);
             ret.setStatus(ExecResult.SUCCESS);
             ret.setBody(tableEntities);
         } catch (Exception e) {
@@ -51,8 +46,22 @@ public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult> {
         return ret;
     }
 
+    protected List<FKColumnField> getFKReference(Connection conn, String table) throws SQLException {
+        List<FKColumnField> tableEntities;
+        try {
+            DBType dbType = DBTypeKit.getDBType(conn);
+            DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
+            tableEntities = dbDialect.getFKColumnField(conn,table);
+        } catch (SQLException e) {
+            logger.severe("读取表清单出错"+ e.getMessage());
+            throw new RuntimeException(e);
+        }
+
+        return tableEntities;
+    }
+
     /**
-     * 获取数据表的外键
+     * 过期：获取数据表的外键
      * parentCatalog – a catalog name; must match the catalog name as it is stored in the database; "" retrieves those without a catalog; null means drop catalog name from the selection criteria
      * parentSchema – a schema name; must match the schema name as it is stored in the database; "" retrieves those without a schema; null means drop schema name from the selection criteria
      * parentTable – the name of the table that exports the key; must match the table name as it is stored in the database

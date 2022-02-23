@@ -341,25 +341,27 @@ public class DBDialect {
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
             String indexName = rs.getString("INDEX_NAME");
+            String indexQualifier = rs.getString("INDEX_QUALIFIER");
             String columnName = rs.getString("COLUMN_NAME");
             String nonUnique = rs.getString("NON_UNIQUE");
             String ascOrDesc = rs.getString("ASC_OR_DESC");
 
-            if(!table.equalsIgnoreCase(tableName)){
+            if(!table.equalsIgnoreCase(tableName)) {
                 continue;
             }
-            if(StringKit.isBlank(indexName)){
+            if(StringKit.isBlank(indexName)) {
                 continue;
             }
-            if(StringKit.isBlank(columnName)){
+            if(StringKit.isBlank(columnName)) {
                 continue;
             }
 
             TableIndex index = tableEntity.lookupIndex(indexName);
-            if(index == null){
+            if(index == null) {
                 index = new TableIndex();
                 index.setDefKey(indexName);
                 index.setUnique(!"1".equalsIgnoreCase(nonUnique));
+                index.setIndexQualifier(indexQualifier);
                 tableEntity.getIndexes().add(index);
             }
 
@@ -491,13 +493,13 @@ public class DBDialect {
         try{
             if (schemaPattern == null) schemaPattern = getSchemaPattern(conn);
 //            String schemaPattern = "bmnc_pdata";
-            rs = meta.getTables(null, schemaPattern, tableName.toLowerCase(), new String[]{"TABLE"});
-            if(rs.next()) {
+            rs = meta.getTables(null, schemaPattern, tableName, new String[]{"TABLE"});
+            if (rs.next()) {
                 TableEntity tableEntity = createTableEntity(conn, rs);
                 fillTableEntity(tableEntity,conn);
                 JdbcKit.close(rs);
                 return tableEntity;
-            }else{
+            } else {
                 //如果全小写不行，就来试试全大写
                 rs = meta.getTables(null, schemaPattern, tableName.toUpperCase(), new String[]{"TABLE"});
                 if(rs.next()) {
@@ -506,12 +508,61 @@ public class DBDialect {
                     return tableEntity;
                 }
             }
-        }catch (SQLException e){
+        } catch (SQLException e){
             throw e;
-        }finally {
+        } finally {
             JdbcKit.close(rs);
         }
         return null;
+    }
+
+    /**
+     PKTABLE_CAT String => primary key table catalog being imported (may be null)
+     PKTABLE_SCHEM String => primary key table schema being imported (may be null)
+     PKTABLE_NAME String => primary key table name being imported
+     PKCOLUMN_NAME String => primary key column name being imported
+     FKTABLE_CAT String => foreign key table catalog (may be null)
+     FKTABLE_SCHEM String => foreign key table schema (may be null)
+     FKTABLE_NAME String => foreign key table name
+     FKCOLUMN_NAME String => foreign key column name
+     FK_NAME String => foreign key name (may be null)
+     PK_NAME String => primary key name (may be null)
+     * @param conn
+     * @param table
+     * @return
+     * @throws SQLException
+     */
+    public List<FKColumnField> getFKColumnField(Connection conn, String table) throws SQLException {
+        DatabaseMetaData meta = conn.getMetaData();
+
+        String schemaPattern = getSchemaPattern(conn);
+
+        ResultSet rs = meta.getImportedKeys(null, schemaPattern, table);
+        List<FKColumnField> tableEntities = new ArrayList<>();
+        while (rs.next()) {
+            FKColumnField fkColumnField = new FKColumnField();
+            String PKTABLE_CAT = rs.getString("PKTABLE_CAT");
+            String PKTABLE_SCHEM = rs.getString("PKTABLE_SCHEM");
+            String PKTABLE_NAME = rs.getString("PKTABLE_NAME");
+            String PKCOLUMN_NAME = rs.getString("PKCOLUMN_NAME");
+            String FKTABLE_CAT = rs.getString("FKTABLE_CAT");
+            String FKTABLE_SCHEM = rs.getString("FKTABLE_SCHEM");
+            String FKTABLE_NAME = rs.getString("FKTABLE_NAME");
+            String FKCOLUMN_NAME = rs.getString("FKCOLUMN_NAME");
+            String FK_NAME = rs.getString("FK_NAME");
+            fkColumnField.setPKTABLE_CAT(PKTABLE_CAT);
+            fkColumnField.setPKTABLE_SCHEM(PKTABLE_SCHEM);
+            fkColumnField.setPKTABLE_NAME(PKTABLE_NAME);
+            fkColumnField.setPKCOLUMN_NAME(PKCOLUMN_NAME);
+            fkColumnField.setFKTABLE_CAT(FKTABLE_CAT);
+            fkColumnField.setFKTABLE_SCHEM(FKTABLE_SCHEM);
+            fkColumnField.setFKTABLE_NAME(FKTABLE_NAME);
+            fkColumnField.setFKCOLUMN_NAME(FKCOLUMN_NAME);
+            fkColumnField.setFK_NAME(FK_NAME);
+
+            tableEntities.add(fkColumnField);
+        }
+        return tableEntities;
     }
 
     /**
@@ -522,7 +573,7 @@ public class DBDialect {
      * @param foreignTable
      * @return
      */
-    public List<FKColumnField> getFKColumnField(Connection conn, String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
+    public List<FKColumnField> getFKColumnField(Connection conn, String foreignCatalog,String foreignSchema, String foreignTable) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
 
 //        String schemaPattern = null;

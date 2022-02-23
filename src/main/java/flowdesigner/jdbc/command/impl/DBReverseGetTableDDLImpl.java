@@ -35,8 +35,8 @@ import java.util.stream.Collectors;
 public class DBReverseGetTableDDLImpl implements Command<ExecResult> {
     public ExecResult exec(Connection conn, Map<String, String> params) {
 //        super.init(params);
-        String schema = params.get("schemaPattern").toUpperCase();
-        String tables = params.get("tables").toUpperCase();
+        String schema = params.getOrDefault("schemaPattern","");
+        String tables = params.getOrDefault("tables","");
         if (StringKit.isBlank(schema)) {
             schema = null;
         }
@@ -45,7 +45,6 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult> {
         }
         List<String> tableList = Arrays.stream(tables.split(","))
                 .collect(Collectors.toList());
-
 
         ExecResult ret = new ExecResult();
 
