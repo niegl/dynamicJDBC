@@ -1,9 +1,12 @@
 package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.SQLStatement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sqlTest.SQLTest;
 
+import java.sql.SQLSyntaxErrorException;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,6 +62,28 @@ class SQLCreateTableBuilderImplTest {
     @Test
     void addForeignKeyNoName() {
         tableBuilder.addForeignKey(null, Arrays.asList("Id_P"),"Persons", Arrays.asList("Id_P","LastName"));
+        System.out.println(tableBuilder.toString());
+    }
+
+    @Test
+    void testAutoIncrease() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="ALTER DATABASE test_db CHARACTER SET = gb2312 COLLATE gb2312_chinese_ci;";
+        SQLStatement statement = SQLTest.parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @Test
+    void addColumnAutoIncrement() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="CREATE TABLE tb_student(\n" +
+                " id INT(4) PRIMARY KEY AUTO_INCREMENT,\n" +
+                "  name VARCHAR(25) NOT NULL\n" +
+                "  );";
+        SQLStatement statement = SQLTest.parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+
+        tableBuilder.addColumnAutoIncrement("Id_P","int");
         System.out.println(tableBuilder.toString());
     }
 }

@@ -138,7 +138,15 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
     @Override
     public SQLCreateTableBuilder addColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull) {
 
+        SQLColumnDefinition column = getColumn(columnName, dataType, primary, unique, notNull, false);
+
+        addColumn(column);
+        return this;
+    }
+
+    private SQLColumnDefinition getColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull, boolean autoIncrement) {
         SQLColumnDefinition column = new SQLColumnDefinition();
+        column.setDbType(dbType);
         column.setName(columnName);
         column.setDataType(
                 SQLParserUtils.createExprParser(dataType, dbType).parseDataType()
@@ -151,10 +159,33 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
 
         if (primary) {
             column.addConstraint(new SQLColumnPrimaryKey());
+            if (autoIncrement) {
+                column.setAutoIncrement(true);
+            }
         } else if (unique) {
             column.addConstraint(new SQLColumnUniqueKey());
         }
 
+        return column;
+    }
+
+    /**
+     *
+     * @param columnName
+     * @param dataType
+     *        通过给字段添加 AUTO_INCREMENT 属性来实现主键自增长。语法格式如下：
+     *          * 字段名 数据类型 AUTO_INCREMENT
+     *          *
+     *          * 默认情况下，AUTO_INCREMENT 的初始值是 1，每新增一条记录，字段值自动加 1。
+     *          * 一个表中只能有一个字段使用 AUTO_INCREMENT 约束，且该字段必须有唯一索引，以避免序号重复（即为主键或主键的一部分）。
+     *          * AUTO_INCREMENT 约束的字段必须具备 NOT NULL 属性。
+     *          * AUTO_INCREMENT 约束的字段只能是整数类型（TINYINT、SMALLINT、INT、BIGINT 等）。
+     *          * AUTO_INCREMENT 约束字段的最大值受该字段的数据类型约束，如果达到上限，AUTO_INCREMENT 就会失效。
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder addColumnAutoIncrement(String columnName, String dataType) {
+        SQLColumnDefinition column = getColumn(columnName, dataType, true, false, false, true);
         addColumn(column);
         return this;
     }
@@ -356,6 +387,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
     @Override
     public SQLCreateTableBuilder addPartitionColumn(String columnName) {
         SQLColumnDefinition column = new SQLColumnDefinition();
+        column.setDbType(dbType);
         column.setName(columnName);
         addPartitionColumn(column);
 
@@ -365,6 +397,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
     @Override
     public SQLCreateTableBuilder addPartitionColumn(String columnName, String columnComment) {
         SQLColumnDefinition column = new SQLColumnDefinition();
+        column.setDbType(dbType);
         column.setName(columnName);
         column.setComment(columnComment);
         addPartitionColumn(column);

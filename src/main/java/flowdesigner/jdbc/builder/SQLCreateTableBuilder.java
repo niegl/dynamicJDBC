@@ -30,6 +30,8 @@ public interface SQLCreateTableBuilder {
 
     SQLCreateTableBuilder addColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull);
 
+    SQLCreateTableBuilder addColumnAutoIncrement(String columnName, String dataType);
+
     SQLCreateTableBuilder addColumn(SQLColumnDefinition column);
 
     SQLCreateTableBuilder addPrimaryKey(String primaryKeyName, List<String> columnNames);
