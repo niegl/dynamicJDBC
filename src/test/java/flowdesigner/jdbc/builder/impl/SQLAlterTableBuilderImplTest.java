@@ -27,9 +27,35 @@ class SQLAlterTableBuilderImplTest {
 
     @org.junit.jupiter.api.Test
     void testPrimary() throws SQLSyntaxErrorException {
-        String dbType = "mysql";
+        String dbType = "hive";
         String sql ="ALTER TABLE 数据表名 ADD PRIMARY KEY(字段名);";
         SQLStatement statement = SQLTest.parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @Test
+    void addPrimaryKey() {
+        alterTableBuilder.addPrimaryKey("primary", true, null);
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void addUniqueKey() {
+        alterTableBuilder.addUniqueKey("primary", true, null);
+        System.out.println(alterTableBuilder);
+        alterTableBuilder.addUniqueIndex("primary", true, null);
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void addUniqueIndex() {
+        alterTableBuilder.addUniqueIndex("primary", true, null);
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void dropDropForeignKey() {
+        alterTableBuilder.dropForeignKey("primary");
+        System.out.println(alterTableBuilder);
     }
 }

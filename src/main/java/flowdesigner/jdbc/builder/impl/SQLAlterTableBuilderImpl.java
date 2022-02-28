@@ -5,8 +5,10 @@ import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.*;
+import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
+import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLAlterTableBuiler;
 
 /**
@@ -18,7 +20,6 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
     private DbType             dbType;
 
     public SQLAlterTableBuilderImpl(DbType dbType){
-        this.stmt = new SQLAlterTableStatement(dbType);
         this.dbType = dbType;
     }
 
@@ -29,7 +30,8 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      */
     @Override
     public SQLAlterTableBuiler setName(String tableName) {
-        stmt.setName(new SQLIdentifierExpr(tableName));
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        statement.setName(new SQLIdentifierExpr(tableName));
         return this;
     }
 
@@ -40,7 +42,8 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
         if (schemaName == null) {
             return null;
         }
-        SQLName name = stmt.getName();
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLName name = statement.getName();
         if (name == null) {
             return null;
         }
@@ -62,8 +65,9 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      */
     @Override
     public SQLAlterTableBuiler renameTable(String toName) {
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
         SQLAlterTableRename alterTableRename = new SQLAlterTableRename(new SQLIdentifierExpr(toName));
-        stmt.addItem(alterTableRename);
+        statement.addItem(alterTableRename);
         return this;
     }
 
@@ -75,10 +79,11 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      */
     @Override
     public SQLAlterTableBuiler addColumn(String columnName, String columnType) {
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
         SQLAlterTableAddColumn alterTableAddColumn = new SQLAlterTableAddColumn();
         SQLColumnDefinition column = getColumn(columnName, columnType);
         alterTableAddColumn.addColumn(column);
-        stmt.addItem(alterTableAddColumn);
+        statement.addItem(alterTableAddColumn);
         return this;
     }
 
@@ -90,17 +95,18 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      */
     @Override
     public SQLAlterTableBuiler dropColomn(String columnName, String columnType) {
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
         SQLColumnDefinition column = getColumn(columnName, columnType);
         switch (dbType) {
             case hive:
                 SQLAlterTableReplaceColumn alterTableReplaceColumn = new SQLAlterTableReplaceColumn();
                 alterTableReplaceColumn.addColumn(column);
-                stmt.addItem(alterTableReplaceColumn);
+                statement.addItem(alterTableReplaceColumn);
                 break;
             default:
                 SQLAlterTableDropColumnItem alterTableDropColumnItem = new SQLAlterTableDropColumnItem();
                 alterTableDropColumnItem.addColumn(new SQLIdentifierExpr(columnName));
-                stmt.addItem(alterTableDropColumnItem);
+                statement.addItem(alterTableDropColumnItem);
                 break;
         }
 
@@ -115,6 +121,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
     @Override
     public SQLAlterTableBuiler alterColumn(String columnName, String toColumnName, String toColumnType, String toColumnComment,
                                            String after, boolean first) {
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
         SQLColumnDefinition column = getColumn(toColumnName, toColumnType);
         column.setComment(toColumnComment);
         switch (dbType) {
@@ -122,7 +129,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
                 MySqlAlterTableChangeColumn item = new MySqlAlterTableChangeColumn();
                 item.setColumnName(new SQLIdentifierExpr(columnName));
                 item.setNewColumnDefinition(column);
-                stmt.addItem(item);
+                statement.addItem(item);
                 break;
             default:
                 SQLAlterTableAlterColumn alterTableAlterColumn = new SQLAlterTableAlterColumn();
@@ -133,7 +140,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
                 if (after != null && !after.isEmpty()) {
                     alterTableAlterColumn.setAfter(new SQLIdentifierExpr(after));
                 }
-                stmt.addItem(alterTableAlterColumn);
+                statement.addItem(alterTableAlterColumn);
         }
 
         return this;
@@ -141,11 +148,156 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
 
     private SQLColumnDefinition getColumn(String columnName, String columnType) {
         SQLColumnDefinition column = new SQLColumnDefinition();
+        column.setDbType(dbType);
         column.setName(columnName);
         column.setDataType(
                 SQLParserUtils.createExprParser(columnType, dbType).parseDataType()
         );
         return column;
+    }
+
+    /**
+     *      * 在修改表时添加主键约束.
+     *      * 1、mysql语法：ALTER TABLE <数据表名>
+     *      *                         // ADD [CONSTRAINT [symbol]] PRIMARY KEY [index_type] (key_part,...) [index_option] ...
+     *      *                         // ADD [CONSTRAINT [symbol]] UNIQUE [INDEX|KEY] [index_name] [index_type] (key_part,...) [index_option] ...
+     *      *                         // ADD [CONSTRAINT [symbol]] FOREIGN KEY [index_name] (col_name,...) reference_definition
+     * @param columnName col_name
+     * @param hasConstraint 是否有CONSTRAINT关键字
+     * @param constraintSymbol 是否有[symbol]
+     * @return
+     */
+    public SQLAlterTableBuilderImpl addPrimaryKey(String columnName, boolean  hasConstraint, String constraintSymbol) {
+
+        return addConstraint(columnName, hasConstraint, constraintSymbol, Token.PRIMARY.name, true);
+    }
+
+    public SQLAlterTableBuilderImpl addUniqueKey(String columnName, boolean  hasConstraint, String constraintSymbol) {
+
+        return addConstraint(columnName, hasConstraint, constraintSymbol, Token.UNIQUE.name, true);
+    }
+
+    public SQLAlterTableBuilderImpl addUniqueIndex(String columnName, boolean  hasConstraint, String constraintSymbol) {
+
+        return addConstraint(columnName, hasConstraint, constraintSymbol, Token.UNIQUE.name, false);
+    }
+
+    public SQLAlterTableBuilderImpl addForeignKey(String columnName, boolean  hasConstraint, String constraintSymbol) {
+
+        return addConstraint(columnName, hasConstraint, constraintSymbol, Token.FOREIGN.name, true);
+    }
+    /**
+     * // ADD [CONSTRAINT [symbol]] PRIMARY KEY [index_type] (key_part,...) [index_option] ...
+     * // ADD [CONSTRAINT [symbol]] UNIQUE [INDEX|KEY] [index_name] [index_type] (key_part,...) [index_option] ...
+     * // ADD [CONSTRAINT [symbol]] FOREIGN KEY [index_name] (col_name,...) reference_definition
+     * @param columnName
+     * @param hasConstraint
+     * @param constraintSymbol
+     * @return
+     */
+    private SQLAlterTableBuilderImpl addConstraint(String columnName, boolean hasConstraint, String constraintSymbol, String type, boolean INDEXKEY) {
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+
+        SQLUnique pk = getPrimaryKey();
+        if (constraintSymbol != null) {
+            pk.setName(constraintSymbol);
+        }
+        pk.getIndexDefinition().setHasConstraint(hasConstraint);
+        if (constraintSymbol != null) {
+            pk.getIndexDefinition().setSymbol(new SQLIdentifierExpr(constraintSymbol));
+        }
+
+        pk.getIndexDefinition().setType(type);
+        if (INDEXKEY) {
+            pk.getIndexDefinition().setKey(true);
+        } else {
+            pk.getIndexDefinition().setIndex(true);
+        }
+
+        if (columnName != null) {
+            SQLSelectOrderByItem item = new SQLSelectOrderByItem();
+            item.setExpr(new SQLIdentifierExpr(columnName));
+            item.setParent(pk);
+            pk.getIndexDefinition().getColumns().add(item);
+        }
+
+        SQLAlterTableAddConstraint item = new SQLAlterTableAddConstraint(pk);
+        statement.addItem(item);
+
+        return this;
+    }
+
+    /**
+     * 适配不同的数据库下的PRIMARY KEY
+     * @return
+     */
+    private SQLUnique getPrimaryKey() {
+        switch (dbType) {
+            case mysql:
+                return new MySqlPrimaryKey();
+            default:
+                return new SQLPrimaryKeyImpl();
+        }
+    }
+
+    /**
+     * 删除主键
+     * @return
+     */
+    public SQLAlterTableBuilderImpl dropPrimaryKey() {
+
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+
+        SQLAlterTableDropPrimaryKey item = new SQLAlterTableDropPrimaryKey();
+        statement.addItem(item);
+
+        return this;
+    }
+
+    /**
+     * ALTER TABLE <表名> DROP FOREIGN KEY <外键约束名>;
+     * @param Name 外键约束名
+     * @return
+     */
+    public SQLAlterTableBuilderImpl dropForeignKey(String Name) {
+
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+
+        SQLAlterTableDropForeignKey item = new SQLAlterTableDropForeignKey();
+        item.setIndexName(new SQLIdentifierExpr(Name));
+        statement.addItem(item);
+
+        return this;
+    }
+
+    /**
+     * 删除索引/[mysql] 删除唯一约束unique
+     * @return
+     */
+    public SQLAlterTableBuilderImpl dropIndex(String indexName) {
+
+        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+
+        SQLAlterTableDropIndex item = new SQLAlterTableDropIndex();
+        item.setIndexName(new SQLIdentifierExpr(indexName));
+        statement.addItem(item);
+
+        return this;
+    }
+
+    public SQLAlterTableStatement getSQLAlterTableStatement() {
+        if (stmt == null) {
+            stmt = createSQLAlterTableStatement();
+        }
+        return stmt;
+    }
+
+    private SQLAlterTableStatement createSQLAlterTableStatement() {
+
+        if (stmt == null) {
+            stmt = new SQLAlterTableStatement(dbType);
+        }
+        return stmt;
     }
 
     @Override
