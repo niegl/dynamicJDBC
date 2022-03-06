@@ -1,9 +1,14 @@
 package flowdesigner.jdbc.builder;
 
+import com.alibaba.druid.DbType;
+
 import java.util.List;
 import java.util.Map;
 
 public interface SQLCreateDatabaseBuilder {
+
+    SQLCreateDatabaseBuilder setType(DbType dbType);
+
     SQLCreateDatabaseBuilder setName(String db_name);
 
     SQLCreateDatabaseBuilder setComment(String db_comment);

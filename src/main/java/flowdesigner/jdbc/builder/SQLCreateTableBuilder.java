@@ -1,5 +1,6 @@
 package flowdesigner.jdbc.builder;
 
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
@@ -7,6 +8,8 @@ import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 import java.util.List;
 
 public interface SQLCreateTableBuilder {
+
+    SQLCreateTableBuilder setType(DbType dbType);
 
     SQLCreateTableBuilder setName(String name);
 

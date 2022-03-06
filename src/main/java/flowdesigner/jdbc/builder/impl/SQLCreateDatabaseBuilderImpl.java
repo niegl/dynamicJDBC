@@ -7,13 +7,20 @@ import com.alibaba.druid.sql.ast.statement.SQLCreateDatabaseStatement;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateDatabaseBuilder;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class SQLCreateDatabaseBuilderImpl implements SQLCreateDatabaseBuilder {
     private SQLCreateDatabaseStatement  stmt;
     private DbType dbType;
+
+    public SQLCreateDatabaseBuilderImpl(){
+    }
 
     public SQLCreateDatabaseBuilderImpl(DbType dbType){
         this.dbType = dbType;
@@ -22,6 +29,12 @@ public class SQLCreateDatabaseBuilderImpl implements SQLCreateDatabaseBuilder {
     public SQLCreateDatabaseBuilderImpl(SQLCreateDatabaseStatement stmt, DbType dbType){
         this.stmt = stmt;
         this.dbType = dbType;
+    }
+
+    @Override
+    public SQLCreateDatabaseBuilder setType(DbType dbType) {
+        this.dbType = dbType;
+        return this;
     }
 
     @Override

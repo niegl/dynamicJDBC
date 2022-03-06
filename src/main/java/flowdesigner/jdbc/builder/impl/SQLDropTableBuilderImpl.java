@@ -15,8 +15,15 @@ public class SQLDropTableBuilderImpl implements SQLDropTableBuilder {
     private SQLDropTableStatement stmt;
     private DbType dbType;
 
+    public SQLDropTableBuilderImpl(){}
     public SQLDropTableBuilderImpl(DbType dbType){
         this.dbType = dbType;
+    }
+
+    @Override
+    public SQLDropTableBuilder setType(DbType dbType) {
+        this.dbType = dbType;
+        return this;
     }
 
     @Override

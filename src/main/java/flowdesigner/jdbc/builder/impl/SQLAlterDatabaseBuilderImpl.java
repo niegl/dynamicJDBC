@@ -18,8 +18,15 @@ public class SQLAlterDatabaseBuilderImpl implements SQLAlterDatabaseBuilder {
     private SQLAlterDatabaseStatement stmt;
     private DbType dbType;
 
+    public SQLAlterDatabaseBuilderImpl(){}
     public SQLAlterDatabaseBuilderImpl(DbType dbType){
         this.dbType = dbType;
+    }
+
+    @Override
+    public SQLAlterDatabaseBuilder setType(DbType dbType) {
+        this.dbType = dbType;
+        return this;
     }
 
     @Override

@@ -25,6 +25,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
     private SQLCreateTableStatement  stmt;
     private DbType             dbType;
 
+    public SQLCreateTableBuilderImpl(){}
     public SQLCreateTableBuilderImpl(DbType dbType){
         this.dbType = dbType;
     }
@@ -50,6 +51,11 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         this.dbType = dbType;
     }
 
+    @Override
+    public SQLCreateTableBuilder setType(DbType dbType) {
+        this.dbType = dbType;
+        return this;
+    }
 
     @Override
     public SQLCreateTableBuilder setName(String name) {

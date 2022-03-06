@@ -1,5 +1,7 @@
 package flowdesigner.jdbc.builder;
 
+import com.alibaba.druid.DbType;
+
 import java.util.Map;
 
 /**
@@ -9,6 +11,8 @@ import java.util.Map;
  *     DEFAULT COLLATE gb2312_chinese_ci;
  */
 public interface SQLAlterDatabaseBuilder {
+    SQLAlterDatabaseBuilder setType(DbType dbType);
+
     SQLAlterDatabaseBuilder setName(String db_name);
 
     SQLAlterDatabaseBuilder alter(String databaseName, Map<String, String> alterOption);

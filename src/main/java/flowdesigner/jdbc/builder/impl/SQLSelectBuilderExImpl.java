@@ -9,8 +9,19 @@ import com.alibaba.druid.sql.builder.impl.SQLSelectBuilderImpl;
 import flowdesigner.jdbc.builder.SQLSelectBuilderEx;
 
 public class SQLSelectBuilderExImpl extends SQLSelectBuilderImpl implements SQLSelectBuilderEx {
+    private DbType             dbType;
+
+    public SQLSelectBuilderExImpl(){
+        super(null);
+    }
     public SQLSelectBuilderExImpl(DbType dbType) {
         super(dbType);
+    }
+
+    @Override
+    public SQLSelectBuilderEx setType(DbType dbType) {
+        this.dbType = dbType;
+        return this;
     }
 
     /**

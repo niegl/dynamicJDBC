@@ -9,27 +9,35 @@ import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
-import flowdesigner.jdbc.builder.SQLAlterTableBuiler;
+import flowdesigner.jdbc.builder.SQLAlterTableBuilder;
 
 /**
  * 该类主要用于SQLAlterTable相关的操作。
  * 如Rename Table、Alter Column、Alter Table Comment、Delete/Replace Columns，etc
  */
-public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
+public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
     private SQLAlterTableStatement stmt;
     private DbType             dbType;
+
+    public SQLAlterTableBuilderImpl(){
+    }
 
     public SQLAlterTableBuilderImpl(DbType dbType){
         this.dbType = dbType;
     }
 
+    @Override
+    public SQLAlterTableBuilder setType(DbType dbType) {
+        this.dbType = dbType;
+        return this;
+    }
     /**
      * 设置原表名
      * @param tableName 原表名
      * @return
      */
     @Override
-    public SQLAlterTableBuiler setName(String tableName) {
+    public SQLAlterTableBuilder setName(String tableName) {
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
         statement.setName(new SQLIdentifierExpr(tableName));
         return this;
@@ -38,7 +46,8 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
     /**
      * 设置数据库名
      */
-    public SQLAlterTableBuiler setSchema(String schemaName) {
+    @Override
+    public SQLAlterTableBuilder setSchema(String schemaName) {
         if (schemaName == null) {
             return null;
         }
@@ -64,7 +73,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @return
      */
     @Override
-    public SQLAlterTableBuiler renameTable(String toName) {
+    public SQLAlterTableBuilder renameTable(String toName) {
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
         SQLAlterTableRename alterTableRename = new SQLAlterTableRename(new SQLIdentifierExpr(toName));
         statement.addItem(alterTableRename);
@@ -78,7 +87,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @return
      */
     @Override
-    public SQLAlterTableBuiler addColumn(String columnName, String columnType) {
+    public SQLAlterTableBuilder addColumn(String columnName, String columnType) {
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
         SQLAlterTableAddColumn alterTableAddColumn = new SQLAlterTableAddColumn();
         SQLColumnDefinition column = getColumn(columnName, columnType);
@@ -94,7 +103,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @return
      */
     @Override
-    public SQLAlterTableBuiler dropColomn(String columnName, String columnType) {
+    public SQLAlterTableBuilder dropColomn(String columnName, String columnType) {
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
         SQLColumnDefinition column = getColumn(columnName, columnType);
         switch (dbType) {
@@ -119,7 +128,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @return
      */
     @Override
-    public SQLAlterTableBuiler alterColumn(String columnName, String toColumnName, String toColumnType, String toColumnComment,
+    public SQLAlterTableBuilder alterColumn(String columnName, String toColumnName, String toColumnType, String toColumnComment,
                                            String after, boolean first) {
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
         SQLColumnDefinition column = getColumn(toColumnName, toColumnType);
@@ -167,22 +176,26 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @param constraintSymbol 是否有[symbol]
      * @return
      */
-    public SQLAlterTableBuilderImpl addPrimaryKey(String columnName, boolean  hasConstraint, String constraintSymbol) {
+    @Override
+    public SQLAlterTableBuilder addPrimaryKey(String columnName, boolean hasConstraint, String constraintSymbol) {
 
         return addConstraint(columnName, hasConstraint, constraintSymbol, Token.PRIMARY.name, true);
     }
 
-    public SQLAlterTableBuilderImpl addUniqueKey(String columnName, boolean  hasConstraint, String constraintSymbol) {
+    @Override
+    public SQLAlterTableBuilder addUniqueKey(String columnName, boolean hasConstraint, String constraintSymbol) {
 
         return addConstraint(columnName, hasConstraint, constraintSymbol, Token.UNIQUE.name, true);
     }
 
-    public SQLAlterTableBuilderImpl addUniqueIndex(String columnName, boolean  hasConstraint, String constraintSymbol) {
+    @Override
+    public SQLAlterTableBuilder addUniqueIndex(String columnName, boolean hasConstraint, String constraintSymbol) {
 
         return addConstraint(columnName, hasConstraint, constraintSymbol, Token.UNIQUE.name, false);
     }
 
-    public SQLAlterTableBuilderImpl addForeignKey(String columnName, boolean  hasConstraint, String constraintSymbol) {
+    @Override
+    public SQLAlterTableBuilder addForeignKey(String columnName, boolean hasConstraint, String constraintSymbol) {
 
         return addConstraint(columnName, hasConstraint, constraintSymbol, Token.FOREIGN.name, true);
     }
@@ -195,7 +208,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @param constraintSymbol
      * @return
      */
-    private SQLAlterTableBuilderImpl addConstraint(String columnName, boolean hasConstraint, String constraintSymbol, String type, boolean INDEXKEY) {
+    private SQLAlterTableBuilder addConstraint(String columnName, boolean hasConstraint, String constraintSymbol, String type, boolean INDEXKEY) {
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
 
         SQLUnique pk = getPrimaryKey();
@@ -244,7 +257,8 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * 删除主键
      * @return
      */
-    public SQLAlterTableBuilderImpl dropPrimaryKey() {
+    @Override
+    public SQLAlterTableBuilder dropPrimaryKey() {
 
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
 
@@ -259,7 +273,8 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * @param Name 外键约束名
      * @return
      */
-    public SQLAlterTableBuilderImpl dropForeignKey(String Name) {
+    @Override
+    public SQLAlterTableBuilder dropForeignKey(String Name) {
 
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
 
@@ -274,7 +289,8 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuiler {
      * 删除索引/[mysql] 删除唯一约束unique
      * @return
      */
-    public SQLAlterTableBuilderImpl dropIndex(String indexName) {
+    @Override
+    public SQLAlterTableBuilder dropIndex(String indexName) {
 
         SQLAlterTableStatement statement = getSQLAlterTableStatement();
 
