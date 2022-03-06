@@ -2,7 +2,6 @@ package flowdesigner.jdbc.builder;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.builder.SQLDeleteBuilder;
-import com.alibaba.druid.sql.builder.SQLSelectBuilder;
 import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
 import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
@@ -11,7 +10,7 @@ import flowdesigner.jdbc.builder.impl.*;
 public class SQLBuilderFactory {
 
     public static SQLSelectBuilder createSelectSQLBuilder(DbType dbType) {
-        return new SQLSelectBuilderExImpl(dbType);
+        return new SQLSelectBuilderImpl(dbType);
     }
 
     public static SQLDeleteBuilder createDeleteBuilder(DbType dbType) {
