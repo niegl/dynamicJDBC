@@ -11,19 +11,29 @@ import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLAlterTableBuilder;
 
+import java.util.Collection;
+
 /**
  * 该类主要用于SQLAlterTable相关的操作。
  * 如Rename Table、Alter Column、Alter Table Comment、Delete/Replace Columns，etc
  */
 public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
-    private SQLAlterTableStatement stmt;
-    private DbType             dbType;
-
-    public SQLAlterTableBuilderImpl(){
-    }
+    protected SQLAlterTableStatement stmt;
+    protected DbType             dbType;
+    protected SQLExprBuilder     exprBuilder;
 
     public SQLAlterTableBuilderImpl(DbType dbType){
         this.dbType = dbType;
+        exprBuilder = new SQLExprBuilder();
+    }
+
+    public SQLAlterTableBuilderImpl(DbType dbType, SQLExprBuilder exprBuilder){
+        this.dbType = dbType;
+        this.exprBuilder = exprBuilder;
+    }
+
+    protected SQLExprBuilder getExprBuilder() {
+        return exprBuilder;
     }
 
     @Override
@@ -194,11 +204,6 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
         return addConstraint(columnName, hasConstraint, constraintSymbol, Token.UNIQUE.name, false);
     }
 
-    @Override
-    public SQLAlterTableBuilder addForeignKey(String columnName, boolean hasConstraint, String constraintSymbol) {
-
-        return addConstraint(columnName, hasConstraint, constraintSymbol, Token.FOREIGN.name, true);
-    }
     /**
      * // ADD [CONSTRAINT [symbol]] PRIMARY KEY [index_type] (key_part,...) [index_option] ...
      * // ADD [CONSTRAINT [symbol]] UNIQUE [INDEX|KEY] [index_name] [index_type] (key_part,...) [index_option] ...
@@ -319,5 +324,29 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
     @Override
     public String toString() {
         return stmt.toString();
+    }
+
+    /**
+     * ALTER TABLE <数据表名> ADD CONSTRAINT <外键名> FOREIGN KEY(<列名>) REFERENCES <主表名> (<列名>);
+     *  ADD [CONSTRAINT [symbol]] PRIMARY KEY [index_type] (key_part,...) [index_option] ...
+     *  ADD [CONSTRAINT [symbol]] UNIQUE [INDEX|KEY] [index_name] [index_type] (key_part,...) [index_option] ...
+     *  ADD [CONSTRAINT [symbol]] FOREIGN KEY [index_name] (col_name,...) reference_definition
+     * @param hasConstraint 是否有CONSTRAINT关键字
+     * @param constraintSymbol 外键名
+     * @param index_name 索引名称
+     * @param columnName 列名
+     * @param referenceTable 主表名
+     * @param referenceColumn 主表列名
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder addForeignKey(boolean hasConstraint, String constraintSymbol, String index_name, Collection<String> columnName,
+                                              String referenceTable, Collection<String> referenceColumn) {
+        return  this;
+    }
+
+    @Override
+    public SQLAlterTableBuilder addForeignKey(boolean hasConstraint, Collection<String> columnName, String referenceTable, Collection<String> referenceColumn) {
+        return null;
     }
 }

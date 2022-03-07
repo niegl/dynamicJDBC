@@ -6,6 +6,7 @@ import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
 import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
 import flowdesigner.jdbc.builder.impl.*;
+import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
 
 public class SQLBuilderFactory {
 
@@ -26,7 +27,12 @@ public class SQLBuilderFactory {
     }
 
     public static SQLAlterTableBuilder createAlterTableBuilder(DbType dbType) {
-        return new SQLAlterTableBuilderImpl(dbType);
+        switch (dbType) {
+            case mysql:
+                return new MySQLAlterTableBuilderImpl();
+            default:
+                return new SQLAlterTableBuilderImpl(dbType);
+        }
     }
 
     public static SQLCreateDatabaseBuilder createCreateDatabaseBuilder(DbType dbType) {

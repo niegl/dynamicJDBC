@@ -2,12 +2,14 @@ package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sqlTest.SQLTest;
 
 import java.sql.SQLSyntaxErrorException;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,7 +17,7 @@ class SQLAlterTableBuilderImplTest {
     SQLAlterTableBuilderImpl alterTableBuilder;
     @BeforeEach
     void setUp() {
-        alterTableBuilder = new SQLAlterTableBuilderImpl(DbType.mysql);
+        alterTableBuilder = new MySQLAlterTableBuilderImpl();
         alterTableBuilder.setName("std_line");
     }
 
@@ -56,6 +58,21 @@ class SQLAlterTableBuilderImplTest {
     @Test
     void dropDropForeignKey() {
         alterTableBuilder.dropForeignKey("primary");
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void addForeignKey() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="ALTER TABLE tb_emp2\n" +
+                " ADD CONSTRAINT fk_tb_dept1\n" +
+                " FOREIGN KEY(deptId)\n" +
+                " REFERENCES tb_dept1(id);";
+        SQLStatement statement = SQLTest.parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+
+        alterTableBuilder.addForeignKey(true,"fk_tb_dept1","index_name", Arrays.asList("deptId"),
+                "tb_dept1",Arrays.asList("id"));
         System.out.println(alterTableBuilder);
     }
 }

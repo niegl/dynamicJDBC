@@ -2,6 +2,8 @@ package flowdesigner.jdbc.builder;
 
 import com.alibaba.druid.DbType;
 
+import java.util.Collection;
+
 public interface SQLAlterTableBuilder {
     SQLAlterTableBuilder setType(DbType dbType);
 
@@ -24,11 +26,15 @@ public interface SQLAlterTableBuilder {
 
     SQLAlterTableBuilder addUniqueIndex(String columnName, boolean hasConstraint, String constraintSymbol);
 
-    SQLAlterTableBuilder addForeignKey(String columnName, boolean hasConstraint, String constraintSymbol);
-
     SQLAlterTableBuilder dropPrimaryKey();
 
     SQLAlterTableBuilder dropForeignKey(String Name);
 
     SQLAlterTableBuilder dropIndex(String indexName);
+
+    SQLAlterTableBuilder addForeignKey(boolean hasConstraint, Collection<String> columnName,
+                                       String referenceTable, Collection<String> referenceColumn);
+
+    SQLAlterTableBuilder addForeignKey(boolean hasConstraint, String constraintSymbol, String index_name, Collection<String> columnName,
+                                       String referenceTable, Collection<String> referenceColumn);
 }
