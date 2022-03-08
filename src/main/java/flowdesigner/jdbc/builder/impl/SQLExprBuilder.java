@@ -15,9 +15,17 @@ public class SQLExprBuilder {
 
     public SQLForeignKeyConstraint builderForeignKey(String index_name, Collection<String> columns,
                                                      String referenceTable, Collection<String> referenceColumn) {
-        SQLForeignKeyImpl fk = new SQLForeignKeyImpl();
+        SQLForeignKeyImpl fk = createForeignKey();
+
+        this.names(fk.getReferencingColumns(), fk, columns);
+        fk.setReferencedTableName(new SQLIdentifierExpr(referenceTable));
+        this.names(fk.getReferencedColumns(), fk, referenceColumn);
 
         return fk;
+    }
+
+    protected SQLForeignKeyImpl createForeignKey() {
+        return new SQLForeignKeyImpl();
     }
 
     public final void names(Collection<SQLName> exprCol, Collection<String> stringCol) {

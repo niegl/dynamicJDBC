@@ -3,6 +3,7 @@ package flowdesigner.jdbc.builder;
 import com.alibaba.druid.DbType;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface SQLAlterTableBuilder {
     SQLAlterTableBuilder setType(DbType dbType);
@@ -32,9 +33,9 @@ public interface SQLAlterTableBuilder {
 
     SQLAlterTableBuilder dropIndex(String indexName);
 
-    SQLAlterTableBuilder addForeignKey(boolean hasConstraint, Collection<String> columnName,
-                                       String referenceTable, Collection<String> referenceColumn);
+    SQLAlterTableBuilder addForeignKey(boolean hasConstraint, List<String> columnName,
+                                       String referenceTable, List<String> referenceColumn);
 
-    SQLAlterTableBuilder addForeignKey(boolean hasConstraint, String constraintSymbol, String index_name, Collection<String> columnName,
-                                       String referenceTable, Collection<String> referenceColumn);
+    SQLAlterTableBuilder addForeignKey(boolean hasConstraint, String constraintSymbol, String index_name, List<String> columnName,
+                                       String referenceTable, List<String> referenceColumn);
 }

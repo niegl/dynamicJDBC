@@ -2,6 +2,7 @@ package flowdesigner.jdbc.builder.impl.dialect.mysql;
 
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl;
 import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import flowdesigner.jdbc.builder.impl.SQLExprBuilder;
 
@@ -12,7 +13,7 @@ public class MySqlExprBuilder extends SQLExprBuilder {
     @Override
     public MysqlForeignKey builderForeignKey(String index_name, Collection<String> columns,
                                              String referenceTable, Collection<String> referenceColumn) {
-        MysqlForeignKey fk = new MysqlForeignKey();
+        MysqlForeignKey fk = (MysqlForeignKey) createForeignKey();
         if (index_name != null) {
             fk.setIndexName(new SQLIdentifierExpr(index_name));
         }
@@ -22,5 +23,8 @@ public class MySqlExprBuilder extends SQLExprBuilder {
         this.names(fk.getReferencedColumns(), referenceColumn);
 
         return fk;
+    }
+    protected SQLForeignKeyImpl createForeignKey() {
+        return new MysqlForeignKey();
     }
 }

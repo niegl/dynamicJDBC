@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import sqlTest.SQLTest;
 
 import java.sql.SQLSyntaxErrorException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,8 +18,8 @@ class SQLAlterTableBuilderImplTest {
     SQLAlterTableBuilderImpl alterTableBuilder;
     @BeforeEach
     void setUp() {
-        alterTableBuilder = new MySQLAlterTableBuilderImpl();
-        alterTableBuilder.setName("std_line");
+        alterTableBuilder = new SQLAlterTableBuilderImpl(DbType.hive);
+        alterTableBuilder.setName("tb_emp2");
     }
 
     @Test
@@ -63,15 +64,16 @@ class SQLAlterTableBuilderImplTest {
 
     @Test
     void addForeignKey() throws SQLSyntaxErrorException {
-        String dbType = "mysql";
+        String dbType = "hive";
         String sql ="ALTER TABLE tb_emp2\n" +
                 " ADD CONSTRAINT fk_tb_dept1\n" +
                 " FOREIGN KEY(deptId)\n" +
                 " REFERENCES tb_dept1(id);";
         SQLStatement statement = SQLTest.parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
-
-        alterTableBuilder.addForeignKey(true,"fk_tb_dept1","index_name", Arrays.asList("deptId"),
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("deptId");
+        alterTableBuilder.addForeignKey(true,"fk_tb_dept1","index_name", strings,
                 "tb_dept1",Arrays.asList("id"));
         System.out.println(alterTableBuilder);
     }

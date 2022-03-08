@@ -1,0 +1,40 @@
+[2022-03-08 14:16:49,469] INFO main LogUtil - true,fk_tb_dept1,index_name,[deptId],tb_dept1,[id]
+[2022-03-08 14:16:49,470] INFO main LogUtil - ALTER TABLE std_line
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY index_name (deptId) REFERENCES tb_dept1 (id)
+[2022-03-08 14:45:31,742] INFO main LogUtil - true,fk_tb_dept1,index_name,[deptId],tb_dept1,[id]
+[2022-03-08 14:45:31,742] INFO main LogUtil - ALTER TABLE std_line
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY index_name (deptId) REFERENCES tb_dept1 (id)
+[2022-03-08 15:00:15,881] INFO main LogUtil - true,fk_tb_dept1,index_name,[deptId],tb_dept1,[id]
+[2022-03-08 15:00:15,881] INFO main LogUtil - ALTER TABLE std_line
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY index_name (deptId) REFERENCES tb_dept1 (id)
+[2022-03-08 15:32:21,131] INFO main LogUtil - ALTER TABLE std_line
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY index_name (deptId) REFERENCES tb_dept1 (id)
+[2022-03-08 15:32:38,123] INFO main LogUtil - ALTER TABLE std_line
+[2022-03-08 15:42:51,478] INFO main LogUtil - ALTER TABLE std_line
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY index_name (deptId) REFERENCES tb_dept1 (id)
+[2022-03-08 15:43:19,510] INFO main LogUtil - ALTER TABLE std_line
+[2022-03-08 15:44:59,070] INFO main LogUtil - ALTER TABLE std_line
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY index_name (deptId) REFERENCES tb_dept1 (id)
+[2022-03-08 15:51:47,203] INFO main LogUtil - ALTER TABLE std_line
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY index_name (deptId) REFERENCES tb_dept1 (id)
+[2022-03-08 15:54:56,702] INFO main LogUtil - ALTER TABLE std_line
+	ADD FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 15:55:28,890] INFO main LogUtil - ALTER TABLE std_line
+[2022-03-08 15:59:32,188] INFO main LogUtil - ALTER TABLE std_line
+	ADD FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 15:59:58,936] INFO main LogUtil - ALTER TABLE std_line
+[2022-03-08 16:14:38,859] INFO main LogUtil - ALTER TABLE std_line
+	ADD FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 16:14:46,707] INFO main LogUtil - ALTER TABLE std_line
+[2022-03-08 16:19:32,443] INFO main LogUtil - ALTER TABLE std_line
+	ADD FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 16:21:59,208] INFO main LogUtil - ALTER TABLE std_line
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 16:22:33,059] INFO main LogUtil - ALTER TABLE tb_emp2
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)

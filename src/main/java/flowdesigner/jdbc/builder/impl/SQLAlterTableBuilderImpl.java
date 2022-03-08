@@ -1,33 +1,39 @@
 package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
+import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
+import commonUtility.log.IPlusLogger;
+import commonUtility.log.PlusLoggerFactory;
+import commonUtility.utils.LogUtil;
 import flowdesigner.jdbc.builder.SQLAlterTableBuilder;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * 该类主要用于SQLAlterTable相关的操作。
  * 如Rename Table、Alter Column、Alter Table Comment、Delete/Replace Columns，etc
  */
 public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
+
     protected SQLAlterTableStatement stmt;
     protected DbType             dbType;
     protected SQLExprBuilder     exprBuilder;
 
-    public SQLAlterTableBuilderImpl(DbType dbType){
+    public SQLAlterTableBuilderImpl(DbType dbType) {
         this.dbType = dbType;
         exprBuilder = new SQLExprBuilder();
     }
 
-    public SQLAlterTableBuilderImpl(DbType dbType, SQLExprBuilder exprBuilder){
+    public SQLAlterTableBuilderImpl(DbType dbType, SQLExprBuilder exprBuilder) {
         this.dbType = dbType;
         this.exprBuilder = exprBuilder;
     }
@@ -323,7 +329,9 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
 
     @Override
     public String toString() {
-        return stmt.toString();
+        String sql = SQLUtils.toSQLString(stmt, dbType);
+        LogUtil.info(sql);
+        return sql;
     }
 
     /**
@@ -340,13 +348,21 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
      * @return
      */
     @Override
-    public SQLAlterTableBuilder addForeignKey(boolean hasConstraint, String constraintSymbol, String index_name, Collection<String> columnName,
-                                              String referenceTable, Collection<String> referenceColumn) {
+    public SQLAlterTableBuilder addForeignKey(boolean hasConstraint, String constraintSymbol, String index_name, List<String> columnName,
+                                              String referenceTable, List<String> referenceColumn) {
+        SQLForeignKeyConstraint fk = this.getExprBuilder().builderForeignKey(index_name, columnName,referenceTable, referenceColumn);
+        if (constraintSymbol != null) {
+            fk.setName(new SQLIdentifierExpr(constraintSymbol));
+        }
+//        fk.setHasConstraint(hasConstraint);
+        SQLAlterTableAddConstraint constraint = new SQLAlterTableAddConstraint(fk);
+        stmt.addItem(constraint);
         return  this;
     }
 
     @Override
-    public SQLAlterTableBuilder addForeignKey(boolean hasConstraint, Collection<String> columnName, String referenceTable, Collection<String> referenceColumn) {
-        return null;
+    public SQLAlterTableBuilder addForeignKey(boolean hasConstraint, List<String> columnName, String referenceTable, List<String> referenceColumn) {
+
+        return addForeignKey(hasConstraint, null, null, columnName, referenceTable, referenceColumn);
     }
 }
