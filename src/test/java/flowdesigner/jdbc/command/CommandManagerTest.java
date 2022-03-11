@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sun.security.krb5.internal.crypto.Des;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -38,7 +39,7 @@ class CommandManagerTest {
         dynamicDriver.setM_propertyInfo(properties);
 
         try {
-            dynamicDriver.createDataSource();
+//            dynamicDriver.createDataSource();
             connection = dynamicDriver.getConnection();
         } catch (SQLException e) {
             System.out.println(dynamicDriver.get_errMessage());
@@ -57,10 +58,32 @@ class CommandManagerTest {
         Gson gson = new Gson();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteUpdateCommandImpl,new HashMap<String,String>(){{
 //            put("schemaPattern","test");
-            put("SQL","CREATE TABLE test_db11.test_db111(id INT(11));");
+            put("SQL","ALTER TABLE test_db11.test_db111 ADD PRIMARY KEY(id);");
         }});
         String s = gson.toJson(cc);
         System.out.println(s);
+    }
+
+    @Test
+    void testJDBCProperties() throws SQLException {
+        Gson gson = new Gson();
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet clientInfoProperties = metaData.getClientInfoProperties();
+        while (clientInfoProperties.next()) {
+            String NAME = clientInfoProperties.getString("NAME");
+            String DEFAULT_VALUE = clientInfoProperties.getString("DEFAULT_VALUE");
+            String DESCRIPTION = clientInfoProperties.getString("DESCRIPTION");
+
+            System.out.println(NAME.concat(",") + DEFAULT_VALUE + "," + DESCRIPTION);
+        }
+//        ResultSet attributes = metaData.getAttributes();
+//        while (clientInfoProperties.next()) {
+//            String NAME = clientInfoProperties.getString("NAME");
+//            String DEFAULT_VALUE = clientInfoProperties.getString("DEFAULT_VALUE");
+//            String DESCRIPTION = clientInfoProperties.getString("DESCRIPTION");
+//
+//            System.out.println(NAME.concat(",") + DEFAULT_VALUE + "," + DESCRIPTION);
+//        }
     }
 
     @Test
@@ -73,7 +96,7 @@ class CommandManagerTest {
         dynamicDriver.setM_propertyInfo(properties);
         Connection connection = null;
         try {
-            dynamicDriver.createDataSource();
+//            dynamicDriver.createDataSource();
             connection = dynamicDriver.getConnection();
         } catch (SQLException e) {
             e.printStackTrace();

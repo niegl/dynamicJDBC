@@ -32,7 +32,7 @@ import java.util.Properties;
  * 通过以上方式将driver功能简单化。如果后续提供不同版本的参数和URL等管理功能，有其他类实现。
  */
 
-public class DynamicDriver {
+public final class DynamicDriver {
     //定义连接池对象
     private DataSource m_ds = null;
     /**
@@ -57,7 +57,7 @@ public class DynamicDriver {
         m_driverDir = driverDir;
     }
 
-    public void createDataSource() {
+    private void createDataSource() {
         try {
             // 文件后缀为.java且不为空，读子文件夹
             Collection<File> files = new ArrayList<>();
@@ -84,7 +84,7 @@ public class DynamicDriver {
      * 获取连接
      */
     public Connection getConnection() throws SQLException {
-        if (m_ds != null) {
+        if (m_ds == null) {
             createDataSource();
         }
         if (m_ds != null) {

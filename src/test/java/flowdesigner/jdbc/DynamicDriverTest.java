@@ -34,7 +34,7 @@ class DynamicDriverTest {
         dynamicDriver.setM_propertyInfo(properties);
         Connection connection = null;
         try {
-            dynamicDriver.createDataSource();
+//            dynamicDriver.createDataSource();
             connection = dynamicDriver.getConnection();
         } catch (SQLException e) {
             System.out.println(dynamicDriver.get_errMessage());
