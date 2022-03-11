@@ -38,3 +38,37 @@
 [2022-03-08 16:22:33,059] INFO main LogUtil - ALTER TABLE tb_emp2
 	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY (deptId)
 		REFERENCES tb_dept1 (id)
+[2022-03-08 17:25:31,129] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:31:33,869] INFO main LogUtil - ALTER TABLE tb_emp2
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 17:41:04,009] INFO main LogUtil - ALTER TABLE tb_emp2
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 17:41:32,603] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:41:32,920] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:41:33,236] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:41:33,236] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:41:33,468] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:41:33,468] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:41:33,907] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:41:33,907] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:41:35,627] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:42:10,700] INFO main LogUtil - ALTER TABLE tb_emp2
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 17:42:38,319] INFO main LogUtil - ALTER TABLE tb_emp2
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)
+[2022-03-08 17:43:26,091] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:43:26,508] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:43:26,862] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:43:26,862] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:43:27,141] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:43:27,141] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:43:27,495] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:43:27,495] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:43:28,831] INFO main LogUtil - ALTER TABLE tb_emp2
+[2022-03-08 17:45:12,210] INFO main LogUtil - ALTER TABLE tb_emp2
+	ADD CONSTRAINT fk_tb_dept1 FOREIGN KEY (deptId)
+		REFERENCES tb_dept1 (id)

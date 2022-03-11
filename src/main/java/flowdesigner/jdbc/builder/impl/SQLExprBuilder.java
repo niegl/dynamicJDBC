@@ -8,10 +8,17 @@ import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl;
 import com.alibaba.druid.sql.ast.statement.SQLLateralViewTableSource;
 import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import com.alibaba.druid.sql.parser.Token;
+import lombok.Setter;
 
 import java.util.Collection;
 
 public class SQLExprBuilder {
+
+    /**
+     * 支持hive的 CONSTRAINT constraint_name FOREIGN KEY (col_name, ...) REFERENCES table_name(col_name, ...) DISABLE NOVALIDATE
+     */
+    @Setter
+    protected boolean   DISABLE_NOVALIDATE = false;
 
     public SQLForeignKeyConstraint builderForeignKey(String index_name, Collection<String> columns,
                                                      String referenceTable, Collection<String> referenceColumn) {
@@ -20,6 +27,10 @@ public class SQLExprBuilder {
         this.names(fk.getReferencingColumns(), fk, columns);
         fk.setReferencedTableName(new SQLIdentifierExpr(referenceTable));
         this.names(fk.getReferencedColumns(), fk, referenceColumn);
+
+        if (DISABLE_NOVALIDATE) {
+            fk.setDisableNovalidate(true);
+        }
 
         return fk;
     }

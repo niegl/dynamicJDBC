@@ -24,6 +24,7 @@ public class MySqlExprBuilder extends SQLExprBuilder {
 
         return fk;
     }
+
     protected SQLForeignKeyImpl createForeignKey() {
         return new MysqlForeignKey();
     }

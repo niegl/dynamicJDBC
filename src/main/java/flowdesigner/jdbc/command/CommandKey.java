@@ -7,5 +7,7 @@ public enum CommandKey {
     CMD_DBReverseGetTableDDL,
     CMD_ParseDDLToTableImpl,
     CMD_DBExecuteCommandImpl,
+    CMD_DBExecuteUpdateCommandImpl,
     CMD_DBReverseGetFKColumnFieldImpl
+
 }

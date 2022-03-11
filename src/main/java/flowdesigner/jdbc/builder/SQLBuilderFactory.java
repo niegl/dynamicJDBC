@@ -6,6 +6,7 @@ import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
 import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
 import flowdesigner.jdbc.builder.impl.*;
+import flowdesigner.jdbc.builder.impl.dialect.hive.HiveAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
 
@@ -33,6 +34,8 @@ public class SQLBuilderFactory {
                 return new MySQLAlterTableBuilderImpl();
             case oracle:
                 return new OracleAlterTableBuilderImpl();
+            case hive:
+                return new HiveAlterTableBuilderImpl();
             default:
                 return new SQLAlterTableBuilderImpl(dbType);
         }

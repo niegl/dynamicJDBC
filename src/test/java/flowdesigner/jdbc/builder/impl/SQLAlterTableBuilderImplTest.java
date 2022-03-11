@@ -68,7 +68,7 @@ class SQLAlterTableBuilderImplTest {
         String sql ="ALTER TABLE tb_emp2\n" +
                 " ADD CONSTRAINT fk_tb_dept1\n" +
                 " FOREIGN KEY(deptId)\n" +
-                " REFERENCES tb_dept1(id);";
+                " REFERENCES tb_dept1(id) DISABLE NOVALIDATE;";
         SQLStatement statement = SQLTest.parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
         ArrayList<String> strings = new ArrayList<>();

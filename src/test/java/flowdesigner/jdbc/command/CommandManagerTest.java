@@ -1,10 +1,12 @@
 package flowdesigner.jdbc.command;
 
+import com.alibaba.druid.util.JdbcUtils;
 import com.google.gson.Gson;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.model.FKColumnField;
 import flowdesigner.jdbc.model.SchemaEntity;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +14,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -42,6 +45,22 @@ class CommandManagerTest {
             e.printStackTrace();
         }
         assertNotNull(connection);
+    }
+
+    @AfterEach
+    void tearDown() {
+        JdbcUtils.close(connection);
+    }
+
+    @Test
+    void testExecuteUpdate() throws SQLException {
+        Gson gson = new Gson();
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteUpdateCommandImpl,new HashMap<String,String>(){{
+//            put("schemaPattern","test");
+            put("SQL","CREATE TABLE test_db11.test_db111(id INT(11));");
+        }});
+        String s = gson.toJson(cc);
+        System.out.println(s);
     }
 
     @Test
