@@ -6,11 +6,10 @@ import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.driver.DynamicDriver;
+import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -19,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DynamicDriverTest {
 
-    @org.junit.jupiter.api.Test
-    void getConnection() throws SQLException {
+    @Test
+    Connection getConnection() throws SQLException {
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
         DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
@@ -56,5 +55,20 @@ class DynamicDriverTest {
         }});
         String s = gson.toJson(cc);
         System.out.println(s);
+
+        return connection;
+    }
+
+    @Test
+    void testDriverManager() throws SQLException {
+        Connection dynamicDriver = getConnection();
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            boolean b = driver.acceptsURL("jdbc:mysql://192.168.2.43:3306");
+            System.out.println(b + ","+driver.getMajorVersion() + "," + driver.getMinorVersion());
+        }
+
+        System.out.println(dynamicDriver);
     }
 }

@@ -24,7 +24,7 @@ import java.util.Objects;
 import java.util.Properties;
 
 /**
- * jdk17 需要设置--add-opens java.base/jdk.internal.loader=ALL-UNNAMED
+ * jdk17 需要设置--add-opens java.base/jdk.internal.loader=ALL-UNNAMED <p>
  * DynamicDriver代表一个具体的驱动。
  * 前面的driver和配置类耦合性太强，不容易剥离。目前需要简化driver功能，将其设计为一个随着文件变化的驱动，也就是接收文件接口用来生成驱动。
  * 但是由于驱动需要动态参数，这个功能由参数设计接口setProperties来实现。
@@ -143,7 +143,7 @@ public final class DynamicDriver {
      *
      * @param jarPath jar包文件路径列表
      */
-    private static boolean loadJar(Collection<File> jarPath) {
+    public static boolean loadJar(Collection<File> jarPath) {
 
         //文件存在
         if (jarPath.isEmpty()) {
