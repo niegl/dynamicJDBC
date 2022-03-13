@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.dialect.impl;
+package flowdesigner.jdbc.command.dialect.impl;
 
+import flowdesigner.jdbc.command.dialect.DBDialect;
 import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
-import flowdesigner.jdbc.dialect.DBDialect;
-import flowdesigner.jdbc.model.ColumnField;
-import flowdesigner.jdbc.model.TableEntity;
+import flowdesigner.jdbc.command.model.ColumnField;
+import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
 import org.apache.commons.lang3.tuple.Pair;

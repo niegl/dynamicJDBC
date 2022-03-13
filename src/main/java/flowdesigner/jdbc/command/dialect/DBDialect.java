@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.dialect;
+package flowdesigner.jdbc.command.dialect;
 
+import flowdesigner.jdbc.command.model.*;
 import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
-import flowdesigner.jdbc.model.*;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
 import org.apache.commons.lang3.tuple.Pair;
@@ -64,7 +64,7 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public Pair<ResultSet,ResultSet> getColumnAndPrimaryKeyResultSetPair(Connection conn,TableEntity tableEntity) throws SQLException {
+    public Pair<ResultSet,ResultSet> getColumnAndPrimaryKeyResultSetPair(Connection conn, TableEntity tableEntity) throws SQLException {
         DatabaseMetaData connMetaData = conn.getMetaData();
         String schema = tableEntity.getTABLE_SCHEM();//getSchemaPattern(conn);
         String tableName = tableEntity.getDefKey();
@@ -81,7 +81,7 @@ public class DBDialect {
      * @param rs
      * @return
      */
-    public SchemaEntity createSchemaEntity(Connection connection,ResultSet rs) throws SQLException {
+    public SchemaEntity createSchemaEntity(Connection connection, ResultSet rs) throws SQLException {
         SchemaEntity entity = new SchemaEntity();
         fillSchemaEntityNoTable(entity, connection,rs);
         if (StringKit.isNotBlank(entity.getDefKey())) {

@@ -18,14 +18,13 @@ package flowdesigner.jdbc.command.impl;
 
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
-import flowdesigner.jdbc.dialect.DBDialect;
-import flowdesigner.jdbc.dialect.DBDialectMatcher;
-import flowdesigner.jdbc.model.TableEntity;
+import flowdesigner.jdbc.command.dialect.DBDialect;
+import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
+import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;

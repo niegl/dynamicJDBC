@@ -13,27 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.dialect.impl;
+package flowdesigner.jdbc.command.model;
 
-import flowdesigner.jdbc.dialect.DBDialect;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import lombok.Data;
+import java.io.Serializable;
 
 /**
- * @desc : DB2数据库方言
+ * 索引引用的字段
  */
-public class DBDialectDB2 extends DBDialect {
-    public String getSchemaPattern(Connection conn) throws SQLException {
-        return conn.getMetaData().getUserName().toUpperCase();
-//        return "jence_user";
-//        return null;
-    }
-
-    public String getTableNamePattern(Connection conn) throws SQLException {
-        return "%";
-    }
-
+@Data
+public class TableIndexColumnField implements Serializable,Cloneable {
+    private String id;
+    private String fieldDefKey;
+    private String ascOrDesc;
 }

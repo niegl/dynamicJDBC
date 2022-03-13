@@ -1,6 +1,5 @@
-package flowdesigner.jdbc.model;
+package flowdesigner.jdbc.command.model;
 
-import flowdesigner.jdbc.command.impl.DBReverseGetTypeInfoImpl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

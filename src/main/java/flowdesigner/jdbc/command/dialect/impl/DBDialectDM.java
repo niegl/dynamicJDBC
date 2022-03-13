@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.dialect.impl;
+package flowdesigner.jdbc.command.dialect.impl;
 
-import flowdesigner.jdbc.dialect.DBDialect;
-import flowdesigner.jdbc.model.TableEntity;
+
+import flowdesigner.jdbc.command.dialect.DBDialect;
+import flowdesigner.jdbc.command.model.TableEntity;
+import flowdesigner.jdbc.util.raw.kit.StringKit;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -26,12 +28,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @desc : 人大金仓Kinbbase方言
+ * @desc : 达梦数据库方言
  */
-public class DBDialectKingbase extends DBDialect {
+public class DBDialectDM extends DBDialect {
+    public String getSchemaPattern(Connection conn) throws SQLException {
+        String schemaPattern = conn.getMetaData().getUserName().toUpperCase();
+        if (StringKit.isNotBlank(schemaPattern)) {
+            schemaPattern = schemaPattern.toUpperCase();
+        }
+        return schemaPattern;
+    }
+
+    /**
+     * 取所有的数据表清单
+     * @param conn
+     * @return
+     */
     public List<TableEntity> getAllTables(Connection conn) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
 
+//        String schemaPattern = null;
         String schemaPattern = getSchemaPattern(conn);
         String tableNamePattern = getTableNamePattern(conn);
         String catalog = conn.getCatalog();
@@ -40,19 +56,10 @@ public class DBDialectKingbase extends DBDialect {
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
-            /**
-             *  SQL Server系统保留表
-             *  trace_xe_action_map,trace_xe_event_map
-             */
-            if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
-                    && !tableName.equalsIgnoreCase("sysmac_compartment")
-                    && !tableName.equalsIgnoreCase("sysmac_label")
-                    && !tableName.equalsIgnoreCase("sysmac_level")
-                    && !tableName.equalsIgnoreCase("sysmac_obj")
-                    && !tableName.equalsIgnoreCase("sysmac_policy")
-                    && !tableName.equalsIgnoreCase("sysmac_policy_enforcement")
-                    && !tableName.equalsIgnoreCase("sysmac_user")
-                    && !tableName.equalsIgnoreCase("dual")){
+            if(tableName.startsWith("#")){
+                continue;
+            }
+            if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")){
                 TableEntity entity = createTableEntity(conn,rs);
                 if(entity != null){
                     tableEntities.add(entity);

@@ -13,30 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.dialect.impl;
+package flowdesigner.jdbc.command.dialect.impl;
 
-
-import flowdesigner.jdbc.dialect.DBDialect;
-import flowdesigner.jdbc.util.raw.kit.StringKit;
-import org.apache.commons.lang3.tuple.Pair;
+import flowdesigner.jdbc.command.dialect.DBDialect;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 /**
- * @desc : ORACLE数据库方言
+ * @desc : DB2数据库方言
  */
-public class DBDialectOracle extends DBDialect {
-
+public class DBDialectDB2 extends DBDialect {
     public String getSchemaPattern(Connection conn) throws SQLException {
-        String schemaPattern = conn.getMetaData().getUserName().toUpperCase();
-        if (StringKit.isNotBlank(schemaPattern)) {
-            schemaPattern = schemaPattern.toUpperCase();
-        }
-        return schemaPattern;
+        return conn.getMetaData().getUserName().toUpperCase();
+//        return "jence_user";
+//        return null;
     }
 
+    public String getTableNamePattern(Connection conn) throws SQLException {
+        return "%";
+    }
 
 }

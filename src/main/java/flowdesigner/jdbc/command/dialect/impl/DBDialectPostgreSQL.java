@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.model;
+package flowdesigner.jdbc.command.dialect.impl;
 
-
-import lombok.Data;
-import java.io.Serializable;
+import flowdesigner.jdbc.command.dialect.DBDialect;
 
 /**
- * 索引引用的字段
+ * @desc : PostgreSQL方言
  */
-@Data
-public class TableIndexColumnField implements Serializable,Cloneable {
-    private String id;
-    private String fieldDefKey;
-    private String ascOrDesc;
+public class DBDialectPostgreSQL extends DBDialect {
 }

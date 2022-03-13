@@ -2,6 +2,8 @@ package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import flowdesigner.jdbc.builder.SQLBuilderFactory;
+import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sqlTest.SQLTest;
@@ -9,10 +11,8 @@ import sqlTest.SQLTest;
 import java.sql.SQLSyntaxErrorException;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SQLCreateTableBuilderImplTest {
-    SQLCreateTableBuilderImpl tableBuilder;
+    SQLCreateTableBuilder tableBuilder;
 
     @BeforeEach
     void setUp() {
@@ -20,6 +20,14 @@ class SQLCreateTableBuilderImplTest {
         tableBuilder = new SQLCreateTableBuilderImpl(DbType.mysql);
         tableBuilder.setName("std_line");
         tableBuilder.setSchema("std_pcode");
+        tableBuilder.setComment("comment");
+        tableBuilder.setIfNotExiists(true);
+    }
+
+    @Test
+    void addColumn() {
+        tableBuilder.addColumn("line_id","Stirng");
+        System.out.println(tableBuilder);
     }
 
     @Test
@@ -85,5 +93,11 @@ class SQLCreateTableBuilderImplTest {
 
         tableBuilder.addColumnAutoIncrement("Id_P","int");
         System.out.println(tableBuilder.toString());
+    }
+
+    @Test
+    void testAddColumn() {
+        tableBuilder.addColumn("line_id","Stirng","commentcol");
+        System.out.println(tableBuilder);
     }
 }

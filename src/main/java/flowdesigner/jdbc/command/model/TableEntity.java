@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.model;
+package flowdesigner.jdbc.command.model;
 
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.*;
 
 @Data

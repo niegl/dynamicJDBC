@@ -1,4 +1,4 @@
-package flowdesigner.jdbc.model;
+package flowdesigner.jdbc.command.model;
 
 import lombok.Data;
 

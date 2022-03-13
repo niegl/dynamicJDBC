@@ -18,7 +18,7 @@ package flowdesigner.jdbc.command.impl;
 
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
-import flowdesigner.jdbc.model.TableEntity;
+import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.util.raw.kit.FileKit;
 import flowdesigner.jdbc.util.raw.kit.IOKit;
 

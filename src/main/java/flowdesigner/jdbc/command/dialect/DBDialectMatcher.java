@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.dialect;
+package flowdesigner.jdbc.command.dialect;
 
-import flowdesigner.jdbc.dialect.impl.*;
+import flowdesigner.jdbc.command.dialect.impl.*;
 import flowdesigner.jdbc.util.sql.core.DBType;
 
 import java.util.HashMap;

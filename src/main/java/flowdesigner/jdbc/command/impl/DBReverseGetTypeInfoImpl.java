@@ -1,14 +1,12 @@
 package flowdesigner.jdbc.command.impl;
 
-import com.alibaba.druid.DbType;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
-import flowdesigner.jdbc.dialect.DBDialect;
-import flowdesigner.jdbc.dialect.DBDialectMatcher;
-import flowdesigner.jdbc.model.TypeInfoEntity;
+import flowdesigner.jdbc.command.dialect.DBDialect;
+import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
+import flowdesigner.jdbc.command.model.TypeInfoEntity;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.sql.Connection;

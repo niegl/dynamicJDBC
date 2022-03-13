@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.dialect.impl;
+package flowdesigner.jdbc.command.dialect.impl;
 
-import flowdesigner.jdbc.dialect.DBDialect;
-import flowdesigner.jdbc.model.ColumnField;
+import flowdesigner.jdbc.command.dialect.DBDialect;
+import flowdesigner.jdbc.command.model.ColumnField;
 
 import java.sql.*;
 import java.util.Set;

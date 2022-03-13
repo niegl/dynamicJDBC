@@ -7,13 +7,10 @@ import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
-import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
-import commonUtility.log.IPlusLogger;
-import commonUtility.log.PlusLoggerFactory;
-import commonUtility.utils.LogUtil;
+import commonUtility.kit.LogKit;
 import flowdesigner.jdbc.builder.SQLAlterTableBuilder;
 
 import java.util.List;
@@ -330,7 +327,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
     @Override
     public String toString() {
         String sql = SQLUtils.toSQLString(stmt, dbType);
-        LogUtil.info(sql);
+        LogKit.info(sql);
         return sql;
     }
 

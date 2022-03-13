@@ -3,7 +3,6 @@ package flowdesigner.jdbc.builder.impl.dialect.mysql;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
-import commonUtility.utils.LogUtil;
 import flowdesigner.jdbc.builder.SQLAlterTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLAlterTableBuilderImpl;
 

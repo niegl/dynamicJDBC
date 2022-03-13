@@ -13,14 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package flowdesigner.jdbc.dialect.impl;
+package flowdesigner.jdbc.command.dialect.impl;
 
-import flowdesigner.jdbc.dialect.DBDialect;
 
-import java.sql.*;
+import flowdesigner.jdbc.command.dialect.DBDialect;
+import flowdesigner.jdbc.util.raw.kit.StringKit;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- * @desc : PostgreSQL方言
+ * @desc : ORACLE数据库方言
  */
-public class DBDialectPostgreSQL extends DBDialect {
+public class DBDialectOracle extends DBDialect {
+
+    public String getSchemaPattern(Connection conn) throws SQLException {
+        String schemaPattern = conn.getMetaData().getUserName().toUpperCase();
+        if (StringKit.isNotBlank(schemaPattern)) {
+            schemaPattern = schemaPattern.toUpperCase();
+        }
+        return schemaPattern;
+    }
+
+
 }

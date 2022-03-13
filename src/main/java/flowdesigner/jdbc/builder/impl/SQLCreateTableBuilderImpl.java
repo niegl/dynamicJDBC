@@ -64,6 +64,11 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         return this;
     }
 
+    /**
+     * 注意：需要先调用setName以后在调用该方法.
+     * @param name
+     * @return
+     */
     @Override
     public SQLCreateTableBuilder setSchema(String name) {
         SQLCreateTableStatement create = getSQLCreateTableStatement();
@@ -133,6 +138,15 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         return this;
     }
 
+    @Override
+    public SQLCreateTableBuilder addColumn(String columnName, String dataType, String comment) {
+
+        SQLColumnDefinition column = getColumn(columnName, dataType, false, false, false, false);
+        column.setComment(comment);
+        addColumn(column);
+        return this;
+    }
+
     /**
      * 添加主键列.如 Id_P int NOT NULL PRIMARY KEY,
      * @param columnName 列名
@@ -145,7 +159,6 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
     public SQLCreateTableBuilder addColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull) {
 
         SQLColumnDefinition column = getColumn(columnName, dataType, primary, unique, notNull, false);
-
         addColumn(column);
         return this;
     }

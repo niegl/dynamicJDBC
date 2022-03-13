@@ -3,21 +3,16 @@ package flowdesigner.jdbc.command;
 import com.alibaba.druid.util.JdbcUtils;
 import com.google.gson.Gson;
 import flowdesigner.jdbc.driver.DynamicDriver;
-import flowdesigner.jdbc.model.FKColumnField;
-import flowdesigner.jdbc.model.SchemaEntity;
-import org.junit.jupiter.api.AfterAll;
+import flowdesigner.jdbc.command.model.FKColumnField;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sun.security.krb5.internal.crypto.Des;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
