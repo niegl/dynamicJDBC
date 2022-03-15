@@ -18,10 +18,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * jdk17 需要设置--add-opens java.base/jdk.internal.loader=ALL-UNNAMED <p>
@@ -39,7 +36,7 @@ public final class DynamicDriver {
      * jar包驱动路径,用;分隔多个路径
      */
     @Setter
-    private String m_driverDir;
+    private ArrayList<String> m_driverDir = new ArrayList<>();
     /**
      * jdbc连接时使用的动态属性配置,至少应该包括 DriverClassName，一般包括用户名和密码
      */
@@ -54,7 +51,12 @@ public final class DynamicDriver {
 
     public DynamicDriver(String driverDir) {
         Objects.requireNonNull(driverDir);
-        m_driverDir = driverDir;
+        Arrays.stream(driverDir.split(";")).sequential().forEach( dir -> m_driverDir.add(dir));
+    }
+
+    public DynamicDriver(List<String> driverDir) {
+        Objects.requireNonNull(driverDir);
+        m_driverDir.addAll(driverDir);
     }
 
     private void createDataSource() {
@@ -62,7 +64,7 @@ public final class DynamicDriver {
             // 文件后缀为.java且不为空，读子文件夹
             Collection<File> files = new ArrayList<>();
             for (String dir :
-                    m_driverDir.split(";")) {
+                    m_driverDir) {
                 Collection<File> listFiles = FileUtils.listFiles(new File(dir),
                         FileFilterUtils.and(new SuffixFileFilter("jar"), EmptyFileFilter.NOT_EMPTY),
                         DirectoryFileFilter.INSTANCE);
