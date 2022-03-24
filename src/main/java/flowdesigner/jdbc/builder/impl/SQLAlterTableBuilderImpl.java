@@ -10,7 +10,7 @@ import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
-import commonUtility.kit.LogKit;
+import commonUtility.log.LogKit;
 import flowdesigner.jdbc.builder.SQLAlterTableBuilder;
 
 import java.util.List;
