@@ -76,10 +76,10 @@ public class CommandManager {
 
         } catch (InstantiationException | IllegalAccessException | SQLException e) {
             logger.log(Level.SEVERE,"执行命令异常", e);
-            ret.setBody("执行命令异常!\n"+e.getMessage());
+            ret.setBody("执行命令异常!\n" + e.getMessage());
         } catch (Exception e) {
             logger.log(Level.SEVERE,"未知的错误", e);
-            ret.setBody("执行命令异常!\n"+e.getMessage());
+            ret.setBody("执行命令异常!\n" + e.getMessage());
         }
 
         return ret;

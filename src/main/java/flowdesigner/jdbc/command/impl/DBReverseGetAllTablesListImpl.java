@@ -32,15 +32,13 @@ import java.util.logging.Level;
 /**
  * 数据库逆向，解析表清单功能
  */
-public class DBReverseGetAllTablesListImpl implements Command<ExecResult> {
+public class DBReverseGetAllTablesListImpl implements Command<ExecResult<List<TableEntity>>> {
 
-    public ExecResult exec(Connection conn,Map<String, String> params) throws SQLException {
+    public ExecResult<List<TableEntity>> exec(Connection conn,Map<String, String> params) throws SQLException {
         String schema = params.getOrDefault("schemaPattern",null);
 
-        ExecResult ret = new ExecResult();
-
-        List<TableEntity> tableEntities = null;
-        tableEntities = fetchTableEntities(conn, schema);
+        ExecResult<List<TableEntity>> ret = new ExecResult<>();
+        List<TableEntity> tableEntities = fetchTableEntities(conn, schema);
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(tableEntities);
 

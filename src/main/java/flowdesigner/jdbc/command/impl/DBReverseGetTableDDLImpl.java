@@ -31,9 +31,9 @@ import java.util.stream.Collectors;
 /**
  * @desc : 数据库逆向，解析表清单的字段以及索引
  */
-public class DBReverseGetTableDDLImpl implements Command<ExecResult> {
-    public ExecResult exec(Connection conn, Map<String, String> params) {
-//        super.init(params);
+public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEntity>>> {
+    public ExecResult<List<TableEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
+
         String schema = params.getOrDefault("schemaPattern","");
         String tables = params.getOrDefault("tables","");
         if (StringKit.isBlank(schema)) {
@@ -45,22 +45,11 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult> {
         List<String> tableList = Arrays.stream(tables.split(","))
                 .collect(Collectors.toList());
 
-        ExecResult ret = new ExecResult();
+        ExecResult<List<TableEntity>> ret = new ExecResult<>();
+        List<TableEntity> tableEntities = fillTableEntities(conn, schema, tableList);
+        ret.setStatus(ExecResult.SUCCESS);
+        ret.setBody(tableEntities);
 
-//        Connection conn = null;
-        try {
-//            conn = createConnect();
-            List<TableEntity> tableEntities = fillTableEntities(conn, schema, tableList);
-            ret.setStatus(ExecResult.SUCCESS);
-            ret.setBody(tableEntities);
-        } catch (Exception e) {
-            ret.setStatus(ExecResult.FAILED);
-            ret.setBody(e.getMessage());
-            logger.severe( e.getMessage());
-        }
-//        finally {
-//            JdbcKit.close(conn);
-//        }
         return ret;
     }
 
@@ -72,25 +61,20 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult> {
      * @param tableNameList
      * @return
      */
-    protected List<TableEntity> fillTableEntities(Connection conn, String schemaPattern, List<String> tableNameList) {
+    protected List<TableEntity> fillTableEntities(Connection conn, String schemaPattern, List<String> tableNameList) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
 
-        try {
-            DatabaseMetaData meta = conn.getMetaData();
-            DBType dbType = DBTypeKit.getDBType(meta);
-            DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
+        DatabaseMetaData meta = conn.getMetaData();
+        DBType dbType = DBTypeKit.getDBType(meta);
+        DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
 
-            for (String tableName : tableNameList) {
-                TableEntity tableEntity = dbDialect.createTableEntity(conn, meta, schemaPattern, tableName);
-                if (tableEntity == null) {
-                    continue;
-                }
-                tableEntity.fillFieldsCalcValue();
-                tableEntities.add(tableEntity);
+        for (String tableName : tableNameList) {
+            TableEntity tableEntity = dbDialect.createTableEntity(conn, meta, schemaPattern, tableName);
+            if (tableEntity == null) {
+                continue;
             }
-        } catch (SQLException e) {
-            logger.severe("读取表清单出错" + e.getMessage());
-            throw new RuntimeException("读取表清单出错|" + e.getMessage(), e);
+            tableEntity.fillFieldsCalcValue();
+            tableEntities.add(tableEntity);
         }
 
         return tableEntities;

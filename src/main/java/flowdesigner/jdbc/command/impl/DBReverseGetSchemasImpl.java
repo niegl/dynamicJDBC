@@ -13,23 +13,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class DBReverseGetSchemasImpl implements Command<ExecResult> {
-    public ExecResult exec(Connection conn, Map<String, String> params) {
+public class DBReverseGetSchemasImpl implements Command<ExecResult<List<SchemaEntity>>> {
+    public ExecResult<List<SchemaEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
 
         String schema = params.getOrDefault("schemaPattern",null);
 
-        ExecResult ret = new ExecResult();
-
-        List<SchemaEntity> schemaEntities = null;
-        try {
-            schemaEntities = fetchSchemaEntities(conn, schema);
-            ret.setStatus(ExecResult.SUCCESS);
-            ret.setBody(schemaEntities);
-        } catch (Exception e) {
-            ret.setStatus(ExecResult.FAILED);
-            ret.setBody(e.getMessage());
-            logger.severe( e.getMessage());
-        }
+        ExecResult<List<SchemaEntity>> ret = new ExecResult<>();
+        List<SchemaEntity> schemaEntities = fetchSchemaEntities(conn, schema);
+        ret.setStatus(ExecResult.SUCCESS);
+        ret.setBody(schemaEntities);
 
         return ret;
     }

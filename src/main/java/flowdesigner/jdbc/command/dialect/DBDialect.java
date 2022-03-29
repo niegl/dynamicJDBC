@@ -43,9 +43,25 @@ public class DBDialect {
      * @throws SQLException
      */
     public String getSchemaPattern(Connection conn) throws SQLException{
+        boolean supportsSchemasInTableDefinitions = conn.getMetaData().supportsSchemasInTableDefinitions();
         return null;
     };
 
+    public String getCatalogPattern(Connection conn, String catalogPattern) throws SQLException{
+        boolean support = conn.getMetaData().supportsCatalogsInTableDefinitions();
+        if (support) {
+            return catalogPattern;
+        }
+        return null;
+    };
+
+    public String getSchemaPattern(Connection conn, String schemaPattern) throws SQLException{
+        boolean support = conn.getMetaData().supportsSchemasInTableDefinitions();
+        if (support) {
+            return schemaPattern;
+        }
+        return null;
+    };
     /**
      * 获取数据库TableNamePattern
      * @param conn
@@ -451,14 +467,19 @@ public class DBDialect {
      */
     public List<TableEntity> getAllTables(Connection conn, String schemaPattern) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
-        if (StringKit.isBlank(schemaPattern)) {
-            schemaPattern = getSchemaPattern(conn);
-        }
-//        String schemaPattern = null;
-        String tableNamePattern = getTableNamePattern(conn);
-        String catalog = conn.getCatalog();
 
-        ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[]{"TABLE"});
+        String catalog = conn.getCatalog();
+        String schema = conn.getSchema();
+        if (StringKit.isBlank(catalog)) {
+            catalog = getCatalogPattern(conn, schemaPattern);
+        }
+        if (StringKit.isBlank(schema)) {
+            schema = getSchemaPattern(conn, schemaPattern);
+        }
+
+        String tableNamePattern = getTableNamePattern(conn);
+
+        ResultSet rs = meta.getTables(catalog, schema, tableNamePattern, new String[]{"TABLE"});
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");

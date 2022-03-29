@@ -1,6 +1,7 @@
 package flowdesigner.jdbc;
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.druid.util.JdbcUtils;
 import com.google.gson.Gson;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
@@ -9,10 +10,7 @@ import flowdesigner.jdbc.driver.DynamicDriver;
 import org.junit.jupiter.api.Test;
 
 import java.sql.*;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,6 +39,7 @@ class DynamicDriverTest {
         }
         assertNotNull(connection);
 
+        JdbcUtils.executeQuery(connection,"select 'x'", new ArrayList<>());
         DatabaseMetaData metaData = connection.getMetaData();
         System.out.println("----------开始打印类型数据");
         ResultSet typeInfo = metaData.getTypeInfo();

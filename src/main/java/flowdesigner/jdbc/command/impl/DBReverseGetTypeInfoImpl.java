@@ -14,10 +14,10 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.Level;
 
-public class DBReverseGetTypeInfoImpl implements Command<ExecResult> {
+public class DBReverseGetTypeInfoImpl implements Command<ExecResult<List<TypeInfoEntity>>> {
 
-    public ExecResult exec(Connection conn, Map<String, String> params) throws SQLException {
-        ExecResult ret = new ExecResult();
+    public ExecResult<List<TypeInfoEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
+        ExecResult<List<TypeInfoEntity>> ret = new ExecResult<>();
 
         List<TypeInfoEntity> tableEntities = null;
         if (conn == null) {

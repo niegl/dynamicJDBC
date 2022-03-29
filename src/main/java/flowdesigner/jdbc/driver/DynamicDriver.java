@@ -36,7 +36,7 @@ public final class DynamicDriver {
      * jar包驱动路径,用;分隔多个路径
      */
     @Setter
-    private ArrayList<String> m_driverDir = new ArrayList<>();
+    private List<String> m_driverDir = new ArrayList<>();
     /**
      * jdbc连接时使用的动态属性配置,至少应该包括 DriverClassName，一般包括用户名和密码
      */

@@ -87,7 +87,7 @@ public abstract class DBTypeKit {
 
         try {
             String url = metaData.getURL();
-            dbType = JdbcUtils.getDbType(url, null);
+            dbType = JdbcUtils.getDbType(url.toLowerCase(), null);
         } catch (SQLException ignored) {
         }
 

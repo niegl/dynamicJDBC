@@ -16,24 +16,15 @@ import java.util.Map;
 /**
  * 设计为执行SQL命令的通用类。
  */
-public class DBExecuteCommandImpl implements Command<ExecResult> {
+public class DBExecuteCommandImpl implements Command<ExecResult<ResultSet>> {
 
-    public ExecResult exec(Connection conn, Map<String, String> params) {
+    public ExecResult<ResultSet> exec(Connection conn, Map<String, String> params) throws SQLException {
         String SQL = params.getOrDefault("SQL",null);
 
-        ExecResult ret = new ExecResult();
-        //获取连接正常的情况下，进入下一步
-        ResultSet resultSet = null;
-        try {
-            resultSet = fetchExecuteResult(conn, SQL);
-            ret.setStatus(ExecResult.SUCCESS);
-            ret.setBody(resultSet);
-        } catch (SQLException e) {
-            ret.setStatus(ExecResult.FAILED);
-            ret.setBody(e.getMessage());
-            logger.severe( e.getMessage());
-        } finally {
-        }
+        ExecResult<ResultSet> ret = new ExecResult<>();
+        ResultSet resultSet = fetchExecuteResult(conn, SQL);
+        ret.setStatus(ExecResult.SUCCESS);
+        ret.setBody(resultSet);
 
         return ret;
     }

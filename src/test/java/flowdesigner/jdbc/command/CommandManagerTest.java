@@ -2,6 +2,7 @@ package flowdesigner.jdbc.command;
 
 import com.alibaba.druid.util.JdbcUtils;
 import com.google.gson.Gson;
+import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +13,9 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +30,7 @@ class CommandManagerTest {
 //        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
 //        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
         properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-        properties.setProperty("url","jdbc:mysql://192.168.2.43:3306");
+        properties.setProperty("url","jdbc:mysql://localhost:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
@@ -41,6 +44,30 @@ class CommandManagerTest {
             e.printStackTrace();
         }
         assertNotNull(connection);
+    }
+
+    @Test
+    void testGetAllTables() throws SQLException {
+        DatabaseMetaData meta = connection.getMetaData();
+        String catalog = connection.getCatalog();
+        String schema = connection.getSchema();
+
+        System.out.println(catalog + "," + schema);
+
+        boolean supportsSchemasInTableDefinitions = connection.getMetaData().supportsSchemasInTableDefinitions();
+        boolean supportsCatalogsInTableDefinitions = connection.getMetaData().supportsCatalogsInTableDefinitions();
+        System.out.println(supportsCatalogsInTableDefinitions);
+        System.out.println(supportsSchemasInTableDefinitions);
+        ResultSet rs = meta.getTables(null, null, null, new String[]{"TABLE"});
+        List<TableEntity> tableEntities = new ArrayList<TableEntity>();
+        while (rs.next()) {
+            String tableName = rs.getString("TABLE_NAME");
+            String TABLE_CAT = rs.getString("TABLE_CAT");
+            String TABLE_SCHEM = rs.getString("TABLE_SCHEM");
+
+            System.out.println(tableName + "," + TABLE_CAT + "," + TABLE_SCHEM);
+
+        }
     }
 
     @AfterEach

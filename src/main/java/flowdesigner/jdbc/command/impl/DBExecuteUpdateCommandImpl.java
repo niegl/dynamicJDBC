@@ -10,23 +10,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class DBExecuteUpdateCommandImpl implements Command<ExecResult> {
+public class DBExecuteUpdateCommandImpl implements Command<ExecResult<Integer>> {
 
-    public ExecResult exec(Connection conn, Map<String, String> params) {
+    public ExecResult<Integer> exec(Connection conn, Map<String, String> params) throws SQLException {
         String SQL = params.getOrDefault("SQL",null);
 
-        ExecResult ret = new ExecResult();
-        //获取连接正常的情况下，进入下一步
-        try {
-            int cc = JdbcUtils.executeUpdate(conn,SQL, new ArrayList<>());
-            ret.setStatus(ExecResult.SUCCESS);
-            ret.setBody(cc);
-        } catch (SQLException e) {
-            ret.setStatus(ExecResult.FAILED);
-            ret.setBody(e.getMessage());
-            logger.severe( e.getMessage());
-        } finally {
-        }
+        ExecResult<Integer> ret = new ExecResult<Integer>();
+        int cc = JdbcUtils.executeUpdate(conn,SQL, new ArrayList<>());
+        ret.setStatus(ExecResult.SUCCESS);
+        ret.setBody(cc);
 
         return ret;
     }

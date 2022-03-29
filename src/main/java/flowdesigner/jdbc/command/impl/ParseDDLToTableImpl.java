@@ -38,32 +38,35 @@ import java.util.logging.Logger;
  * @date : 2021/9/11
  * @desc : 将DDL语句解析为表结构
  */
-public class ParseDDLToTableImpl implements Command<ExecResult> {
+public class ParseDDLToTableImpl implements Command<ExecResult<List<TableEntity>>> {
     /** 使用java自带的log工具 */
     private static final Logger logger = Logger.getLogger("ParseDDLToTableImpl");
     private static String DB_URL = "jdbc:h2:mem:MockChiner;DB_CLOSE_DELAY=-1";
 
-    public ExecResult exec(Connection connection,Map<String, String> params) {
+    public ExecResult<List<TableEntity>> exec(Connection connection,Map<String, String> params) throws SQLException {
         String ddlFile = params.get("ddlFile");
-        ExecResult ret = new ExecResult();
+        ExecResult<List<TableEntity>> ret = new ExecResult<List<TableEntity>>();
         Connection conn = null;
+
+        String ddlContent = null;
         try {
-            String ddlContent = readDDLFile(ddlFile);
+            ddlContent = readDDLFile(ddlFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            conn = DriverManager.getConnection(DB_URL);
+        conn = DriverManager.getConnection(DB_URL);
+        try {
             createTable(conn,ddlContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            String tables = getALLTablesString(conn);
+        String tables = getALLTablesString(conn);
             IOKit.close(conn);//conn.getMetaData(); 只能使用一次,所以要重新取一次
             conn = DriverManager.getConnection(DB_URL);
             ret = parseTableDDL(conn,tables);
-        } catch (IOException | SQLException e) {
-            ret.setBody(e.getMessage());
-            ret.setStatus(ExecResult.FAILED);
-            logger.log(Level.SEVERE,e.getMessage(),e);
-        } finally {
-//            IOKit.close(conn);
-        }
+
         return ret;
     }
 
@@ -91,7 +94,7 @@ public class ParseDDLToTableImpl implements Command<ExecResult> {
         Map<String,String> params = new HashMap<>();
         DBReverseGetAllTablesListImpl cmd = new DBReverseGetAllTablesListImpl();
 //        cmd.setDbConn(connection);
-        ExecResult ret = cmd.exec(connection, new HashMap<>());
+        ExecResult<List<TableEntity>> ret = cmd.exec(connection, new HashMap<>());
         if(ret.getStatus().equals(ExecResult.SUCCESS)){
             StringBuffer tables = new StringBuffer();
             List<TableEntity> dataList = (List<TableEntity>)ret.getBody();
@@ -105,13 +108,12 @@ public class ParseDDLToTableImpl implements Command<ExecResult> {
         return "";
     }
 
-    private ExecResult parseTableDDL(Connection connection,String tables){
+    private ExecResult<List<TableEntity>> parseTableDDL(Connection connection,String tables) throws SQLException {
         Map<String,String> params = new HashMap<>();
         params.put("tables",tables);
 
         DBReverseGetTableDDLImpl cmd = new DBReverseGetTableDDLImpl();
 //        cmd.setDbConn(connection);
-        ExecResult ret = cmd.exec(connection, params);
-        return ret;
+        return cmd.exec(connection, params);
     }
 }

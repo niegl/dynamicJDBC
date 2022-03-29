@@ -18,30 +18,19 @@ import java.util.Map;
 /**
  * 通过元数据接口getCrossReference 获取表外键
  */
-public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult> {
+public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult<List<FKColumnField>>> {
 
-    public ExecResult exec(Connection conn, Map<String, String> params) {
+    public ExecResult<List<FKColumnField>> exec(Connection conn, Map<String, String> params) throws SQLException {
 
         String table = params.get("Table");
         if (StringKit.isBlank(table)) {
             throw new IllegalArgumentException("Table not specified");
         }
 
-        ExecResult ret = new ExecResult();
-
-        //获取连接正常的情况下，进入下一步
-        List<FKColumnField> tableEntities = null;
-        try {
-            tableEntities = getFKReference(conn, table);
-            ret.setStatus(ExecResult.SUCCESS);
-            ret.setBody(tableEntities);
-        } catch (Exception e) {
-            ret.setStatus(ExecResult.FAILED);
-            ret.setBody(e.getMessage());
-            logger.severe( e.getMessage());
-        } finally {
-//            JdbcKit.close(conn);
-        }
+        ExecResult<List<FKColumnField>> ret = new ExecResult<>();
+        List<FKColumnField> tableEntities = getFKReference(conn, table);
+        ret.setStatus(ExecResult.SUCCESS);
+        ret.setBody(tableEntities);
 
         return ret;
     }
