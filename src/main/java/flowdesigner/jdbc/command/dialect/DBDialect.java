@@ -36,6 +36,13 @@ public class DBDialect {
 
     protected Logger logger = Logger.getLogger("DBDialect");
 
+    public String getCatalogPattern(Connection conn) throws SQLException{
+        boolean supportsCatalogsInTableDefinitions = conn.getMetaData().supportsCatalogsInTableDefinitions();
+        if (supportsCatalogsInTableDefinitions) {
+            return getCatalogPattern(conn, conn.getCatalog());
+        }
+        return null;
+    };
     /**
      * 获取数据库SchemaPattern
      * @param conn
@@ -44,12 +51,18 @@ public class DBDialect {
      */
     public String getSchemaPattern(Connection conn) throws SQLException{
         boolean supportsSchemasInTableDefinitions = conn.getMetaData().supportsSchemasInTableDefinitions();
+        if (supportsSchemasInTableDefinitions) {
+            return getSchemaPattern(conn,conn.getSchema());
+        }
         return null;
     };
 
     public String getCatalogPattern(Connection conn, String catalogPattern) throws SQLException{
         boolean support = conn.getMetaData().supportsCatalogsInTableDefinitions();
         if (support) {
+            if (StringKit.isBlank(catalogPattern)) {
+                return null;
+            }
             return catalogPattern;
         }
         return null;
@@ -58,6 +71,9 @@ public class DBDialect {
     public String getSchemaPattern(Connection conn, String schemaPattern) throws SQLException{
         boolean support = conn.getMetaData().supportsSchemasInTableDefinitions();
         if (support) {
+            if (StringKit.isBlank(schemaPattern)) {
+                return null;
+            }
             return schemaPattern;
         }
         return null;
@@ -468,15 +484,8 @@ public class DBDialect {
     public List<TableEntity> getAllTables(Connection conn, String schemaPattern) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
 
-        String catalog = conn.getCatalog();
-        String schema = conn.getSchema();
-        if (StringKit.isBlank(catalog)) {
-            catalog = getCatalogPattern(conn, schemaPattern);
-        }
-        if (StringKit.isBlank(schema)) {
-            schema = getSchemaPattern(conn, schemaPattern);
-        }
-
+        String catalog = getCatalogPattern(conn, schemaPattern);
+        String schema = getSchemaPattern(conn, schemaPattern);
         String tableNamePattern = getTableNamePattern(conn);
 
         ResultSet rs = meta.getTables(catalog, schema, tableNamePattern, new String[]{"TABLE"});

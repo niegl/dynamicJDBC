@@ -26,12 +26,6 @@ import java.util.Set;
  */
 public class DBDialectMySQL extends DBDialect {
 
-    public String getSchemaPattern(Connection conn) throws SQLException {
-        //原本应该取dbName,但是目前没有找到好的办法从URL中解析出来
-        //schemaPattern = dbname;
-        return null;
-    }
-
     public void fillColumnField(ColumnField field, Connection conn, ResultSet rs, Set<String> pkSet) throws SQLException {
         super.fillColumnField(field, conn, rs, pkSet);
         int dataType = rs.getInt("DATA_TYPE");
