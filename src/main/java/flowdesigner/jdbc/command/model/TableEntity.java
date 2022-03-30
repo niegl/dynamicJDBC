@@ -64,7 +64,7 @@ public class TableEntity /*implements Serializable,Cloneable*/ {
     }
 
     public void fillFieldsCalcValue(){
-        for(int i=1;i<=fields.size();i++){
+        for(int i=1;i <= fields.size();i++){
             ColumnField field = fields.get(i-1);
             field.setTableEntity(this);
             field.fillConvertNames();

@@ -521,31 +521,29 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public TableEntity createTableEntity(Connection conn,DatabaseMetaData meta, String schemaPattern, String tableName) throws SQLException {
+    public List<TableEntity> createTableEntity(Connection conn, DatabaseMetaData meta, String schemaPattern, String tableName) throws SQLException {
+        List<TableEntity> tableEntities = new ArrayList<>();
         ResultSet rs = null;
         try{
             String schema = getSchemaPattern(conn, schemaPattern);
             String catalog = getCatalogPattern(conn, schemaPattern);
 
             rs = meta.getTables(catalog, schema, tableName, new String[]{"TABLE"});
-            if (rs.next()) {
+            while (rs.next()) {
                 TableEntity tableEntity = createTableEntity(conn, rs);
-                fillTableEntity(tableEntity,conn);
-                return tableEntity;
+                if (tableEntity == null) {
+                    continue;
+                }
+                fillTableEntity(tableEntity, conn);
+                tableEntity.fillFieldsCalcValue();
+                tableEntities.add(tableEntity);
+
             }
-//            else {
-//                //如果全小写不行，就来试试全大写
-//                rs = meta.getTables(null, schemaPattern, tableName.toUpperCase(), new String[]{"TABLE"});
-//                if(rs.next()) {
-//                    TableEntity tableEntity = createTableEntity(conn, rs);
-//                    fillTableEntity(tableEntity,conn);
-//                    return tableEntity;
-//                }
-//            }
+
+            return tableEntities;
         } finally {
             JdbcKit.close(rs);
         }
-        return null;
     }
 
     /**

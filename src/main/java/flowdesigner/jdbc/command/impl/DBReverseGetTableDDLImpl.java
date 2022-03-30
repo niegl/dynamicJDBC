@@ -34,13 +34,13 @@ import java.util.stream.Collectors;
 public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEntity>>> {
     public ExecResult<List<TableEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
 
-        String schema = params.getOrDefault("schemaPattern","");
-        String tables = params.getOrDefault("tables","");
+        String schema = params.getOrDefault("schemaPattern",null);
+        String tables = params.getOrDefault("tables",null);
         if (StringKit.isBlank(schema)) {
             schema = null;
         }
         if (StringKit.isBlank(tables)) {
-            throw new IllegalArgumentException("parameter [tables] not exists");
+            tables = "%";
         }
         List<String> tableList = Arrays.stream(tables.split(","))
                 .collect(Collectors.toList());
@@ -69,12 +69,11 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
         DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
 
         for (String tableName : tableNameList) {
-            TableEntity tableEntity = dbDialect.createTableEntity(conn, meta, schemaPattern, tableName);
-            if (tableEntity == null) {
+            List<TableEntity> tableEntities1 = dbDialect.createTableEntity(conn, meta, schemaPattern, tableName);
+            if (tableEntities1.isEmpty()) {
                 continue;
             }
-            tableEntity.fillFieldsCalcValue();
-            tableEntities.add(tableEntity);
+            tableEntities.addAll(tableEntities1);
         }
 
         return tableEntities;
