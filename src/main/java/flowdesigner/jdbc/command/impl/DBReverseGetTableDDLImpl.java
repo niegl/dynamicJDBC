@@ -62,7 +62,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
      * @return
      */
     protected List<TableEntity> fillTableEntities(Connection conn, String schemaPattern, List<String> tableNameList) throws SQLException {
-        List<TableEntity> tableEntities = new ArrayList<TableEntity>();
+        List<TableEntity> tableEntities = new ArrayList<>();
 
         DatabaseMetaData meta = conn.getMetaData();
         DBType dbType = DBTypeKit.getDBType(meta);

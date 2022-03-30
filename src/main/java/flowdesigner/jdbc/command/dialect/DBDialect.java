@@ -98,11 +98,12 @@ public class DBDialect {
      */
     public Pair<ResultSet,ResultSet> getColumnAndPrimaryKeyResultSetPair(Connection conn, TableEntity tableEntity) throws SQLException {
         DatabaseMetaData connMetaData = conn.getMetaData();
+        String catalog = tableEntity.getTABLE_CAT();
         String schema = tableEntity.getTABLE_SCHEM();//getSchemaPattern(conn);
         String tableName = tableEntity.getDefKey();
 
-        ResultSet rs = connMetaData.getColumns(conn.getCatalog(), schema, tableName, "%");
-        ResultSet pkRs = connMetaData.getPrimaryKeys(conn.getCatalog(), schema, tableName);
+        ResultSet rs = connMetaData.getColumns(catalog, schema, tableName, "%");
+        ResultSet pkRs = connMetaData.getPrimaryKeys(catalog, schema, tableName);
 
         return Pair.of(rs,pkRs);
     }
@@ -131,7 +132,7 @@ public class DBDialect {
      */
     public TableEntity createTableEntity(Connection connection,ResultSet rs) throws SQLException {
         TableEntity entity = new TableEntity();
-        fillTableEntityNoColumn(entity, connection,rs);
+        fillTableEntityNoColumn(entity, connection, rs);
         if (StringKit.isNotBlank(entity.getDefKey())) {
             return entity;
         } else {
@@ -162,7 +163,7 @@ public class DBDialect {
      * @param rs
      * @throws SQLException
      */
-    public void fillTableEntityNoColumn(TableEntity tableEntity, Connection connection,ResultSet rs) throws SQLException {
+    public void fillTableEntityNoColumn(TableEntity tableEntity, Connection connection, ResultSet rs) throws SQLException {
         String tableCat = rs.getString("TABLE_CAT");
         String tableSchem = rs.getString("TABLE_SCHEM");
         String tableName = rs.getString("TABLE_NAME");
@@ -366,9 +367,11 @@ public class DBDialect {
      * @throws SQLException
      */
     public void fillTableIndexes(TableEntity tableEntity, Connection conn) throws SQLException {
+        String cat = tableEntity.getTABLE_CAT();
+        String schem = tableEntity.getTABLE_SCHEM();
         String table = tableEntity.getDefKey();
         DatabaseMetaData dbMeta = conn.getMetaData();
-        ResultSet rs = dbMeta.getIndexInfo(null,null,table,false,false);
+        ResultSet rs = dbMeta.getIndexInfo(cat,schem, table,false,false);
 
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
@@ -521,25 +524,24 @@ public class DBDialect {
     public TableEntity createTableEntity(Connection conn,DatabaseMetaData meta, String schemaPattern, String tableName) throws SQLException {
         ResultSet rs = null;
         try{
-            if (schemaPattern == null) schemaPattern = getSchemaPattern(conn);
-//            String schemaPattern = "bmnc_pdata";
-            rs = meta.getTables(null, schemaPattern, tableName, new String[]{"TABLE"});
+            String schema = getSchemaPattern(conn, schemaPattern);
+            String catalog = getCatalogPattern(conn, schemaPattern);
+
+            rs = meta.getTables(catalog, schema, tableName, new String[]{"TABLE"});
             if (rs.next()) {
                 TableEntity tableEntity = createTableEntity(conn, rs);
                 fillTableEntity(tableEntity,conn);
-                JdbcKit.close(rs);
                 return tableEntity;
-            } else {
-                //如果全小写不行，就来试试全大写
-                rs = meta.getTables(null, schemaPattern, tableName.toUpperCase(), new String[]{"TABLE"});
-                if(rs.next()) {
-                    TableEntity tableEntity = createTableEntity(conn, rs);
-                    fillTableEntity(tableEntity,conn);
-                    return tableEntity;
-                }
             }
-        } catch (SQLException e){
-            throw e;
+//            else {
+//                //如果全小写不行，就来试试全大写
+//                rs = meta.getTables(null, schemaPattern, tableName.toUpperCase(), new String[]{"TABLE"});
+//                if(rs.next()) {
+//                    TableEntity tableEntity = createTableEntity(conn, rs);
+//                    fillTableEntity(tableEntity,conn);
+//                    return tableEntity;
+//                }
+//            }
         } finally {
             JdbcKit.close(rs);
         }

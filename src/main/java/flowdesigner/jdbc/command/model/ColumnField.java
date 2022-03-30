@@ -75,8 +75,7 @@ public class ColumnField implements Serializable,Cloneable {
     @Override
     public String toString() {
         return "ColumnField{" +
-                "tableEntity=" + tableEntity +
-                ", rowNo=" + rowNo +
+                "  rowNo=" + rowNo +
                 ", defKey='" + defKey + '\'' +
                 ", defName='" + defName + '\'' +
                 ", dataType=" + dataType +
