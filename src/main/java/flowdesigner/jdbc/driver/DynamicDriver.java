@@ -59,6 +59,13 @@ public final class DynamicDriver {
         m_driverDir.addAll(driverDir);
     }
 
+    public void setM_driverDir(List<String> driverDir) {
+        this.m_driverDir = driverDir;
+    }
+    public void setM_driverDir(String driverDir) {
+        this.m_driverDir = Arrays.asList(driverDir.split(","));
+    }
+
     private void createDataSource() {
         try {
             // 文件后缀为.java且不为空，读子文件夹

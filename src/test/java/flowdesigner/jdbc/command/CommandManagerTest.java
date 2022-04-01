@@ -169,8 +169,8 @@ class CommandManagerTest {
     void testExeCommandGetDDL() throws SQLException {
         Gson gson = new Gson();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-            put("schemaPattern","test");
-            put("tables","NewTable");
+            put("schemaPattern","test_db11");
+            put("tables","aa ddd");
         }});
         String s = gson.toJson(cc);
         System.out.println(s);
