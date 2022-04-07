@@ -195,35 +195,30 @@ public class DBDialect {
         String tableName = tableEntity.getDefKey();
 
         ResultSet rs = null;
-//        Statement stmt = null;
         ResultSet pkRs = null;
-//        Statement pkStmt = null;
 
         try {
             Pair<ResultSet,ResultSet> pair = getColumnAndPrimaryKeyResultSetPair(conn,tableEntity);
             rs = pair.getLeft();
             pkRs = pair.getRight();
-//            stmt = rs.getStatement();
-//            pkStmt = pkRs.getStatement();
+
             Set<String> pkSet = new HashSet<String>();
             while(pkRs.next()){
                 String columnName = pkRs.getString("COLUMN_NAME");
                 pkSet.add(columnName);
             }
 
-            while(rs.next()){
+            while(rs.next()) {
                 ColumnField field = new ColumnField();
-                fillColumnField(field,conn,rs,pkSet);
+                fillColumnField(field, conn, rs, pkSet);
                 tableEntity.getFields().add(field);
             }
             fillTableIndexes(tableEntity,conn);
         } catch (SQLException e) {
-            logger.log(Level.SEVERE,"读取数据表"+tableName+"的字段明细出错",e);
-            throw new RuntimeException("读取数据表"+tableName+"的字段明细出错",e);
+            logger.log(Level.SEVERE,"读取数据表"+tableName+"的字段明细出错");
+//            throw new RuntimeException("读取数据表"+tableName+"的字段明细出错",e);
         } finally {
-//            JdbcKit.close(stmt);
             JdbcKit.close(rs);
-//            JdbcKit.close(pkStmt);
             JdbcKit.close(pkRs);
         }
     }
@@ -537,7 +532,6 @@ public class DBDialect {
                 fillTableEntity(tableEntity, conn);
                 tableEntity.fillFieldsCalcValue();
                 tableEntities.add(tableEntity);
-
             }
 
             return tableEntities;

@@ -62,6 +62,7 @@ public final class DynamicDriver {
     public void setM_driverDir(List<String> driverDir) {
         this.m_driverDir = driverDir;
     }
+
     public void setM_driverDir(String driverDir) {
         this.m_driverDir = Arrays.asList(driverDir.split(","));
     }
