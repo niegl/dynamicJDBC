@@ -8,6 +8,7 @@ public class FKColumnField {
     private String PKTABLE_SCHEM;// String => parent key table schema (may be null)
     private String PKTABLE_NAME;// String => parent key table name
     private String PKCOLUMN_NAME;// String => parent key column name
+
     private String FKTABLE_CAT;// String => foreign key table catalog (may be null) being exported (may be null)
     private String FKTABLE_SCHEM;// String => foreign key table schema (may be null) being exported (may be null)
     private String FKTABLE_NAME;// String => foreign key table name being exported

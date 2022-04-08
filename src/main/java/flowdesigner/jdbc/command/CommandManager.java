@@ -30,6 +30,8 @@ public class CommandManager {
         put(CMD_DBExecuteCommandImpl, DBExecuteCommandImpl.class);            //正向执行，获取SQL语句执行结果
         put(CMD_DBExecuteUpdateCommandImpl, DBExecuteUpdateCommandImpl.class);
         put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);            //正向执行，获取SQL语句执行结果
+        put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);            //正向执行，获取SQL语句执行结果
+
     }};
 
     /**

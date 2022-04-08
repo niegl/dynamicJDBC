@@ -20,6 +20,7 @@ import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -556,15 +557,32 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public List<FKColumnField> getFKColumnField(Connection conn, String table) throws SQLException {
+    public List<FKColumnField> getFKColumnField(Connection conn, String schemaPattern, String table) throws SQLException {
+        String schema = getSchemaPattern(conn, schemaPattern);
+        String catalog = getCatalogPattern(conn, schemaPattern);
+
         DatabaseMetaData meta = conn.getMetaData();
 
-        String schemaPattern = getSchemaPattern(conn);
+        ResultSet rs = meta.getImportedKeys(catalog, schema, table);
+        return getFkColumnFields(rs);
+    }
 
-        ResultSet rs = meta.getImportedKeys(null, schemaPattern, table);
+    public List<FKColumnField> getFKReference(Connection conn, String schemaPattern, String table) throws SQLException {
+
+        String schema = getSchemaPattern(conn, schemaPattern);
+        String catalog = getCatalogPattern(conn, schemaPattern);
+
+        DatabaseMetaData meta = conn.getMetaData();
+        ResultSet rs = meta.getExportedKeys(catalog, schema, table);
+        return getFkColumnFields(rs);
+    }
+
+    @NotNull
+    private List<FKColumnField> getFkColumnFields(ResultSet rs) throws SQLException {
         List<FKColumnField> tableEntities = new ArrayList<>();
         while (rs.next()) {
             FKColumnField fkColumnField = new FKColumnField();
+
             String PKTABLE_CAT = rs.getString("PKTABLE_CAT");
             String PKTABLE_SCHEM = rs.getString("PKTABLE_SCHEM");
             String PKTABLE_NAME = rs.getString("PKTABLE_NAME");
@@ -573,15 +591,20 @@ public class DBDialect {
             String FKTABLE_SCHEM = rs.getString("FKTABLE_SCHEM");
             String FKTABLE_NAME = rs.getString("FKTABLE_NAME");
             String FKCOLUMN_NAME = rs.getString("FKCOLUMN_NAME");
+            String PK_NAME = rs.getString("PK_NAME");
             String FK_NAME = rs.getString("FK_NAME");
+
             fkColumnField.setPKTABLE_CAT(PKTABLE_CAT);
             fkColumnField.setPKTABLE_SCHEM(PKTABLE_SCHEM);
             fkColumnField.setPKTABLE_NAME(PKTABLE_NAME);
             fkColumnField.setPKCOLUMN_NAME(PKCOLUMN_NAME);
+
             fkColumnField.setFKTABLE_CAT(FKTABLE_CAT);
             fkColumnField.setFKTABLE_SCHEM(FKTABLE_SCHEM);
             fkColumnField.setFKTABLE_NAME(FKTABLE_NAME);
             fkColumnField.setFKCOLUMN_NAME(FKCOLUMN_NAME);
+
+            fkColumnField.setPK_NAME(PK_NAME);
             fkColumnField.setFK_NAME(FK_NAME);
 
             tableEntities.add(fkColumnField);

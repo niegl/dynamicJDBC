@@ -2,6 +2,7 @@ package flowdesigner.jdbc.command;
 
 import com.alibaba.druid.util.JdbcUtils;
 import com.google.gson.Gson;
+import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
@@ -25,16 +26,16 @@ class CommandManagerTest {
     Connection connection = null;
     @BeforeEach
     void setUp() {
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
-//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
-        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
-//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-//        properties.setProperty("url","jdbc:mysql://localhost:3306");
-//        properties.setProperty("username","root");
-//        properties.setProperty("password","123456");
-//        properties.setProperty("maxWait","3000");
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+        properties.setProperty("url","jdbc:mysql://localhost:3306");
+        properties.setProperty("username","root");
+        properties.setProperty("password","123456");
+        properties.setProperty("maxWait","3000");
         dynamicDriver.setM_propertyInfo(properties);
 
         try {
@@ -194,6 +195,18 @@ class CommandManagerTest {
         }});
         String s = gson.toJson(cc);
         System.out.println(s);
+    }
+
+    @Test
+    void testGetImportedKeys() throws SQLException {
+
+        DBReverseGetFKReferenceImpl getFKReference = new DBReverseGetFKReferenceImpl();
+        ExecResult<List<FKColumnField>> execResult = getFKReference.exec(connection, new HashMap<String, String>() {{
+            put("Table", "tb_emp3");
+        }});
+
+        System.out.println(execResult.getBody());
+
     }
 
     @Test

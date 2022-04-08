@@ -21,26 +21,26 @@ import java.util.Map;
 public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult<List<FKColumnField>>> {
 
     public ExecResult<List<FKColumnField>> exec(Connection conn, Map<String, String> params) throws SQLException {
-
-        String table = params.get("Table");
+        String schemaPattern = params.getOrDefault("schemaPattern",null);
+        String table = params.getOrDefault("table", params.getOrDefault("Table", null));
         if (StringKit.isBlank(table)) {
-            throw new IllegalArgumentException("Table not specified");
+            throw new IllegalArgumentException("table not specified");
         }
 
         ExecResult<List<FKColumnField>> ret = new ExecResult<>();
-        List<FKColumnField> tableEntities = getFKReference(conn, table);
+        List<FKColumnField> tableEntities = getFKReference(conn, schemaPattern, table);
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(tableEntities);
 
         return ret;
     }
 
-    protected List<FKColumnField> getFKReference(Connection conn, String table) throws SQLException {
+    protected List<FKColumnField> getFKReference(Connection conn, String schemaPattern, String table) throws SQLException {
         List<FKColumnField> tableEntities;
         try {
             DBType dbType = DBTypeKit.getDBType(conn);
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
-            tableEntities = dbDialect.getFKColumnField(conn,table);
+            tableEntities = dbDialect.getFKColumnField(conn, schemaPattern, table);
         } catch (SQLException e) {
             logger.severe("读取表清单出错"+ e.getMessage());
             throw new RuntimeException(e);
