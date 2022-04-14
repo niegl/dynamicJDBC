@@ -1,9 +1,13 @@
 package flowdesigner.jdbc.builder;
 
+import com.alibaba.druid.sql.ast.statement.SQLSelect;
+import com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import flowdesigner.jdbc.builder.impl.SQLSelectBuilderImpl;
 
 public interface SQLSelectBuilder {
+
+    SQLSelect getSQLSelect();
 
     SQLSelectStatement getSQLSelectStatement();
 
@@ -32,6 +36,8 @@ public interface SQLSelectBuilder {
     SQLSelectBuilder limit(int rowCount);
 
     SQLSelectBuilder limit(int rowCount, int offset);
+
+    SQLSelectBuilder union(SQLSelectBuilder selectBuilder, String unionType);
 
     SQLSelectBuilder join(String joinType, String table, String alias,
                           String exprLeft, String exprRight, String operator);

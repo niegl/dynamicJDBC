@@ -138,10 +138,47 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    /**
+     * UNION [ALL | DISTINCT]
+     * @throws SQLSyntaxErrorException
+     */
+    @org.junit.jupiter.api.Test
+    void testUnion() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="select a.alarm_level_desc from std_pcode.t99_alarm_level_cd a union (select b.type_id  from std_pcode.dev_alarm_type_info b)";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+        sql ="SELECT a, b\n" +
+                "FROM (SELECT building_t.idbuilding_t, building_t.name, building_t.floors, campus_t.idcampus_t FROM test.building_t INNER JOIN test.campus_t  ON building_t.campus_id = campus_t.idcampus_t) vv\n" +
+                "UNION ALL\n" +
+                "SELECT c, d\n" +
+                "FROM test.building_t tt";
+        statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+        sql ="SELECT a, b\n" +
+                "FROM (SELECT building_t.idbuilding_t, building_t.name, building_t.floors, campus_t.idcampus_t FROM test.building_t INNER JOIN test.campus_t  ON building_t.campus_id = campus_t.idcampus_t) vv\n" +
+                "UNION ALL\n" +
+                "SELECT c, d\n" +
+                "FROM test.building_t tt\n" +
+                "UNION DISTINCT\n" +
+                "SELECT e, f\n" +
+                "FROM test.building_t2 tt";
+        statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
+    void testSelectBlock() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="select a.alarm_level_desc from std_pcode.t99_alarm_level_cd a";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         if (list.size() > 1) {
-            throw new SQLSyntaxErrorException("MultiQueries is not supported,use single query instead ");
+            throw new SQLSyntaxErrorException("MultiQueries is not supported,use single query instead");
         }
         return list.get(0);
     }

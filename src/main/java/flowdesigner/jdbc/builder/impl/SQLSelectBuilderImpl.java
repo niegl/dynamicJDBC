@@ -3,12 +3,14 @@ package flowdesigner.jdbc.builder.impl;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.SQLLimit;
 import com.alibaba.druid.sql.ast.SQLOrderBy;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
+import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLSelectBuilder;
 
 public class SQLSelectBuilderImpl implements SQLSelectBuilder {
@@ -24,6 +26,7 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
         this.dbType = dbType;
     }
 
+    @Override
     public SQLSelect getSQLSelect() {
         if (stmt.getSelect() == null) {
             stmt.setSelect(createSelect());
@@ -207,6 +210,67 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
         return new SQLSelectGroupByClause();
     }
 
+    /**
+     * UNION 操作,支持多次union。
+     * @param selectBuilder union后半部分
+     * @param unionType union类型：ALL、DISTINCT
+     * @return 前半部分对象
+     */
+    @Override
+    public SQLSelectBuilder union(SQLSelectBuilder selectBuilder, String unionType) {
+        SQLSelectQuery left = getSQLSelect().getQuery();
+        SQLSelectQuery right = selectBuilder.getSQLSelect().getQuery();
+
+        if (left == null || right == null) {
+            return this;
+        }
+
+        SQLUnionQuery unionQuery = new SQLUnionQuery(dbType);
+        unionQuery.setLeft(left);
+
+        if ( unionType.equalsIgnoreCase(Token.ALL.name) ) {
+            unionQuery.setOperator(SQLUnionOperator.UNION_ALL);
+        } else if (unionType.equalsIgnoreCase(Token.DISTINCT.name)) {
+            unionQuery.setOperator(SQLUnionOperator.DISTINCT);
+        }
+
+        // 需要判断是否需要括号将 union后半部分括起来，以免本来属于整个union的order by 分配到union后半部分的
+        boolean paren = false;
+        if (right instanceof SQLSelectQueryBlock) {
+            SQLSelectQueryBlock rightQuery = (SQLSelectQueryBlock) right;
+            SQLOrderBy orderBy = rightQuery.getOrderBy();
+            if (orderBy != null) {
+                paren = true;
+            }
+
+            SQLLimit limit = rightQuery.getLimit();
+            if (limit != null) {
+                paren = true;
+            }
+        } else if (right instanceof SQLUnionQuery) {
+            SQLUnionQuery rightUnion = (SQLUnionQuery) right;
+            final SQLOrderBy orderBy = rightUnion.getOrderBy();
+            if (orderBy != null) {
+                paren = true;
+            }
+
+            SQLLimit limit = rightUnion.getLimit();
+            if (limit != null) {
+                paren = true;
+            }
+        }
+
+        if (paren) {
+            right.setParenthesized(true);
+        }
+
+//        boolean paren = lexer.token == Token.LPAREN;
+//        SQLSelectQuery right = this.query(paren ? null : union, false);
+        unionQuery.setRight(right);
+        getSQLSelect().setQuery(unionQuery);
+
+        return this;
+    }
     /**
      * 需要支持多次join。
      * 注意：调用join之前需要先调用from接口。
