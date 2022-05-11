@@ -80,12 +80,17 @@ class CommandManagerTest {
     @Test
     void testExecuteUpdate() throws SQLException {
         Gson gson = new Gson();
+        long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteUpdateCommandImpl,new HashMap<String,String>(){{
 //            put("schemaPattern","test");
-            put("SQL","ALTER TABLE test_db11.test_db111 ADD PRIMARY KEY(id);");
+//            put("SQL","ALTER TABLE test_db11.test_db111 ADD PRIMARY KEY(id);");
+//            put("SQL","ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
+            put("SQL","ALTER TABLE test.tb_emp6 ADD CONSTRAINT fk_emp_dept1 FOREIGN KEY(deptId) REFERENCES tb_dept1(id);");
         }});
+        long end = Instant.now().toEpochMilli();
         String s = gson.toJson(cc);
         System.out.println(s);
+        System.out.println(end - start);
     }
 
     @Test
