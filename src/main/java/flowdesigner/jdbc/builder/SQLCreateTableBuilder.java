@@ -11,6 +11,12 @@ public interface SQLCreateTableBuilder {
 
     SQLCreateTableBuilder setType(DbType dbType);
 
+    SQLCreateTableBuilder setTemporary(String temporaryType);
+
+    SQLCreateTableBuilder setLike(String tableName);
+
+    SQLCreateTableBuilder setSelect(String select);
+
     SQLCreateTableBuilder setName(String name);
 
     SQLCreateTableBuilder setSchema(String name);

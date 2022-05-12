@@ -1,6 +1,8 @@
 package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import flowdesigner.jdbc.builder.SQLBuilderFactory;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
@@ -98,6 +100,33 @@ class SQLCreateTableBuilderImplTest {
     @Test
     void testAddColumn() {
         tableBuilder.addColumn("line_id","Stirng","commentcol");
+        System.out.println(tableBuilder);
+    }
+
+    @Test
+    void testTempTable0() {
+        tableBuilder.addColumn("line_id","Stirng","commentcol");
+        System.out.println(tableBuilder);
+    }
+
+    @Test
+    void setTemporary() {
+        tableBuilder.setTemporary("dd");
+        tableBuilder.addColumn("line_id","Stirng");
+        System.out.println(tableBuilder);
+    }
+
+    @Test
+    void setLike() {
+        tableBuilder.setTemporary("dd");
+        tableBuilder.setLike("abc");
+        System.out.println(tableBuilder);
+    }
+
+    @Test
+    void setSelect() {
+        tableBuilder.setTemporary("dd");
+        tableBuilder.setSelect("select a,b from t");
         System.out.println(tableBuilder);
     }
 }

@@ -175,6 +175,30 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    @org.junit.jupiter.api.Test
+    void testTempTable0() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="CREATE TEMPORARY TABLE list_bucket_multiple (col1 STRING, col2 int, col3 STRING);";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
+    void testTempTable1() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="CREATE TEMPORARY TABLE total_amount_by_discount like abc;";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
+    void testTempTable2() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="CREATE TEMPORARY TABLE total_amount_by_discount as SELECT discount, total_amount FROM abc;";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         if (list.size() > 1) {

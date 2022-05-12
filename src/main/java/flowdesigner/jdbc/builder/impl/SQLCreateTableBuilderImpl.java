@@ -5,6 +5,7 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.*;
 import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLQueryExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2CreateTableStatement;
 import com.alibaba.druid.sql.dialect.hive.stmt.HiveCreateTableStatement;
@@ -54,6 +55,56 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
     @Override
     public SQLCreateTableBuilder setType(DbType dbType) {
         this.dbType = dbType;
+        return this;
+    }
+
+    /**
+     * 创建临时表
+     * @param temporaryType
+     *          GLOBAL_TEMPORARY,
+     *         LOCAL_TEMPORARY,
+     *         TEMPORARY,
+     *         SHADOW;
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder setTemporary(String temporaryType) {
+        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        create.setType(SQLCreateTableStatement.Type.GLOBAL_TEMPORARY);
+        return this;
+    }
+
+    /**
+     * 支持like。语法：CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name
+     *   LIKE existing_table_or_view_name
+     * @param tableName
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder setLike(String tableName) {
+        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLExpr name = SQLUtils.toSQLExpr(tableName, this.dbType);
+        if (name instanceof SQLName) {
+            create.setLike((SQLName) name);
+        } else if (name instanceof SQLExprTableSource) {
+            create.setLike( (SQLExprTableSource) name);
+        }
+        return this;
+    }
+
+    /**
+     * 支持 create ... as select 语法
+     * @param select select a,b from t
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder setSelect(String select) {
+        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLExpr query = SQLUtils.toSQLExpr(select, this.dbType);
+        if (query instanceof SQLQueryExpr) {
+            stmt.setSelect(((SQLQueryExpr) query).getSubQuery());
+        }
+
         return this;
     }
 
