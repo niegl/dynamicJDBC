@@ -199,8 +199,1316 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    @org.junit.jupiter.api.Test
+    void testTempTable3() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="\n" +
+                "\n" +
+                "\n" +
+                "--B0000001 进站量\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "create temporary TABLE t1001\n" +
+                "(\n" +
+                "start_tm  timestamp,\n" +
+                "end_tm timestamp,\n" +
+                "stn_id varchar(50),\n" +
+                "line_id varchar(50),\n" +
+                "entry_qty int,\n" +
+                "exit_qty int);\n" +
+                "\n" +
+                "insert into t1001\n" +
+                "select\n" +
+                "cast (concat(substr(start_tm,1,13),':00:00')  as timestamp ) as start_tm,\n" +
+                "from_unixtime(unix_timestamp(cast (concat(substr(start_tm,1,13),':00:00')  as timestamp ) )+3600,'yyyy-MM-dd HH:mm:ss') as end_tm,\n" +
+                "a.stn_id,\n" +
+                "a.line_id,\n" +
+                "sum(entry_qty),\n" +
+                "sum(exit_qty)\n" +
+                "from pdata.T05_Stn_PQ_Period_Stat a where a.start_tm>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "group by\n" +
+                "substr(start_tm,1,13),\n" +
+                "a.stn_id,\n" +
+                "a.line_id\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "--hour 站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "A.start_tm,\n" +
+                "A.end_tm,\n" +
+                "A.Entry_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(A.start_tm,1,4),substr(A.start_tm,6,2),substr(A.start_tm,9,2)),\n" +
+                "'B0000001',\n" +
+                "'Hour'\n" +
+                "FROM t1001 A\n" +
+                " left join  PDATA.T02_Fac_Point_Pty_Rel_H B ON A.Stn_ID=B.Fac_Point_ID AND B.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where B.Pty_ID is not null and A.start_tm>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "--hour 线路\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "A.start_tm,\n" +
+                "A.end_tm,\n" +
+                "A.Entry_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(A.start_tm,1,4),substr(A.start_tm,6,2),substr(A.start_tm,9,2)),\n" +
+                "'B0000001',\n" +
+                "'Hour'\n" +
+                "FROM ( select line_id,start_tm,end_tm,sum(Entry_Qty) Entry_Qty from t1001 group by line_id,start_tm,end_tm ) A\n" +
+                " left join pdata.t02_line_pty_rel_h B ON A.line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null and A.start_tm>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "--hour 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "start_tm,\n" +
+                "end_tm,\n" +
+                "sum(Entry_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(start_tm,1,4),substr(start_tm,6,2),substr(start_tm,9,2)),\n" +
+                "'B0000001',\n" +
+                "'Hour'\n" +
+                "FROM t1001 \n" +
+                "where start_tm>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "group by start_tm,end_tm \n" +
+                ";\n" +
+                "\n" +
+                "--Day 站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "Entry_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000001',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat A \n" +
+                " left join  PDATA.T02_Fac_Point_Pty_Rel_H B ON A.Stn_ID=B.Fac_Point_ID AND B.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "--Day 线路\n" +
+                "insert INTO  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "Entry_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000001',\n" +
+                "'Day'\n" +
+                "FROM ( SELECT Stat_Dt,line_id,SUM(Entry_Qty) Entry_Qty FROM PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "        where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "        GROUP BY Stat_Dt,line_id\n" +
+                ") A \n" +
+                " left join  pdata.t02_line_pty_rel_h B ON A.line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Day 北京地铁\n" +
+                "insert INTO  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "sum(Entry_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000001',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "GROUP BY Stat_Dt\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "--Month 站\n" +
+                "\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(Entry_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000001',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat A\n" +
+                " left join  PDATA.T02_Fac_Point_Pty_Rel_H B ON A.Stn_ID=B.Fac_Point_ID AND B.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "--Month 线路\n" +
+                "insert into ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "f_starttime,\n" +
+                "f_stoptime,\n" +
+                "Entry_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(f_starttime,1,4),SUBSTR(f_starttime,6,2)),\n" +
+                "'B0000001',\n" +
+                "'Month'\n" +
+                "FROM(select cast(trunc(Stat_Dt,'MM') as timestamp) f_starttime,\n" +
+                "        cast(date_add(last_day(Stat_Dt),1) as timestamp) f_stoptime,sum(Entry_Qty) Entry_Qty,line_id\n" +
+                "        from  PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "        where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "        group by cast(trunc(Stat_Dt,'MM') as timestamp),cast(date_add(last_day(Stat_Dt),1) as timestamp),line_id\n" +
+                ") A\n" +
+                " left join  pdata.t02_line_pty_rel_h B ON A.line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Month 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(Entry_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000001',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "--Year 车站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(Entry_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(Stat_Dt,1,4),\n" +
+                "'B0000001',\n" +
+                "'Year'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat A\n" +
+                " left join  PDATA.T02_Fac_Point_Pty_Rel_H B ON A.Stn_ID=B.Fac_Point_ID AND B.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where B.Pty_ID is not null \n" +
+                "and  A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "SUBSTR(Stat_Dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "--Year 线路\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "f_starttime,\n" +
+                "f_stoptime,\n" +
+                "Entry_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(f_starttime,1,4),\n" +
+                "'B0000001',\n" +
+                "'Year'\n" +
+                "FROM ( select cast(trunc(Stat_Dt,'YY') as timestamp) f_starttime,\n" +
+                "        cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp) f_stoptime,sum(Entry_Qty) Entry_Qty,line_id\n" +
+                "        from PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "        where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "        group by cast(trunc(Stat_Dt,'YY') as timestamp) ,\n" +
+                "        cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp) ,line_id\n" +
+                ")A\n" +
+                " left join  pdata.t02_line_pty_rel_h B ON A.line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Year 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(Entry_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(Stat_Dt,1,4),\n" +
+                "'B0000001',\n" +
+                "'Year'\n" +
+                "from PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "group by cast(trunc(Stat_Dt,'YY') as timestamp) ,cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp)\n" +
+                ",SUBSTR(Stat_Dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "--B0000002 出站量\n" +
+                "\n" +
+                "\n" +
+                "-- Hour 车站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "A.start_tm,\n" +
+                "A.end_tm,\n" +
+                "A.Exit_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(A.start_tm,1,4),substr(A.start_tm,6,2),substr(A.start_tm,9,2)),\n" +
+                "'B0000002',\n" +
+                "'Hour'\n" +
+                "FROM t1001 A\n" +
+                " left join  PDATA.T02_Fac_Point_Pty_Rel_H B ON A.Stn_ID=B.Fac_Point_ID AND B.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where B.Pty_ID is not null and A.start_tm>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "--hour 线路\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "A.start_tm,\n" +
+                "A.end_tm,\n" +
+                "A.Exit_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(A.start_tm,1,4),substr(A.start_tm,6,2),substr(A.start_tm,9,2)),\n" +
+                "'B0000002',\n" +
+                "'Hour'\n" +
+                "FROM ( select line_id,start_tm,end_tm,sum(Exit_Qty) Exit_Qty from t1001 group by line_id,start_tm,end_tm ) A\n" +
+                " left join pdata.t02_line_pty_rel_h B ON A.line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null and A.start_tm>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "--hour 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "start_tm,\n" +
+                "end_tm,\n" +
+                "sum(Exit_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(start_tm,1,4),substr(start_tm,6,2),substr(start_tm,9,2)),\n" +
+                "'B0000002',\n" +
+                "'Hour'\n" +
+                "FROM t1001 \n" +
+                "where start_tm>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "group by start_tm,end_tm\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "-- Day 车站\n" +
+                "\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "Exit_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000002',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat A \n" +
+                " left join  PDATA.T02_Fac_Point_Pty_Rel_H B ON A.Stn_ID=B.Fac_Point_ID AND B.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "--Day 线路\n" +
+                "insert INTO  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "Exit_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000002',\n" +
+                "'Day'\n" +
+                "FROM ( SELECT Stat_Dt,line_id,SUM(Exit_Qty) Exit_Qty FROM PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "        where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "        GROUP BY Stat_Dt,line_id\n" +
+                ") A \n" +
+                " left join  pdata.t02_line_pty_rel_h B ON A.line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Day 北京地铁\n" +
+                "insert INTO  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "sum(Exit_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000002',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "GROUP BY Stat_Dt\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "-- Month 车站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(Exit_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000002',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat A\n" +
+                " left join  PDATA.T02_Fac_Point_Pty_Rel_H B ON A.Stn_ID=B.Fac_Point_ID AND B.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where B.Pty_ID is not null \n" +
+                "and A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "--Month 线路\n" +
+                "insert into ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "f_starttime,\n" +
+                "f_stoptime,\n" +
+                "Exit_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(f_starttime,1,4),SUBSTR(f_starttime,6,2)),\n" +
+                "'B0000002',\n" +
+                "'Month'\n" +
+                "FROM(select cast(trunc(Stat_Dt,'MM') as timestamp) f_starttime,\n" +
+                "        cast(date_add(last_day(Stat_Dt),1) as timestamp) f_stoptime,sum(Exit_Qty) Exit_Qty,line_id\n" +
+                "        from  PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "        where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "        group by cast(trunc(Stat_Dt,'MM') as timestamp),cast(date_add(last_day(Stat_Dt),1) as timestamp),line_id\n" +
+                ") A\n" +
+                " left join  pdata.t02_line_pty_rel_h B ON A.line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Month 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(Exit_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000002',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "-- Year 车站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)  \n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(Exit_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(stat_dt,1,4),\n" +
+                "'B0000002',\n" +
+                "'Year'\n" +
+                "FROM PDATA.T05_Stn_PQ_Dt_Stat A\n" +
+                " left join  PDATA.T02_Fac_Point_Pty_Rel_H B ON A.Stn_ID=B.Fac_Point_ID AND B.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where B.Pty_ID is not null \n" +
+                "and A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),SUBSTR(stat_dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "--Year 线路\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "f_starttime,\n" +
+                "f_stoptime,\n" +
+                "Exit_Qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(f_starttime,1,4),\n" +
+                "'B0000002',\n" +
+                "'Year'\n" +
+                "FROM ( select cast(trunc(Stat_Dt,'YY') as timestamp) f_starttime,\n" +
+                "        cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp) f_stoptime,sum(Exit_Qty) Exit_Qty,line_id\n" +
+                "        from PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "        where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "        group by cast(trunc(Stat_Dt,'YY') as timestamp) ,\n" +
+                "        cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp) ,line_id\n" +
+                ")A\n" +
+                " left join  pdata.t02_line_pty_rel_h B ON A.line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Year 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(Exit_Qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(stat_dt,1,4),\n" +
+                "'B0000002',\n" +
+                "'Year'\n" +
+                "from PDATA.T05_Stn_PQ_Dt_Stat \n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "group by cast(trunc(Stat_Dt,'YY') as timestamp) ,cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),SUBSTR(stat_dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "--B0000004       客运量\n" +
+                "\n" +
+                "-- Day 线路\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "pasgr_qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000004',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Pasgr_Qty_Dt_Stat A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "-- Day 北京地铁\n" +
+                "insert into ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "sum(pasgr_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000004',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Pasgr_Qty_Dt_Stat \n" +
+                "where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "group by Stat_Dt\n" +
+                ";\n" +
+                "\n" +
+                "-- Month 线路\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(pasgr_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000004',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Pasgr_Qty_Dt_Stat A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "-- Month 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(pasgr_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000004',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Pasgr_Qty_Dt_Stat \n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "-- Year 线路\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(pasgr_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(A.Stat_Dt,1,4),\n" +
+                "'B0000004',\n" +
+                "'Year'\n" +
+                "FROM  PDATA.T05_Pasgr_Qty_Dt_Stat  A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),SUBSTR(A.Stat_Dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "-- Year 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(pasgr_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(Stat_Dt,1,4),\n" +
+                "'B0000004',\n" +
+                "'Year'\n" +
+                "FROM  PDATA.T05_Pasgr_Qty_Dt_Stat \n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "group by cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "SUBSTR(Stat_Dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "--B0000005\n" +
+                "\n" +
+                "\n" +
+                "--Day 线路\n" +
+                "\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "pasgr_turnover,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000005',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Pasgr_Turnover_Dt_Stat A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "--Day 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "sum(pasgr_turnover),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000005',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Pasgr_Turnover_Dt_Stat \n" +
+                "where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "group by Stat_Dt\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "--Month 线路\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "  SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(pasgr_turnover),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(A.Stat_Dt,1,4),SUBSTR(A.Stat_Dt,6,2)),\n" +
+                "'B0000005',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Pasgr_Turnover_Dt_Stat A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(A.Stat_Dt,1,4),SUBSTR(A.Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "--Month 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(pasgr_turnover),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000005',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Pasgr_Turnover_Dt_Stat \n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "--Year 线路\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(pasgr_turnover),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(stat_dt,1,4),\n" +
+                "'B0000005',\n" +
+                "'Year'\n" +
+                "FROM  PDATA.T05_Pasgr_Turnover_Dt_Stat  A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),SUBSTR(stat_dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "--Year 北京地铁 \n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(pasgr_turnover),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(stat_dt,1,4),\n" +
+                "'B0000005',\n" +
+                "'Year'\n" +
+                "FROM  PDATA.T05_Pasgr_Turnover_Dt_Stat  \n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'YY')\n" +
+                "group by cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),SUBSTR(stat_dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "--B0000007\n" +
+                "\n" +
+                "--Day 线路\n" +
+                "--赖婷婷20180105，修改走行公里日期，取最近7天\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "trac_km/100,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(A.stat_dt,1,4),substr(A.stat_dt,6,2),substr(A.stat_dt,9,2)),\n" +
+                "'B0000007',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Train_Mov_Stat A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=date_add(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))),-7)\n" +
+                ";\n" +
+                "\n" +
+                "--Day 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "sum(trac_km)/100,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000007',\n" +
+                "'Day'\n" +
+                "FROM PDATA.T05_Train_Mov_Stat \n" +
+                "where stat_dt>=date_add(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))),-7)\n" +
+                "group by Stat_Dt\n" +
+                ";\n" +
+                "\n" +
+                "--Month 线路\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(trac_km)/100,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(A.Stat_Dt,1,4),SUBSTR(A.Stat_Dt,6,2)),\n" +
+                "'B0000007',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Train_Mov_Stat A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=trunc(date_add(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,-7),'MM')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(A.Stat_Dt,1,4),SUBSTR(A.Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "--Month 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(trac_km)/100,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000007',\n" +
+                "'Month'\n" +
+                "FROM PDATA.T05_Train_Mov_Stat \n" +
+                "where stat_dt>=trunc(date_add(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,-7),'MM')\n" +
+                "group by cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "--Year 线路\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(trac_km)/100,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(A.Stat_Dt,1,4),\n" +
+                "'B0000007',\n" +
+                "'Year'\n" +
+                "FROM  PDATA.T05_Train_Mov_Stat  A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                "and A.stat_dt>=trunc(date_add(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,-7),'YY')\n" +
+                "group by B.Pty_ID ,cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "SUBSTR(A.Stat_Dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "--Year 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(trac_km)/100,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(Stat_Dt,1,4),\n" +
+                "'B0000007',\n" +
+                "'Year'\n" +
+                "FROM  PDATA.T05_Train_Mov_Stat \n" +
+                "where stat_dt>=trunc(date_add(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,-7),'YY')\n" +
+                "group by cast(trunc(Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),SUBSTR(Stat_Dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "--'B0000003' 换乘量\n" +
+                "create temporary TABLE t1002\n" +
+                "(\n" +
+                "start_tm  timestamp,\n" +
+                "end_tm timestamp,\n" +
+                "traf_stn_id varchar(50),\n" +
+                "xfer_out_line_id varchar(50),\n" +
+                "xfer_in_line_id varchar(50),\n" +
+                "traf_qty int);\n" +
+                "\n" +
+                "insert into t1002\n" +
+                "select\n" +
+                "cast (concat(substr(start_tm,1,13),':00:00')  as timestamp ) as start_tm,\n" +
+                "from_unixtime(unix_timestamp(cast (concat(substr(start_tm,1,13),':00:00')  as timestamp ) )+3600,'yyyy-MM-dd HH:mm:ss') as end_tm,\n" +
+                "traf_stn_id,\n" +
+                "xfer_out_line_id,\n" +
+                "xfer_in_line_id,\n" +
+                "sum(traf_qty)\n" +
+                "from pdata.T05_TRAF_QTY_PERIOD_STAT where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "group by\n" +
+                "substr(start_tm,1,13),\n" +
+                "traf_stn_id,\n" +
+                "xfer_out_line_id,\n" +
+                "xfer_in_line_id\n" +
+                ";\n" +
+                "\n" +
+                "--hour 车站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "C.Pty_ID,\n" +
+                "A.start_tm,\n" +
+                "A.end_tm,\n" +
+                "A.traf_qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(A.start_tm,1,4),substr(A.start_tm,6,2),substr(A.start_tm,9,2)),\n" +
+                "'B0000003',\n" +
+                "'Hour'\n" +
+                "FROM t1002 A\n" +
+                "inner join pdata.T02_Stn_Traf_Stn_Rel_H B  on A.Traf_Stn_ID=B.Traf_Stn_ID and A.xfer_in_line_id=substr(B.stn_id,1,2)\n" +
+                "inner join pdata.T02_Fac_Point_Pty_Rel_H C on  B.stn_id=C.Fac_Point_ID and C.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                ";\n" +
+                "\n" +
+                "--hour 线路\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "A.start_tm,\n" +
+                "A.end_tm,\n" +
+                "A.traf_qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(A.start_tm,1,4),substr(A.start_tm,6,2),substr(A.start_tm,9,2)),\n" +
+                "'B0000003',\n" +
+                "'Hour'\n" +
+                " from (\n" +
+                "  select xfer_in_line_id,start_tm,end_tm,sum(traf_qty) traf_qty from t1002 group by xfer_in_line_id,start_tm,end_tm\n" +
+                " ) A\n" +
+                " left join  pdata.t02_line_pty_rel_h B ON A.xfer_in_line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--hour 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "start_tm,\n" +
+                "end_tm,\n" +
+                "sum(traf_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(start_tm,1,4),substr(start_tm,6,2),substr(start_tm,9,2)),\n" +
+                "'B0000003',\n" +
+                "'Hour'\n" +
+                " from  t1002\n" +
+                " group by start_tm,end_tm \n" +
+                ";\n" +
+                "\n" +
+                "--Day 车站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "C.Pty_ID,\n" +
+                "cast(A.Stat_Dt as timestamp),\n" +
+                "cast(date_add(A.Stat_Dt,1) as timestamp),\n" +
+                "traf_qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000003',\n" +
+                "'Day'\n" +
+                " from\n" +
+                "pdata.T05_Traf_Qty_Dt_Stat A\n" +
+                "inner join pdata.T02_Stn_Traf_Stn_Rel_H B  on A.Traf_Stn_ID=B.Traf_Stn_ID and A.xfer_in_line_id=substr(B.stn_id,1,2)\n" +
+                "inner join pdata.T02_Fac_Point_Pty_Rel_H C on  B.stn_id=C.Fac_Point_ID and C.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where c.Pty_ID is not null\n" +
+                "AND A.stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                ";\n" +
+                "\n" +
+                "--Day 线路\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "cast(A.Stat_Dt as timestamp),\n" +
+                "cast(date_add(A.Stat_Dt,1) as timestamp),\n" +
+                "traf_qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000003',\n" +
+                "'Day'\n" +
+                " from ( select xfer_in_line_id,Stat_Dt,sum(traf_qty) traf_qty from pdata.T05_Traf_Qty_Dt_Stat\n" +
+                "        where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                "        group by xfer_in_line_id,Stat_Dt \n" +
+                " ) A\n" +
+                " left join  pdata.t02_line_pty_rel_h B ON A.xfer_in_line_id=B.line_id AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Day 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(Stat_Dt as timestamp),\n" +
+                "cast(date_add(Stat_Dt,1) as timestamp),\n" +
+                "sum(traf_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(substr(stat_dt,1,4),substr(stat_dt,6,2),substr(stat_dt,9,2)),\n" +
+                "'B0000003',\n" +
+                "'Day'\n" +
+                " from  pdata.T05_Traf_Qty_Dt_Stat\n" +
+                " where stat_dt>=to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2)))\n" +
+                " group by Stat_Dt \n" +
+                ";\n" +
+                "\n" +
+                "--Month 车站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "C.Pty_ID,\n" +
+                "cast(trunc(A.Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(A.Stat_Dt),1) as timestamp),\n" +
+                "sum(traf_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000003',\n" +
+                "'Month'\n" +
+                " from\n" +
+                "pdata.T05_Traf_Qty_Dt_Stat A\n" +
+                "inner join pdata.T02_Stn_Traf_Stn_Rel_H B  on A.Traf_Stn_ID=B.Traf_Stn_ID and A.xfer_in_line_id=substr(B.stn_id,1,2)\n" +
+                "inner join pdata.T02_Fac_Point_Pty_Rel_H C on  B.stn_id=C.Fac_Point_ID and C.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where c.Pty_ID is not null \n" +
+                "and A.stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "group by C.Pty_ID ,cast(trunc(A.Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(A.Stat_Dt),1) as timestamp),concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "--Month 线路\n" +
+                "insert INTO  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "f_starttime,\n" +
+                "f_stoptime,\n" +
+                "traf_qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "A.stat_dt,\n" +
+                "'B0000003',\n" +
+                "'Month'\n" +
+                " from\n" +
+                "( select cast(trunc(Stat_Dt,'MM') as timestamp) f_starttime,\n" +
+                "        cast(date_add(last_day(Stat_Dt),1) as timestamp) f_stoptime,\n" +
+                "        concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)) stat_dt,\n" +
+                "        xfer_in_line_id,sum(traf_qty) traf_qty from pdata.T05_Traf_Qty_Dt_Stat\n" +
+                "        where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                "        group by xfer_in_line_id ,cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "        cast(date_add(last_day(Stat_Dt),1) as timestamp),concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ") A\n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.xfer_in_line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Month 北京地铁\n" +
+                "insert INTO  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select\n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                "cast(date_add(last_day(Stat_Dt),1) as timestamp),\n" +
+                "sum(traf_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2)),\n" +
+                "'B0000003',\n" +
+                "'Month'\n" +
+                " from pdata.T05_Traf_Qty_Dt_Stat\n" +
+                "where stat_dt>=trunc(to_date(CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2))) ,'MM')\n" +
+                " group by cast(trunc(Stat_Dt,'MM') as timestamp),\n" +
+                " cast(date_add(last_day(Stat_Dt),1) as timestamp),concat(SUBSTR(Stat_Dt,1,4),SUBSTR(Stat_Dt,6,2))\n" +
+                ";\n" +
+                "\n" +
+                "--Year 车站\n" +
+                "insert OVERWRITE TABLE  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "C.Pty_ID,\n" +
+                "cast(trunc(A.Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(A.Stat_Dt),'-12-31')),1) as timestamp),\n" +
+                "sum(traf_qty),\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(A.Stat_Dt,1,4),\n" +
+                "'B0000003',\n" +
+                "'Year'\n" +
+                " from \n" +
+                "pdata.T05_Traf_Qty_Dt_Stat A \n" +
+                "inner join pdata.T02_Stn_Traf_Stn_Rel_H B  on A.Traf_Stn_ID=B.Traf_Stn_ID and A.xfer_in_line_id=substr(B.stn_id,1,2)\n" +
+                "inner join pdata.T02_Fac_Point_Pty_Rel_H C on  B.stn_id=C.Fac_Point_ID and C.Fac_Point_Pty_Rel_Ctgy_CD='05'\n" +
+                "where c.Pty_ID is not null \n" +
+                "group by C.Pty_ID ,cast(trunc(A.Stat_Dt,'YY') as timestamp),\n" +
+                "cast(date_add(to_date(concat(year(A.Stat_Dt),'-12-31')),1) as timestamp),SUBSTR(A.Stat_Dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "\n" +
+                "--Year 线路\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "B.Pty_ID,\n" +
+                "f_starttime,\n" +
+                "f_stoptime,\n" +
+                "traf_qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(f_starttime,1,4),\n" +
+                "'B0000003',\n" +
+                "'Year'\n" +
+                " from \n" +
+                "( select cast(trunc(Stat_Dt,'YY') as timestamp) f_starttime,\n" +
+                "        cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp) f_stoptime,\n" +
+                "        sum(traf_qty) traf_qty,xfer_in_line_id\n" +
+                "  from pdata.T05_Traf_Qty_Dt_Stat \n" +
+                "        group by cast(trunc(Stat_Dt,'YY') as timestamp),cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),xfer_in_line_id\n" +
+                ") A \n" +
+                " left join  pdata.T02_Line_Pty_Rel_H  B ON A.xfer_in_line_id=B.line_id  AND B.line_pty_rel_ctgy_cd='20'\n" +
+                "where B.Pty_ID is not null\n" +
+                ";\n" +
+                "\n" +
+                "--Year 北京地铁\n" +
+                "insert into  ENERGY_CONFIG.T_EQ_EnergyQuota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "select \n" +
+                "1,\n" +
+                "'jz',\n" +
+                "'21021',\n" +
+                "cast(trunc(Stat_Dt,'YY') as timestamp) f_starttime,\n" +
+                "cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp) f_stoptime,\n" +
+                "sum(traf_qty) traf_qty,\n" +
+                "1,\n" +
+                "null,\n" +
+                "current_timestamp,\n" +
+                "SUBSTR(Stat_Dt,1,4),\n" +
+                "'B0000003',\n" +
+                "'Year'\n" +
+                " from pdata.T05_Traf_Qty_Dt_Stat \n" +
+                "group by cast(trunc(Stat_Dt,'YY') as timestamp),cast(date_add(to_date(concat(year(Stat_Dt),'-12-31')),1) as timestamp),SUBSTR(Stat_Dt,1,4)\n" +
+                ";\n" +
+                "\n" +
+                "--运营分公司  20180531\n" +
+                "insert into energy_config.t_eq_energyquota PARTITION(stat_dt,f_quotacode,f_recordtype)\n" +
+                "SELECT '1' f_accountsetid,'yf' f_energyobjtype,\n" +
+                "case when substr(f_energyobjid,1,7)='2102101' then '2101101'\n" +
+                " when substr(f_energyobjid,1,7)='2102102' then '2101102'\n" +
+                " when substr(f_energyobjid,1,7)='2102103' then '2101103'\n" +
+                " when substr(f_energyobjid,1,7)='2102104' then '2101104'\n" +
+                " end f_energyobjid, \n" +
+                "f_starttime, f_stoptime, sum(f_quotaval) f_quotaval, '1' f_state, null, current_timestamp, stat_dt, f_quotacode, f_recordtype \n" +
+                "FROM energy_config.t_eq_energyquota\n" +
+                "where opt_tm>=current_date and length(f_energyobjid)=9\n" +
+                "group by substr(f_energyobjid,1,7), f_starttime, f_stoptime, stat_dt, f_quotacode, f_recordtype;\n" +
+                "\n" +
+                "\n";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
+        list.forEach(statement -> System.out.println("解析后的SQL 为 : [" + statement.toString() +"]"));
         if (list.size() > 1) {
             throw new SQLSyntaxErrorException("MultiQueries is not supported,use single query instead");
         }
