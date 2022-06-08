@@ -159,8 +159,12 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
         SQLSelectQueryBlock queryBlock = getQueryBlock();
 
         SQLExpr exprObj = SQLUtils.toSQLExpr(expr, dbType);
+        if (exprObj instanceof SQLBinaryOpExpr) {
+            ((SQLBinaryOpExpr) exprObj).setParenthesized(true);
+        }
         SQLExpr newCondition = SQLUtils.buildCondition(SQLBinaryOperator.BooleanOr, exprObj, false,
                 queryBlock.getWhere());
+
         queryBlock.setWhere(newCondition);
 
         return this;

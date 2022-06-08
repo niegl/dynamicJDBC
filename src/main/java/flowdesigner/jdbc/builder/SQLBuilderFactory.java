@@ -1,6 +1,9 @@
 package flowdesigner.jdbc.builder;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
+import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
+import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.builder.SQLDeleteBuilder;
 import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
@@ -14,6 +17,9 @@ public class SQLBuilderFactory {
 
     public static SQLSelectBuilder createSelectSQLBuilder(DbType dbType) {
         return new SQLSelectBuilderImpl(dbType);
+    }
+    public static SQLSelectBuilder createSelectSQLBuilder(SQLSelectStatement stmt, DbType dbType) {
+        return new SQLSelectBuilderImpl(stmt,dbType);
     }
 
     public static SQLDeleteBuilder createDeleteBuilder(DbType dbType) {
@@ -48,8 +54,25 @@ public class SQLBuilderFactory {
     public static SQLCreateTableBuilder createCreateTableBuilder(DbType dbType) {
         return new SQLCreateTableBuilderImpl(dbType);
     }
-
+    public static SQLCreateTableBuilder createCreateTableBuilder(SQLCreateTableStatement stmt, DbType dbType) {
+        return new SQLCreateTableBuilderImpl(stmt,dbType);
+    }
     public static SQLDropTableBuilder createDropTableBuilder(DbType dbType) {
         return new SQLDropTableBuilderImpl(dbType);
     }
+
+    public static SQLInsertBuilder createInsertBuilder(DbType dbType) {
+        return createInsertBuilder(null, dbType);
+    }
+
+    public static SQLInsertBuilder createInsertBuilder(SQLInsertStatement stmt, DbType dbType) {
+        switch (dbType) {
+            case hive:
+                return new SQLHiveInsertBuilderImpl(stmt, dbType);
+            default:
+                return new SQLInsertBuilderImpl(stmt, dbType);
+        }
+    }
+
+
 }

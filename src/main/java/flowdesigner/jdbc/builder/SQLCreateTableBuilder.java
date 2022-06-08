@@ -4,6 +4,7 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
+import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 
 import java.util.List;
 
@@ -61,4 +62,6 @@ public interface SQLCreateTableBuilder {
     SQLCreateTableBuilder addOption(String name, String value);
 
     SQLCreateTableBuilder addOption(String name, SQLExpr value);
+
+    SQLCreateTableStatement getSQLCreateTableStatement();
 }

@@ -1506,6 +1506,25 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    @org.junit.jupiter.api.Test
+    void testInsert() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="INSERT INTO first_table_name PARTITION(data_dt='${erg_date}') (column1, column2,  columnN) \n" +
+                "SELECT column1, column2, columnN \n" +
+                "FROM second_table_name\n" +
+                "WHERE column1=2;";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
+    void testOr() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="SELECT a, b FROM tablea WHERE data_dt = '2022-10' AND a = 2 OR (b = 4 AND aa = 2)";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> System.out.println("解析后的SQL 为 : [" + statement.toString() +"]"));

@@ -51,4 +51,21 @@ class SQLSelectBuilderImplTest {
         builder.union(builder3, "DISTINCT");
         System.out.println(builder);
     }
+
+    @Test
+    void whereAnd() {
+        SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.hive);
+        builderEx.select("a","b")
+                .from("tablea","a")
+                .where("data_dt='2022-10'");
+
+        builderEx.whereAnd("a=2");
+        builderEx.whereOr("b=4 and aa=2");
+
+        System.out.println(builderEx);
+    }
+
+    @Test
+    void whereOr() {
+    }
 }
