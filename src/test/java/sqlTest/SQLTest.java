@@ -1525,6 +1525,14 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    @org.junit.jupiter.api.Test
+    void testJoin() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="SELECT a, b FROM A join B on A.a=B.a and A.b = B.b;";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> System.out.println("解析后的SQL 为 : [" + statement.toString() +"]"));

@@ -334,6 +334,44 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
         return this;
     }
 
+    @Override
+    public SQLSelectBuilder joinAnd(String conditionLeft, String conditionRight, String conditionOperator) {
+        joinRest(SQLBinaryOperator.BooleanAnd, conditionLeft, conditionRight, conditionOperator);
+        return this;
+    }
+
+    @Override
+    public SQLSelectBuilder joinOr(String conditionLeft, String conditionRight, String conditionOperator) {
+        joinRest(SQLBinaryOperator.BooleanOr, conditionLeft, conditionRight, conditionOperator);
+        return this;
+    }
+
+    /**
+     * 添加 A JOIN B on A.a = B.b And 后面部分
+     * @param AndOr
+     * @param conditionLeft
+     * @param conditionRight
+     * @param conditionOperator
+     */
+    private void joinRest(SQLBinaryOperator AndOr, String conditionLeft, String conditionRight, String conditionOperator) {
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        SQLTableSource from = queryBlock.getFrom();
+        SQLJoinTableSource joinTableSource = null;
+
+        if (from instanceof SQLExprTableSource || from instanceof SQLJoinTableSource) {
+            joinTableSource = (SQLJoinTableSource) from;
+        }
+        if (joinTableSource != null) {
+            SQLExpr left = joinTableSource.getCondition();
+            SQLBinaryOpExpr right = new SQLBinaryOpExpr(queryBlock.getDbType());
+            right.setLeft(new SQLIdentifierExpr(conditionLeft));
+            right.setRight(new SQLIdentifierExpr(conditionRight));
+            right.setOperator(SQLBinaryOperator.Equality);
+            SQLBinaryOpExpr newCondition = new SQLBinaryOpExpr(left, AndOr, right, dbType);
+            joinTableSource.setCondition(newCondition);
+        }
+    }
+
     public String toString() {
         return SQLUtils.toSQLString(stmt, dbType);
     }

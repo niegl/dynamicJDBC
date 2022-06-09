@@ -15,6 +15,8 @@ class SQLSelectBuilderImplTest {
         builderEx.select("a","b")
                 .from("tablea","a");
         builderEx.join("inner join","tableb","b","a.aa","b.bb","=");
+        builderEx.joinAnd("c","B.c","=");
+        builderEx.joinOr("d","B.d","=");
         builderEx.join("inner join","tablec","c","c.cc","b.bb","=");
 
         System.out.println(builderEx);
@@ -67,5 +69,9 @@ class SQLSelectBuilderImplTest {
 
     @Test
     void whereOr() {
+    }
+
+    @Test
+    void testJoin() {
     }
 }

@@ -41,4 +41,8 @@ public interface SQLSelectBuilder {
 
     SQLSelectBuilder join(String joinType, String table, String alias,
                           String exprLeft, String exprRight, String operator);
+
+    SQLSelectBuilder joinAnd(String conditionLeft, String conditionRight, String conditionOperator);
+
+    SQLSelectBuilder joinOr(String conditionLeft, String conditionRight, String conditionOperator);
 }
