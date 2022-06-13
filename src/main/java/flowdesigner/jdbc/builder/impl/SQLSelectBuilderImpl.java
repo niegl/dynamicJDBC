@@ -9,6 +9,7 @@ import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.*;
+import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLSelectBuilder;
@@ -366,7 +367,16 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
             SQLBinaryOpExpr right = new SQLBinaryOpExpr(queryBlock.getDbType());
             right.setLeft(new SQLIdentifierExpr(conditionLeft));
             right.setRight(new SQLIdentifierExpr(conditionRight));
-            right.setOperator(SQLBinaryOperator.Equality);
+
+            SQLBinaryOperator binaryOperator = null;
+            for (SQLBinaryOperator operator: SQLBinaryOperator.values()) {
+                if (operator.getName().equalsIgnoreCase(conditionOperator)) {
+                    binaryOperator = operator;
+                }
+            }
+            if (binaryOperator == null) return;
+
+            right.setOperator(binaryOperator);
             SQLBinaryOpExpr newCondition = new SQLBinaryOpExpr(left, AndOr, right, dbType);
             joinTableSource.setCondition(newCondition);
         }
@@ -374,5 +384,45 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
 
     public String toString() {
         return SQLUtils.toSQLString(stmt, dbType);
+    }
+
+    /**
+     * 以下为MYSQL适配接口
+     */
+    @Override
+    public void setBigResult(boolean bigResult) {
+
+    }
+    @Override
+    public void setBufferResult(boolean bufferResult) {
+
+    }
+    @Override
+    public void setCache(Boolean cache) {
+
+    }
+    @Override
+    public void setCalcFoundRows(boolean calcFoundRows) {
+
+    }
+
+    /**
+     * 以下为DB2适配接口
+     */
+    @Override
+    public void setIsolation(String isolation) {
+
+    }
+    @Override
+    public void setIsolation(DB2SelectQueryBlock.Isolation isolation) {
+
+    }
+    @Override
+    public void setForReadOnly(boolean forReadOnly) {
+
+    }
+    @Override
+    public void setOptimizeFor(SQLExpr optimizeFor) {
+
     }
 }

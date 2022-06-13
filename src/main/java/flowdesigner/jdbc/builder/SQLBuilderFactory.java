@@ -9,17 +9,33 @@ import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
 import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
 import flowdesigner.jdbc.builder.impl.*;
+import flowdesigner.jdbc.builder.impl.dialect.db2.DB2SelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.HiveAlterTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.hive.SQLHiveInsertBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLSelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
 
 public class SQLBuilderFactory {
 
     public static SQLSelectBuilder createSelectSQLBuilder(DbType dbType) {
-        return new SQLSelectBuilderImpl(dbType);
+        return createSelectSQLBuilder(new SQLSelectStatement(dbType),dbType);
     }
     public static SQLSelectBuilder createSelectSQLBuilder(SQLSelectStatement stmt, DbType dbType) {
-        return new SQLSelectBuilderImpl(stmt,dbType);
+        switch (dbType) {
+
+            case mysql:
+                return new MySQLSelectBuilderImpl(stmt, dbType);
+            case db2:
+                return new DB2SelectBuilderImpl(stmt, dbType);
+            case hive:
+            case odps:
+            case oracle:
+            case postgresql:
+            case sqlserver:
+            default:
+                return new SQLSelectBuilderImpl(stmt, dbType);
+        }
     }
 
     public static SQLDeleteBuilder createDeleteBuilder(DbType dbType) {
