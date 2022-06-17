@@ -15,11 +15,12 @@ import flowdesigner.jdbc.builder.impl.dialect.hive.SQLHiveInsertBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLSelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleSelectBuilderImpl;
 
 public class SQLBuilderFactory {
 
     public static SQLSelectBuilder createSelectSQLBuilder(DbType dbType) {
-        return createSelectSQLBuilder(new SQLSelectStatement(dbType),dbType);
+        return createSelectSQLBuilder(new SQLSelectStatement(dbType), dbType);
     }
     public static SQLSelectBuilder createSelectSQLBuilder(SQLSelectStatement stmt, DbType dbType) {
         switch (dbType) {
@@ -31,6 +32,7 @@ public class SQLBuilderFactory {
             case hive:
             case odps:
             case oracle:
+                return new OracleSelectBuilderImpl(stmt, dbType);
             case postgresql:
             case sqlserver:
             default:

@@ -139,11 +139,13 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
 
     @Override
     public SQLSelectBuilder where(String expr) {
+        return where(SQLUtils.toSQLExpr(expr, dbType));
+    }
+
+    @Override
+    public SQLSelectBuilder where(SQLExpr expr) {
         SQLSelectQueryBlock queryBlock = getQueryBlock();
-
-        SQLExpr exprObj = SQLUtils.toSQLExpr(expr, dbType);
-        queryBlock.setWhere(exprObj);
-
+        queryBlock.setWhere(expr);
         return this;
     }
 

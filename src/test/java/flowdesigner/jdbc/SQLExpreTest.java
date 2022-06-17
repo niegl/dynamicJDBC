@@ -46,5 +46,11 @@ public class SQLExpreTest {
         SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
         System.out.println(expr);
     }
-
+    @org.junit.jupiter.api.Test
+    void testSQLOverExpr() throws SQLSyntaxErrorException {
+        DbType dbType = JdbcConstants.MYSQL;
+        String sql = "min(object_id) over(partition by type order by object_id)";
+        SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
+        System.out.println(expr);
+    }
 }

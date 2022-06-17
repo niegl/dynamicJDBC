@@ -31,6 +31,8 @@ public interface SQLSelectBuilder {
 
     SQLSelectBuilder where(String expr);
 
+    SQLSelectBuilder where(SQLExpr expr);
+
     SQLSelectBuilder whereAnd(String expr);
 
     SQLSelectBuilder whereOr(String expr);

@@ -6,7 +6,14 @@ import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.SQLStatementImpl;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.*;
+import com.alibaba.druid.sql.dialect.oracle.parser.OracleStatementParser;
+import com.alibaba.druid.sql.dialect.oracle.visitor.OracleExportParameterVisitor;
+import com.alibaba.druid.sql.parser.SQLParserFeature;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
+import com.alibaba.druid.sql.parser.SQLStatementParser;
+import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
+import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
+import org.junit.jupiter.api.Test;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.List;
@@ -1533,9 +1540,41 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    @org.junit.jupiter.api.Test
+    void testSet() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="--Modify history list:Created by 聂广苓\n" +
+                "\n" +
+                "set ngmr.furion.pool=DEFAULT;";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @Test
+    void testExportParamized() {
+        String sql = "select name,age from test_tab1 where name='name' and age = 11 and id in  ('A','B')";
+        final StringBuilder out = new StringBuilder();
+        final ExportParameterVisitor visitor = new OracleExportParameterVisitor(out);
+        // visitor.setParameterizedMergeInList(true);
+        SQLStatementParser parser = new OracleStatementParser(sql);
+        final SQLStatement parseStatement = parser.parseStatement();
+        parseStatement.accept(visitor);
+        final List<Object> plist = visitor.getParameters();
+        sql = out.toString();
+        System.out.println("src:"+sql);
+        System.out.println("sql:"+sql+" params:"+plist);
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
-        list.forEach(statement -> System.out.println("解析后的SQL 为 : [" + statement.toString() +"]"));
+        list.forEach(statement -> {
+            final StringBuilder out = new StringBuilder();
+            SQLASTOutputVisitor visitor = new SQLASTOutputVisitor(out);
+//            visitor.setDesensitize(true);
+            visitor.setParameterizedQuesUnMergeInList(true);
+            statement.accept(visitor);
+            System.out.println("解析后的SQL 为 : [" + out.toString() +"]");
+        });
         if (list.size() > 1) {
             throw new SQLSyntaxErrorException("MultiQueries is not supported,use single query instead");
         }

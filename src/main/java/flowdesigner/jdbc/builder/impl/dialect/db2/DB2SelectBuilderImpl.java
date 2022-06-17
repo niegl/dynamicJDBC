@@ -40,21 +40,5 @@ public class DB2SelectBuilderImpl extends SQLSelectBuilderImpl {
         getQueryBlock().setOptimizeFor(optimizeFor);
     }
 
-    /**
-     * 忽略offset，DB2不支持offset
-     * @param rowCount
-     * @param offset
-     * @return
-     */
-    @Override
-    public SQLSelectBuilder limit(int rowCount, int offset) {
-        getQueryBlock().setFirst(new SQLIntegerExpr(rowCount));
-//        if (offset <= 0) {
-//            getQueryBlock().setFirst(new SQLIntegerExpr(rowCount));
-//        } else {
-//            //throw new UnsupportedOperationException("not support offset");
-//        }
-        return null;
-    }
 
 }
