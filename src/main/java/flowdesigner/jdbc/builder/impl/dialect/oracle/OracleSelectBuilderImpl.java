@@ -13,6 +13,7 @@ import flowdesigner.jdbc.builder.SQLSelectBuilder;
 import flowdesigner.jdbc.builder.impl.SQLSelectBuilderImpl;
 
 public class OracleSelectBuilderImpl extends SQLSelectBuilderImpl {
+
     public OracleSelectBuilderImpl(DbType dbType) {
         super(dbType);
     }

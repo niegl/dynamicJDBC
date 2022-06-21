@@ -9,6 +9,12 @@ import flowdesigner.jdbc.builder.SQLSelectBuilder;
 import flowdesigner.jdbc.builder.impl.SQLSelectBuilderImpl;
 
 public class DB2SelectBuilderImpl extends SQLSelectBuilderImpl {
+    static {
+        supportMethods.add("setIsolation");
+        supportMethods.add("setForReadOnly");
+        supportMethods.add("setOptimizeFor");
+    }
+
     public DB2SelectBuilderImpl(DbType dbType) {
         super(dbType);
     }

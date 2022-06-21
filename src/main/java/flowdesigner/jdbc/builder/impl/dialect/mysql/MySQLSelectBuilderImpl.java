@@ -5,7 +5,16 @@ import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
 import flowdesigner.jdbc.builder.impl.SQLSelectBuilderImpl;
 
+import java.util.List;
+
 public class MySQLSelectBuilderImpl extends SQLSelectBuilderImpl {
+
+    static {
+        supportMethods.add("setBigResult");
+        supportMethods.add("setBufferResult");
+        supportMethods.add("setCache");
+        supportMethods.add("setCalcFoundRows");
+    }
 
     public MySQLSelectBuilderImpl(DbType dbType) {
         super(dbType);

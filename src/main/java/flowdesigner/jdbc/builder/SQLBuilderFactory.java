@@ -16,6 +16,7 @@ import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLSelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleSelectBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.pg.PGSelectBuilderImpl;
 
 public class SQLBuilderFactory {
 
@@ -34,6 +35,7 @@ public class SQLBuilderFactory {
             case oracle:
                 return new OracleSelectBuilderImpl(stmt, dbType);
             case postgresql:
+                return new PGSelectBuilderImpl(stmt, dbType);
             case sqlserver:
             default:
                 return new SQLSelectBuilderImpl(stmt, dbType);

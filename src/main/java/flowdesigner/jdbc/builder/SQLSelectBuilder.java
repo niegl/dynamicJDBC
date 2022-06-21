@@ -7,11 +7,17 @@ import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
 import flowdesigner.jdbc.builder.impl.SQLSelectBuilderImpl;
 
+import java.util.List;
+
 public interface SQLSelectBuilder {
 
     SQLSelect getSQLSelect();
 
     SQLSelectStatement getSQLSelectStatement();
+
+    List<String> getSupportMethods();
+
+    String getSupportMethodsAsString();
 
     SQLSelectBuilder select(String... columns);
 

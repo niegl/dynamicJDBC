@@ -13,10 +13,34 @@ import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLSelectBuilder;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SQLSelectBuilderImpl implements SQLSelectBuilder {
     private SQLSelectStatement stmt;
     private DbType             dbType;
+
+    protected static List<String> supportMethods = new ArrayList<>();
+    static {
+        supportMethods.add("select");
+        supportMethods.add("selectWithAlias");
+        supportMethods.add("from");
+        supportMethods.add("orderBy");
+        supportMethods.add("groupBy");
+        supportMethods.add("having");
+        supportMethods.add("into");
+        supportMethods.add("where");
+        supportMethods.add("whereAnd");
+        supportMethods.add("whereOr");
+        supportMethods.add("limit");
+        supportMethods.add("union");
+        supportMethods.add("join");
+        supportMethods.add("joinAnd");
+        supportMethods.add("joinOr");
+        supportMethods.add("join");
+    }
 
     public SQLSelectBuilderImpl(DbType dbType){
         this(new SQLSelectStatement(), dbType);
@@ -38,6 +62,20 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
     @Override
     public SQLSelectStatement getSQLSelectStatement() {
         return stmt;
+    }
+
+    /**
+     * 返回当前数据库支持的方法。
+     * @return
+     */
+    @Override
+    public List<String> getSupportMethods() {
+        return supportMethods;
+    }
+
+    @Override
+    public String getSupportMethodsAsString() {
+        return StringUtils.join(supportMethods,",");
     }
 
     @Override
