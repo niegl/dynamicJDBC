@@ -26,7 +26,7 @@ class CommandManagerTest {
     Connection connection = null;
     @BeforeEach
     void setUp() {
-//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
         DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
 //        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");

@@ -420,7 +420,7 @@ public class DBDialect {
         DatabaseMetaData meta = conn.getMetaData();
 
         if (StringKit.isBlank(schemaPattern)) {
-            schemaPattern = getSchemaPattern(conn);
+            schemaPattern = getSchemaPattern(conn, schemaPattern);
         }
 
         String catalog = conn.getCatalog();

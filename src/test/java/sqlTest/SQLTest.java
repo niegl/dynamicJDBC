@@ -1550,6 +1550,14 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    @org.junit.jupiter.api.Test
+    void testInsertIntoColumns() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="INSERT INTO Persons (LastName, Address) VALUES (('Wilson', 'Champs-Elysees'),('Wilson2', 'Champs-Elysees2'))";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
     @Test
     void testExportParamized() {
         String sql = "select name,age from test_tab1 where name='name' and age = 11 and id in  ('A','B')";

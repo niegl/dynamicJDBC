@@ -24,7 +24,7 @@ class DynamicDriverTest {
 //        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
 //        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
         properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-        properties.setProperty("url","jdbc:mysql://192.168.2.43:3306");
+        properties.setProperty("url","jdbc:mysql://localhost:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");

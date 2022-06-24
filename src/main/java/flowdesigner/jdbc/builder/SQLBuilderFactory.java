@@ -30,13 +30,13 @@ public class SQLBuilderFactory {
                 return new MySQLSelectBuilderImpl(stmt, dbType);
             case db2:
                 return new DB2SelectBuilderImpl(stmt, dbType);
-            case hive:
-            case odps:
             case oracle:
                 return new OracleSelectBuilderImpl(stmt, dbType);
             case postgresql:
                 return new PGSelectBuilderImpl(stmt, dbType);
             case sqlserver:
+            case hive:
+            case odps:
             default:
                 return new SQLSelectBuilderImpl(stmt, dbType);
         }

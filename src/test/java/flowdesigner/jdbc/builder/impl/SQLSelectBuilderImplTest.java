@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SQLSelectBuilderImplTest {
 
-    SQLSelectBuilder builderEx = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+    SQLSelectBuilder builderEx = SQLBuilderFactory.createSelectSQLBuilder(DbType.hive);
     @AfterEach
     void tearDown() {
         System.out.println(builderEx);
@@ -18,7 +18,7 @@ class SQLSelectBuilderImplTest {
 
     @Test
     void join() {
-        SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.mysql);
+//        SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.mysql);
         builderEx.select("a","b")
                 .from("tablea","a");
         builderEx.join("inner join","tableb","b","a.aa","b.bb","=");
