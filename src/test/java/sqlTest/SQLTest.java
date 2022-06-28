@@ -1573,6 +1573,12 @@ public class SQLTest {
         System.out.println("sql:"+sql+" params:"+plist);
     }
 
+    @Test
+    void testGroup() throws SQLSyntaxErrorException {
+        String sql = "select name,age from test_tab1 group by name";
+        parser(sql, "hive");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {
