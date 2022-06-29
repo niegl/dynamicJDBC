@@ -16,6 +16,7 @@
 package flowdesigner.jdbc.util.sql.kit;
 
 
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.sql.core.DBType;
@@ -111,7 +112,7 @@ public abstract class DBTypeKit {
 
     public static String getDBTypeStr(String driverName){
         if (driverName.equals("Hive JDBC")) {
-            return DBType.HIVE.getName();
+            return DbType.hive.name();//.getName();
         } else {
             return null;
         }

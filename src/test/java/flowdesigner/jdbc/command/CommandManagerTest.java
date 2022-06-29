@@ -6,6 +6,7 @@ import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
+import flowdesigner.jdbc.util.FunctionUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,10 +16,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,13 +24,13 @@ class CommandManagerTest {
     Connection connection = null;
     @BeforeEach
     void setUp() {
-//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
-//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
-        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-        properties.setProperty("url","jdbc:mysql://localhost:3306");
+        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+//        properties.setProperty("url","jdbc:mysql://localhost:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
@@ -246,5 +244,19 @@ class CommandManagerTest {
             fkColumnField.setFK_NAME(FK_NAME);
             System.out.println(fkColumnField);
         }
+    }
+
+    @Test
+    void getSupportFunctions() throws SQLException {
+        Collection<String> supportFunctions = FunctionUtils.getSupportFunctions(connection);
+    }
+
+    @Test
+    void getSupportFunctionUsage() throws SQLException {
+        String usage = FunctionUtils.getFunctionUsage(connection,"acos");
+    }
+    @Test
+    void getSupportFunctionType() throws SQLException {
+        FunctionUtils.getFunctionType("^=");
     }
 }

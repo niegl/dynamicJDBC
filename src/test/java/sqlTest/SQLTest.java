@@ -1579,6 +1579,12 @@ public class SQLTest {
         parser(sql, "hive");
     }
 
+    @Test
+    void testDescribeFunction() throws SQLSyntaxErrorException {
+        String sql = "describe function acos";
+        parser(sql, "hive");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {
