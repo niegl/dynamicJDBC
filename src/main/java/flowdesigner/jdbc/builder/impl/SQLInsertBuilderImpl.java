@@ -40,6 +40,11 @@ public class SQLInsertBuilderImpl implements SQLInsertBuilder {
     }
 
     @Override
+    public SQLInsertBuilder setInsertColumn(String column) {
+        return setInsertColumns(column);
+    }
+
+    @Override
     public SQLInsertBuilder setInsertColumns(String... columns) {
         SQLInsertStatement insert = getSQLInsertStatement();
         for (String column : columns) {
@@ -48,6 +53,7 @@ public class SQLInsertBuilderImpl implements SQLInsertBuilder {
         }
         return this;
     }
+
     /**
      * 非通用接口：子类实现
      * @param ifNotExists

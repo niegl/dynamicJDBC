@@ -8,6 +8,7 @@ import com.alibaba.druid.sql.ast.statement.SQLSelectQuery;
 public interface SQLInsertBuilder {
     SQLInsertBuilder setTableSource(String tableName);
 
+    SQLInsertBuilder setInsertColumn(String column);
     SQLInsertBuilder setInsertColumns(String... columns);
 
     SQLInsertBuilder setIfNotExists(boolean ifNotExists);

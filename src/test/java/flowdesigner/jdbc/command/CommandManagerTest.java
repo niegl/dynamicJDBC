@@ -6,7 +6,7 @@ import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
-import flowdesigner.jdbc.util.FunctionUtils;
+import flowdesigner.jdbc.operators.SQLOperatorUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -248,15 +248,15 @@ class CommandManagerTest {
 
     @Test
     void getSupportFunctions() throws SQLException {
-        Collection<String> supportFunctions = FunctionUtils.getSupportFunctions(connection);
+        Collection<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(connection);
     }
 
     @Test
     void getSupportFunctionUsage() throws SQLException {
-        String usage = FunctionUtils.getFunctionUsage(connection,"acos");
+        String usage = SQLOperatorUtils.getFunctionDescription(connection,"acos");
     }
     @Test
     void getSupportFunctionType() throws SQLException {
-        FunctionUtils.getFunctionType("^=");
+        SQLOperatorUtils.getFunctionType("^=");
     }
 }
