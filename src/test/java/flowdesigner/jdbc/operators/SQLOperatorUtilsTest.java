@@ -12,5 +12,17 @@ class SQLOperatorUtilsTest {
         System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "||"));
         System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "sum"));
         System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "substr"));
+        System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "PRIOR"));
+        System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "map"));
+    }
+
+    @Test
+    void testGetFunctionSignature() {
+
+    }
+
+    @Test
+    void getSupportFunctions() {
+        System.out.println(SQLOperatorUtils.getSupportFunctions(null));
     }
 }

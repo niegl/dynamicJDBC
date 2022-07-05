@@ -112,5 +112,12 @@ public class SQLExpreTest {
         sql = out.toString();
         System.out.println("src:"+sql);
     }
+    @org.junit.jupiter.api.Test
+    void testMap() throws SQLSyntaxErrorException {
+        DbType dbType = JdbcConstants.HIVE;
+        String sql = "map(key1, value1, key2, value2)";
+        SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
+        System.out.println(expr);
 
+    }
 }

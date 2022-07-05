@@ -2,7 +2,20 @@ package flowdesigner.jdbc.operators;
 
 public enum SQLOperator {
 
-    //region SQLBinaryOperator
+    //region 一元操作符
+    Plus("+"),
+    Negative("-"),
+    Not("!"),
+    Compl("~"),
+    Prior("PRIOR"),
+    ConnectByRoot("CONNECT BY"),
+    BINARY("BINARY"),
+    RAW("RAW"),
+    NOT("NOT"),
+    // Number of points in path or polygon
+    Pound("#"),
+    //endregion
+    //region 二元操作符
     Union("UNION", 0),
     COLLATE("COLLATE", 20),
     BitwiseXor("^", 50),
@@ -69,6 +82,13 @@ public enum SQLOperator {
     PG_ST_DISTANCE("<->", 20),
     //endregion
 
+    //region ComplexTypeConstructor
+    Map("map"),
+    Struct("struct"),
+    Named_struct("named_struct"),
+    Array("array"),
+    Create_union("create_union"),
+    //endregion
     //region 聚合函数
     AVG("AVG"), COUNT("COUNT"), MAX("MAX"), MIN("MIN"), STDDEV("STDDEV"), SUM("SUM"),
     //endregion
@@ -139,6 +159,7 @@ public enum SQLOperator {
                 return false;
         }
     }
+
     public boolean isStringFunction() {
         switch(this) {
             case substr:
