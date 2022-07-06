@@ -19,7 +19,6 @@ package flowdesigner.jdbc.command.impl;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.model.TableEntity;
-import flowdesigner.jdbc.util.raw.kit.FileKit;
 import flowdesigner.jdbc.util.raw.kit.IOKit;
 
 import java.io.*;
@@ -30,7 +29,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -38,50 +36,32 @@ import java.util.logging.Logger;
  * @date : 2021/9/11
  * @desc : 将DDL语句解析为表结构
  */
-public class ParseDDLToTableImpl implements Command<ExecResult<List<TableEntity>>> {
+public class DBReverseParseDDLToTableImpl implements Command<ExecResult<List<TableEntity>>> {
     /** 使用java自带的log工具 */
     private static final Logger logger = Logger.getLogger("ParseDDLToTableImpl");
     private static String DB_URL = "jdbc:h2:mem:MockChiner;DB_CLOSE_DELAY=-1";
 
     public ExecResult<List<TableEntity>> exec(Connection connection,Map<String, String> params) throws SQLException {
-        String ddlFile = params.get("ddlFile");
         ExecResult<List<TableEntity>> ret = new ExecResult<List<TableEntity>>();
-        Connection conn = null;
 
-        String ddlContent = null;
-        try {
-            ddlContent = readDDLFile(ddlFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String ddlContent = params.get("ddl");
+        if (ddlContent == null) {
+            return ret;
         }
 
-        conn = DriverManager.getConnection(DB_URL);
+        Connection conn = DriverManager.getConnection(DB_URL);
         try {
             createTable(conn,ddlContent);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new SQLException(e.getMessage());
         }
 
         String tables = getALLTablesString(conn);
-            IOKit.close(conn);//conn.getMetaData(); 只能使用一次,所以要重新取一次
-            conn = DriverManager.getConnection(DB_URL);
-            ret = parseTableDDL(conn,tables);
+        IOKit.close(conn);//conn.getMetaData(); 只能使用一次,所以要重新取一次
+        conn = DriverManager.getConnection(DB_URL);
+        ret = parseTableDDL(conn,tables);
 
         return ret;
-    }
-
-    private String readDDLFile(String ddlFile) throws IOException {
-        File inFile = new File(ddlFile);
-        InputStream inputStream = null;
-        try {
-            inputStream = FileKit.openInputStream(inFile);
-            return IOKit.toString(inputStream,"UTF-8");
-        } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE,"读取DDL文件出错:"+ddlFile, e);
-            throw new RuntimeException(e);
-        } finally {
-            IOKit.close(inputStream);
-        }
     }
 
     private void createTable(Connection connection,String ddlScript) throws SQLException, IOException {

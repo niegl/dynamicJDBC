@@ -3,7 +3,6 @@ package flowdesigner.jdbc.operators;
 public enum SQLOperatorType {
     //Built-in Operators
     RelationalOperator,ArithmeticOperator,LogicalOperator, // SQLBinaryOperator
-    StringOperator,
     ComplexTypeConstructor,
     //Built-in Functions
     MathematicalFunction,

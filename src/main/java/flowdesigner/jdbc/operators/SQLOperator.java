@@ -2,7 +2,20 @@ package flowdesigner.jdbc.operators;
 
 public enum SQLOperator {
 
-    //region SQLBinaryOperator
+    //region 一元操作符
+    Plus("+"),
+    Negative("-"),
+    Not("!"),
+    Compl("~"),
+    Prior("PRIOR"),
+    ConnectByRoot("CONNECT BY"),
+    BINARY("BINARY"),
+    RAW("RAW"),
+    NOT("NOT"),
+    // Number of points in path or polygon
+    Pound("#"),
+    //endregion
+    //region 二元操作符
     Union("UNION", 0),
     COLLATE("COLLATE", 20),
     BitwiseXor("^", 50),
@@ -67,6 +80,56 @@ public enum SQLOperator {
     Assignment(":=", 169),
     PG_And("&&", 140),
     PG_ST_DISTANCE("<->", 20),
+    //endregion
+
+    //region ComplexTypeConstructor
+    Map("map"),
+    Struct("struct"),
+    Named_struct("named_struct"),
+    Array("array"),
+    Create_union("create_union"),
+    //endregion
+    //region MathematicalFunction
+    round("round"),
+    bround("bround"),
+    floor("floor"),
+    ceil("ceil"),
+    ceiling("ceiling"),
+    rand("rand"),
+    exp("exp"),
+    ln("ln"),
+    log10("log10"),
+    log2("log2"),
+    log("log"),
+    pow("pow"),
+    sqrt("sqrt"),
+    bin("bin"),
+    hex("hex"),
+    unhex("unhex"),
+    conv("conv"),
+    abs("abs"),
+    pmod("pmod"),
+    sin("sin"),
+    asin("asin"),
+    cos("cos"),
+    acos("acos"),
+    tan("tan"),
+    atan("atan"),
+    degrees("degrees"),
+    radians("radians"),
+    positive("positive"),
+    negative("negative"),
+    sign("sign"),
+    e("e"),
+    pi("pi"),
+    factorial("factorial"),
+    cbrt("cbrt"),
+    shiftleft("shiftleft"),
+    shiftright("shiftright"),
+    shiftrightunsigned("shiftrightunsigned"),
+    greatest("greatest"),
+    least("least"),
+    width_bucket("width_bucket"),
     //endregion
 
     //region 聚合函数
@@ -139,6 +202,7 @@ public enum SQLOperator {
                 return false;
         }
     }
+
     public boolean isStringFunction() {
         switch(this) {
             case substr:
@@ -149,6 +213,52 @@ public enum SQLOperator {
         }
     }
 
+    public boolean isMathematicalFunction() {
+        switch(this) {
+            case bround:
+            case floor:
+            case        ceil:
+            case        ceiling:
+            case        rand:
+            case        exp:
+            case        ln:
+            case        log10:
+            case        log2:
+            case        log:
+            case        pow:
+            case        sqrt:
+            case       bin:
+            case       hex:
+            case       unhex:
+            case        conv:
+            case        abs:
+            case        pmod:
+            case        sin:
+            case       asin:
+            case        cos:
+            case        acos:
+            case       tan:
+            case       atan:
+            case       degrees:
+            case      radians:
+            case       positive:
+            case       negative:
+            case        sign:
+            case        e:
+            case        pi:
+            case        factorial:
+            case        cbrt:
+            case       shiftleft:
+            case       shiftright:
+            case        shiftrightunsigned:
+            case      greatest:
+            case      least:
+            case       width_bucket:
+                return true;
+            default:
+                return false;
+        }
+    }
     public boolean isAggregateFunction() {
         switch(this) {
             case AVG:

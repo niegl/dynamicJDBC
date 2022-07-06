@@ -1584,7 +1584,17 @@ public class SQLTest {
         String sql = "describe function acos";
         parser(sql, "hive");
     }
-
+    @Test
+    void testParseCreate() throws SQLSyntaxErrorException {
+        String sql = "CREATE TABLE IF NOT EXISTS `runoob_tbl`(\n" +
+                "   `runoob_id` INT UNSIGNED AUTO_INCREMENT,\n" +
+                "   `runoob_title` VARCHAR(100) NOT NULL,\n" +
+                "   `runoob_author` VARCHAR(40) NOT NULL,\n" +
+                "   `submission_date` DATE,\n" +
+                "   PRIMARY KEY ( `runoob_id` )\n" +
+                ")ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+        parser(sql, "mysql");
+    }
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {

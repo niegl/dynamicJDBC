@@ -190,6 +190,26 @@ class CommandManagerTest {
     }
 
     @Test
+    void testExeCommandParseDDL() throws SQLException {
+        Gson gson = new Gson();
+        long start = Instant.now().toEpochMilli();
+        ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{
+            put("ddl","CREATE TABLE IF NOT EXISTS `runoob_tbl`(\n" +
+                    "   `runoob_id` INT UNSIGNED AUTO_INCREMENT,\n" +
+                    "   `runoob_title` VARCHAR(100) NOT NULL,\n" +
+                    "   `runoob_author` VARCHAR(40) NOT NULL,\n" +
+                    "   `submission_date` DATE,\n" +
+                    "   PRIMARY KEY ( `runoob_id` )\n" +
+                    ")ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+            put("dbType","mysql");
+        }});
+        long end = Instant.now().toEpochMilli();
+        String s = gson.toJson(cc);
+        System.out.println(s);
+        System.out.println(end - start);
+    }
+
+    @Test
     void testExeCommandGetImportedKeys() throws SQLException {
 
         Gson gson = new Gson();

@@ -15,10 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class SQLOperatorUtils {
 
@@ -36,6 +33,18 @@ public class SQLOperatorUtils {
      */
     public static List<String> getSupportFunctions(Connection connection) {
         ArrayList<String> ret = new ArrayList<>();
+
+        // 处理离线状态下的函数获取
+        if (connection == null) {
+            for (SQLUnaryOperator operator:SQLUnaryOperator.values()) {
+                ret.add(operator.name);
+            }
+            for (SQLBinaryOperator operator:SQLBinaryOperator.values()) {
+                ret.add(operator.name);
+            }
+            ret.addAll(Arrays.asList("AVG", "COUNT", "MAX", "MIN", "STDDEV", "SUM"));
+            return ret;
+        }
 
         SQLShowFunctionsStatement functionsStatement = new SQLShowFunctionsStatement();
         ExecResult<ResultSet> execResult = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl, new HashMap<String,String>(){{
@@ -114,7 +123,7 @@ public class SQLOperatorUtils {
 
         SQLOperator sqlOperator = SQLOperator.of(name);
         if (sqlOperator == null) {
-            return name;
+            return expr.toString();
         }
 
         SQLOperatorType functionType = getFunctionType(name);
@@ -126,12 +135,54 @@ public class SQLOperatorUtils {
             case BinaryOperator:
                 expr = new SQLBinaryOpExpr(new SQLIdentifierExpr("?"), of(sqlOperator.name(), SQLBinaryOperator.values()), new SQLIdentifierExpr("?"), dbType);
                 break;
-            case StringOperator:
-
+            case UnaryOperator:
+                expr = new SQLUnaryExpr(of(sqlOperator.name(), SQLUnaryOperator.values()), new SQLIdentifierExpr("?"));
                 break;
             case ComplexTypeConstructor:
+                switch (sqlOperator) {
+                    case Map:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("key1"), new SQLIdentifierExpr("value1"), new SQLIdentifierExpr("key2"), new SQLIdentifierExpr("value2"), new SQLIdentifierExpr("..."));
+                        break;
+                    case Struct:
+                    case Array:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("value1"), new SQLIdentifierExpr("value2"), new SQLIdentifierExpr("..."));
+                        break;
+                    case Named_struct:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("name1"), new SQLIdentifierExpr("value1"), new SQLIdentifierExpr("name2"), new SQLIdentifierExpr("value2"), new SQLIdentifierExpr("..."));
+                        break;
+                    case Create_union:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("tag"),new SQLIdentifierExpr("value1"), new SQLIdentifierExpr("value2"), new SQLIdentifierExpr("..."));
+                        break;
+                }
                 break;
             case MathematicalFunction:
+                switch (sqlOperator) {
+                    case rand:
+                        expr = new SQLMethodInvokeExpr(name,null, new SQLIdentifierExpr("base"),new SQLIdentifierExpr("?"));
+                        break;
+                    case pow:
+                        expr = new SQLMethodInvokeExpr(name,null, new SQLIdentifierExpr("?"),new SQLIdentifierExpr("2"));
+                        break;
+                    case conv:
+                        expr = new SQLMethodInvokeExpr(name,null, new SQLIdentifierExpr("?"),new SQLIdentifierExpr("10"),new SQLIdentifierExpr("2"));
+                        break;
+                    case pmod:
+                        expr = new SQLMethodInvokeExpr(name,null, new SQLIdentifierExpr("?"),new SQLIdentifierExpr("?"));
+                        break;
+                    case e:
+                    case pi:
+                        expr = new SQLMethodInvokeExpr(name);
+                        break;
+                    case shiftleft:
+                    case shiftright:
+                    case shiftrightunsigned:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("1"));
+                        break;
+                    case greatest:
+                    case least:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("?"), new SQLIdentifierExpr("..."));
+                        break;
+                }
                 break;
             case CollectionFunction:
                 break;
@@ -195,6 +246,8 @@ public class SQLOperatorUtils {
                 return SQLOperatorType.RelationalOperator;
             } else if (sqlOperator.isStringFunction()) {
                 return SQLOperatorType.StringFunction;
+            } else if (sqlOperator.isMathematicalFunction()) {
+                return SQLOperatorType.MathematicalFunction;
             } else if (sqlOperator.isAggregateFunction()) {
                 return SQLOperatorType.UDAF;
             } else {
@@ -211,7 +264,7 @@ public class SQLOperatorUtils {
 
     private static <T extends Enum<T>> T of(String name, T[] values) {
         for (T value : values) {
-            if (value.name().equalsIgnoreCase(name)) {
+            if (value.name().equals(name)) {
                 return value;
             }
         }
