@@ -89,6 +89,49 @@ public enum SQLOperator {
     Array("array"),
     Create_union("create_union"),
     //endregion
+    //region MathematicalFunction
+    round("round"),
+    bround("bround"),
+    floor("floor"),
+    ceil("ceil"),
+    ceiling("ceiling"),
+    rand("rand"),
+    exp("exp"),
+    ln("ln"),
+    log10("log10"),
+    log2("log2"),
+    log("log"),
+    pow("pow"),
+    sqrt("sqrt"),
+    bin("bin"),
+    hex("hex"),
+    unhex("unhex"),
+    conv("conv"),
+    abs("abs"),
+    pmod("pmod"),
+    sin("sin"),
+    asin("asin"),
+    cos("cos"),
+    acos("acos"),
+    tan("tan"),
+    atan("atan"),
+    degrees("degrees"),
+    radians("radians"),
+    positive("positive"),
+    negative("negative"),
+    sign("sign"),
+    e("e"),
+    pi("pi"),
+    factorial("factorial"),
+    cbrt("cbrt"),
+    shiftleft("shiftleft"),
+    shiftright("shiftright"),
+    shiftrightunsigned("shiftrightunsigned"),
+    greatest("greatest"),
+    least("least"),
+    width_bucket("width_bucket"),
+    //endregion
+
     //region 聚合函数
     AVG("AVG"), COUNT("COUNT"), MAX("MAX"), MIN("MIN"), STDDEV("STDDEV"), SUM("SUM"),
     //endregion
@@ -170,6 +213,52 @@ public enum SQLOperator {
         }
     }
 
+    public boolean isMathematicalFunction() {
+        switch(this) {
+            case bround:
+            case floor:
+            case        ceil:
+            case        ceiling:
+            case        rand:
+            case        exp:
+            case        ln:
+            case        log10:
+            case        log2:
+            case        log:
+            case        pow:
+            case        sqrt:
+            case       bin:
+            case       hex:
+            case       unhex:
+            case        conv:
+            case        abs:
+            case        pmod:
+            case        sin:
+            case       asin:
+            case        cos:
+            case        acos:
+            case       tan:
+            case       atan:
+            case       degrees:
+            case      radians:
+            case       positive:
+            case       negative:
+            case        sign:
+            case        e:
+            case        pi:
+            case        factorial:
+            case        cbrt:
+            case       shiftleft:
+            case       shiftright:
+            case        shiftrightunsigned:
+            case      greatest:
+            case      least:
+            case       width_bucket:
+                return true;
+            default:
+                return false;
+        }
+    }
     public boolean isAggregateFunction() {
         switch(this) {
             case AVG:

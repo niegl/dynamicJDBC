@@ -23,11 +23,11 @@ public class CommandManager {
     /** 命令注册表*/
     private static final Map<CommandKey, Class<?>> commandRegister = new HashMap<CommandKey, Class<?>>() {{
         put(CMD_DBReverseGetTypeInfo, DBReverseGetTypeInfoImpl.class);          //逆向解析，获取数据表清单
-        put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);          //逆向解析，获取数据表清单
+        put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);            //逆向解析，获取数据表清单
         put(CMD_DBReverseGetAllTablesList, DBReverseGetAllTablesListImpl.class);  //逆向解析，获取数据表清单
         put(CMD_DBReverseGetTableDDL, DBReverseGetTableDDLImpl.class);            //逆向解析，获取指定数据表DDL
-        put(CMD_ParseDDLToTableImpl, ParseDDLToTableImpl.class);            //逆向解析，获取指定数据表DDL
-        put(CMD_DBExecuteCommandImpl, DBExecuteCommandImpl.class);            //正向执行，获取SQL语句执行结果
+        put(CMD_ParseDDLToTableImpl, DBParseDDLImpl.class);                     //逆向解析，获取指定数据表DDL
+        put(CMD_DBExecuteCommandImpl, DBExecuteCommandImpl.class);              //正向执行，获取SQL语句执行结果
         put(CMD_DBExecuteUpdateCommandImpl, DBExecuteUpdateCommandImpl.class);
         put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);            //正向执行，获取SQL语句执行结果
         put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);            //正向执行，获取SQL语句执行结果
@@ -57,7 +57,8 @@ public class CommandManager {
         ExecResult ret = new ExecResult(ExecResult.FAILED, "未知异常");
         try {
             if (connection == null)
-                if (!cmdText.equals(CMD_DBReverseGetTypeInfo))
+                if (!(cmdText.equals(CMD_DBReverseGetTypeInfo)
+                        || cmdText.equals(CMD_ParseDDLToTableImpl)))
                     return ret;
 
             Class<?> cmdClass = commandRegister.get(cmdText);

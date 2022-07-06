@@ -120,4 +120,12 @@ public class SQLExpreTest {
         System.out.println(expr);
 
     }
+    @org.junit.jupiter.api.Test
+    void testLogFunction() throws SQLSyntaxErrorException {
+        DbType dbType = JdbcConstants.HIVE;
+        String sql = "log(base, a)";
+        SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
+        System.out.println(expr);
+
+    }
 }
