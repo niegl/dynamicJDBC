@@ -132,6 +132,59 @@ public enum SQLOperator {
     width_bucket("width_bucket"),
     //endregion
 
+    //region CollectionFunction
+    size("size"),
+    map_keys("map_keys"),
+    map_values("map_values"),
+    array_contains("array_contains"),
+    sort_array("sort_array"),
+    //endregion
+
+    //region Type Conversion Functions
+    binary("binary"),
+    cast("cast"),
+    //endregion
+
+    //region Date Functions
+    from_unixtime("from_unixtime"),
+    unix_timestamp("unix_timestamp"),
+    to_date("to_date"),
+    year("year"),
+    quarter("quarter"),
+    month("month"),
+    day("day"),
+    dayofmonth("dayofmonth"),
+    hour("hour"),
+    minute("minute"),
+    second("second"),
+    weekofyear("weekofyear"),
+    extract("extract"),
+    datediff("datediff"),
+    date_add("date_add"),
+    date_sub("date_sub"),
+    from_utc_timestamp("from_utc_timestamp"),
+    to_utc_timestamp("to_utc_timestamp"),
+    current_date("current_date"),
+    current_timestamp("current_timestamp"),
+    add_months("add_months"),
+    last_day("last_day"),
+    next_day("next_day"),
+    trunc("trunc"),
+    months_between("months_between"),
+    date_format("date_format"),
+    //endregion
+
+    //region Conditional Functions
+    isnull("isnull"),
+    isnotnull("isnotnull"),
+    nvl("nvl"),
+    assert_true("assert_true"),
+    IF("if"),
+    COALESCE("COALESCE"),
+    nullif("nullif"),
+    CASE("case"),
+    //endregion
+
     //region 聚合函数
     AVG("AVG"), COUNT("COUNT"), MAX("MAX"), MIN("MIN"), STDDEV("STDDEV"), SUM("SUM"),
     //endregion
@@ -212,7 +265,60 @@ public enum SQLOperator {
                 return false;
         }
     }
-
+    public boolean isCollectionFunction() {
+        switch(this) {
+            case size:
+            case        map_keys:
+            case        map_values:
+            case        array_contains:
+            case         sort_array:
+                return true;
+            default:
+                return false;
+        }
+    }
+    public boolean isTypeConversionFunction() {
+        switch(this) {
+            case cast:
+            case        binary:
+                return true;
+            default:
+                return false;
+        }
+    }
+    public boolean isDateFunction() {
+        switch(this) {
+            case from_unixtime:
+            case         unix_timestamp:
+            case         to_date:
+            case         year:
+            case        quarter:
+            case        month:
+            case         day:
+            case        dayofmonth:
+            case        hour:
+            case       minute:
+            case        second:
+            case        weekofyear:
+            case         extract:
+            case        datediff:
+            case        date_add:
+            case        date_sub:
+            case        from_utc_timestamp:
+            case        to_utc_timestamp:
+            case        current_date:
+            case        current_timestamp:
+            case       add_months:
+            case         last_day:
+            case        next_day:
+            case        trunc:
+            case        months_between:
+            case        date_format:
+                return true;
+            default:
+                return false;
+        }
+    }
     public boolean isMathematicalFunction() {
         switch(this) {
             case bround:
@@ -272,6 +378,21 @@ public enum SQLOperator {
                 return false;
         }
     }
+    public boolean isConditionalFunction() {
+        switch (this) {
+            case  isnull:
+            case  isnotnull:
+            case  nvl:
+            case  assert_true:
+            case  IF:
+            case  COALESCE:
+            case  nullif:
+            case CASE:
+                return true;
+            default:
+                return false;
+        }
+    }
 
     public static SQLOperator of(String name) {
         for (SQLOperator value : SQLOperator.values()) {
@@ -282,5 +403,6 @@ public enum SQLOperator {
 
         return null;
     }
+
 
 }

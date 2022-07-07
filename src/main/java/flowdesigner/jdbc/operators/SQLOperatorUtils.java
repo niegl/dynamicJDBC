@@ -1,6 +1,7 @@
 package flowdesigner.jdbc.operators;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.SQLDataTypeImpl;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.SQLDescribeStatement;
@@ -182,15 +183,116 @@ public class SQLOperatorUtils {
                     case least:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("?"), new SQLIdentifierExpr("..."));
                         break;
+                    default:
+                        expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("?"));
+                        break;
                 }
                 break;
             case CollectionFunction:
+                switch (sqlOperator) {
+                    case array_contains:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("value1"));
+                        break;
+                    default:
+                        expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("?"));
+                        break;
+                }
                 break;
             case TypeConversionFunction:
+                switch (sqlOperator) {
+                    case cast:
+                        expr = new SQLCastExpr(new SQLIdentifierExpr("?"), new SQLDataTypeImpl("<type>"));
+                        break;
+                    default:
+                        expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("?"));
+                        break;
+                }
                 break;
             case DateFunction:
+                switch (sqlOperator) {
+                    case from_unixtime:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("[, string format]"));
+                        break;
+                    case         unix_timestamp:
+                        expr = new SQLMethodInvokeExpr(name);
+                        break;
+                    case       to_date:
+                    case         year:
+                    case        quarter:
+                    case        month:
+                    case         day:
+                    case        dayofmonth:
+                    case        hour:
+                    case       minute:
+                    case        second:
+                    case        weekofyear:
+                    case         last_day:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"));
+                        break;
+                    case         extract:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("<month/hour/dayofweek/month/minute>"));
+                        ((SQLMethodInvokeExpr)expr).setFrom(new SQLCharExpr("?"));
+                        break;
+                    case        datediff:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("('2009-03-01', '2009-02-27')"));
+                        break;
+                    case        date_add:
+                    case        date_sub:
+                    case       add_months:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIntegerExpr(1));
+                        break;
+                    case        from_utc_timestamp:
+                    case        to_utc_timestamp:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("PST"));
+                        break;
+                    case        next_day:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("'FRIDAY"));
+                        break;
+                    case        trunc:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("format"));
+                        break;
+                    case        months_between:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("'1997-02-28 10:30:00'"), new SQLIdentifierExpr("'1996-10-30'"));
+                        break;
+                    case        date_format:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("'fmt'"));
+                        break;
+                    case        current_date:
+                    case        current_timestamp:
+                    default:
+                        expr = new SQLMethodInvokeExpr(name);
+                        break;
+                }
                 break;
             case ConditionalFunction:
+                switch (sqlOperator) {
+                    case  nvl:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("default_value"));
+                        break;
+                    case  COALESCE:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("val1"), new SQLIdentifierExpr("val2"), new SQLIdentifierExpr("..."));
+                        break;
+                    case  nullif:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("?"));
+                        break;
+                    case CASE:
+                        SQLCaseExpr caseExpr = new SQLCaseExpr();
+                        caseExpr.setValueExpr(new SQLIdentifierExpr("?"));
+                        caseExpr.addItem(new SQLIdentifierExpr("condition1"), new SQLIdentifierExpr("value1"));
+                        caseExpr.addItem(new SQLIdentifierExpr("condition2"), new SQLIdentifierExpr("value2"));
+                        caseExpr.setElseExpr(new SQLIdentifierExpr("elsevalue"));
+                        expr = caseExpr;
+                        break;
+                    case IF:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("testCondition"), new SQLIdentifierExpr("valueTrue"), new SQLIdentifierExpr("valueFalseOrNull"));
+                        break;
+                    case  isnull:
+                    case  isnotnull:
+                    case  assert_true:
+                    default:
+                        expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("?"));
+                        break;
+                }
                 break;
             case StringFunction:
                 switch (sqlOperator) {
@@ -248,6 +350,14 @@ public class SQLOperatorUtils {
                 return SQLOperatorType.StringFunction;
             } else if (sqlOperator.isMathematicalFunction()) {
                 return SQLOperatorType.MathematicalFunction;
+            } else if (sqlOperator.isCollectionFunction()) {
+                return SQLOperatorType.CollectionFunction;
+            } else if (sqlOperator.isTypeConversionFunction()) {
+                return SQLOperatorType.TypeConversionFunction;
+            } else if (sqlOperator.isDateFunction()) {
+                return SQLOperatorType.DateFunction;
+            } else if (sqlOperator.isConditionalFunction()) {
+                return SQLOperatorType.ConditionalFunction;
             } else if (sqlOperator.isAggregateFunction()) {
                 return SQLOperatorType.UDAF;
             } else {
