@@ -1595,6 +1595,14 @@ public class SQLTest {
                 ")ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         parser(sql, "mysql");
     }
+
+    @Test
+    void testVariant() throws SQLSyntaxErrorException {
+        String sql = "SELECT ${hiveconf:TXDATE}\n" +
+                "FROM PDATA.T04_EngCspt_Rel_H A";
+        parser(sql, "hive");
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {

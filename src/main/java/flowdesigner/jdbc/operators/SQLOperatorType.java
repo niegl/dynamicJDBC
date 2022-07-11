@@ -12,6 +12,7 @@ public enum SQLOperatorType {
     ConditionalFunction,
     StringFunction,
     DataMaskingFunction,
+    MiscFunctions,
     //Built-in Aggregate Functions (UDAF)
     UDAF,
     //Built-in Table-Generating Functions (UDTF)

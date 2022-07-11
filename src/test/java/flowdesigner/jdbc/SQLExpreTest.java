@@ -129,14 +129,14 @@ public class SQLExpreTest {
 
     }
     @org.junit.jupiter.api.Test
-    void tesextractFunction() throws SQLSyntaxErrorException {
+    void testExtractFunction() throws SQLSyntaxErrorException {
         DbType dbType = JdbcConstants.HIVE;
         String sql = "extract(month from \"2016-10-20\") ";
         SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
         System.out.println(expr);
     }
     @org.junit.jupiter.api.Test
-    void teseCaseFunction() throws SQLSyntaxErrorException {
+    void testCaseFunction() throws SQLSyntaxErrorException {
         DbType dbType = JdbcConstants.HIVE;
         String sql = "CASE a WHEN b THEN c WHEN d THEN e ELSE f END";
         SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);

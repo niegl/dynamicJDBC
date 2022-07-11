@@ -229,11 +229,12 @@ public class SQLOperatorUtils {
                     case         last_day:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"));
                         break;
-                    case         extract:
-                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("<month/hour/dayofweek/month/minute>"));
-                        ((SQLMethodInvokeExpr)expr).setFrom(new SQLCharExpr("?"));
+                    case  extract:
+                        SQLMethodInvokeExpr methodExpr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("<month/hour/dayofweek/month/minute>"));
+                        methodExpr.setFrom(new SQLCharExpr("?"));
+                        expr = methodExpr;
                         break;
-                    case        datediff:
+                    case  datediff:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("('2009-03-01', '2009-02-27')"));
                         break;
                     case        date_add:
@@ -296,19 +297,227 @@ public class SQLOperatorUtils {
                 break;
             case StringFunction:
                 switch (sqlOperator) {
+                    case space:
+                        expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("1"));
+                        break;
+                    // 一个参数
+                    case ascii:
+                    case base64:
+                    case character_length:
+                    case chr:
+                    case length:
+                    case lower:
+                    case lcase:
+                    case upper:
+                    case ucase:
+                    case ltrim:
+                    case rtrim:
+                    case trim:
+                    case octet_length:
+                    case quote:
+                    case reverse:
+                    case sentences:
+                    case unbase64:
+                    case initcap:
+                    case soundex:
+                        expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("?"));
+                        break;
+                    // 两个常量
+                    case levenshtein:
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("A"), new SQLIdentifierExpr("B"));
+                        break;
+                    // 多个常量
+                    case concat:
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("A"), new SQLIdentifierExpr("B..."));
+                        break;
+                    // 参数 + 常量
+                    case encode:
+                    case decode:
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("'UTF-8'"));
+                        break;
+                    case elt://elt(N int,str1 string,str2 string,str3 string,...)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("N"), new SQLIdentifierExpr("str1"), new SQLIdentifierExpr("str2"), new SQLIdentifierExpr("..."));
+                        break;
+                    case field://field(val T,val1 T,val2 T,val3 T,...)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("val"), new SQLIdentifierExpr("val1"), new SQLIdentifierExpr("val2"), new SQLIdentifierExpr("..."));
+                        break;
+                    case find_in_set://find_in_set(string str, string strList)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("strList"));
+                        break;
+                    case format_number:// format_number(number x, int d)
+                    case repeat://repeat(string str, int n)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLNumberExpr(2));
+                        break;
+                    case in_file://in_file(string str, string filename)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("filename"));
+                        break;
+                    case instr://instr(string str, string substr)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("str"), new SQLIdentifierExpr("?"));
+                        break;
+                    case locate://locate(string substr, string str[, int pos])
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("str"));
+                        break;
+                    case lpad://lpad(string str, int len, string pad)
+                    case rpad:
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLNumberExpr(8), new SQLIdentifierExpr("0"));
+                        break;
+                    case parse_url://parse_url(string urlString, string partToExtract [, string keyToExtract])
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLCharExpr("HOST"));
+                        break;
+                    case printf://printf(String format, Obj... args)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("format"), new SQLIdentifierExpr("?"));
+                        break;
+                    case regexp_extract://regexp_extract(string subject, string pattern, int index)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("pattern"),new SQLNumberExpr(1));
+                        break;
+                    case regexp_replace://regexp_replace(string INITIAL_STRING, string PATTERN, string REPLACEMENT)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("pattern"),new SQLIdentifierExpr("REPLACEMENT"));
+                        break;
+                    case replace://replace(string A, string OLD, string NEW)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("OLD"),new SQLIdentifierExpr("NEW"));
+                        break;
+                    case split://split(string str, string pat)
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLCharExpr(","));
+                        break;
+                    case str_to_map://str_to_map(text[, delimiter1, delimiter2])
+                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLCharExpr(","), new SQLCharExpr(":"));
+                        break;
                     case substr:
                     case substring:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIntegerExpr(0));
                         break;
+                    case substring_index://substring_index(string A, string delim, int count)
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"),new SQLCharExpr("."), new SQLNumberExpr(2));
+                        break;
+                    case translate://translate(string|char|varchar input, string|char|varchar from, string|char|varchar to)
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"),new SQLCharExpr("from"), new SQLCharExpr("to"));
+                        break;
+                    // 全模式
+                    case context_ngrams://context_ngrams(array<array<string>>, array<string>, int K, int pf)
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"),new SQLIdentifierExpr("array<string>"), new SQLNumberExpr(3));
+                        break;
+                    case concat_ws://concat_ws(string SEP, string A, string B...)
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLCharExpr(","),new SQLIdentifierExpr("stringA"),new SQLIdentifierExpr("stringB"),new SQLIdentifierExpr("..."));
+                        break;
+                    case get_json_object://get_json_object(string json_string, string path)
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("json_string"), new SQLIdentifierExpr("path"));
+                        break;
+                    case ngrams://ngrams(array<array<string>>, int N, int K, int pf)
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLNumberExpr(1), new SQLNumberExpr(2));
+                        break;
                 }
                 break;
             case DataMaskingFunction:
+                switch (sqlOperator) {
+                    case mask: // mask(string str[, string upper[, string lower[, string number]]])
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLCharExpr("U"), new SQLIdentifierExpr("L"), new SQLCharExpr("#"));
+                        break;
+                    case mask_first_n:
+                    case mask_last_n:
+                    case mask_show_first_n:
+                    case mask_show_last_n:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLNumberExpr(4));
+                        break;
+                    case mask_hash:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"));
+                        break;
+                }
                 break;
+            case MiscFunctions:
+                switch (sqlOperator) {
+                    case current_user:
+                    case logged_in_user:
+                    case current_database:
+                    case version:
+                    case surrogate_key:
+                        expr = new SQLMethodInvokeExpr(name);
+                        break;
+                        // 一个参数
+                    case hash:
+                    case md5:
+                    case sha1:
+                    case sha:
+                    case crc32:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"));
+                        break;
+                        // 一个参数+ int
+                    case sha2:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("224|256|384|512|0"));
+                        break;
+                        // 一个参数+ string
+                    case aes_encrypt:
+                    case aes_decrypt:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("key"));
+                        break;
+                        // 函数
+                    case java_method:
+                    case reflect://java_method(class, method[, arg1[, arg2..]])
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("class"), new SQLIdentifierExpr("method")
+                                , new SQLIdentifierExpr("[, arg1[, arg2..]]"));
+                        break;
+                }
             case UDAF:
-                expr = new SQLAggregateExpr(name);
-                ((SQLAggregateExpr) expr).addArgument(new SQLIdentifierExpr("?"));
-                break;
+                switch (sqlOperator) {
+                    case AVG:
+                    case COUNT:
+                    case MAX:
+                    case MIN:
+                    case STDDEV:
+                    case SUM:
+                    case variance:
+                    case var_pop:
+                    case var_samp:
+                    case stddev_pop:
+                    case stddev_samp:
+                    case collect_set:
+                    case collect_list:
+                        expr = new SQLAggregateExpr(name, null, new SQLIdentifierExpr("?"));
+                        break;
+                        // 两个参数
+                    case covar_pop:
+                    case covar_samp:
+                    case corr:
+                        expr = new SQLAggregateExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("?"));
+                        break;
+                        // 一个参数+ 一个小数
+                    case percentile:
+                    case percentile_approx:
+                        expr = new SQLAggregateExpr(name, null, new SQLIdentifierExpr("?"), new SQLNumberExpr(0.1));
+                        break;
+                        // 一个参数+一个int
+                    case histogram_numeric:
+                    case ntile:
+                        expr = new SQLAggregateExpr(name, null, new SQLIdentifierExpr("?"), new SQLNumberExpr(2));
+                        break;
+                        // 全匹配模式
+                    case regr_avgx://regr_sxx(independent, dependent)
+                    case regr_avgy:
+                    case regr_count:
+                    case regr_intercept:
+                    case regr_r2:
+                    case regr_slope:
+                    case regr_sxx:
+                    case regr_sxy:
+                    case regr_syy:
+                        expr = new SQLAggregateExpr(name, null, new SQLIdentifierExpr("independent"), new SQLIdentifierExpr("dependent"));
+                        break;
+                }
+
             case UDTF:
+                switch (sqlOperator) {
+                    case explode:
+                    case posexplode:
+                    case inline:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"));
+                        break;
+                    case stack:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("r,T1V1,...,Tn/rVn)"));
+                        break;
+                    case json_tuple://json_tuple(string jsonStr,string k1,...,string kn)
+                    case parse_url_tuple:
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("k1,...,kn"));
+                        break;
+                }
                 break;
             case GROUPingAndSORTing:
                 break;
@@ -348,10 +557,16 @@ public class SQLOperatorUtils {
                 return SQLOperatorType.RelationalOperator;
             } else if (sqlOperator.isStringFunction()) {
                 return SQLOperatorType.StringFunction;
+            } else if (sqlOperator.isDataMaskingFunctions()) {
+                return SQLOperatorType.DataMaskingFunction;
+            } else if (sqlOperator.isMiscFunctions()) {
+                return SQLOperatorType.MiscFunctions;
             } else if (sqlOperator.isMathematicalFunction()) {
                 return SQLOperatorType.MathematicalFunction;
             } else if (sqlOperator.isCollectionFunction()) {
                 return SQLOperatorType.CollectionFunction;
+            } else if (sqlOperator.isComplexTypeConstructor()) {
+                return SQLOperatorType.ComplexTypeConstructor;
             } else if (sqlOperator.isTypeConversionFunction()) {
                 return SQLOperatorType.TypeConversionFunction;
             } else if (sqlOperator.isDateFunction()) {
@@ -360,6 +575,8 @@ public class SQLOperatorUtils {
                 return SQLOperatorType.ConditionalFunction;
             } else if (sqlOperator.isAggregateFunction()) {
                 return SQLOperatorType.UDAF;
+            } else if (sqlOperator.isUDTF()) {
+                return SQLOperatorType.UDTF;
             } else {
                 if (of(sqlOperator.name(), SQLBinaryOperator.values()) != null) {
                     return SQLOperatorType.BinaryOperator;

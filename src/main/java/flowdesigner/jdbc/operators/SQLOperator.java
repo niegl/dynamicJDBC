@@ -1,5 +1,9 @@
 package flowdesigner.jdbc.operators;
 
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
+import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
+
 public enum SQLOperator {
 
     //region 一元操作符
@@ -187,14 +191,132 @@ public enum SQLOperator {
 
     //region 聚合函数
     AVG("AVG"), COUNT("COUNT"), MAX("MAX"), MIN("MIN"), STDDEV("STDDEV"), SUM("SUM"),
+    variance("variance"),
+    var_pop("var_pop"),
+    var_samp("var_samp"),
+    stddev_pop("stddev_pop"),
+    stddev_samp("stddev_samp"),
+    collect_set("collect_set"),
+    collect_list("collect_list"),
+    // 两个参数
+    covar_pop("covar_pop"),
+    covar_samp("covar_samp"),
+    corr("corr"),
+    // 一个参数+ 一个小数
+    percentile("percentile"),
+    percentile_approx("percentile_approx"),
+    // 一个参数+一个int
+    histogram_numeric("histogram_numeric"),
+    ntile("ntile"),
+    // 全匹配模式
+    regr_avgx("regr_avgx"),
+    regr_avgy("regr_avgy"),
+    regr_count("regr_count"),
+    regr_intercept("regr_intercept"),
+    regr_r2("regr_r2"),
+    regr_slope("regr_slope"),
+    regr_sxx("regr_sxx"),
+    regr_sxy("regr_sxy"),
+    regr_syy("regr_syy"),
     //endregion
-
 
     //region String Functions
+    // 常量
+    space("space"),
+    // 一个参数
+    ascii("ascii"),
+    base64("base64"),
+    character_length("character_length"),
+    chr("chr"),
+    length("length"),
+    lower("lower"),
+    lcase("lcase"),
+    upper("upper"),
+    ucase("ucase"),
+    ltrim("ltrim"),
+    rtrim("rtrim"),
+    trim("trim"),
+    octet_length("octet_length"),
+    quote("quote"),
+    reverse("reverse"),
+    sentences("sentences"),
+    unbase64("unbase64"),
+    initcap("initcap"),
+    soundex("soundex"),
+    // 两个参数
+    concat("concat"),
+    levenshtein("levenshtein"),
+    // 参数 + 常量
     substr("substr"),
-    substring("substring");
+    substring("substring"),
+    decode("decode"),
+    elt("elt"),
+    encode("encode"),
+    field("field"),
+    find_in_set("find_in_set"),
+    format_number("format_number"),
+    in_file("in_file"),
+    instr("instr"),
+    locate("locate"),
+    lpad("lpad"),
+    rpad("rpad"),
+    parse_url("parse_url"),
+    printf("printf"),
+    regexp_extract("regexp_extract"),
+    regexp_replace("regexp_replace"),
+    repeat("repeat"),
+    replace("replace"),
+    split("split"),
+    str_to_map("str_to_map"),
+    substring_index("substring_index"),
+    translate("translate"),
+
+    // 全模式
+    context_ngrams("context_ngrams"),
+    concat_ws("concat_ws"),
+    get_json_object("get_json_object"),
+    ngrams("ngrams"),
     //endregion
 
+    //region Data Masking Functions
+    mask("mask"),
+    mask_first_n("mask_first_n"),
+    mask_last_n("mask_last_n"),
+    mask_show_first_n("mask_show_first_n"),
+    mask_show_last_n("mask_show_last_n"),
+    mask_hash("mask_hash"),
+    //endregion
+
+    //region Misc. Functions
+    // 无参
+    current_user("current_user"),
+    logged_in_user("logged_in_user"),
+    current_database("current_database"),
+    version("version"),
+    surrogate_key("surrogate_key"),
+    // 一个参数
+    hash("hash"),
+    md5("md5"),
+    sha1("sha1"),
+    sha("sha"),
+    crc32("crc32"),
+    // 一个参数+ int
+    sha2("sha2"),
+    // 一个参数+ string
+    aes_encrypt("aes_encrypt"),
+    aes_decrypt("aes_decrypt"),
+    // 函数
+    java_method("java_method"),
+    reflect("reflect"),
+    //endregion
+
+    explode("explode"),
+    posexplode("posexplode"),
+    inline("inline"),
+    stack("stack"),
+    json_tuple("json_tuple"),
+    parse_url_tuple("parse_url_tuple")
+    ;
 
     SQLOperator(String name) {
         this(name, 999);
@@ -255,11 +377,98 @@ public enum SQLOperator {
                 return false;
         }
     }
+    public boolean isDataMaskingFunctions() {
+        switch(this) {
+            case mask:
+            case mask_first_n:
+            case mask_last_n:
+            case mask_show_first_n:
+            case mask_show_last_n:
+            case mask_hash:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isMiscFunctions() {
+        switch(this) {
+            case current_user:
+            case logged_in_user:
+            case current_database:
+            case version:
+            case surrogate_key:
+            // 一个参数
+            case hash:
+            case md5:
+            case sha1:
+            case sha:
+            case crc32:
+            // 一个参数+ int
+            case sha2:
+            // 一个参数+ string
+            case aes_encrypt:
+            case aes_decrypt:
+            // 函数
+            case java_method:
+            case reflect:
+                return true;
+            default:
+                return false;
+        }
+    }
 
     public boolean isStringFunction() {
         switch(this) {
+            case space:
+            case ascii:
+            case base64:
+            case character_length:
+            case chr:
+            case length:
+            case lower:
+            case lcase:
+            case upper:
+            case ucase:
+            case ltrim:
+            case rtrim:
+            case trim:
+            case octet_length:
+            case quote:
+            case reverse:
+            case sentences:
+            case unbase64:
+            case initcap:
+            case soundex:
+            case concat:
+            case levenshtein:
+            case decode:
+            case elt:
+            case encode:
+            case field:
+            case find_in_set:
+            case format_number:
+            case in_file:
+            case instr:
+            case locate:
+            case lpad:
+            case rpad:
+            case parse_url:
+            case printf:
+            case regexp_extract:
+            case regexp_replace:
+            case repeat:
+            case replace:
+            case split:
+            case str_to_map:
             case substr:
             case substring:
+            case substring_index:
+            case translate:
+            case context_ngrams:
+            case concat_ws:
+            case get_json_object:
+            case ngrams:
                 return true;
             default:
                 return false;
@@ -373,6 +582,33 @@ public enum SQLOperator {
             case MIN:
             case STDDEV:
             case SUM:
+            case variance:
+            case var_pop:
+            case var_samp:
+            case stddev_pop:
+            case stddev_samp:
+            case collect_set:
+            case collect_list:
+            // 两个参数
+            case covar_pop:
+            case covar_samp:
+            case corr:
+            // 一个参数+ 一个小数
+            case percentile:
+            case percentile_approx:
+            // 一个参数+一个int
+            case histogram_numeric:
+            case ntile:
+            // 全匹配模式
+            case regr_avgx:
+            case regr_avgy:
+            case regr_count:
+            case regr_intercept:
+            case regr_r2:
+            case regr_slope:
+            case regr_sxx:
+            case regr_sxy:
+            case regr_syy:
                 return true;
             default:
                 return false;
@@ -405,4 +641,30 @@ public enum SQLOperator {
     }
 
 
+    public boolean isUDTF() {
+        switch (this) {
+            case explode:
+            case posexplode:
+            case inline:
+            case stack:
+            case json_tuple:
+            case parse_url_tuple:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isComplexTypeConstructor() {
+        switch (this) {
+            case Map:
+            case Struct:
+            case Array:
+            case Named_struct:
+            case Create_union:
+                return true;
+            default:
+                return false;
+        }
+    }
 }
