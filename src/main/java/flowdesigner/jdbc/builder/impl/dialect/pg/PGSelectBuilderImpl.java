@@ -20,7 +20,9 @@ public class PGSelectBuilderImpl extends SQLSelectBuilderImpl {
     public PGSelectBuilderImpl(DbType dbType) {
         super(dbType);
     }
-
+    public PGSelectBuilderImpl(String sql, DbType dbType) {
+        super(sql, dbType);
+    }
     public PGSelectBuilderImpl(SQLSelectStatement stmt, DbType dbType) {
         super(stmt, dbType);
     }

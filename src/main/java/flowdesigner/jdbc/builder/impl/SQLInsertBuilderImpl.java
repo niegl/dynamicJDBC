@@ -12,18 +12,32 @@ import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleInsertStatement;
 import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGInsertStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerInsertStatement;
 import flowdesigner.jdbc.builder.SQLInsertBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SQLInsertBuilderImpl implements SQLInsertBuilder {
 
-    private SQLInsertStatement stmt = null;
-    private DbType dbType;
+    private @Nullable SQLInsertStatement stmt = null;
+    private final @NotNull DbType dbType;
 
-    public SQLInsertBuilderImpl(DbType dbType){
+    public SQLInsertBuilderImpl(@NotNull DbType dbType){
         this.dbType = dbType;
     }
-
-    public SQLInsertBuilderImpl(SQLInsertStatement stmt, DbType dbType){
+    public SQLInsertBuilderImpl(String sql, @NotNull DbType dbType) {
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
+        if (stmtList.isEmpty()) {
+            throw new IllegalArgumentException("not support empty-statement :" + sql);
+        } else if (stmtList.size() > 1) {
+            throw new IllegalArgumentException("not support multi-statement :" + sql);
+        } else {
+            SQLInsertStatement stmt = (SQLInsertStatement)stmtList.get(0);
+            this.stmt = stmt;
+            this.dbType = dbType;
+        }
+    }
+    public SQLInsertBuilderImpl(@Nullable SQLInsertStatement stmt, @NotNull DbType dbType){
         this.stmt = stmt;
         this.dbType = dbType;
     }

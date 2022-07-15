@@ -27,6 +27,8 @@ class SQLOperatorUtilsTest {
         System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "AND"));
         System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "+"));
         System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "<=>"));
+        System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "DAYOFWEEK"));
+
     }
 
     @Test
@@ -36,6 +38,6 @@ class SQLOperatorUtilsTest {
 
     @Test
     void getSupportFunctions() {
-        System.out.println(SQLOperatorUtils.getSupportFunctions(null));
+        System.out.println(SQLOperatorUtils.getSupportFunctions(null, DbType.hive));
     }
 }

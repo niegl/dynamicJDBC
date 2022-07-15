@@ -19,7 +19,9 @@ public class MySQLSelectBuilderImpl extends SQLSelectBuilderImpl {
     public MySQLSelectBuilderImpl(DbType dbType) {
         super(dbType);
     }
-
+    public MySQLSelectBuilderImpl(String sql, DbType dbType) {
+        super(sql, dbType);
+    }
     public MySQLSelectBuilderImpl(SQLSelectStatement stmt, DbType dbType) {
         super(stmt, dbType);
     }

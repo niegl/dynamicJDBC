@@ -2,10 +2,13 @@ package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.SQLCreateDatabaseStatement;
+import com.alibaba.druid.sql.ast.statement.SQLDeleteStatement;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateDatabaseBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,14 +22,22 @@ public class SQLCreateDatabaseBuilderImpl implements SQLCreateDatabaseBuilder {
     private SQLCreateDatabaseStatement  stmt;
     private DbType dbType;
 
-    public SQLCreateDatabaseBuilderImpl(){
-    }
-
-    public SQLCreateDatabaseBuilderImpl(DbType dbType){
+    public SQLCreateDatabaseBuilderImpl(@NotNull DbType dbType){
         this.dbType = dbType;
     }
-
-    public SQLCreateDatabaseBuilderImpl(SQLCreateDatabaseStatement stmt, DbType dbType){
+    public SQLCreateDatabaseBuilderImpl(String sql, DbType dbType) {
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
+        if (stmtList.isEmpty()) {
+            throw new IllegalArgumentException("not support empty-statement :" + sql);
+        } else if (stmtList.size() > 1) {
+            throw new IllegalArgumentException("not support multi-statement :" + sql);
+        } else {
+            SQLCreateDatabaseStatement stmt = (SQLCreateDatabaseStatement)stmtList.get(0);
+            this.stmt = stmt;
+            this.dbType = dbType;
+        }
+    }
+    public SQLCreateDatabaseBuilderImpl(SQLCreateDatabaseStatement stmt, @NotNull DbType dbType){
         this.stmt = stmt;
         this.dbType = dbType;
     }

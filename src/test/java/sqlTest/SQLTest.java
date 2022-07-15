@@ -1598,10 +1598,15 @@ public class SQLTest {
 
     @Test
     void testVariant() throws SQLSyntaxErrorException {
-        String sql = "SELECT ${hiveconf:TXDATE}\n" +
-                "FROM PDATA.T04_EngCspt_Rel_H A";
+        String sql = "INSERT  OVERWRITE  TABLE ftpchk.partition_table\n" +
+                " PARTITION(dt='20220608',seqdt='20220608170320_00')\n" +
+                "(name,\n" +
+                "cardnum)\n" +
+                " SELECT  name,cardnum  from ftpchk.temp_11002120220608110021_02_00_00_0_20220608170320_00;";
         parser(sql, "hive");
     }
+
+
 
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);

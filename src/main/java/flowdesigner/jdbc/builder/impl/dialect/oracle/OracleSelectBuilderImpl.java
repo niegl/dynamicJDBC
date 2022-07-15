@@ -17,7 +17,9 @@ public class OracleSelectBuilderImpl extends SQLSelectBuilderImpl {
     public OracleSelectBuilderImpl(DbType dbType) {
         super(dbType);
     }
-
+    public OracleSelectBuilderImpl(String sql, DbType dbType) {
+        super(sql, dbType);
+    }
     public OracleSelectBuilderImpl(SQLSelectStatement stmt, DbType dbType) {
         super(stmt, dbType);
     }

@@ -1,6 +1,6 @@
 package flowdesigner.jdbc;
 
-import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.druid.util.DruidDataSourceUtils;
 import com.alibaba.druid.util.JdbcUtils;
 import com.google.gson.Gson;
 import flowdesigner.jdbc.command.CommandKey;
@@ -70,4 +70,75 @@ class DynamicDriverTest {
 
         System.out.println(dynamicDriver);
     }
+
+    DynamicDriver getDriver() {
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+        Properties properties = new Properties();
+        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000/default");
+//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+//        properties.setProperty("url","jdbc:mysql://localhost:3306");
+        properties.setProperty("username","root");
+        properties.setProperty("password","123456");
+        properties.setProperty("maxWait","3000");
+        dynamicDriver.setM_propertyInfo(properties);
+        Connection connection = null;
+        try {
+//            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+            System.out.println(dynamicDriver.get_errMessage());
+            e.printStackTrace();
+        }
+
+        assert connection != null;
+        return dynamicDriver;
+    }
+
+    DynamicDriver getMariaDBDriver() {
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\org.mariadb.jdbc");
+        Properties properties = new Properties();
+        properties.setProperty("driverClassName","org.mariadb.jdbc.Driver");
+        properties.setProperty("url","jdbc:mariadb://192.168.2.43:3306");
+        properties.setProperty("username","root");
+        properties.setProperty("password","123456");
+        properties.setProperty("maxWait","3000");
+        dynamicDriver.setM_propertyInfo(properties);
+        Connection connection = null;
+        try {
+//            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+            System.out.println(dynamicDriver.get_errMessage());
+            e.printStackTrace();
+        }
+
+        assert connection != null;
+        return dynamicDriver;
+    }
+
+    @Test
+    void testDruidDataSource() {
+        DynamicDriver driver = getDriver();
+        String url = DruidDataSourceUtils.getUrl(driver.getDataSource());
+        System.out.println(url);
+        long id = DruidDataSourceUtils.getID(driver.getDataSource());
+        System.out.println(id);
+        String name = DruidDataSourceUtils.getName(driver.getDataSource());
+        System.out.println(name);
+
+    }
+
+    @Test
+    void printMariaDBFunctions() throws SQLException {
+        DynamicDriver mariaDBDriver = getMariaDBDriver();
+        DatabaseMetaData meta = mariaDBDriver.getConnection().getMetaData();
+        ResultSet functions = meta.getFunctions(null, null, null);
+                while (functions.next()) {
+            String FUNCTION_NAME = functions.getString("FUNCTION_NAME");
+            System.out.println(FUNCTION_NAME);
+        }
+    }
+
 }

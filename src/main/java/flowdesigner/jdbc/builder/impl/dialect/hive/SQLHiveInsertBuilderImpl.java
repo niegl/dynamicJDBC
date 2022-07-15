@@ -11,8 +11,8 @@ public class SQLHiveInsertBuilderImpl extends SQLInsertBuilderImpl {
         this(null, dbType);
     }
 
-    public SQLHiveInsertBuilderImpl(SQLInsertStatement stmt, DbType dbType) {
-        super(stmt, dbType);
+    public SQLHiveInsertBuilderImpl(String sql, DbType dbType) {
+        super(sql, dbType);
     }
 
     @Override

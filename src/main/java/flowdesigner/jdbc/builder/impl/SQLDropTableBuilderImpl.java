@@ -2,9 +2,16 @@ package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.statement.SQLDeleteStatement;
 import com.alibaba.druid.sql.ast.statement.SQLDropTableStatement;
+import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import flowdesigner.jdbc.builder.SQLDropTableBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * 删除数据库表。
@@ -12,11 +19,26 @@ import flowdesigner.jdbc.builder.SQLDropTableBuilder;
  * 1、在 MySQL 中，其语法格式为：DROP DATABASE [ IF EXISTS ] <数据库名>
  */
 public class SQLDropTableBuilderImpl implements SQLDropTableBuilder {
-    private SQLDropTableStatement stmt;
+    private @Nullable SQLDropTableStatement stmt;
     private DbType dbType;
 
-    public SQLDropTableBuilderImpl(){}
-    public SQLDropTableBuilderImpl(DbType dbType){
+    public SQLDropTableBuilderImpl(@NotNull DbType dbType){
+        this.dbType = dbType;
+    }
+    public SQLDropTableBuilderImpl(String sql, DbType dbType) {
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
+        if (stmtList.isEmpty()) {
+            throw new IllegalArgumentException("not support empty-statement :" + sql);
+        } else if (stmtList.size() > 1) {
+            throw new IllegalArgumentException("not support multi-statement :" + sql);
+        } else {
+            SQLDropTableStatement stmt = (SQLDropTableStatement)stmtList.get(0);
+            this.stmt = stmt;
+            this.dbType = dbType;
+        }
+    }
+    public SQLDropTableBuilderImpl(@Nullable SQLDropTableStatement stmt, @NotNull DbType dbType){
+        this.stmt = stmt;
         this.dbType = dbType;
     }
 

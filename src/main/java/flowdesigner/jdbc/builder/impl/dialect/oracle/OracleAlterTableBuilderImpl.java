@@ -14,6 +14,9 @@ public class OracleAlterTableBuilderImpl extends SQLAlterTableBuilderImpl {
     public OracleAlterTableBuilderImpl() {
         super(DbType.oracle, new OracleExprBuilder());
     }
+    public OracleAlterTableBuilderImpl(String sql) {
+        super(sql, DbType.oracle, new OracleExprBuilder());
+    }
 
     @Override
     public SQLAlterTableBuilder addForeignKey(boolean hasConstraint, String constraintSymbol, String index_name, List<String> columnName,

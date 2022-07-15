@@ -18,16 +18,18 @@ import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleCreateTableStatement;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
 
-    private SQLCreateTableStatement  stmt;
-    private DbType             dbType;
+    private @Nullable SQLCreateTableStatement  stmt;
+    private DbType dbType;
 
     public SQLCreateTableBuilderImpl(){}
-    public SQLCreateTableBuilderImpl(DbType dbType){
+    public SQLCreateTableBuilderImpl(@NotNull DbType dbType){
         this.dbType = dbType;
     }
 
@@ -47,7 +49,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         this.dbType = dbType;
     }
 
-    public SQLCreateTableBuilderImpl(SQLCreateTableStatement stmt, DbType dbType){
+    public SQLCreateTableBuilderImpl(@Nullable SQLCreateTableStatement stmt, @NotNull DbType dbType){
         this.stmt = stmt;
         this.dbType = dbType;
     }

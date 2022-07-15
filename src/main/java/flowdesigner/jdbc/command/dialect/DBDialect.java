@@ -16,17 +16,16 @@
 package flowdesigner.jdbc.command.dialect;
 
 import flowdesigner.jdbc.command.model.*;
+import flowdesigner.jdbc.operators.SQLOperatorType;
 import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +43,18 @@ public class DBDialect {
         }
         return null;
     };
+
+    public String getCatalogPattern(Connection conn, String catalogPattern) throws SQLException{
+        boolean support = conn.getMetaData().supportsCatalogsInTableDefinitions();
+        if (support) {
+            if (StringKit.isBlank(catalogPattern)) {
+                return null;
+            }
+            return catalogPattern;
+        }
+        return null;
+    };
+
     /**
      * 获取数据库SchemaPattern
      * @param conn
@@ -53,18 +64,7 @@ public class DBDialect {
     public String getSchemaPattern(Connection conn) throws SQLException{
         boolean supportsSchemasInTableDefinitions = conn.getMetaData().supportsSchemasInTableDefinitions();
         if (supportsSchemasInTableDefinitions) {
-            return getSchemaPattern(conn,conn.getSchema());
-        }
-        return null;
-    };
-
-    public String getCatalogPattern(Connection conn, String catalogPattern) throws SQLException{
-        boolean support = conn.getMetaData().supportsCatalogsInTableDefinitions();
-        if (support) {
-            if (StringKit.isBlank(catalogPattern)) {
-                return null;
-            }
-            return catalogPattern;
+            return getSchemaPattern(conn, conn.getSchema());
         }
         return null;
     };
@@ -670,4 +670,24 @@ public class DBDialect {
         return infoEntities;
     }
 
+    public Set<String> getAllFunctions(Connection conn) throws SQLException {
+        Set<String> functions = new HashSet<>();
+        String schemaPattern = getSchemaPattern(conn, null);
+        String catalog = getCatalogPattern(conn, null);
+
+        DatabaseMetaData meta = conn.getMetaData();
+        ResultSet functions1 = meta.getFunctions(catalog, schemaPattern, "%");
+        while (functions1.next()) {
+            String FUNCTION_NAME = functions1.getString("FUNCTION_NAME");
+            functions.add(FUNCTION_NAME);
+        }
+        Collections.addAll(functions,meta.getTimeDateFunctions().split(","));
+        Collections.addAll(functions,meta.getStringFunctions().split(","));
+        Collections.addAll(functions,meta.getNumericFunctions().split(","));
+        Collections.addAll(functions,meta.getSystemFunctions().split(","));
+
+        functions.removeIf(String::isEmpty);
+
+        return functions;
+    }
 }

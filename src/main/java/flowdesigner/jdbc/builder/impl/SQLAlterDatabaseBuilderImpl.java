@@ -3,14 +3,18 @@ package flowdesigner.jdbc.builder.impl;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.SQLAlterCharacter;
 import com.alibaba.druid.sql.ast.statement.SQLAlterDatabaseStatement;
+import com.alibaba.druid.sql.ast.statement.SQLDeleteStatement;
+import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLAlterDatabaseBuilder;
 
+import java.util.List;
 import java.util.Map;
 
 public class SQLAlterDatabaseBuilderImpl implements SQLAlterDatabaseBuilder {
@@ -18,8 +22,24 @@ public class SQLAlterDatabaseBuilderImpl implements SQLAlterDatabaseBuilder {
     private SQLAlterDatabaseStatement stmt;
     private DbType dbType;
 
-    public SQLAlterDatabaseBuilderImpl(){}
+
     public SQLAlterDatabaseBuilderImpl(DbType dbType){
+        this.dbType = dbType;
+    }
+    public SQLAlterDatabaseBuilderImpl(String sql, DbType dbType) {
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
+        if (stmtList.isEmpty()) {
+            throw new IllegalArgumentException("not support empty-statement :" + sql);
+        } else if (stmtList.size() > 1) {
+            throw new IllegalArgumentException("not support multi-statement :" + sql);
+        } else {
+            SQLAlterDatabaseStatement stmt = (SQLAlterDatabaseStatement)stmtList.get(0);
+            this.stmt = stmt;
+            this.dbType = dbType;
+        }
+    }
+    public SQLAlterDatabaseBuilderImpl(SQLAlterDatabaseStatement stmt, DbType dbType){
+        this.stmt = stmt;
         this.dbType = dbType;
     }
 

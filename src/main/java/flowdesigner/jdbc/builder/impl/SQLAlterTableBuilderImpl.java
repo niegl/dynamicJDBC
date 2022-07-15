@@ -3,6 +3,7 @@ package flowdesigner.jdbc.builder.impl;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLName;
+import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.*;
@@ -28,9 +29,29 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
         this.dbType = dbType;
         exprBuilder = new SQLExprBuilder();
     }
+    public SQLAlterTableBuilderImpl(String sql, DbType dbType) {
+        this(dbType);
 
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
+        if (stmtList.isEmpty()) {
+            throw new IllegalArgumentException("not support empty-statement :" + sql);
+        } else if (stmtList.size() > 1) {
+            throw new IllegalArgumentException("not support multi-statement :" + sql);
+        } else {
+            SQLAlterTableStatement stmt = (SQLAlterTableStatement)stmtList.get(0);
+            this.stmt = stmt;
+        }
+    }
+    public SQLAlterTableBuilderImpl(SQLAlterTableStatement stmt, DbType dbType){
+        this(dbType);
+        this.stmt = stmt;
+    }
     public SQLAlterTableBuilderImpl(DbType dbType, SQLExprBuilder exprBuilder) {
-        this.dbType = dbType;
+        this(dbType);
+        this.exprBuilder = exprBuilder;
+    }
+    public SQLAlterTableBuilderImpl(String sql, DbType dbType, SQLExprBuilder exprBuilder) {
+        this(sql, dbType);
         this.exprBuilder = exprBuilder;
     }
 

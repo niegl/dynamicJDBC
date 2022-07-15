@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SQLSelectBuilderImplTest {
 
-    SQLSelectBuilder builderEx = SQLBuilderFactory.createSelectSQLBuilder(DbType.hive);
+    SQLSelectBuilder builderEx = SQLBuilderFactory.createSelectSQLBuilder( DbType.hive);
     @AfterEach
     void tearDown() {
         System.out.println(builderEx);

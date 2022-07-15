@@ -5,6 +5,7 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLLimit;
 import com.alibaba.druid.sql.ast.SQLOrderBy;
+import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
@@ -44,6 +45,19 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
 
     public SQLSelectBuilderImpl(DbType dbType){
         this(new SQLSelectStatement(), dbType);
+    }
+
+    public SQLSelectBuilderImpl(String sql, DbType dbType) {
+        List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
+        if (stmtList.isEmpty()) {
+            throw new IllegalArgumentException("not support empty-statement :" + sql);
+        } else if (stmtList.size() > 1) {
+            throw new IllegalArgumentException("not support multi-statement :" + sql);
+        } else {
+            SQLSelectStatement stmt = (SQLSelectStatement)stmtList.get(0);
+            this.stmt = stmt;
+            this.dbType = dbType;
+        }
     }
 
     public SQLSelectBuilderImpl(SQLSelectStatement stmt, DbType dbType){

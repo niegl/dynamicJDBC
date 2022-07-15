@@ -8,4 +8,8 @@ public class HiveAlterTableBuilderImpl extends SQLAlterTableBuilderImpl {
         super(DbType.hive);
         exprBuilder.setDISABLE_NOVALIDATE(true);
     }
+    public HiveAlterTableBuilderImpl(String sql) {
+        super(sql, DbType.hive);
+        exprBuilder.setDISABLE_NOVALIDATE(true);
+    }
 }

@@ -5,12 +5,11 @@ import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class DBExecuteUpdateCommandImpl implements Command<ExecResult<Integer>> {
+public class DBExecuteUpdateImpl implements Command<ExecResult<Integer>> {
 
     public ExecResult<Integer> exec(Connection conn, Map<String, String> params) throws SQLException {
         String SQL = params.getOrDefault("SQL",null);

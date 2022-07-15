@@ -19,6 +19,9 @@ import flowdesigner.jdbc.command.dialect.DBDialect;
 import flowdesigner.jdbc.command.model.ColumnField;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -52,4 +55,6 @@ public class DBDialectMySQL extends DBDialect {
         }
         return false;
     }
+
+
 }

@@ -18,7 +18,9 @@ public class DB2SelectBuilderImpl extends SQLSelectBuilderImpl {
     public DB2SelectBuilderImpl(DbType dbType) {
         super(dbType);
     }
-
+    public DB2SelectBuilderImpl(String sql, DbType dbType) {
+        super(sql, dbType);
+    }
     public DB2SelectBuilderImpl(SQLSelectStatement stmt, DbType dbType) {
         super(stmt, dbType);
     }

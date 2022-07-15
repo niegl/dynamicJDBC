@@ -9,5 +9,6 @@ public enum CommandKey {
     CMD_DBExecuteCommandImpl,
     CMD_DBExecuteUpdateCommandImpl,
     CMD_DBReverseGetFKColumnFieldImpl,
-    CMD_DBReverseGetFKReferenceImpl
+    CMD_DBReverseGetFKReferenceImpl,
+    CMD_DBReverseGetFunctionsImpl
 }

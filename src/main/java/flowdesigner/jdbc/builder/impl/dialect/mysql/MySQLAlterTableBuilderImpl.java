@@ -14,6 +14,10 @@ public class MySQLAlterTableBuilderImpl extends SQLAlterTableBuilderImpl {
         super(DbType.mysql, new MySqlExprBuilder());
     }
 
+    public MySQLAlterTableBuilderImpl(String sql) {
+        super(sql, DbType.mysql, new MySqlExprBuilder());
+    }
+
     @Override
     protected MySqlExprBuilder getExprBuilder() {
         return (MySqlExprBuilder)exprBuilder;

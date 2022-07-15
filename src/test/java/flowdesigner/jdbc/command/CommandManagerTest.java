@@ -1,8 +1,10 @@
 package flowdesigner.jdbc.command;
 
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.util.JdbcUtils;
 import com.google.gson.Gson;
 import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
+import flowdesigner.jdbc.command.impl.DBReverseGetFunctionsImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
@@ -46,6 +48,30 @@ class CommandManagerTest {
         assertNotNull(connection);
     }
 
+    Connection getMySQL() {
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+        Properties properties = new Properties();
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+        properties.setProperty("url","jdbc:mysql://localhost:3306");
+        properties.setProperty("username","root");
+        properties.setProperty("password","123456");
+        properties.setProperty("maxWait","3000");
+        dynamicDriver.setM_propertyInfo(properties);
+
+        try {
+//            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+            System.out.println(dynamicDriver.get_errMessage());
+            e.printStackTrace();
+        }
+        assertNotNull(connection);
+        return connection;
+    }
+
     @Test
     void testGetAllTables() throws SQLException {
         DatabaseMetaData meta = connection.getMetaData();
@@ -79,11 +105,24 @@ class CommandManagerTest {
     void testExecuteUpdate() throws SQLException {
         Gson gson = new Gson();
         long start = Instant.now().toEpochMilli();
-        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteUpdateCommandImpl,new HashMap<String,String>(){{
+        ExecResult cc = CommandManager.exeCommand(getMySQL(), CommandKey.CMD_DBExecuteUpdateCommandImpl,new HashMap<String,String>(){{
 //            put("schemaPattern","test");
-//            put("SQL","ALTER TABLE test_db11.test_db111 ADD PRIMARY KEY(id);");
-//            put("SQL","ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
-            put("SQL","ALTER TABLE test.tb_emp6 ADD CONSTRAINT fk_emp_dept1 FOREIGN KEY(deptId) REFERENCES tb_dept1(id);");
+            put("SQL","ALTER TABLE test_db11.test_db111 ADD PRIMARY KEY(id);");
+            put("SQL","ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
+//            put("SQL","ALTER TABLE test.tb_emp6 ADD CONSTRAINT fk_emp_dept1 FOREIGN KEY(deptId) REFERENCES tb_dept1(id);");
+        }});
+        long end = Instant.now().toEpochMilli();
+        String s = gson.toJson(cc);
+        System.out.println(s);
+        System.out.println(end - start);
+    }
+    @Test
+    void testExecuteSelect() throws SQLException {
+        Gson gson = new Gson();
+        long start = Instant.now().toEpochMilli();
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl,new HashMap<String,String>(){{
+            put("SQL","SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm\n" +
+                    "FROM std_pcode.t99_cala_stat_index_mapping");
         }});
         long end = Instant.now().toEpochMilli();
         String s = gson.toJson(cc);
@@ -233,6 +272,16 @@ class CommandManagerTest {
     }
 
     @Test
+    void testGetFunctions() throws SQLException {
+
+        DBReverseGetFunctionsImpl getFKReference = new DBReverseGetFunctionsImpl();
+        ExecResult<Set<String>> execResult = getFKReference.exec(connection, new HashMap<>());
+
+        System.out.println(execResult.getBody());
+
+    }
+
+    @Test
     void testExeCommandCrossReference() throws SQLException {
 
 //        Gson gson = new Gson();
@@ -268,9 +317,20 @@ class CommandManagerTest {
 
     @Test
     void getSupportFunctions() throws SQLException {
-        Collection<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(connection);
-    }
+//        Collection<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(connection, DbType.hive);
+//        System.out.println(supportFunctions);
 
+        Connection mySQL = getMySQL();
+        Collection<String> supportFunctions2 = SQLOperatorUtils.getSupportFunctions(mySQL, DbType.mysql);
+        System.out.println(supportFunctions2);
+//        supportFunctions2.removeIf( f -> supportFunctions.contains(f.toUpperCase()) || supportFunctions.contains(f.toLowerCase()));
+//        System.out.println(supportFunctions2);
+    }
+    @Test
+    void getSupportFunctions3() throws SQLException {
+        Collection<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(null, DbType.oracle);
+        System.out.println(supportFunctions);
+    }
     @Test
     void getSupportFunctionUsage() throws SQLException {
         String usage = SQLOperatorUtils.getFunctionDescription(connection,"acos");
@@ -278,5 +338,28 @@ class CommandManagerTest {
     @Test
     void getSupportFunctionType() throws SQLException {
         SQLOperatorUtils.getFunctionType("^=");
+    }
+
+    @Test
+    void getSupportFunctions2() throws SQLException {
+        connection = getMySQL();
+        DatabaseMetaData meta = connection.getMetaData();
+         String functions1 = meta.getTimeDateFunctions();
+        String functions2 = meta.getSystemFunctions();
+        String functions3 = meta.getStringFunctions();
+        String functions4 = meta.getNumericFunctions();
+        String functions5 = meta.getSystemFunctions();
+
+
+//        ResultSet functions5 = meta.getFunctions(null,null,"%");
+//        while (functions5.next()) {
+//            String FUNCTION_NAME = functions5.getString("FUNCTION_NAME");
+//            System.out.println(FUNCTION_NAME);
+//        }
+        System.out.println(functions1);
+        System.out.println(functions2);
+        System.out.println(functions3);
+        System.out.println(functions4);
+        System.out.println(functions5);
     }
 }

@@ -1,9 +1,5 @@
 package flowdesigner.jdbc.operators;
 
-import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
-import com.alibaba.druid.sql.ast.expr.SQLIntegerExpr;
-import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
-
 public enum SQLOperator {
 
     //region 一元操作符
@@ -28,8 +24,8 @@ public enum SQLOperator {
     Divide("/", 60),
     DIV("DIV", 60),
     Modulus("%", 60),
-    Mod("MOD", 60),
-    Add("+", 70),
+    MOD("MOD", 60),
+    ADD("+", 70),
     Subtract("-", 70),
     SubGt("->", 20),
     SubGtGt("->>", 20),
@@ -95,39 +91,44 @@ public enum SQLOperator {
     //endregion
     //region MathematicalFunction
     round("round"),
+    trunc("trunc","trunc(?)"),
     bround("bround"),
-    floor("floor"),
-    ceil("ceil"),
+    FLOOR("floor"),
+    CEIL("ceil"),
     ceiling("ceiling"),
     rand("rand"),
-    exp("exp"),
-    ln("ln"),
+    EXP("exp"),
+    LN("ln"),
     log10("log10"),
     log2("log2"),
-    log("log"),
+    LOG("log"),
     pow("pow"),
-    sqrt("sqrt"),
+    SQRT("sqrt"),
     bin("bin"),
     hex("hex"),
     unhex("unhex"),
     conv("conv"),
-    abs("abs"),
+    ABS("abs"),
     pmod("pmod"),
-    sin("sin"),
+    SIN("sin"),
     asin("asin"),
-    cos("cos"),
-    acos("acos"),
-    tan("tan"),
+    COS("cos"),
+    COT("COT","COT(?)"),
+    ACOS("acos"),
+    TAN("tan"),
     atan("atan"),
-    degrees("degrees"),
-    radians("radians"),
+    ATAN2("ATAN2","atan2(?, ?)"),
+    DEGREES("degrees"),
+    RADIANS("radians"),
+    RANDOM("RANDOM","RANDOM()"),
     positive("positive"),
     negative("negative"),
-    sign("sign"),
+    SIGN("sign"),
     e("e"),
-    pi("pi"),
+    PI("pi"),
+    POWER("POWER","POWER(?,n)"),
     factorial("factorial"),
-    cbrt("cbrt"),
+    CBRT("cbrt"),
     shiftleft("shiftleft"),
     shiftright("shiftright"),
     shiftrightunsigned("shiftrightunsigned"),
@@ -147,17 +148,24 @@ public enum SQLOperator {
     //region Type Conversion Functions
     binary("binary"),
     cast("cast"),
+    asciistr("asciistr"),
+    bin_to_num("bin_to_num"),
+    CONVERT("convert","convert(?,d_chset)"),
+    TO_CHAR("to_char", "to_char(?)"),
+    TO_NUMBER("to_number","to_number(?)"),
+    TO_TIMESTAMP("TO_TIMESTAMP","TO_TIMESTAMP(?)"),
     //endregion
 
     //region Date Functions
     from_unixtime("from_unixtime"),
     unix_timestamp("unix_timestamp"),
-    to_date("to_date"),
+    TO_DATE("to_date"),
     year("year"),
     quarter("quarter"),
     month("month"),
     day("day"),
     dayofmonth("dayofmonth"),
+    DAYOFWEEK("DAYOFWEEK", "DAYOFWEEK(?)"),
     hour("hour"),
     minute("minute"),
     second("second"),
@@ -173,9 +181,13 @@ public enum SQLOperator {
     add_months("add_months"),
     last_day("last_day"),
     next_day("next_day"),
-    trunc("trunc"),
+    TRUNC("TRUNC","TRUNC(?)"),
     months_between("months_between"),
     date_format("date_format"),
+    SYSDATE("SYSDATE","SYSDATE"),
+    SYSTIMESTAMP("SYSTIMESTAMP","SYSTIMESTAMP"),
+    DBTIMEZONE("DBTIMEZONE","DBTIMEZONE"),
+    ROUND("ROUND","ROUND(?)"),
     //endregion
 
     //region Conditional Functions
@@ -190,7 +202,7 @@ public enum SQLOperator {
     //endregion
 
     //region 聚合函数
-    AVG("AVG"), COUNT("COUNT"), MAX("MAX"), MIN("MIN"), STDDEV("STDDEV"), SUM("SUM"),
+    AVG("AVG"), COUNT("COUNT"), MAX("MAX"), MIN("MIN"), STDDEV("STDDEV"), SUM("SUM","SUM([distinct] ?)"),
     variance("variance"),
     var_pop("var_pop"),
     var_samp("var_samp"),
@@ -224,31 +236,37 @@ public enum SQLOperator {
     // 常量
     space("space"),
     // 一个参数
-    ascii("ascii"),
+    BIT_LENGTH("BIT_LENGTH","BIT_LENGTH(?)"),
+    CHAR_LENGTH("CHAR_LENGTH","CHAR_LENGTH(?)"),
+    ASCII("ascii"),
+    BTRIM("BTRIM","BTRIM(?)"),
+    CHR("CHR","CHR(?)"),
     base64("base64"),
     character_length("character_length"),
-    chr("chr"),
-    length("length"),
-    lower("lower"),
-    lcase("lcase"),
-    upper("upper"),
+    LENGTH("length"),
+    LOWER("lower"),
+    LCASE("lcase"),
+    UPPER("upper"),
     ucase("ucase"),
     ltrim("ltrim"),
     rtrim("rtrim"),
     trim("trim"),
-    octet_length("octet_length"),
+    OCTET_LENGTH("octet_length"),
+    OVERLAY("OVERLAY","overlay(? placing string from 0)"),
+    POSITION("POSITION","position(substring in ?)"),
     quote("quote"),
     reverse("reverse"),
     sentences("sentences"),
     unbase64("unbase64"),
-    initcap("initcap"),
+    INITCAP("initcap"),
     soundex("soundex"),
     // 两个参数
     concat("concat"),
+    CONCATA("CONCATA","CONCATA(?,?)"),
     levenshtein("levenshtein"),
     // 参数 + 常量
     substr("substr"),
-    substring("substring"),
+    SUBSTRING("substring"),
     decode("decode"),
     elt("elt"),
     encode("encode"),
@@ -267,9 +285,13 @@ public enum SQLOperator {
     repeat("repeat"),
     replace("replace"),
     split("split"),
+    SPLIT_PART("SPLIT_PART","split_part(?, delimiter, 1)"),
+    STRPOS("STRPOS","strpos(string, substring)"),
+    TO_ASCII("TO_ASCII","TO_ASCII(?)"),
+    TO_HEX("TO_HEX","TO_HEX(?)"),
     str_to_map("str_to_map"),
     substring_index("substring_index"),
-    translate("translate"),
+    TRANSLATE("translate"),
 
     // 全模式
     context_ngrams("context_ngrams"),
@@ -296,7 +318,7 @@ public enum SQLOperator {
     surrogate_key("surrogate_key"),
     // 一个参数
     hash("hash"),
-    md5("md5"),
+    MD5("md5"),
     sha1("sha1"),
     sha("sha"),
     crc32("crc32"),
@@ -321,16 +343,26 @@ public enum SQLOperator {
     SQLOperator(String name) {
         this(name, 999);
     }
-
+    SQLOperator(String name, String usage) {
+        this(name, 999, usage);
+    }
     SQLOperator(String name, int priority) {
+        this(name, priority, "");
+    }
+    SQLOperator(String name, int priority, String usage) {
         this.name = name;
         this.nameLCase = name.toLowerCase();
         this.priority = priority;
+        this.usage = usage;
     }
 
     public final String name;
     public final String nameLCase;
     public final int priority;
+    /**
+     * 简化签名的获取，不在使用标准的SQL语法
+     */
+    public final String usage;
 
     public boolean isRelational() {
 
@@ -365,13 +397,13 @@ public enum SQLOperator {
 
     public boolean isArithmetic() {
         switch(this) {
-            case Add:
+            case ADD:
             case Subtract:
             case Multiply:
             case Divide:
             case DIV:
             case Modulus:
-            case Mod:
+            case MOD:
                 return true;
             default:
                 return false;
@@ -400,7 +432,7 @@ public enum SQLOperator {
             case surrogate_key:
             // 一个参数
             case hash:
-            case md5:
+            case MD5:
             case sha1:
             case sha:
             case crc32:
@@ -421,26 +453,32 @@ public enum SQLOperator {
     public boolean isStringFunction() {
         switch(this) {
             case space:
-            case ascii:
+            case ASCII:
+            case BTRIM:
+            case BIT_LENGTH:
+            case CHAR_LENGTH:
+            case CHR:
             case base64:
             case character_length:
-            case chr:
-            case length:
-            case lower:
-            case lcase:
-            case upper:
+            case LENGTH:
+            case LOWER:
+            case LCASE:
+            case UPPER:
             case ucase:
             case ltrim:
             case rtrim:
             case trim:
-            case octet_length:
+            case OCTET_LENGTH:
+            case OVERLAY:
+            case POSITION:
             case quote:
             case reverse:
             case sentences:
             case unbase64:
-            case initcap:
+            case INITCAP:
             case soundex:
             case concat:
+            case CONCATA:
             case levenshtein:
             case decode:
             case elt:
@@ -460,11 +498,15 @@ public enum SQLOperator {
             case repeat:
             case replace:
             case split:
+            case SPLIT_PART:
+            case STRPOS:
+            case TO_ASCII:
+            case TO_HEX:
             case str_to_map:
             case substr:
-            case substring:
+            case SUBSTRING:
             case substring_index:
-            case translate:
+            case TRANSLATE:
             case context_ngrams:
             case concat_ws:
             case get_json_object:
@@ -489,7 +531,13 @@ public enum SQLOperator {
     public boolean isTypeConversionFunction() {
         switch(this) {
             case cast:
-            case        binary:
+            case binary:
+            case asciistr:
+            case bin_to_num:
+            case CONVERT:
+            case TO_CHAR:
+            case TO_NUMBER:
+            case TO_TIMESTAMP:
                 return true;
             default:
                 return false;
@@ -499,7 +547,7 @@ public enum SQLOperator {
         switch(this) {
             case from_unixtime:
             case         unix_timestamp:
-            case         to_date:
+            case TO_DATE:
             case         year:
             case        quarter:
             case        month:
@@ -520,9 +568,13 @@ public enum SQLOperator {
             case       add_months:
             case         last_day:
             case        next_day:
-            case        trunc:
+            case        TRUNC:
             case        months_between:
             case        date_format:
+            case SYSDATE:
+            case SYSTIMESTAMP:
+            case DBTIMEZONE:
+            case ROUND:
                 return true;
             default:
                 return false;
@@ -531,38 +583,44 @@ public enum SQLOperator {
     public boolean isMathematicalFunction() {
         switch(this) {
             case bround:
-            case floor:
-            case        ceil:
+            case round:
+            case FLOOR:
+            case CEIL:
             case        ceiling:
             case        rand:
-            case        exp:
-            case        ln:
+            case EXP:
+            case LN:
             case        log10:
             case        log2:
-            case        log:
+            case LOG:
             case        pow:
-            case        sqrt:
+            case SQRT:
             case       bin:
             case       hex:
             case       unhex:
             case        conv:
-            case        abs:
+            case ABS:
             case        pmod:
-            case        sin:
+            case SIN:
             case       asin:
-            case        cos:
-            case        acos:
-            case       tan:
+            case COS:
+            case COT:
+            case ACOS:
+            case TAN:
             case       atan:
-            case       degrees:
-            case      radians:
+            case       ATAN2:
+            case DEGREES:
+            case RADIANS:
+            case RANDOM:
             case       positive:
             case       negative:
-            case        sign:
+            case trunc:
+            case SIGN:
             case        e:
-            case        pi:
+            case PI:
+            case POWER:
             case        factorial:
-            case        cbrt:
+            case CBRT:
             case       shiftleft:
             case       shiftright:
             case        shiftrightunsigned:
