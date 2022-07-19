@@ -95,7 +95,7 @@ public enum SQLOperator {
     bround("bround"),
     FLOOR("floor"),
     CEIL("ceil"),
-    ceiling("ceiling"),
+    CEILING("ceiling"),
     rand("rand"),
     EXP("exp"),
     LN("ln"),
@@ -109,17 +109,24 @@ public enum SQLOperator {
     unhex("unhex"),
     conv("conv"),
     ABS("abs"),
+    ABSVAL("ABSVAL","ABSVAL(?)"),
     pmod("pmod"),
     SIN("sin"),
-    asin("asin"),
+    asin("asin(?)"),
+    COSH("COSH","COSH(?)"),
     COS("cos"),
     COT("COT","COT(?)"),
+    SINH("SINH","SINH(?)"),
+    DIGITS("DIGITS","DIGITS(?)"),
+    MULTIPLY_ALT("MULTIPLY_ALT","MULTIPLY_ALT(?,?)"),
     ACOS("acos"),
     TAN("tan"),
-    atan("atan"),
+    TANH("tanh(?)"),
+    ATAN("atan"),
     ATAN2("ATAN2","atan2(?, ?)"),
     DEGREES("degrees"),
     RADIANS("radians"),
+    SQUARE("SQUARE","SQUARE(?)"),
     RANDOM("RANDOM","RANDOM()"),
     positive("positive"),
     negative("negative"),
@@ -150,49 +157,94 @@ public enum SQLOperator {
     cast("cast"),
     asciistr("asciistr"),
     bin_to_num("bin_to_num"),
-    CONVERT("convert","convert(?,d_chset)"),
+    CONVERT("convert"),
     TO_CHAR("to_char", "to_char(?)"),
     TO_NUMBER("to_number","to_number(?)"),
     TO_TIMESTAMP("TO_TIMESTAMP","TO_TIMESTAMP(?)"),
+    SMALLINT("SMALLINT","SMALLINT(?)"),
+    INTEGER("INTEGER","INTEGER(?)"),
+    BIGINT("BIGINT","BIGINT(?)"),
+    DECIMAL("DECIMAL","DECIMAL(?)"),
+    REAL("REAL","REAL(?)"),
+    DOUBLE("DOUBLE","DOUBLE(?)"),
+    FLOAT("FLOAT","FLOAT(?)"),
+    CHAR("CHAR","CHAR(?)"),
+    VARCHAR("VARCHAR","VARCHAR(?)"),
+    VARCHAR_FORMAT_BIT("VARCHAR_FORMAT_BIT","VARCHAR_FORMAT_BIT(?)"),
+    VARCHAR_FORMAT("VARCHAR_FORMAT","VARCHAR_FORMAT(?,'YYYY-MM-DD HH24:MI:SS')"),
+    VARCHAR_BIT_FORMAT("VARCHAR_BIT_FORMAT","VARCHAR_BIT_FORMAT(?)"),
+    LONG_VARCHAR("LONG_VARCHAR","LONG_VARCHAR(?)"),
+    CLOB("CLOB","CLOB(?)"),
+    GRAPHIC("GRAPHIC","GRAPHIC(?)"),
+    VARGRAPHIC("VARGRAPHIC","VARGRAPHIC(?)"),
+    LONG_VARGRAPHIC("LONG_VARGRAPHIC","LONG_VARGRAPHIC(?)"),
+    DBCLOB("DBCLOB","DBCLOB(?)"),
+    BLOB("BLOB","BLOB(?)"),
+    DATE("DATE","DATE(?)"),
+    TIME("TIME","TIME(?)"),
+    TIMESTAMP("TIMESTAMP","TIMESTAMP(?)"),
     //endregion
 
     //region Date Functions
     from_unixtime("from_unixtime"),
     unix_timestamp("unix_timestamp"),
     TO_DATE("to_date"),
-    year("year"),
+    YEAR("year"),
     quarter("quarter"),
-    month("month"),
-    day("day"),
-    dayofmonth("dayofmonth"),
-    DAYOFWEEK("DAYOFWEEK", "DAYOFWEEK(?)"),
+    MONTH("month"),
+    DAY("day"),
     hour("hour"),
     minute("minute"),
     second("second"),
+    MICROSECOND("MICROSECOND"),
+    MONTHNAME("MONTHNAME","MONTHNAME(?)"),
+    DAYNAME("DAYNAME","DAYNAME(?)"),
+    WEEK("WEEK","WEEK(?)"),
+    WEEK_ISO("WEEK_ISO","WEEK_ISO(?)"),
+    TIMESTAMP_ISO("TIMESTAMP_ISO","TIMESTAMP_ISO(?)"),
     weekofyear("weekofyear"),
+    dayofmonth("dayofmonth"),
+    DAYOFWEEK("DAYOFWEEK", "DAYOFWEEK(?)"),
+    SYSDATETIME("SYSDATETIME","SYSDATETIME()"),
     extract("extract"),
-    datediff("datediff"),
+    DATEDIFF("datediff"),
+    TIMESTAMPDIFF("TIMESTAMPDIFF","TIMESTAMPDIFF(?,?)"),
+    DATEFROMPARTS("DATEFROMPARTS","DATEFROMPARTS( year ,  month ,  day )"),
+    TIMESTAMP_FORMAT("TIMESTAMP_FORMAT","TIMESTAMP_FORMAT(?,'yyyy-mm-dd')"),
+    DATENAME("DATENAME","DATENAME(year, ?)"),
+    DATEPART("","DATEPART(yyyy,?)"),
     date_add("date_add"),
     date_sub("date_sub"),
+    DAYS("DAYS","DAYS(?)"),
+    JULIAN_DAY("JULIAN_DAY","JULIAN_DAY(?)"),
+    MIDNIGHT_SECONDS("MIDNIGHT_SECONDS","MIDNIGHT_SECONDS(?)"),
     from_utc_timestamp("from_utc_timestamp"),
     to_utc_timestamp("to_utc_timestamp"),
     current_date("current_date"),
-    current_timestamp("current_timestamp"),
+    CURRENT_TIMESTAMP("current_timestamp"),
+    DATEADD("DATEADD","DATEADD(day,2,?)"),
     add_months("add_months"),
     last_day("last_day"),
     next_day("next_day"),
+    GETDATE("GETDATE","GETDATE()"),
+    GETUTCDATE("GETUTCDATE","GETUTCDATE()"),
+    ISDATE("ISDATE","ISDATE(?)"),
     TRUNC("TRUNC","TRUNC(?)"),
+    TRUNCATE("TRUNCATE"),
     months_between("months_between"),
     date_format("date_format"),
     SYSDATE("SYSDATE","SYSDATE"),
     SYSTIMESTAMP("SYSTIMESTAMP","SYSTIMESTAMP"),
     DBTIMEZONE("DBTIMEZONE","DBTIMEZONE"),
     ROUND("ROUND","ROUND(?)"),
+
     //endregion
 
     //region Conditional Functions
-    isnull("isnull"),
+    ISNULL("isnull"),
+    ISNUMERIC("ISNUMERIC","ISNUMERIC(?)"),
     isnotnull("isnotnull"),
+    SESSION_USER("SESSION_USER","SESSION_USER"),
     nvl("nvl"),
     assert_true("assert_true"),
     IF("if"),
@@ -230,42 +282,58 @@ public enum SQLOperator {
     regr_sxx("regr_sxx"),
     regr_sxy("regr_sxy"),
     regr_syy("regr_syy"),
+    VALUE("VALUE","VALUE(EXPRESSION1,EXPRESSION2)"), //db2
     //endregion
 
     //region String Functions
     // 常量
-    space("space"),
+    SPACE("space"),
     // 一个参数
     BIT_LENGTH("BIT_LENGTH","BIT_LENGTH(?)"),
     CHAR_LENGTH("CHAR_LENGTH","CHAR_LENGTH(?)"),
     ASCII("ascii"),
+    STRIP("STRIP","STRIP(?)"),
+    UNICODE("UNICODE","UNICODE(?)"),
     BTRIM("BTRIM","BTRIM(?)"),
     CHR("CHR","CHR(?)"),
+    STR("STR","STR(?)"),
+    STUFF("STUFF","STUFF( ? , start, length, new_string)"),
+    CHARINDEX("CHARINDEX","CHARINDEX( substring ,   string ,  start )" ),
+    DATALENGTH("DATALENGTH","DATALENGTH(?)"),
+    DIFFERENCE("DIFFERENCE","DIFFERENCE(?,?)"),
+    FORMAT("FORMAT","FORMAT( value, format)"),
+    LEFT("LEFT","LEFT( ?,2)"),
+    RIGHT("RIGHT","RIGHT(?,2)"),
     base64("base64"),
     character_length("character_length"),
     LENGTH("length"),
+    LEN("LEN","LEN(?)"),
+    NCHAR("NCHAR","NCHAR(2)"),
+    PATINDEX("PATINDEX","PATINDEX('%pattern%', ?)"),
+    QUOTENAME("QUOTENAME","QUOTENAME( ?, quote_char )"),
+    REPLICATE("REPLICATE","REPLICATE( ?, 2 )"),
     LOWER("lower"),
     LCASE("lcase"),
     UPPER("upper"),
     ucase("ucase"),
     ltrim("ltrim"),
-    rtrim("rtrim"),
+    RTRIM("rtrim"),
     trim("trim"),
     OCTET_LENGTH("octet_length"),
     OVERLAY("OVERLAY","overlay(? placing string from 0)"),
     POSITION("POSITION","position(substring in ?)"),
     quote("quote"),
-    reverse("reverse"),
+    REVERSE("reverse"),
     sentences("sentences"),
     unbase64("unbase64"),
     INITCAP("initcap"),
-    soundex("soundex"),
+    SOUNDEX("soundex"),
     // 两个参数
     concat("concat"),
     CONCATA("CONCATA","CONCATA(?,?)"),
     levenshtein("levenshtein"),
     // 参数 + 常量
-    substr("substr"),
+    SUBSTR("substr"),
     SUBSTRING("substring"),
     decode("decode"),
     elt("elt"),
@@ -275,15 +343,15 @@ public enum SQLOperator {
     format_number("format_number"),
     in_file("in_file"),
     instr("instr"),
-    locate("locate"),
+    LOCATE("locate"),
     lpad("lpad"),
     rpad("rpad"),
     parse_url("parse_url"),
     printf("printf"),
     regexp_extract("regexp_extract"),
     regexp_replace("regexp_replace"),
-    repeat("repeat"),
-    replace("replace"),
+    REPEAT("repeat"),
+    REPLACE("replace"),
     split("split"),
     SPLIT_PART("SPLIT_PART","split_part(?, delimiter, 1)"),
     STRPOS("STRPOS","strpos(string, substring)"),
@@ -292,10 +360,11 @@ public enum SQLOperator {
     str_to_map("str_to_map"),
     substring_index("substring_index"),
     TRANSLATE("translate"),
-
+    INSERT("INSERT","INSERT(?,POS,SIZE,replaceExpr)"),
+    POSSTR("POSSTR","POSSTR(?,EXP2)"),
     // 全模式
     context_ngrams("context_ngrams"),
-    concat_ws("concat_ws"),
+    CONCAT_WS("concat_ws"),
     get_json_object("get_json_object"),
     ngrams("ngrams"),
     //endregion
@@ -311,7 +380,8 @@ public enum SQLOperator {
 
     //region Misc. Functions
     // 无参
-    current_user("current_user"),
+    CURRENT_USER("current_user"),
+    IIF("IIF","IIF( condition, value_if_true, value_if_false)"),
     logged_in_user("logged_in_user"),
     current_database("current_database"),
     version("version"),
@@ -327,6 +397,11 @@ public enum SQLOperator {
     // 一个参数+ string
     aes_encrypt("aes_encrypt"),
     aes_decrypt("aes_decrypt"),
+    ENCRYPT("ENCRYPT","ENCRYPT(?)"),
+    DECRYPT_BIN("DECRYPT_BIN","DECRYPT_BIN(?)"),
+    DECRYPT_CHARs("DECRYPT_CHARs","DECRYPT_CHARs(?)"),
+    GETHINT("GETHINT"),
+    GENERATE_UNIQUE("GENERATE_UNIQUE","GENERATE_UNIQUE()"),
     // 函数
     java_method("java_method"),
     reflect("reflect"),
@@ -425,7 +500,8 @@ public enum SQLOperator {
 
     public boolean isMiscFunctions() {
         switch(this) {
-            case current_user:
+            case CURRENT_USER:
+            case SESSION_USER:
             case logged_in_user:
             case current_database:
             case version:
@@ -452,31 +528,46 @@ public enum SQLOperator {
 
     public boolean isStringFunction() {
         switch(this) {
-            case space:
+            case SPACE:
             case ASCII:
+            case UNICODE:
             case BTRIM:
             case BIT_LENGTH:
             case CHAR_LENGTH:
+            case DATALENGTH:
+            case DIFFERENCE:
+            case FORMAT:
+            case LEFT:
+            case RIGHT:
             case CHR:
+            case CHAR:
+            case STR:
+            case STUFF:
+            case CHARINDEX:
             case base64:
             case character_length:
             case LENGTH:
+            case LEN:
+            case NCHAR:
+            case PATINDEX:
+            case QUOTENAME:
+            case REPLICATE:
             case LOWER:
             case LCASE:
             case UPPER:
             case ucase:
             case ltrim:
-            case rtrim:
+            case RTRIM:
             case trim:
             case OCTET_LENGTH:
             case OVERLAY:
             case POSITION:
             case quote:
-            case reverse:
+            case REVERSE:
             case sentences:
             case unbase64:
             case INITCAP:
-            case soundex:
+            case SOUNDEX:
             case concat:
             case CONCATA:
             case levenshtein:
@@ -488,29 +579,31 @@ public enum SQLOperator {
             case format_number:
             case in_file:
             case instr:
-            case locate:
+            case LOCATE:
             case lpad:
             case rpad:
             case parse_url:
             case printf:
             case regexp_extract:
             case regexp_replace:
-            case repeat:
-            case replace:
+            case REPEAT:
+            case REPLACE:
             case split:
             case SPLIT_PART:
             case STRPOS:
             case TO_ASCII:
             case TO_HEX:
             case str_to_map:
-            case substr:
+            case SUBSTR:
             case SUBSTRING:
             case substring_index:
             case TRANSLATE:
             case context_ngrams:
-            case concat_ws:
+            case CONCAT_WS:
             case get_json_object:
             case ngrams:
+            case POSSTR:
+            case INSERT:
                 return true;
             default:
                 return false;
@@ -538,6 +631,28 @@ public enum SQLOperator {
             case TO_CHAR:
             case TO_NUMBER:
             case TO_TIMESTAMP:
+            case SMALLINT:
+            case INTEGER:
+            case BIGINT:
+            case DECIMAL:
+            case REAL:
+            case DOUBLE:
+            case FLOAT:
+            case CHAR:
+            case VARCHAR:
+            case VARCHAR_FORMAT_BIT:
+            case VARCHAR_FORMAT:
+            case VARCHAR_BIT_FORMAT:
+            case LONG_VARCHAR:
+            case CLOB:
+            case GRAPHIC:
+            case VARGRAPHIC:
+            case LONG_VARGRAPHIC:
+            case DBCLOB:
+            case BLOB:
+            case DATE:
+            case TIME:
+            case TIMESTAMP:
                 return true;
             default:
                 return false;
@@ -548,27 +663,47 @@ public enum SQLOperator {
             case from_unixtime:
             case         unix_timestamp:
             case TO_DATE:
-            case         year:
+            case YEAR:
             case        quarter:
-            case        month:
-            case         day:
+            case MONTH:
+            case SYSDATETIME:
+            case DAY:
             case        dayofmonth:
             case        hour:
             case       minute:
             case        second:
+            case MICROSECOND:
+            case MONTHNAME:
+            case DAYNAME:
+            case WEEK:
+            case WEEK_ISO:
+            case TIMESTAMP_ISO:
+            case DAYS:
+            case JULIAN_DAY:
+            case MIDNIGHT_SECONDS:
             case        weekofyear:
             case         extract:
-            case        datediff:
+            case DATEDIFF:
+            case TIMESTAMPDIFF:
+            case DATEFROMPARTS:
+            case TIMESTAMP_FORMAT:
+            case DATENAME:
+            case DATEPART:
             case        date_add:
             case        date_sub:
             case        from_utc_timestamp:
             case        to_utc_timestamp:
             case        current_date:
-            case        current_timestamp:
+            case CURRENT_TIMESTAMP:
+            case DATEADD:
             case       add_months:
             case         last_day:
             case        next_day:
+            case GETDATE:
+            case GETUTCDATE:
+            case ISDATE:
             case        TRUNC:
+            case TRUNCATE:
             case        months_between:
             case        date_format:
             case SYSDATE:
@@ -586,7 +721,7 @@ public enum SQLOperator {
             case round:
             case FLOOR:
             case CEIL:
-            case        ceiling:
+            case CEILING:
             case        rand:
             case EXP:
             case LN:
@@ -600,6 +735,7 @@ public enum SQLOperator {
             case       unhex:
             case        conv:
             case ABS:
+            case ABSVAL:
             case        pmod:
             case SIN:
             case       asin:
@@ -607,10 +743,11 @@ public enum SQLOperator {
             case COT:
             case ACOS:
             case TAN:
-            case       atan:
+            case ATAN:
             case       ATAN2:
             case DEGREES:
             case RADIANS:
+            case SQUARE:
             case RANDOM:
             case       positive:
             case       negative:
@@ -667,6 +804,7 @@ public enum SQLOperator {
             case regr_sxx:
             case regr_sxy:
             case regr_syy:
+            case VALUE:
                 return true;
             default:
                 return false;
@@ -674,7 +812,8 @@ public enum SQLOperator {
     }
     public boolean isConditionalFunction() {
         switch (this) {
-            case  isnull:
+            case ISNULL:
+            case ISNUMERIC:
             case  isnotnull:
             case  nvl:
             case  assert_true:

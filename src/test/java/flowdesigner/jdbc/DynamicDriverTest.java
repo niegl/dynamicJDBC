@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DynamicDriverTest {
 
     @Test
-    Connection getConnection() throws SQLException {
+    Connection getMysqlConnection() throws SQLException {
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
         DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
@@ -60,7 +60,7 @@ class DynamicDriverTest {
 
     @Test
     void testDriverManager() throws SQLException {
-        Connection dynamicDriver = getConnection();
+        Connection dynamicDriver = getMysqlConnection();
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();
@@ -71,7 +71,7 @@ class DynamicDriverTest {
         System.out.println(dynamicDriver);
     }
 
-    DynamicDriver getDriver() {
+    DynamicDriver getHiveDriver() {
         DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
@@ -120,7 +120,7 @@ class DynamicDriverTest {
 
     @Test
     void testDruidDataSource() {
-        DynamicDriver driver = getDriver();
+        DynamicDriver driver = getHiveDriver();
         String url = DruidDataSourceUtils.getUrl(driver.getDataSource());
         System.out.println(url);
         long id = DruidDataSourceUtils.getID(driver.getDataSource());
@@ -138,6 +138,16 @@ class DynamicDriverTest {
                 while (functions.next()) {
             String FUNCTION_NAME = functions.getString("FUNCTION_NAME");
             System.out.println(FUNCTION_NAME);
+        }
+    }
+
+    @Test
+    void printDataTypes() throws SQLException {
+        Connection connection = getMysqlConnection();
+        ResultSet typeInfo = connection.getMetaData().getTypeInfo();
+        while (typeInfo.next()) {
+            String TYPE_NAME = typeInfo.getString("TYPE_NAME");
+            System.out.println(TYPE_NAME);
         }
     }
 

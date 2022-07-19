@@ -208,6 +208,13 @@ public class SQLOperatorUtils {
                     case cast:
                         expr = new SQLCastExpr(new SQLIdentifierExpr("?"), new SQLDataTypeImpl("<type>"));
                         return expr.toString();
+                    case CONVERT:
+                        if (dbType.equals(DbType.sqlserver)) {
+                            expr = new SQLMethodInvokeExpr(name,new SQLIdentifierExpr("VARCHAR(19),?"));
+                        } else {
+                            expr = new SQLMethodInvokeExpr(name,new SQLIdentifierExpr("convert(?,d_chset)"));
+                        }
+                        return expr.toString();
                     default:
                         expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("?"));
                         return expr.toString();
@@ -221,14 +228,15 @@ public class SQLOperatorUtils {
                         expr = new SQLMethodInvokeExpr(name);
                         return expr.toString();
                     case TO_DATE:
-                    case         year:
+                    case YEAR:
                     case        quarter:
-                    case        month:
-                    case         day:
+                    case MONTH:
+                    case DAY:
                     case        dayofmonth:
                     case        hour:
                     case       minute:
                     case        second:
+                    case MICROSECOND:
                     case        weekofyear:
                     case         last_day:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"));
@@ -238,7 +246,7 @@ public class SQLOperatorUtils {
                         methodExpr.setFrom(new SQLCharExpr("?"));
                         expr = methodExpr;
                         return expr.toString();
-                    case  datediff:
+                    case DATEDIFF:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("('2009-03-01', '2009-02-27')"));
                         return expr.toString();
                     case        date_add:
@@ -263,7 +271,7 @@ public class SQLOperatorUtils {
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("'fmt'"));
                         return expr.toString();
                     case        current_date:
-                    case        current_timestamp:
+                    case CURRENT_TIMESTAMP:
                     default:
                         expr = new SQLMethodInvokeExpr(name);
                         return expr.toString();
@@ -290,7 +298,7 @@ public class SQLOperatorUtils {
                     case IF:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("testCondition"), new SQLIdentifierExpr("valueTrue"), new SQLIdentifierExpr("valueFalseOrNull"));
                         return expr.toString();
-                    case  isnull:
+                    case ISNULL:
                     case  isnotnull:
                     case  assert_true:
                     default:
@@ -299,7 +307,7 @@ public class SQLOperatorUtils {
                 }
             case StringFunction:
                 switch (sqlOperator) {
-                    case space:
+                    case SPACE:
                         expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("1"));
                         return expr.toString();
                     // 一个参数
@@ -313,15 +321,15 @@ public class SQLOperatorUtils {
                     case UPPER:
                     case ucase:
                     case ltrim:
-                    case rtrim:
+                    case RTRIM:
                     case trim:
                     case OCTET_LENGTH:
                     case quote:
-                    case reverse:
+                    case REVERSE:
                     case sentences:
                     case unbase64:
                     case INITCAP:
-                    case soundex:
+                    case SOUNDEX:
                         expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("?"));
                         return expr.toString();
                     // 两个常量
@@ -347,7 +355,7 @@ public class SQLOperatorUtils {
                         expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("strList"));
                         return expr.toString();
                     case format_number:// format_number(number x, int d)
-                    case repeat://repeat(string str, int n)
+                    case REPEAT://repeat(string str, int n)
                         expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLNumberExpr(2));
                         return expr.toString();
                     case in_file://in_file(string str, string filename)
@@ -356,8 +364,12 @@ public class SQLOperatorUtils {
                     case instr://instr(string str, string substr)
                         expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("str"), new SQLIdentifierExpr("?"));
                         return expr.toString();
-                    case locate://locate(string substr, string str[, int pos])
-                        expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("str"));
+                    case LOCATE://locate(string substr, string str[, int pos])
+                        if (dbType.equals(DbType.db2)) {
+                            expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("substr"));
+                        } else {
+                            expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("substr"), new SQLIdentifierExpr("?"));
+                        }
                         return expr.toString();
                     case lpad://lpad(string str, int len, string pad)
                     case rpad:
@@ -375,7 +387,7 @@ public class SQLOperatorUtils {
                     case regexp_replace://regexp_replace(string INITIAL_STRING, string PATTERN, string REPLACEMENT)
                         expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("pattern"),new SQLIdentifierExpr("REPLACEMENT"));
                         return expr.toString();
-                    case replace://replace(string A, string OLD, string NEW)
+                    case REPLACE://replace(string A, string OLD, string NEW)
                         expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("OLD"),new SQLIdentifierExpr("NEW"));
                         return expr.toString();
                     case split://split(string str, string pat)
@@ -384,7 +396,7 @@ public class SQLOperatorUtils {
                     case str_to_map://str_to_map(text[, delimiter1, delimiter2])
                         expr = new SQLMethodInvokeExpr(name, new SQLIdentifierExpr("?"), new SQLCharExpr(","), new SQLCharExpr(":"));
                         return expr.toString();
-                    case substr:
+                    case SUBSTR:
                     case SUBSTRING:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIntegerExpr(0));
                         return expr.toString();
@@ -398,7 +410,7 @@ public class SQLOperatorUtils {
                     case context_ngrams://context_ngrams(array<array<string>>, array<string>, int K, int pf)
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"),new SQLIdentifierExpr("array<string>"), new SQLNumberExpr(3));
                         return expr.toString();
-                    case concat_ws://concat_ws(string SEP, string A, string B...)
+                    case CONCAT_WS://concat_ws(string SEP, string A, string B...)
                         expr = new SQLMethodInvokeExpr(name, null, new SQLCharExpr(","),new SQLIdentifierExpr("stringA"),new SQLIdentifierExpr("stringB"),new SQLIdentifierExpr("..."));
                         return expr.toString();
                     case get_json_object://get_json_object(string json_string, string path)
@@ -407,6 +419,11 @@ public class SQLOperatorUtils {
                     case ngrams://ngrams(array<array<string>>, int N, int K, int pf)
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLNumberExpr(1), new SQLNumberExpr(2));
                         return expr.toString();
+                    case POSITION:
+                        if (dbType.equals(DbType.db2)) {
+                            expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("EXP2"));
+                            return expr.toString();
+                        }
                 }
                 break;
             case DataMaskingFunction:
@@ -427,7 +444,7 @@ public class SQLOperatorUtils {
                 break;
             case MiscFunctions:
                 switch (sqlOperator) {
-                    case current_user:
+                    case CURRENT_USER:
                     case logged_in_user:
                     case current_database:
                     case version:
