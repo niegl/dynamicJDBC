@@ -34,12 +34,12 @@ public class SQLOperatorUtils {
     public static Set<String> getSupportFunctions(Connection connection, DbType dbType) {
         Set<String> functions = new HashSet<>();
 
-        if (connection != null) {
-            ExecResult<Set<String>> execResult = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFunctionsImpl, new HashMap<>());
-            if (execResult.getStatus().equalsIgnoreCase(ExecResult.SUCCESS)) {
-                functions.addAll(execResult.getBody());
-            }
-        }
+//        if (connection != null) {
+//            ExecResult<Set<String>> execResult = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFunctionsImpl, new HashMap<>());
+//            if (execResult.getStatus().equalsIgnoreCase(ExecResult.SUCCESS)) {
+//                functions.addAll(execResult.getBody());
+//            }
+//        }
 
         // 实际数据库中可能获取的不全，需要配置补充
         if (dbType.equals(DbType.oracle)) {
@@ -50,17 +50,17 @@ public class SQLOperatorUtils {
             Utils.loadFromFile("META-INF/druid/parser/hive/builtin_functions", functions);
         } else if (dbType.equals(DbType.postgresql)) {
             Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_functions", functions);
+        } else if (dbType.equals(DbType.db2)) {
+            Utils.loadFromFile("META-INF/druid/parser/db2/builtin_functions", functions);
+        } else if (dbType.equals(DbType.mariadb)) {
+            Utils.loadFromFile("META-INF/druid/parser/maria/builtin_functions", functions);
+        } else if (dbType.equals(DbType.sqlserver)) {
+            Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_functions", functions);
         }
 
         // 如果没有获取到任何函数也没有配置函数，那么返回默认
         if (functions.isEmpty()) {
-            for (SQLBinaryOperator operator:SQLBinaryOperator.values()) {
-                functions.add(operator.name);
-            }
-            for (SQLUnaryOperator operator:SQLUnaryOperator.values()) {
-                functions.add(operator.name);
-            }
-            functions.addAll(Arrays.asList("AVG", "COUNT", "MAX", "MIN", "STDDEV", "SUM"));
+            functions.addAll(Arrays.asList("AVG", "COUNT", "MAX", "MIN", "SUM"));
         }
 
         return functions;
@@ -186,7 +186,7 @@ public class SQLOperatorUtils {
                     case shiftrightunsigned:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("1"));
                         return expr.toString();
-                    case greatest:
+                    case GREATEST:
                     case least:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("?"), new SQLIdentifierExpr("..."));
                         return expr.toString();
@@ -211,8 +211,11 @@ public class SQLOperatorUtils {
                     case CONVERT:
                         if (dbType.equals(DbType.sqlserver)) {
                             expr = new SQLMethodInvokeExpr(name,new SQLIdentifierExpr("VARCHAR(19),?"));
-                        } else {
-                            expr = new SQLMethodInvokeExpr(name,new SQLIdentifierExpr("convert(?,d_chset)"));
+                        } else if (dbType.equals(DbType.mysql)) {
+                            expr = new SQLMethodInvokeExpr(name,new SQLIdentifierExpr("'ABC' USING gbk"));
+                        }
+                        else {
+                            expr = new SQLMethodInvokeExpr(name,new SQLIdentifierExpr("?,d_chset"));
                         }
                         return expr.toString();
                     default:
@@ -237,7 +240,7 @@ public class SQLOperatorUtils {
                     case       minute:
                     case        second:
                     case MICROSECOND:
-                    case        weekofyear:
+                    case WEEKOFYEAR:
                     case         last_day:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"));
                         return expr.toString();
@@ -270,6 +273,18 @@ public class SQLOperatorUtils {
                     case        date_format:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("'fmt'"));
                         return expr.toString();
+                    case TIMESTAMP:
+                        if (dbType.equals(DbType.mysql)) {
+                            expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("expression"), new SQLIdentifierExpr("'interval'"));
+                            return expr.toString();
+                        }
+                        break;
+                    case TIMESTAMPDIFF:
+                        if (dbType.equals(DbType.mysql)) {
+                            expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("DAY/MONTH/YEAR,?,?"));
+                            return expr.toString();
+                        }
+                        break;
                     case        current_date:
                     case CURRENT_TIMESTAMP:
                     default:

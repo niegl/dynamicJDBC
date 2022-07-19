@@ -139,7 +139,7 @@ public enum SQLOperator {
     shiftleft("shiftleft"),
     shiftright("shiftright"),
     shiftrightunsigned("shiftrightunsigned"),
-    greatest("greatest"),
+    GREATEST("greatest"),
     least("least"),
     width_bucket("width_bucket"),
     //endregion
@@ -182,39 +182,56 @@ public enum SQLOperator {
     BLOB("BLOB","BLOB(?)"),
     DATE("DATE","DATE(?)"),
     TIME("TIME","TIME(?)"),
-    TIMESTAMP("TIMESTAMP","TIMESTAMP(?)"),
+    TIME_FORMAT("TIME_FORMAT","TIME_FORMAT(?,format)"),
+    TIME_TO_SEC("TIME_TO_SEC","TIME_TO_SEC(?)"),
+
     //endregion
 
     //region Date Functions
+    TIMEDIFF("TIMEDIFF","TIMEDIFF(?,?)"),
+    TIMESTAMP("TIMESTAMP","TIMESTAMP(?)"),
     from_unixtime("from_unixtime"),
     unix_timestamp("unix_timestamp"),
     TO_DATE("to_date"),
     YEAR("year"),
+    YEARWEEK("YEARWEEK","YEARWEEK(?)"),
     quarter("quarter"),
     MONTH("month"),
     DAY("day"),
     hour("hour"),
     minute("minute"),
     second("second"),
+    SEC_TO_TIME("SEC_TO_TIME"),
+    STR_TO_DATE("STR_TO_DATE"),
+
     MICROSECOND("MICROSECOND"),
     MONTHNAME("MONTHNAME","MONTHNAME(?)"),
+    PERIOD_ADD("PERIOD_ADD","PERIOD_ADD(period, number)"),
+    PERIOD_DIFF("PERIOD_DIFF","PERIOD_DIFF(period, number)"),
+
     DAYNAME("DAYNAME","DAYNAME(?)"),
     WEEK("WEEK","WEEK(?)"),
+    WEEKDAY("WEEKDAY","WEEKDAY(?)"),
     WEEK_ISO("WEEK_ISO","WEEK_ISO(?)"),
     TIMESTAMP_ISO("TIMESTAMP_ISO","TIMESTAMP_ISO(?)"),
-    weekofyear("weekofyear"),
+    WEEKOFYEAR("weekofyear"),
     dayofmonth("dayofmonth"),
     DAYOFWEEK("DAYOFWEEK", "DAYOFWEEK(?)"),
     SYSDATETIME("SYSDATETIME","SYSDATETIME()"),
     extract("extract"),
     DATEDIFF("datediff"),
     TIMESTAMPDIFF("TIMESTAMPDIFF","TIMESTAMPDIFF(?,?)"),
+    TO_DAYS("TO_DAYS","TO_DAYS(?)"),
     DATEFROMPARTS("DATEFROMPARTS","DATEFROMPARTS( year ,  month ,  day )"),
     TIMESTAMP_FORMAT("TIMESTAMP_FORMAT","TIMESTAMP_FORMAT(?,'yyyy-mm-dd')"),
     DATENAME("DATENAME","DATENAME(year, ?)"),
     DATEPART("","DATEPART(yyyy,?)"),
     date_add("date_add"),
     date_sub("date_sub"),
+    SUBDATE("SUBDATE","SUBDATE(?,n)"),
+    SUBTIME("SUBTIME","SUBTIME(?,n)"),
+    ADDDATE("ADDDATE","ADDDATE(?,n)"),
+    ADDTIME("ADDTIME","ADDDATE(?,n)"),
     DAYS("DAYS","DAYS(?)"),
     JULIAN_DAY("JULIAN_DAY","JULIAN_DAY(?)"),
     MIDNIGHT_SECONDS("MIDNIGHT_SECONDS","MIDNIGHT_SECONDS(?)"),
@@ -225,6 +242,10 @@ public enum SQLOperator {
     DATEADD("DATEADD","DATEADD(day,2,?)"),
     add_months("add_months"),
     last_day("last_day"),
+    LOCALTIME("LOCALTIME","LOCALTIME()"),
+    LOCALTIMESTAMP("LOCALTIMESTAMP","LOCALTIMESTAMP()"),
+    MAKEDATE("MAKEDATE","MAKEDATE(year, day-of-year)"),
+    MAKETIME("MAKETIME","MAKETIME(hour, minute, second)"),
     next_day("next_day"),
     GETDATE("GETDATE","GETDATE()"),
     GETUTCDATE("GETUTCDATE","GETUTCDATE()"),
@@ -233,9 +254,9 @@ public enum SQLOperator {
     TRUNCATE("TRUNCATE"),
     months_between("months_between"),
     date_format("date_format"),
-    SYSDATE("SYSDATE","SYSDATE"),
-    SYSTIMESTAMP("SYSTIMESTAMP","SYSTIMESTAMP"),
-    DBTIMEZONE("DBTIMEZONE","DBTIMEZONE"),
+    SYSDATE("SYSDATE","SYSDATE()"),
+    SYSTIMESTAMP("SYSTIMESTAMP","SYSTIMESTAMP()"),
+    DBTIMEZONE("DBTIMEZONE","DBTIMEZONE()"),
     ROUND("ROUND","ROUND(?)"),
 
     //endregion
@@ -244,12 +265,14 @@ public enum SQLOperator {
     ISNULL("isnull"),
     ISNUMERIC("ISNUMERIC","ISNUMERIC(?)"),
     isnotnull("isnotnull"),
-    SESSION_USER("SESSION_USER","SESSION_USER"),
+    SESSION_USER("SESSION_USER","SESSION_USER()"),
+    SYSTEM_USER("SYSTEM_USER","SYSTEM_USER()"),
     nvl("nvl"),
     assert_true("assert_true"),
     IF("if"),
     COALESCE("COALESCE"),
     nullif("nullif"),
+    IFNULL("IFNULL","IFNULL(v1,v2)"),
     CASE("case"),
     //endregion
 
@@ -380,10 +403,14 @@ public enum SQLOperator {
 
     //region Misc. Functions
     // 无参
+    LAST_INSERT_ID("LAST_INSERT_ID","LAST_INSERT_ID()"),
+    CONNECTION_ID("CONNECTION_ID","CONNECTION_ID()"),
     CURRENT_USER("current_user"),
+    USER("USER","USER()"),
     IIF("IIF","IIF( condition, value_if_true, value_if_false)"),
     logged_in_user("logged_in_user"),
     current_database("current_database"),
+    DATABASE("DATABASE","DATABASE()"),
     version("version"),
     surrogate_key("surrogate_key"),
     // 一个参数
@@ -500,10 +527,15 @@ public enum SQLOperator {
 
     public boolean isMiscFunctions() {
         switch(this) {
+            case LAST_INSERT_ID:
+            case CONNECTION_ID:
             case CURRENT_USER:
+            case USER:
             case SESSION_USER:
+            case SYSTEM_USER:
             case logged_in_user:
             case current_database:
+            case DATABASE:
             case version:
             case surrogate_key:
             // 一个参数
@@ -652,6 +684,9 @@ public enum SQLOperator {
             case BLOB:
             case DATE:
             case TIME:
+            case TIME_FORMAT:
+            case TIME_TO_SEC:
+            case TIMEDIFF:
             case TIMESTAMP:
                 return true;
             default:
@@ -664,24 +699,31 @@ public enum SQLOperator {
             case         unix_timestamp:
             case TO_DATE:
             case YEAR:
+            case YEARWEEK:
             case        quarter:
             case MONTH:
             case SYSDATETIME:
             case DAY:
             case        dayofmonth:
+            case TO_DAYS:
             case        hour:
             case       minute:
             case        second:
+            case SEC_TO_TIME:
+            case STR_TO_DATE:
             case MICROSECOND:
             case MONTHNAME:
+            case PERIOD_ADD:
+            case PERIOD_DIFF:
             case DAYNAME:
             case WEEK:
+            case WEEKDAY:
             case WEEK_ISO:
             case TIMESTAMP_ISO:
             case DAYS:
             case JULIAN_DAY:
             case MIDNIGHT_SECONDS:
-            case        weekofyear:
+            case WEEKOFYEAR:
             case         extract:
             case DATEDIFF:
             case TIMESTAMPDIFF:
@@ -691,6 +733,10 @@ public enum SQLOperator {
             case DATEPART:
             case        date_add:
             case        date_sub:
+            case SUBDATE:
+            case SUBTIME:
+            case ADDDATE:
+            case ADDTIME:
             case        from_utc_timestamp:
             case        to_utc_timestamp:
             case        current_date:
@@ -761,7 +807,7 @@ public enum SQLOperator {
             case       shiftleft:
             case       shiftright:
             case        shiftrightunsigned:
-            case      greatest:
+            case GREATEST:
             case      least:
             case       width_bucket:
                 return true;
@@ -820,6 +866,7 @@ public enum SQLOperator {
             case  IF:
             case  COALESCE:
             case  nullif:
+            case IFNULL:
             case CASE:
                 return true;
             default:

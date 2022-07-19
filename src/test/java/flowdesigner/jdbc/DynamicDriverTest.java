@@ -118,6 +118,28 @@ class DynamicDriverTest {
         return dynamicDriver;
     }
 
+    DynamicDriver getPostgreDriver() {
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\org.postgresql");
+        Properties properties = new Properties();
+        properties.setProperty("driverClassName","org.postgresql.Driver");
+        properties.setProperty("url","jdbc:postgresql://localhost:5432/postgres");
+        properties.setProperty("username","postgres");
+        properties.setProperty("password","123456");
+        properties.setProperty("maxWait","3000");
+        dynamicDriver.setM_propertyInfo(properties);
+        Connection connection = null;
+        try {
+//            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+            System.out.println(dynamicDriver.get_errMessage());
+            e.printStackTrace();
+        }
+
+        assert connection != null;
+        return dynamicDriver;
+    }
+
     @Test
     void testDruidDataSource() {
         DynamicDriver driver = getHiveDriver();
@@ -132,8 +154,8 @@ class DynamicDriverTest {
 
     @Test
     void printMariaDBFunctions() throws SQLException {
-        DynamicDriver mariaDBDriver = getMariaDBDriver();
-        DatabaseMetaData meta = mariaDBDriver.getConnection().getMetaData();
+        DynamicDriver driver = getMariaDBDriver();
+        DatabaseMetaData meta = driver.getConnection().getMetaData();
         ResultSet functions = meta.getFunctions(null, null, null);
                 while (functions.next()) {
             String FUNCTION_NAME = functions.getString("FUNCTION_NAME");
@@ -143,7 +165,7 @@ class DynamicDriverTest {
 
     @Test
     void printDataTypes() throws SQLException {
-        Connection connection = getMysqlConnection();
+        Connection connection = getMariaDBDriver().getConnection();
         ResultSet typeInfo = connection.getMetaData().getTypeInfo();
         while (typeInfo.next()) {
             String TYPE_NAME = typeInfo.getString("TYPE_NAME");
