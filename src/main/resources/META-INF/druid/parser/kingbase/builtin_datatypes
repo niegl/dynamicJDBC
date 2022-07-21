@@ -1,0 +1,22 @@
+numeric
+double
+char
+nchar
+varchar
+nvarchar
+clob
+text
+numeric
+integer
+double precision
+date
+timestamp
+timestamp without time zone
+timestamp with time zone
+timestamp with local time zone
+interval day to second
+interval year to month
+blob
+json
+jsonb
+xml

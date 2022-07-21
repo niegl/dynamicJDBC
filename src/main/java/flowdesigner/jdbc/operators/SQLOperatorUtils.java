@@ -88,6 +88,10 @@ public class SQLOperatorUtils {
             Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
         } else if (dbType.equals(DbType.h2)) {
             Utils.loadFromFile("META-INF/druid/parser/h2/builtin_functions", functions);
+        } else if (dbType.equals(DbType.dm)) {
+            Utils.loadFromFile("META-INF/druid/parser/dm/builtin_functions", functions);
+        } else if (dbType.equals(DbType.kingbase)) {
+            Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_functions", functions);
         }
 
         // 如果没有获取到任何函数也没有配置函数，那么返回默认
