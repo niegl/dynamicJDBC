@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SQLSelectBuilderImplTest {
 
-    SQLSelectBuilder builderEx = SQLBuilderFactory.createSelectSQLBuilder( DbType.hive);
+    SQLSelectBuilder builderEx = SQLBuilderFactory.createSelectSQLBuilder( DbType.mysql);
     @AfterEach
     void tearDown() {
         System.out.println(builderEx);
@@ -116,4 +116,11 @@ class SQLSelectBuilderImplTest {
         builderEx.setCalcFoundRows(true);
     }
 
+    @Test
+    void orderBy() {
+        builderEx.select("a","b")
+            .from("tablea","a")
+            .where("data_dt='2022-10'");
+        builderEx.orderBy("root_t.a asc","b");
+    }
 }

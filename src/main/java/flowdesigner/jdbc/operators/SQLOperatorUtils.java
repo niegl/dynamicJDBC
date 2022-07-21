@@ -56,6 +56,10 @@ public class SQLOperatorUtils {
             Utils.loadFromFile("META-INF/druid/parser/maria/builtin_functions", functions);
         } else if (dbType.equals(DbType.sqlserver)) {
             Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_functions", functions);
+        } else if (dbType.equals(DbType.sybase)) {
+            Utils.loadFromFile("META-INF/druid/parser/sybase/builtin_functions", functions);
+        } else if (dbType.equals(DbType.derby)) {
+            Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
         }
 
         // 如果没有获取到任何函数也没有配置函数，那么返回默认
@@ -168,7 +172,7 @@ public class SQLOperatorUtils {
                     case rand:
                         expr = new SQLMethodInvokeExpr(name,null, new SQLIdentifierExpr("base"),new SQLIdentifierExpr("?"));
                         return expr.toString();
-                    case pow:
+                    case POW:
                         expr = new SQLMethodInvokeExpr(name,null, new SQLIdentifierExpr("?"),new SQLIdentifierExpr("2"));
                         return expr.toString();
                     case conv:
@@ -187,7 +191,7 @@ public class SQLOperatorUtils {
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("1"));
                         return expr.toString();
                     case GREATEST:
-                    case least:
+                    case LEAST:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("?"), new SQLIdentifierExpr("..."));
                         return expr.toString();
                     default:
@@ -426,7 +430,7 @@ public class SQLOperatorUtils {
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"),new SQLIdentifierExpr("array<string>"), new SQLNumberExpr(3));
                         return expr.toString();
                     case CONCAT_WS://concat_ws(string SEP, string A, string B...)
-                        expr = new SQLMethodInvokeExpr(name, null, new SQLCharExpr(","),new SQLIdentifierExpr("stringA"),new SQLIdentifierExpr("stringB"),new SQLIdentifierExpr("..."));
+                        expr = new SQLMethodInvokeExpr(name, null, new SQLCharExpr("','"),new SQLIdentifierExpr("stringA"),new SQLIdentifierExpr("stringB"),new SQLIdentifierExpr("..."));
                         return expr.toString();
                     case get_json_object://get_json_object(string json_string, string path)
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("json_string"), new SQLIdentifierExpr("path"));

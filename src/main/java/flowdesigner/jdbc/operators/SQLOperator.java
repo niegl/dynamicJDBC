@@ -19,6 +19,7 @@ public enum SQLOperator {
     Union("UNION", 0),
     COLLATE("COLLATE", 20),
     BitwiseXor("^", 50),
+    XOR("XOR", "xor(?, ?)"),
     BitwiseXorEQ("^=", 110),
     Multiply("*", 60),
     Divide("/", 60),
@@ -90,7 +91,6 @@ public enum SQLOperator {
     Create_union("create_union"),
     //endregion
     //region MathematicalFunction
-    round("round"),
     trunc("trunc","trunc(?)"),
     bround("bround"),
     FLOOR("floor"),
@@ -99,10 +99,10 @@ public enum SQLOperator {
     rand("rand"),
     EXP("exp"),
     LN("ln"),
-    log10("log10"),
-    log2("log2"),
+    LOG10("log10"),
+    LOG2("log2"),
     LOG("log"),
-    pow("pow"),
+    POW("pow"),
     SQRT("sqrt"),
     bin("bin"),
     hex("hex"),
@@ -120,10 +120,15 @@ public enum SQLOperator {
     DIGITS("DIGITS","DIGITS(?)"),
     MULTIPLY_ALT("MULTIPLY_ALT","MULTIPLY_ALT(?,?)"),
     ACOS("acos"),
+    ASIN("ASIN","ASIN(?)"),
     TAN("tan"),
     TANH("tanh(?)"),
     ATAN("atan"),
     ATAN2("ATAN2","atan2(?, ?)"),
+    BIT_COUNT("BIT_COUNT","BIT_COUNT(?)"),
+    EVEN("EVEN","EVEN(?)"),
+    GAMMA("GAMMA","GAMMA(?)"),
+
     DEGREES("degrees"),
     RADIANS("radians"),
     SQUARE("SQUARE","SQUARE(?)"),
@@ -134,13 +139,16 @@ public enum SQLOperator {
     e("e"),
     PI("pi"),
     POWER("POWER","POWER(?,n)"),
-    factorial("factorial"),
+    FACTORIAL("factorial"),
     CBRT("cbrt"),
     shiftleft("shiftleft"),
     shiftright("shiftright"),
     shiftrightunsigned("shiftrightunsigned"),
     GREATEST("greatest"),
-    least("least"),
+    LEAST("least","least(x1, x2, ...)"),
+    LGAMMA("LGAMMA","lgamma(?)"),
+    NEXTAFTER("NEXTAFTER","nextafter(?, y)"),
+    SETSEED("SETSEED","SETSEED(?)"),
     width_bucket("width_bucket"),
     //endregion
 
@@ -262,6 +270,9 @@ public enum SQLOperator {
     //endregion
 
     //region Conditional Functions
+    ISFINITE("ISFINITE"),
+    ISINF("ISINF"),
+    ISNAN("ISNAN"),
     ISNULL("isnull"),
     ISNUMERIC("ISNUMERIC","ISNUMERIC(?)"),
     isnotnull("isnotnull"),
@@ -310,6 +321,9 @@ public enum SQLOperator {
 
     //region String Functions
     // 常量
+    ARRAY_EXTRACT("array_extract","array_extract(?,1)"),
+    ARRAY_SLICE("array_slice","array_slice(?, begin, end)"),
+    CONTAINS("contains","contains(?, search_string)"),
     SPACE("space"),
     // 一个参数
     BIT_LENGTH("BIT_LENGTH","BIT_LENGTH(?)"),
@@ -327,7 +341,7 @@ public enum SQLOperator {
     FORMAT("FORMAT","FORMAT( value, format)"),
     LEFT("LEFT","LEFT( ?,2)"),
     RIGHT("RIGHT","RIGHT(?,2)"),
-    base64("base64"),
+    base64("base64","base64(?)"),
     character_length("character_length"),
     LENGTH("length"),
     LEN("LEN","LEN(?)"),
@@ -560,6 +574,9 @@ public enum SQLOperator {
 
     public boolean isStringFunction() {
         switch(this) {
+            case ARRAY_EXTRACT:
+            case ARRAY_SLICE:
+            case CONTAINS:
             case SPACE:
             case ASCII:
             case UNICODE:
@@ -763,52 +780,63 @@ public enum SQLOperator {
     }
     public boolean isMathematicalFunction() {
         switch(this) {
+            case ABS      :
+            case ACOS     :
+            case ASIN     :
+            case ATAN2    :
+            case BIT_COUNT:
+            case CBRT     :
+            case CEIL     :
+            case CEILING  :
+            case CHR      :
+            case COS      :
+            case COT      :
+            case DEGREES  :
+            case EVEN     :
+            case FACTORIAL:
+            case FLOOR    :
+            case GAMMA    :
+            case GREATEST :
+            case LEAST    :
+            case LGAMMA   :
+            case NEXTAFTER:
+            case SETSEED  :
+            case LN       :
+            case LOG      :
+            case LOG2     :
+            case LOG10    :
+
+            case PI       :
+            case POW      :
+            case POWER    :
+            case RADIANS  :
+            case RANDOM   :
+            case ROUND    :
+
+            case SIN      :
+            case SIGN     :
+            case SQRT     :
+            case XOR      :
+            case TAN      :
             case bround:
-            case round:
-            case FLOOR:
-            case CEIL:
-            case CEILING:
             case        rand:
             case EXP:
-            case LN:
-            case        log10:
-            case        log2:
-            case LOG:
-            case        pow:
-            case SQRT:
             case       bin:
             case       hex:
             case       unhex:
             case        conv:
-            case ABS:
             case ABSVAL:
             case        pmod:
-            case SIN:
             case       asin:
-            case COS:
-            case COT:
-            case ACOS:
-            case TAN:
             case ATAN:
-            case       ATAN2:
-            case DEGREES:
-            case RADIANS:
             case SQUARE:
-            case RANDOM:
             case       positive:
             case       negative:
             case trunc:
-            case SIGN:
             case        e:
-            case PI:
-            case POWER:
-            case        factorial:
-            case CBRT:
             case       shiftleft:
             case       shiftright:
             case        shiftrightunsigned:
-            case GREATEST:
-            case      least:
             case       width_bucket:
                 return true;
             default:
@@ -859,6 +887,9 @@ public enum SQLOperator {
     public boolean isConditionalFunction() {
         switch (this) {
             case ISNULL:
+            case ISFINITE:
+            case ISINF    :
+            case ISNAN    :
             case ISNUMERIC:
             case  isnotnull:
             case  nvl:

@@ -153,10 +153,10 @@ class DynamicDriverTest {
     }
 
     @Test
-    void printMariaDBFunctions() throws SQLException {
-        DynamicDriver driver = getMariaDBDriver();
+    void printFunctions() throws SQLException {
+        DynamicDriver driver = getHiveDriver();
         DatabaseMetaData meta = driver.getConnection().getMetaData();
-        ResultSet functions = meta.getFunctions(null, null, null);
+        ResultSet functions = meta.getFunctions(null, null, "%");
                 while (functions.next()) {
             String FUNCTION_NAME = functions.getString("FUNCTION_NAME");
             System.out.println(FUNCTION_NAME);
