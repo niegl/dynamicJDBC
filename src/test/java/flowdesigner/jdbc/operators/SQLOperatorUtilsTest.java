@@ -40,4 +40,13 @@ class SQLOperatorUtilsTest {
     void getSupportFunctions() {
         System.out.println(SQLOperatorUtils.getSupportFunctions(null, DbType.hive));
     }
+
+    @Test
+    void getSupportFunctionsAsString() {
+    }
+
+    @Test
+    void getSupportFunctionsJson() {
+        System.out.println(SQLOperatorUtils.getSupportFunctionsJson(null, DbType.mysql));
+    }
 }

@@ -6,6 +6,7 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.SQLDescribeStatement;
 import com.alibaba.druid.util.Utils;
+import com.google.gson.Gson;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
@@ -16,16 +17,41 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SQLOperatorUtils {
+
+    /**
+     * 用于向客户端输出JSON格式
+     */
+    private static class FunctionInfo {
+        String name;
+        String type;
+        String signature;
+
+        public FunctionInfo(String name, String type, String signature) {
+            this.name = name;
+            this.type = type;
+            this.signature = signature;
+        }
+    }
 
     public SQLOperatorUtils() {
     }
 
-    public static String getSupportFunctionsAsString(Connection connection, DbType dbType) {
+    public static String getSupportFunctionsJson(Connection connection, DbType dbType) {
+
         Collection<String> stringList = getSupportFunctions(connection, dbType);
-        return StringUtils.join(stringList,",");
+        Collection<FunctionInfo> functionInfos = stringList.stream().map(f -> {
+            SQLOperatorType type = getFunctionType(f);
+            String signature = getFunctionSignature(dbType, f);
+            return new FunctionInfo(f, type.name(), signature);
+        }).collect(Collectors.toList());
+
+        Gson gson = new Gson();
+        return gson.toJson(functionInfos);
     }
+
     /**
      * 获取当前数据库支持的函数列表。为了尽量保证函数完整，返回的函数为两部分组成：配置函数+获取函数（如果获取不到就默认）
      * @param connection 当前数据库连接
@@ -60,6 +86,8 @@ public class SQLOperatorUtils {
             Utils.loadFromFile("META-INF/druid/parser/sybase/builtin_functions", functions);
         } else if (dbType.equals(DbType.derby)) {
             Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
+        } else if (dbType.equals(DbType.h2)) {
+            Utils.loadFromFile("META-INF/druid/parser/h2/builtin_functions", functions);
         }
 
         // 如果没有获取到任何函数也没有配置函数，那么返回默认
@@ -112,17 +140,7 @@ public class SQLOperatorUtils {
 
         return ret;
     }
-    public static String getFunctionSignature2(DbType dbType, String name) {
 
-        SQLExpr expr = new SQLIdentifierExpr(name);
-
-        SQLOperator sqlOperator = SQLOperator.of(name);
-        if (sqlOperator == null) {
-            return expr.toString();
-        }
-
-        return sqlOperator.usage;
-    }
     /**
      * 获取函数签名- 处理后的函数签名。处理过程：常数填充默认值，字段填充?号; 对于有多个签名的函数，取最简洁的那一个。
      * 客户端使用时只需要把?号换成选择字段即可，多个?号的剩余客户自己改写。
@@ -570,9 +588,6 @@ public class SQLOperatorUtils {
         return getFunctionSignature2(dbType, name);
     }
 
-    public static String getFunctionTypeAsString(String name) {
-        return getFunctionType(name).name();
-    }
     /**
      * 获取函数类型：UnaryOperator=一元运算符；BinaryOperator=二元运算符；MethodInvoke=函数；AggregateFunction=聚合函数;0=其他函数
      * @param name 函数名称
@@ -627,15 +642,26 @@ public class SQLOperatorUtils {
         return SQLOperatorType.Others;
     }
 
+    private static String getFunctionSignature2(DbType dbType, String name) {
+
+        SQLExpr expr = new SQLIdentifierExpr(name);
+
+        SQLOperator sqlOperator = SQLOperator.of(name);
+        if (sqlOperator == null) {
+            return expr.toString();
+        }
+
+        return sqlOperator.usage;
+    }
+
     private static <T extends Enum<T>> T of(String name, T[] values) {
         for (T value : values) {
-            if (value.name().equals(name)) {
+            if (value.name().equalsIgnoreCase(name)) {
                 return value;
             }
         }
 
         return null;
     }
-
 
 }
