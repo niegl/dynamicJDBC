@@ -149,7 +149,6 @@ class DynamicDriverTest {
         System.out.println(id);
         String name = DruidDataSourceUtils.getName(driver.getDataSource());
         System.out.println(name);
-
     }
 
     @Test
