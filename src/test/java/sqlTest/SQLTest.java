@@ -2,6 +2,7 @@ package sqlTest;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.SQLStatementImpl;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
@@ -13,6 +14,7 @@ import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
 import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
+import com.alibaba.druid.util.JdbcConstants;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLSyntaxErrorException;
@@ -1606,7 +1608,17 @@ public class SQLTest {
         parser(sql, "hive");
     }
 
+    @org.junit.jupiter.api.Test
+    void testEnvironment() throws SQLSyntaxErrorException {
+        String sql = "set hive.exec.dynamic.partition.mode=nonstrict;SET TXDATE=CONCAT(SUBSTR(${TXDATE},1,4),'-',SUBSTR(${TXDATE},5,2),'-',SUBSTR(${TXDATE},7,2));";
+        parser(sql, "hive");
+    }
 
+    @org.junit.jupiter.api.Test
+    void testMySQLEnvironment() throws SQLSyntaxErrorException {
+        String sql = "set global max_allowed_packet = 2*1024*1024*10;";
+        parser(sql, "mysql");
+    }
 
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);

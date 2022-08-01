@@ -1,10 +1,14 @@
 package flowdesigner.jdbc.operators;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLDataTypeImpl;
 import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.*;
+import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.ast.statement.SQLDescribeStatement;
+import com.alibaba.druid.sql.ast.statement.SQLSetStatement;
 import com.alibaba.druid.util.Utils;
 import com.google.gson.Gson;
 import flowdesigner.jdbc.command.CommandKey;
@@ -92,11 +96,49 @@ public class SQLOperatorUtils {
             Utils.loadFromFile("META-INF/druid/parser/dm/builtin_functions", functions);
         } else if (dbType.equals(DbType.kingbase)) {
             Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_functions", functions);
+        } else if (dbType.equals(DbType.gbase)) {
+            Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_functions", functions);
+        } else if (dbType.equals(DbType.oceanbase)) {
+            Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_functions", functions);
+        } else if (dbType.equals(DbType.informix)) {
+            Utils.loadFromFile("META-INF/druid/parser/Informix/builtin_functions", functions);
         }
 
         // 如果没有获取到任何函数也没有配置函数，那么返回默认
         if (functions.isEmpty()) {
             functions.addAll(Arrays.asList("AVG", "COUNT", "MAX", "MIN", "SUM"));
+            functions.addAll(Arrays.asList("ABS",
+                    "ACOS",
+                    "ASIN",
+                    "ATAN",
+                    "ATAN2",
+                    "BIT_COUNT",
+                    "CEIL",
+                    "CEILING",
+                    "CONV",
+                    "COS",
+                    "COT",
+                    "CRC32",
+                    "DEGREES",
+                    "EXP",
+                    "FLOOR",
+                    "LN",
+                    "LOG",
+                    "LOG10",
+                    "LOG2",
+                    "MOD",
+                    "NEG",
+                    "PI",
+                    "POW",
+                    "POWER",
+                    "RADIANS",
+                    "RAND",
+                    "ROUND",
+                    "SIGN",
+                    "SIN",
+                    "SQRT",
+                    "TAN",
+                    "TRUNCATE"));
         }
 
         return functions;
@@ -167,11 +209,17 @@ public class SQLOperatorUtils {
             case ArithmeticOperator:
             case LogicalOperator:
             case BinaryOperator:
-                expr = new SQLBinaryOpExpr(new SQLIdentifierExpr("?"), of(sqlOperator.name(), SQLBinaryOperator.values()), new SQLIdentifierExpr("?"), dbType);
-                return expr.toString();
+                SQLBinaryOperator binaryOperator = of(sqlOperator.name(), SQLBinaryOperator.values());
+                if (binaryOperator != null) {
+                    expr = new SQLBinaryOpExpr(new SQLIdentifierExpr("?"), binaryOperator, new SQLIdentifierExpr("?"), dbType);
+                    return expr.toString();
+                }
             case UnaryOperator:
-                expr = new SQLUnaryExpr(of(sqlOperator.name(), SQLUnaryOperator.values()), new SQLIdentifierExpr("?"));
-                return expr.toString();
+                SQLUnaryOperator unaryOperator = of(sqlOperator.name(), SQLUnaryOperator.values());
+                if (unaryOperator != null) {
+                    expr = new SQLUnaryExpr(unaryOperator, new SQLIdentifierExpr("?"));
+                    return expr.toString();
+                }
             case ComplexTypeConstructor:
                 switch (sqlOperator) {
                     case Map:
@@ -325,7 +373,7 @@ public class SQLOperatorUtils {
                     case  COALESCE:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("val1"), new SQLIdentifierExpr("val2"), new SQLIdentifierExpr("..."));
                         return expr.toString();
-                    case  nullif:
+                    case NULLIF:
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("?"), new SQLIdentifierExpr("?"));
                         return expr.toString();
                     case CASE:
@@ -340,7 +388,7 @@ public class SQLOperatorUtils {
                         expr = new SQLMethodInvokeExpr(name, null, new SQLIdentifierExpr("testCondition"), new SQLIdentifierExpr("valueTrue"), new SQLIdentifierExpr("valueFalseOrNull"));
                         return expr.toString();
                     case ISNULL:
-                    case  isnotnull:
+                    case ISNOTNULL:
                     case  assert_true:
                     default:
                         expr = new SQLMethodInvokeExpr(name,  new SQLIdentifierExpr("?"));
@@ -525,7 +573,7 @@ public class SQLOperatorUtils {
                     case STDDEV:
                     case SUM:
                     case variance:
-                    case var_pop:
+                    case VAR_POP:
                     case var_samp:
                     case stddev_pop:
                     case stddev_samp:
@@ -606,7 +654,13 @@ public class SQLOperatorUtils {
         }
 
         if (sqlOperator != null) {
-            if (sqlOperator.isArithmetic()){
+            if (sqlOperator.isLockingFunctions()) {
+                return SQLOperatorType.LockFunctions;
+            } else if (sqlOperator.isENCRYPT_DECRYPT()) {
+                return SQLOperatorType.ENCRYPT_DECRYPT;
+            } else if (sqlOperator.isBuildIn()) {
+                return SQLOperatorType.BuiltIn;
+            } else if (sqlOperator.isArithmetic()){
                 return SQLOperatorType.ArithmeticOperator;
             } else if (sqlOperator.isLogical()) {
                 return SQLOperatorType.LogicalOperator;
@@ -618,6 +672,8 @@ public class SQLOperatorUtils {
                 return SQLOperatorType.DataMaskingFunction;
             } else if (sqlOperator.isMiscFunctions()) {
                 return SQLOperatorType.MiscFunctions;
+            } else if (sqlOperator.isInformationFunctions()) {
+                return SQLOperatorType.InformationFunctions;
             } else if (sqlOperator.isMathematicalFunction()) {
                 return SQLOperatorType.MathematicalFunction;
             } else if (sqlOperator.isCollectionFunction()) {
@@ -634,6 +690,8 @@ public class SQLOperatorUtils {
                 return SQLOperatorType.UDAF;
             } else if (sqlOperator.isUDTF()) {
                 return SQLOperatorType.UDTF;
+            } else if (sqlOperator.isXPathUDF()) {
+                return SQLOperatorType.XPathUDF;
             } else {
                 if (of(sqlOperator.name(), SQLBinaryOperator.values()) != null) {
                     return SQLOperatorType.BinaryOperator;
@@ -656,6 +714,194 @@ public class SQLOperatorUtils {
         }
 
         return sqlOperator.usage;
+    }
+
+    /**
+     * 返回指定数据库的可用环境参数设置
+     * @param dbType 数据库类型
+     * @return 可用环境，如：
+     * set ngmr.furion.pool=DEFAULT;
+     * set hive.support.concurrency=false;
+     * set hive.groupby.position.alias = true;
+     * set hive.auto.convert.join=true;
+     *
+     * set hive.fetch.task.conversion=more;
+     * set mapred.max.split.size=50000000; --50M指的是数据的最大分割单元大小；max的默认值是256MB
+     * set hive.exec.reducers.bytes.per.reducer=50000000; --（50M（每个reduce任务处理的数据量，默认为1000^3=1G））
+     * set hive.exec.reducers.max=999;  --（每个任务最大的reduce数，默认为999）
+     * set hive.groupby.skewindata = true;
+     *
+     * set hive.exec.parallel=true; --可以开启并发执行
+     * set hive.exec.parallel.thread.number=16; --同一个sql允许最大并行度，默认为8
+     * set hive.exec.dynamic.partition=true;
+     * set hive.exec.dynamic.partition.mode=nonstrict;
+     * set hive.enforce.bucketing=true;
+     */
+    public static List<String> getEnvironmentList(DbType dbType) {
+        ArrayList<String> list = new ArrayList<>();
+
+        switch (dbType) {
+
+            case other -> {
+            }
+            case jtds -> {
+            }
+            case hsql -> {
+            }
+            case db2 -> {
+            }
+            case postgresql -> {
+            }
+            case sqlserver -> {
+            }
+            case oracle -> {
+            }
+            case mysql -> {
+                list.add("key_buffer_size=int");
+                list.add("max_allowed_packet=int");
+            }
+            case mariadb -> {
+            }
+            case derby -> {
+            }
+            case hive -> {
+                list.add("ngmr.furion.pool=string");
+                list.add("hive.support.concurrency=bool");
+                list.add("hive.groupby.position.alias = bool");
+                list.add("hive.auto.convert.join=bool");
+                list.add("hive.fetch.task.conversion=none|more|minimal");
+                list.add("mapred.max.split.size=bool");
+                list.add("hive.exec.reducers.bytes.per.reducer=int");
+                list.add("hive.exec.reducers.max=int");
+                list.add("hive.groupby.skewindata = bool");
+                list.add("hive.exec.parallel=bool");
+                list.add("hive.exec.parallel.thread.number=int");
+                list.add("hive.exec.dynamic.partition=bool");
+                list.add("hive.exec.dynamic.partition.mode=nonstrict|strict");
+                list.add("hive.enforce.bucketing=bool");
+            }
+            case h2 -> {
+            }
+            case dm -> {
+            }
+            case kingbase -> {
+            }
+            case gbase -> {
+            }
+            case oceanbase -> {
+            }
+            case informix -> {
+            }
+            case odps -> {
+            }
+            case teradata -> {
+            }
+            case phoenix -> {
+            }
+            case edb -> {
+            }
+            case kylin -> {
+            }
+            case sqlite -> {
+            }
+            case ads -> {
+            }
+            case presto -> {
+            }
+            case elastic_search -> {
+            }
+            case hbase -> {
+            }
+            case drds -> {
+            }
+            case clickhouse -> {
+            }
+            case blink -> {
+            }
+            case antspark -> {
+            }
+            case oceanbase_oracle -> {
+            }
+            case polardb -> {
+            }
+            case ali_oracle -> {
+            }
+            case mock -> {
+            }
+            case sybase -> {
+            }
+            case highgo -> {
+            }
+            case greenplum -> {
+            }
+            case gaussdb -> {
+            }
+            case trino -> {
+            }
+            case oscar -> {
+            }
+            case tidb -> {
+            }
+            case tydb -> {
+            }
+            case ingres -> {
+            }
+            case cloudscape -> {
+            }
+            case timesten -> {
+            }
+            case as400 -> {
+            }
+            case sapdb -> {
+            }
+            case kdb -> {
+            }
+            case log4jdbc -> {
+            }
+            case xugu -> {
+            }
+            case firebirdsql -> {
+            }
+            case JSQLConnect -> {
+            }
+            case JTurbo -> {
+            }
+            case interbase -> {
+            }
+            case pointbase -> {
+            }
+            case edbc -> {
+            }
+            case mimer -> {
+            }
+        }
+        return list;
+    }
+
+    public static String getEnvironmentString(DbType dbType) {
+        Collection<String> list = getEnvironmentList(dbType);
+        return StringUtils.join(list,',');
+    }
+    /**
+     * 获取用户定义变量
+     * @param dbType 数据库类型
+     * @param sql set SQL语句
+     * @return 变量列表
+     */
+    public static List<String> getVariantList(String dbType, String sql) {
+        List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
+
+        return list.stream().filter(s -> s instanceof SQLSetStatement)
+                .flatMap(s -> {
+                    Collection<SQLAssignItem> items = ((SQLSetStatement) s).getItems();
+                    items.removeIf(i -> i.getTarget() instanceof SQLPropertyExpr);
+                    return items.stream().map(i -> i.getTarget().toString());
+                }).toList();
+    }
+
+    public static String getVariantString(String dbType, String sql) {
+        Collection<String> list = getVariantList(dbType, sql);
+        return StringUtils.join(list,',');
     }
 
     private static <T extends Enum<T>> T of(String name, T[] values) {

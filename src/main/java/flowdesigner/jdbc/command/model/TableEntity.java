@@ -38,7 +38,7 @@ public class TableEntity /*implements Serializable,Cloneable*/ {
      * @param columnDefKey
      * @return
      */
-    public ColumnField lookupField(String columnDefKey){
+    public ColumnField lookupField(String columnDefKey) {
         List<ColumnField> fieldList = getFields();
         for(ColumnField field : fieldList){
             if(columnDefKey.equalsIgnoreCase(field.getDefKey())){

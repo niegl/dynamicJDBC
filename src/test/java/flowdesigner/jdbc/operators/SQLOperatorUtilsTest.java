@@ -3,6 +3,8 @@ package flowdesigner.jdbc.operators;
 import com.alibaba.druid.DbType;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SQLOperatorUtilsTest {
@@ -34,6 +36,14 @@ class SQLOperatorUtilsTest {
     @Test
     void testGetFunctionSignature() {
 
+        DbType dbType = DbType.mysql;
+        Set<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(null, dbType);
+        supportFunctions.forEach( f -> {
+            String signature = SQLOperatorUtils.getFunctionSignature(dbType, f);
+            if (signature.equals(f)) {
+                System.out.println(signature);
+            }
+        });
     }
 
     @Test
@@ -48,5 +58,15 @@ class SQLOperatorUtilsTest {
     @Test
     void getSupportFunctionsJson() {
         System.out.println(SQLOperatorUtils.getSupportFunctionsJson(null, DbType.mysql));
+    }
+
+    @Test
+    void getEnvironmentString() {
+        System.out.println(SQLOperatorUtils.getEnvironmentString(DbType.mysql));
+    }
+
+    @Test
+    void getVariantString() {
+        System.out.println(SQLOperatorUtils.getVariantString("mysql","set global max_allowed_packet = 2*1024*1024*10;"));
     }
 }

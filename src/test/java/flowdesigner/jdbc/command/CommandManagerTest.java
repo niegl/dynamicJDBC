@@ -233,7 +233,7 @@ class CommandManagerTest {
         Gson gson = new Gson();
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{
-            put("ddl","CREATE TABLE IF NOT EXISTS `runoob_tbl`(\n" +
+            put("ddl","CREATE TABLE IF NOT EXISTS `pcode.runoob_tbl`(\n" +
                     "   `runoob_id` INT UNSIGNED AUTO_INCREMENT,\n" +
                     "   `runoob_title` VARCHAR(100) NOT NULL,\n" +
                     "   `runoob_author` VARCHAR(40) NOT NULL,\n" +

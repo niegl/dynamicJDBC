@@ -11,10 +11,8 @@ atan
 avg
 base64
 between
-UDFToLong
 bin
 binary
-UDFToBoolean
 bround
 case
 cbrt
@@ -52,23 +50,9 @@ dayofmonth
 dayofweek
 decimal
 decode
-default.extract_station
-default.extract_station_12
-default.extract_station_13
-default.extract_station_14
-default.extract_station_15
-default.extract_station_16
-default.extract_station_18
-default.extract_station_20
-default.yy_substr
-default.yy_substr_12
-default.yy_substr_split_10
-default.yy_substr_split_11
-default.yylower
 degrees
 dense_rank
 div
-UDFToDouble
 e
 elt
 encode
@@ -82,7 +66,6 @@ factorial
 field
 find_in_set
 first_value
-UDFToFloat
 floor
 floor_day
 floor_hour
@@ -110,10 +93,7 @@ index
 initcap
 inline
 instr
-UDFToInteger
 internal_interval
-interval_day_time
-interval_year_month
 isnotnull
 isnull
 java_method
@@ -145,7 +125,6 @@ mask_hash
 mask_last_n
 mask_show_first_n
 mask_show_last_n
-matchpath
 max
 md5
 min
@@ -156,10 +135,6 @@ named_struct
 negative
 next_day
 ngrams
-noop
-noopstreaming
-noopwithmap
-noopwithmapstreaming
 not
 ntile
 nvl
@@ -204,7 +179,6 @@ shiftrightunsigned
 sign
 sin
 size
-UDFToShort
 sort_array
 soundex
 space
@@ -216,7 +190,6 @@ stddev
 stddev_pop
 stddev_samp
 str_to_map
-UDFToString
 struct
 substr
 substring
@@ -224,7 +197,6 @@ substring_index
 sum
 tan
 timestamp
-UDFToByte
 to_date
 to_unix_timestamp
 to_utc_timestamp
@@ -243,8 +215,6 @@ varchar
 variance
 version
 weekofyear
-when
-windowingtablefunction
 xpath
 xpath_boolean
 xpath_double

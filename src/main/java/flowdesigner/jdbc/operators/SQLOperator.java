@@ -38,6 +38,8 @@ public enum SQLOperator {
     LeftShift("<<", 80),
     RightShift(">>", 80),
     BitwiseAnd("&", 90),
+    EWAH_BITMAP_AND("ewah_bitmap_and","ewah_bitmap_and(b1, b2)"),
+    EWAH_BITMAP_OR("ewah_bitmap_or","ewah_bitmap_or(b1, b2)"),
     BitwiseOr("|", 100),
     GreaterThan(">", 110),
     GreaterThanOrEqual(">=", 110),
@@ -49,7 +51,7 @@ public enum SQLOperator {
     IsDistinctFrom("IS DISTINCT FROM", 110),
     IsNotDistinctFrom("IS NOT DISTINCT FROM", 110),
     Like("LIKE", 110),
-    SoudsLike("SOUNDS LIKE", 110),
+    SoudsLike("SOUNDS LIKE",110,"? SOUNDS LIKE expr2"),
     NotLike("NOT LIKE", 110),
     ILike("ILIKE", 110),
     NotILike("NOT ILIKE", 110),
@@ -81,6 +83,245 @@ public enum SQLOperator {
     Assignment(":=", 169),
     PG_And("&&", 140),
     PG_ST_DISTANCE("<->", 20),
+    BETWEEN("between", "? [NOT] BETWEEN b AND c"),
+    IN("in", "? IN (val1, val2, ...)"),
+    NOT_IN("not in", "? NOT IN (value,...)"),
+    //endregion
+
+    //region Built-In Function and Operator
+    MBRTOUCHES("mbrtouches","MBRTouches(g1, g2)"),
+    FORMAT_BYTES("format_bytes","FORMAT_BYTES(count)"),
+    ST_SRID("st_srid","st_srid(?)"),
+    IS_IPV_4_COMPAT("is_ipv4_compat","is_ipv4_compat(?)"),
+    NORMALIZE_STATEMENT("normalize_statement","normalize_statement(?)"),
+    MBRCOVERS("mbrcovers","MBRCovers(g1, g2)"),
+    READ_FIREWALL_USERS("read_firewall_users","read_firewall_users(user, mode)"),
+    ST_UNION("st_union","ST_Union(g1, g2)"),
+
+    st_pointatdistance("st_pointatdistance","st_pointatdistance()"),
+    st_mpointfromtext("st_mpointfromtext","st_mpointfromtext()"),
+    st_collect("st_collect","st_collect()"),
+    inet6_aton("inet6_aton","inet6_aton()"),
+    st_isclosed("st_isclosed","st_isclosed()"),
+
+
+    st_intersects("st_intersects","st_intersects()"),
+    mbrcoveredby("mbrcoveredby","mbrcoveredby()"),
+    st_numgeometries("st_numgeometries","st_numgeometries()"),
+    st_geomcollfromwkb("st_geomcollfromwkb","st_geomcollfromwkb()"),
+    st_asbinary("st_asbinary","st_asbinary()"),
+    st_pointfromgeohash("st_pointfromgeohash","st_pointfromgeohash()"),
+    json_pretty("json_pretty","json_pretty()"),
+    master_pos_wait("master_pos_wait","master_pos_wait()"),
+    st_endpoint("st_endpoint","st_endpoint()"),
+    st_symdifference("st_symdifference","st_symdifference()"),
+    multipoint("multipoint","multipoint()"),
+    st_envelope("st_envelope","st_envelope()"),
+    st_touches("st_touches","st_touches()"),
+    regexp_substr("regexp_substr","regexp_substr()"),
+    mbrcontains("mbrcontains","mbrcontains()"),
+    mbrwithin("mbrwithin","mbrwithin()"),
+    internal_check_time("internal_check_time","internal_check_time()"),
+    st_isvalid("st_isvalid","st_isvalid()"),
+    st_longfromgeohash("st_longfromgeohash","st_longfromgeohash()"),
+    st_difference("st_difference","st_difference()"),
+    current_role("current_role","current_role()"),
+    ps_current_thread_id("ps_current_thread_id","ps_current_thread_id()"),
+    make_set("make_set","make_set()"),
+    json_schema_validation_report("json_schema_validation_report","json_schema_validation_report()"),
+    timestampadd("timestampadd","timestampadd()"),
+    st_issimple("st_issimple","st_issimple()"),
+    from_base64("from_base64","from_base64()"),
+    bin_to_uuid("bin_to_uuid","bin_to_uuid()"),
+    set_firewall_mode("set_firewall_mode","set_firewall_mode(user, mode)"),
+    oct("oct","oct()"),
+    json_merge("json_merge","json_merge()"),
+    export_set("export_set","export_set()"),
+    multipolygon("multipolygon","multipolygon()"),
+    st_linefromtext("st_linefromtext","st_linefromtext()"),
+    internal_data_free("internal_data_free","internal_data_free()"),
+    internal_max_data_length("internal_max_data_length","internal_max_data_length()"),
+    interval("interval","interval()"),
+    ISNOTNULL("IS NOT NULL","? IS NOT NULL"),
+    charset("charset","charset()"),
+    can_access_user("can_access_user","can_access_user()"),
+    json_array_insert("json_array_insert","json_array_insert()"),
+    st_makeenvelope("st_makeenvelope","st_makeenvelope()"),
+    st_transform("st_transform","st_transform()"),
+    get_format("get_format","get_format()"),
+    uncompressed_length("uncompressed_length","uncompressed_length()"),
+    utc_timestamp("utc_timestamp","utc_timestamp()"),
+    st_buffer_strategy("st_buffer_strategy","st_buffer_strategy()"),
+    st_intersection("st_intersection","st_intersection()"),
+    st_area("st_area","st_area()"),
+    polygon("polygon","polygon()"),
+    read_firewall_whitelist("read_firewall_whitelist","read_firewall_whitelist(user, rule)"),
+
+    st_validate("st_validate","st_validate()"),
+    json_length("json_length","json_length()"),
+    st_linefromwkb("st_linefromwkb","st_linefromwkb()"),
+    internal_table_rows("internal_table_rows","internal_table_rows()"),
+    row_count("row_count","row_count()"),
+    uuid_to_bin("uuid_to_bin","uuid_to_bin()"),
+    mbrdisjoint("mbrdisjoint","mbrdisjoint()"),
+    json_keys("json_keys","json_keys()"),
+    st_interiorringn("st_interiorringn","st_interiorringn()"),
+    st_contains("st_contains","st_contains()"),
+
+    is_uuid("is_uuid","is_uuid()"),
+    internal_index_length("internal_index_length","internal_index_length()"),
+    validate_password_strength("validate_password_strength","validate_password_strength()"),
+
+    st_astext("st_astext","st_astext()"),
+    json_storage_free("json_storage_free","json_storage_free()"),
+    is_ipv4_mapped("is_ipv4_mapped","is_ipv4_mapped()"),
+    icu_version("icu_version","icu_version()"),
+    st_overlaps("st_overlaps","st_overlaps()"),
+    mbrequals("mbrequals","mbrequals()"),
+    st_asgeojson("st_asgeojson","st_asgeojson()"),
+    st_hausdorffdistance("st_hausdorffdistance","st_hausdorffdistance()"),
+    internal_is_enabled_role("internal_is_enabled_role","internal_is_enabled_role()"),
+    utc_date("utc_date","utc_date()"),
+    internal_dd_char_length("internal_dd_char_length","internal_dd_char_length()"),
+    st_numpoints("st_numpoints","st_numpoints()"),
+    mbroverlaps("mbroverlaps","mbroverlaps()"),
+    st_polyfromtext("st_polyfromtext","st_polyfromtext()"),
+    st_pointfromwkb("st_pointfromwkb","st_pointfromwkb()"),
+    st_geomfromtext("st_geomfromtext","st_geomfromtext()"),
+    internal_checksum("internal_checksum","internal_checksum()"),
+    json_array("json_array","json_array()"),
+    curtime("curtime","curtime()"),
+    st_mpointfromwkb("st_mpointfromwkb","st_mpointfromwkb()"),
+    st_mpolyfromtext("st_mpolyfromtext","st_mpolyfromtext()"),
+    st_x("st_x","st_x()"),
+    st_y("st_y","st_y()"),
+    dayofyear("dayofyear","dayofyear()"),
+    json_depth("json_depth","json_depth()"),
+    st_geometrytype("st_geometrytype","st_geometrytype()"),
+    roles_graphml("roles_graphml","roles_graphml()"),
+    mid("mid","mid()"),
+    st_polyfromwkb("st_polyfromwkb","st_polyfromwkb()"),
+    st_distance_sphere("st_distance_sphere","st_distance_sphere()"),
+    DEFAULT("default","default()"),
+    name_const("name_const","name_const()"),
+    st_swapxy("st_swapxy","st_swapxy()"),
+    current_time("current_time","current_time()"),
+    json_remove("json_remove","json_remove()"),
+    json_extract("json_extract","json_extract()"),
+    st_startpoint("st_startpoint","st_startpoint()"),
+    internal_auto_increment("internal_auto_increment","internal_auto_increment()"),
+    regexp_instr("regexp_instr","regexp_instr()"),
+    st_isempty("st_isempty","st_isempty()"),
+
+    linestring("linestring","linestring()"),
+    st_lineinterpolatepoints("st_lineinterpolatepoints","st_lineinterpolatepoints()"),
+    between_and("between ... and ...","? BETWEEN min AND max"),
+    NOT_BETWEEN_AND("not between ... and ...","? NOT BETWEEN min AND max"),
+    st_distance("st_distance","st_distance()"),
+    st_longitude("st_longitude","st_longitude()"),
+    coercibility("coercibility","coercibility()"),
+    json_valid("json_valid","json_valid()"),
+    can_access_table("can_access_table","can_access_table()"),
+    ISNULL("isnull","isnull(?),"),
+    ps_thread_id("ps_thread_id","ps_thread_id()"),
+    source_pos_wait("source_pos_wait","source_pos_wait()"),
+    internal_data_length("internal_data_length","internal_data_length()"),
+    st_geomfromgeojson("st_geomfromgeojson","st_geomfromgeojson()"),
+    json_merge_patch("json_merge_patch","json_merge_patch()"),
+    st_length("st_length","st_length()"),
+    json_set("json_set","json_set()"),
+
+    st_disjoint("st_disjoint","st_disjoint()"),
+    st_frechetdistance("st_frechetdistance","st_frechetdistance()"),
+    weight_string("weight_string","weight_string()"),
+    curdate("curdate","curdate()"),
+    json_contains("json_contains","json_contains()"),
+    internal_keys_disabled("internal_keys_disabled","internal_keys_disabled()"),
+    json_table("json_table","json_table()"),
+    st_exteriorring("st_exteriorring","st_exteriorring()"),
+    now("now","now()"),
+    internal_get_username("internal_get_username","internal_get_username()"),
+
+    st_pointfromtext("st_pointfromtext","st_pointfromtext()"),
+    ord("ord","ord()"),
+    internal_index_column_cardinality("internal_index_column_cardinality","internal_index_column_cardinality()"),
+    memberof("member of","? MEMBER OF(json_array)"),
+    gtid_subset("gtid_subset","gtid_subset()"),
+    gtid_subtract("gtid_subtract","gtid_subtract()"),
+    internal_get_view_warning_or_error("internal_get_view_warning_or_error","internal_get_view_warning_or_error()"),
+    json_object("json_object","json_object()"),
+    get_dd_column_privileges("get_dd_column_privileges","get_dd_column_privileges()"),
+    st_convexhull("st_convexhull","st_convexhull()"),
+    from_days("from_days","from_days()"),
+    json_replace("json_replace","json_replace()"),
+    json_insert("json_insert","json_insert()"),
+    internal_avg_row_length("internal_avg_row_length","internal_avg_row_length()"),
+    any_value("any_value","any_value()"),
+    st_latitude("st_latitude","st_latitude()"),
+    inet_aton("inet_aton","inet_aton()"),
+    compress("compress","compress()"),
+    json_quote("json_quote","json_quote()"),
+    multilinestring("multilinestring","multilinestring()"),
+    benchmark("benchmark","benchmark()"),
+    get_dd_index_sub_part_length("get_dd_index_sub_part_length","get_dd_index_sub_part_length()"),
+    geometrycollection("geometrycollection","geometrycollection()"),
+    can_access_database("can_access_database","can_access_database()"),
+    st_centroid("st_centroid","st_centroid()"),
+    json_type("json_type","json_type()"),
+    st_lineinterpolatepoint("st_lineinterpolatepoint","st_lineinterpolatepoint()"),
+    st_within("st_within","st_within()"),
+    geomcollection("geomcollection","geomcollection()"),
+    inet6_ntoa("inet6_ntoa","inet6_ntoa()"),
+    json_storage_size("json_storage_size","json_storage_size()"),
+    json_search("json_search","json_search()"),
+    statement_digest_text("statement_digest_text","statement_digest_text()"),
+    mbrintersects("mbrintersects","mbrintersects()"),
+    st_dimension("st_dimension","st_dimension()"),
+    st_crosses("st_crosses","st_crosses()"),
+    json_arrayagg("json_arrayagg","json_arrayagg()"),
+    st_geomcollfromtext("st_geomcollfromtext","st_geomcollfromtext()"),
+    st_mlinefromtext("st_mlinefromtext","st_mlinefromtext()"),
+    format_pico_time("format_pico_time","format_pico_time()"),
+    st_mpolyfromwkb("st_mpolyfromwkb","st_mpolyfromwkb()"),
+    st_geometryn("st_geometryn","st_geometryn()"),
+    st_simplify("st_simplify","st_simplify()"),
+    can_access_column("can_access_column","can_access_column()"),
+    st_geomfromwkb("st_geomfromwkb","st_geomfromwkb()"),
+    json_contains_path("json_contains_path","json_contains_path()"),
+
+    notin("notin","notin()"),
+    nth_value("nth_value","nth_value()"),
+    collation("collation","collation()"),
+    st_numinteriorring("st_numinteriorring","st_numinteriorring()"),
+    random_bytes("random_bytes","random_bytes()"),
+    strcmp("strcmp","strcmp()"),
+    st_equals("st_equals","st_equals()"),
+    wait_until_sql_thread_after_gtids("wait_until_sql_thread_after_gtids","wait_until_sql_thread_after_gtids()"),
+    regexp_like("regexp_like","regexp_like()"),
+    st_latfromgeohash("st_latfromgeohash","st_latfromgeohash()"),
+    found_rows("found_rows","found_rows()"),
+    wait_for_executed_gtid_set("wait_for_executed_gtid_set","wait_for_executed_gtid_set()"),
+    uncompress("uncompress","uncompress()"),
+    MYSQL_FIREWALL_FLUSH_STATUS("mysql_firewall_flush_status","mysql_firewall_flush_status()"),
+    json_objectagg("json_objectagg","json_objectagg()"),
+    internal_is_mandatory_role("internal_is_mandatory_role","internal_is_mandatory_role()"),
+    values("values","values()"),
+    is_ipv6("is_ipv6","is_ipv6()"),
+    is_ipv4("is_ipv4","is_ipv4()"),
+    point("point","point()"),
+    json_array_append("json_array_append","json_array_append()"),
+    st_buffer("st_buffer","st_buffer()"),
+    statement_digest("statement_digest","statement_digest()"),
+    st_geohash("st_geohash","st_geohash()"),
+    st_pointn("st_pointn","st_pointn()"),
+
+    get_dd_create_options("get_dd_create_options","get_dd_create_options()"),
+    match("match","match()"),
+    inet_ntoa("inet_ntoa","inet_ntoa()"),
+
+    json_merge_preserve("json_merge_preserve","json_merge_preserve()"),
+    load_file("load_file","load_file()"),
+    st_mlinefromwkb("st_mlinefromwkb","st_mlinefromwkb()"),
     //endregion
 
     //region ComplexTypeConstructor
@@ -91,6 +332,7 @@ public enum SQLOperator {
     Create_union("create_union"),
     //endregion
     //region MathematicalFunction
+    STD("std","std(?)"),
     trunc("trunc","trunc(?)"),
     bround("bround"),
     FLOOR("floor"),
@@ -150,6 +392,7 @@ public enum SQLOperator {
     NEXTAFTER("NEXTAFTER","nextafter(?, y)"),
     SETSEED("SETSEED","SETSEED(?)"),
     width_bucket("width_bucket"),
+
     //endregion
 
     //region CollectionFunction
@@ -158,17 +401,23 @@ public enum SQLOperator {
     map_values("map_values"),
     array_contains("array_contains"),
     sort_array("sort_array"),
+    INDEX("index","index(a, n)"),
+    GET_SPLITS("get_splits","get_splits(string,int)"),
     //endregion
 
     //region Type Conversion Functions
     binary("binary"),
+    USING_BINARY("USING BINARY","? USING BINARY"),
+    AS_BINARY("AS BINARY","? AS BINARY"),
     cast("cast"),
     asciistr("asciistr"),
     bin_to_num("bin_to_num"),
     CONVERT("convert"),
+    convert_tz("convert_tz","convert_tz()"),
     TO_CHAR("to_char", "to_char(?)"),
     TO_NUMBER("to_number","to_number(?)"),
     TO_TIMESTAMP("TO_TIMESTAMP","TO_TIMESTAMP(?)"),
+    TO_BASE_64("to_base64","to_base64(?)"),
     SMALLINT("SMALLINT","SMALLINT(?)"),
     INTEGER("INTEGER","INTEGER(?)"),
     BIGINT("BIGINT","BIGINT(?)"),
@@ -196,12 +445,24 @@ public enum SQLOperator {
     //endregion
 
     //region Date Functions
+    INTERNAL_INTERVAL("internal_interval","internal_interval(intervalType,intervalArg)"),
     TIMEDIFF("TIMEDIFF","TIMEDIFF(?,?)"),
     TIMESTAMP("TIMESTAMP","TIMESTAMP(?)"),
     from_unixtime("from_unixtime"),
     unix_timestamp("unix_timestamp"),
+    UTC_TIME("utc_time","utc_time()"),
+    TO_UNIX_TIMESTAMP("to_unix_timestamp","to_unix_timestamp(?[, pattern])"),
     TO_DATE("to_date"),
+    TO_SECONDS("to_seconds","to_seconds(?)"),
     YEAR("year"),
+    FLOOR_YEAR("floor_year","floor_year(?)"),
+    FLOOR_MONTH("floor_month","floor_month(?)"),
+    FLOOR_HOUR("floor_hour","floor_hour(?)"),
+    FLOOR_WEEK("floor_week","floor_week(?)"),
+    FLOOR_DAY("floor_day","floor_day(?)"),
+    FLOOR_QUARTER("floor_quarter","floor_quarter(?)"),
+    FLOOR_MINUTE("floor_minute","floor_minute(?)"),
+    FLOOR_SECOND("floor_second","floor_second(?)"),
     YEARWEEK("YEARWEEK","YEARWEEK(?)"),
     quarter("quarter"),
     MONTH("month"),
@@ -211,7 +472,7 @@ public enum SQLOperator {
     second("second"),
     SEC_TO_TIME("SEC_TO_TIME"),
     STR_TO_DATE("STR_TO_DATE"),
-
+    SLEEP("sleep","SLEEP(duration)"),
     MICROSECOND("MICROSECOND"),
     MONTHNAME("MONTHNAME","MONTHNAME(?)"),
     PERIOD_ADD("PERIOD_ADD","PERIOD_ADD(period, number)"),
@@ -273,29 +534,44 @@ public enum SQLOperator {
     ISFINITE("ISFINITE"),
     ISINF("ISINF"),
     ISNAN("ISNAN"),
-    ISNULL("isnull"),
     ISNUMERIC("ISNUMERIC","ISNUMERIC(?)"),
-    isnotnull("isnotnull"),
-    SESSION_USER("SESSION_USER","SESSION_USER()"),
-    SYSTEM_USER("SYSTEM_USER","SYSTEM_USER()"),
     nvl("nvl"),
     assert_true("assert_true"),
-    IF("if"),
     COALESCE("COALESCE"),
-    nullif("nullif"),
+    IF("if"),
+    NULLIF("nullif"),
     IFNULL("IFNULL","IFNULL(v1,v2)"),
     CASE("case"),
     //endregion
 
+
+
     //region 聚合函数
-    AVG("AVG"), COUNT("COUNT"), MAX("MAX"), MIN("MIN"), STDDEV("STDDEV"), SUM("SUM","SUM([distinct] ?)"),
-    variance("variance"),
-    var_pop("var_pop"),
-    var_samp("var_samp"),
+    AVG("AVG"),
+    COUNT("COUNT"),
+    COUNT_DISTINCT("count(distinct)","count(distinct)(?)"),
+    MAX("MAX"), MIN("MIN"), STDDEV("STDDEV"), SUM("SUM","SUM([distinct] ?)"),
+    RANK("rank","RANK() over(partition by ?  order by ? desc)"),
+    DENSE_RANK("dense_rank","dense_rank() over(partition by ?  order by ? desc)"),
+    ROW_NUMBER("row_number","row_number() over(partition by ?  order by ? desc)"),
+    PERCENT_RANK("percent_rank","percent_rank() over(partition by ?  order by ? desc)"),
+    CUME_DIST("cume_dist","cume_dist() over(partition by ?  order by ? desc)"),
+    LAST_VALUE("last_value","last_value() over(partition by ?  order by ? desc)"),
+    FIRST_VALUE("first_value","first_value() over(partition by ?  order by ? desc)"),
+    LEAD("lead","lead(?) over(partition by ?  order by ? desc)"),
+    LAG("lag","lag(?) over(partition by ?  order by ? desc)"),
+    GROUP_CONCAT("group_concat","group_concat(?)"),
     stddev_pop("stddev_pop"),
     stddev_samp("stddev_samp"),
+    variance("variance"),
+    VAR_POP("var_pop"),
+    var_samp("var_samp"),
+    BIT_OR("bit_or","bit_or(?)"),
+    BIT_AND("bit_and","bit_and(?)"),
+    BIT_XOR("bit_xor","bit_xor(?)"),
     collect_set("collect_set"),
     collect_list("collect_list"),
+    COMPUTE_STATS("compute_stats","compute_stats(?)"),
     // 两个参数
     covar_pop("covar_pop"),
     covar_samp("covar_samp"),
@@ -417,35 +693,80 @@ public enum SQLOperator {
 
     //region Misc. Functions
     // 无参
-    LAST_INSERT_ID("LAST_INSERT_ID","LAST_INSERT_ID()"),
-    CONNECTION_ID("CONNECTION_ID","CONNECTION_ID()"),
-    CURRENT_USER("current_user"),
-    USER("USER","USER()"),
     IIF("IIF","IIF( condition, value_if_true, value_if_false)"),
     logged_in_user("logged_in_user"),
     current_database("current_database"),
-    DATABASE("DATABASE","DATABASE()"),
+
     version("version"),
     surrogate_key("surrogate_key"),
     // 一个参数
     hash("hash"),
     MD5("md5"),
+    UUID("uuid","uuid()"),
+    UUID_SHORT("uuid_short","uuid_short()"),
     sha1("sha1"),
     sha("sha"),
     crc32("crc32"),
     // 一个参数+ int
     sha2("sha2"),
     // 一个参数+ string
-    aes_encrypt("aes_encrypt"),
-    aes_decrypt("aes_decrypt"),
-    ENCRYPT("ENCRYPT","ENCRYPT(?)"),
-    DECRYPT_BIN("DECRYPT_BIN","DECRYPT_BIN(?)"),
-    DECRYPT_CHARs("DECRYPT_CHARs","DECRYPT_CHARs(?)"),
+
     GETHINT("GETHINT"),
     GENERATE_UNIQUE("GENERATE_UNIQUE","GENERATE_UNIQUE()"),
     // 函数
     java_method("java_method"),
     reflect("reflect"),
+    REFLECT_2("reflect2","reflect2(?,method[,arg1[,arg2..]])"),
+    GROUPING("grouping","grouping(a, b)"),
+    EWAH_BITMAP("ewah_bitmap","ewah_bitmap(expr)"),
+    EWAH_BITMAP_EMPTY("ewah_bitmap_empty","ewah_bitmap_empty(expr)"),
+    //endregion
+
+    //region InformationFunctions
+    BENCHMARK     ("BENCHMARK","BENCHMARK(count,?)"),
+    CHARSET       ("CHARSET","CHARSET(?)"),
+    COERCIBILITY  ("COERCIBILITY","COERCIBILITY(?)"),
+    COLLATION     ("COLLATION","COLLATION(?)"),
+    CONNECTION_ID ("CONNECTION_ID","CONNECTION_ID()"),
+    CURRENT_USER  ("CURRENT_USER","CURRENT_USER()"),
+    DATABASE      ("DATABASE","DATABASE()"),
+    FOUND_ROWS    ("FOUND_ROWS","FOUND_ROWS ()"),
+    LAST_INSERT_ID("LAST_INSERT_ID","LAST_INSERT_ID()"),
+    ROW_COUNT     ("ROW_COUNT","ROW_COUNT()"),
+    SCHEMA        ("SCHEMA","SCHEMA()"),
+    SESSION_USER  ("SESSION_USER","SESSION_USER ()"),
+    SYSTEM_USER   ("SYSTEM_USER","SYSTEM_USER()"),
+    USER          ("USER","USER()"),
+    VERSION       ("VERSION","VERSION()"),
+    //endregion
+
+    //region ENCRYPTdecrypt
+    aes_encrypt("aes_encrypt","aes_encrypt(?)"),
+    aes_decrypt("aes_decrypt","aes_decrypt(?)"),
+    DES_DECRYPT("DES_DECRYPT","DES_DECRYPT(?)"),
+    DES_ENCRYPT("DES_ENCRYPT","DES_ENCRYPT(?)"),
+    ASYMMETRIC_DECRYPT("asymmetric_decrypt","asymmetric_decrypt(algorithm, ?, priv_key_str)"),
+    ASYMMETRIC_ENCRYPT("asymmetric_encrypt","asymmetric_encrypt(algorithm, ?, pub_key_str)"),
+    ASYMMETRIC_DERIVE("asymmetric_derive","asymmetric_derive(pub_key_str, priv_key_str)"),
+    ASYMMETRIC_SIGN("asymmetric_sign","asymmetric_sign(algorithm, ?, priv_key_str, digest_type)"),
+    ASYMMETRIC_VERIFY("asymmetric_verify","asymmetric_verify(algorithm, ?, sig_str, pub_key_str, digest_type)"),
+    CREATE_ASYMMETRIC_PRIV_KEY("create_asymmetric_priv_key","create_asymmetric_priv_key(algorithm, {key_len|dh_secret})"),
+    CREATE_ASYMMETRIC_PUB_KEY("create_asymmetric_pub_key","create_asymmetric_pub_key(algorithm, priv_key_str)"),
+    CREATE_DH_PARAMETERS("create_dh_parameters","create_dh_parameters(key_len)"),
+    CREATE_DIGEST("create_digest","create_digest(digest_type, ?)"),
+    ENCRYPT("ENCRYPT","ENCRYPT(?)"),
+    DECRYPT_BIN("DECRYPT_BIN","DECRYPT_BIN(?)"),
+    DECRYPT_CHARs("DECRYPT_CHARs","DECRYPT_CHARs(?)"),
+    OLD_PASSWORD("OLD_PASSWORD","OLD_PASSWORD(?)"),
+    PASSWORD("PASSWORD","PASSWORD(?)"),
+    //endregion
+
+    //region Locking Fucntions
+    GET_LOCK("get_lock","GET_LOCK(?,timeout)"),
+    IS_FREE_LOCK("is_free_lock","IS_FREE_LOCK(?)"),
+    IS_USED_LOCK("IS_USED_LOCK","IS_USED_LOCK(?)"),
+    RELEASE_LOCK("RELEASE_LOCK","RELEASE_LOCK(?)"),
+    RELEASE_ALL_LOCKS("release_all_locks","release_all_locks()"),
     //endregion
 
     explode("explode"),
@@ -453,7 +774,27 @@ public enum SQLOperator {
     inline("inline"),
     stack("stack"),
     json_tuple("json_tuple"),
-    parse_url_tuple("parse_url_tuple")
+    JSON_VALUE("json_value","JSON_VALUE(json_doc, path)"),
+    JSON_SCHEMA_VALID("json_schema_valid","JSON_SCHEMA_VALID(schema,document)"),
+    JSON_OVERLAPS("json_overlaps","JSON_OVERLAPS(?, ?)"),
+    JSON_UNQUOTE("json_unquote","JSON_UNQUOTE(?)"),
+    parse_url_tuple("parse_url_tuple"),
+
+
+    //region XPATH
+    EXTRACTVALUE("extractvalue","ExtractValue(xml_frag, xpath_expr)"),
+    UPDATEXML("updatexml","UpdateXML(xml_target, xpath_expr, new_xml)"),
+    XPATH_STRING("xpath_string","xpath_string(xml, xpath)"),
+    XPATH_FLOAT("xpath_float","xpath_float(xml, xpath)"),
+    XPATH_NUMBER("xpath_number","xpath_number(xml, xpath)"),
+    XPATH_INT("xpath_int","xpath_int(xml, xpath)"),
+    XPATH_BOOLEAN("xpath_boolean","xpath_boolean(xml, xpath)"),
+    XPATH_DOUBLE("xpath_double","xpath_double(xml, xpath)"),
+    XPATH_LONG("xpath_long","xpath_long(xml, xpath)"),
+    XPATH_SHORT("xpath_short","xpath_short(xml, xpath)"),
+    XPATH("xpath","xpath(xml, xpath)")
+
+    //endregion
     ;
 
     SQLOperator(String name) {
@@ -501,6 +842,9 @@ public enum SQLOperator {
             case NotRegExp:
             case Is:
             case IsNot:
+            case BETWEEN:
+            case IN:
+            case NOT_IN:
                 return true;
             default:
                 return false;
@@ -508,7 +852,8 @@ public enum SQLOperator {
     }
 
     public boolean isLogical() {
-        return this == BooleanAnd || this == BooleanOr || this == BooleanXor;
+        return this == BooleanAnd || this == BooleanOr || this == BooleanXor || this == EWAH_BITMAP_AND
+                || this == BitwiseAnd || this == EWAH_BITMAP_OR;
     }
 
     public boolean isArithmetic() {
@@ -525,6 +870,240 @@ public enum SQLOperator {
                 return false;
         }
     }
+
+    public boolean isBuildIn() {
+        switch(this) {
+            case MBRTOUCHES                          :
+            case FORMAT_BYTES:
+            case COUNT_DISTINCT:
+            case ST_SRID:
+            case IS_IPV_4_COMPAT:
+            case JSON_VALUE:
+            case JSON_SCHEMA_VALID:
+            case NORMALIZE_STATEMENT:
+            case UUID_SHORT:
+            case JSON_OVERLAPS:
+            case MBRCOVERS:
+            case READ_FIREWALL_USERS:
+            case ST_UNION:
+            case JSON_UNQUOTE:
+            case st_pointatdistance                  :
+            case st_mpointfromtext                   :
+            case st_collect                          :
+            case inet6_aton                          :
+            case st_isclosed                         :
+            case st_intersects                       :
+            case mbrcoveredby                        :
+            case st_numgeometries                    :
+            case st_geomcollfromwkb                  :
+            case st_asbinary                         :
+            case st_pointfromgeohash                 :
+            case json_pretty                         :
+            case master_pos_wait                     :
+            case st_endpoint                         :
+            case st_symdifference                    :
+            case multipoint                          :
+            case st_envelope                         :
+            case st_touches                          :
+            case regexp_substr                       :
+            case mbrcontains                         :
+            case mbrwithin                           :
+            case internal_check_time                 :
+            case st_isvalid                          :
+            case st_longfromgeohash                  :
+            case st_difference                       :
+            case current_role                        :
+            case ps_current_thread_id                :
+            case make_set                            :
+            case json_schema_validation_report       :
+            case timestampadd                        :
+            case st_issimple                         :
+            case from_base64                         :
+            case bin_to_uuid                         :
+            case set_firewall_mode                   :
+            case oct                                 :
+            case json_merge                          :
+            case export_set                          :
+            case multipolygon                        :
+            case st_linefromtext                     :
+            case internal_data_free                  :
+            case internal_max_data_length            :
+            case interval                            :
+            case charset                             :
+            case can_access_user                     :
+            case json_array_insert                   :
+            case st_makeenvelope                     :
+            case convert_tz                          :
+            case st_transform                        :
+            case get_format                          :
+            case uncompressed_length                 :
+            case utc_timestamp                       :
+            case st_buffer_strategy                  :
+            case st_intersection                     :
+            case st_area                             :
+            case polygon                             :
+            case read_firewall_whitelist             :
+            case st_validate                         :
+            case json_length                         :
+            case st_linefromwkb                      :
+            case internal_table_rows                 :
+            case row_count                           :
+            case uuid_to_bin                         :
+            case mbrdisjoint                         :
+            case json_keys                           :
+            case st_interiorringn                    :
+            case st_contains                         :
+            case is_uuid                             :
+            case internal_index_length               :
+            case validate_password_strength          :
+            case st_astext                           :
+            case json_storage_free                   :
+            case is_ipv4_mapped                      :
+            case icu_version                         :
+            case st_overlaps                         :
+            case mbrequals                           :
+            case st_asgeojson                        :
+            case st_hausdorffdistance                :
+            case internal_is_enabled_role            :
+            case utc_date                            :
+            case internal_dd_char_length             :
+            case st_numpoints                        :
+            case mbroverlaps                         :
+            case st_polyfromtext                     :
+            case st_pointfromwkb                     :
+            case st_geomfromtext                     :
+            case internal_checksum                   :
+            case json_array                          :
+            case curtime                             :
+            case st_mpointfromwkb                    :
+            case st_mpolyfromtext                    :
+            case st_x                                :
+            case st_y                                :
+            case dayofyear                           :
+            case json_depth                          :
+            case st_geometrytype                     :
+            case roles_graphml                       :
+            case mid                                 :
+            case st_polyfromwkb                      :
+            case st_distance_sphere                  :
+            case DEFAULT:
+            case name_const                          :
+            case st_swapxy                           :
+            case current_time                        :
+            case UTC_TIME:
+            case json_remove                         :
+            case json_extract                        :
+            case st_startpoint                       :
+            case internal_auto_increment             :
+            case regexp_instr                        :
+            case st_isempty                          :
+            case linestring                          :
+            case st_lineinterpolatepoints            :
+            case st_distance                         :
+            case st_longitude                        :
+            case coercibility                        :
+            case json_valid                          :
+            case can_access_table                    :
+            case ps_thread_id                        :
+            case source_pos_wait                     :
+            case internal_data_length                :
+            case st_geomfromgeojson                  :
+            case json_merge_patch                    :
+            case st_length                           :
+            case json_set                            :
+            case ASYMMETRIC_DECRYPT:
+            case st_disjoint                         :
+            case st_frechetdistance                  :
+            case weight_string                       :
+            case curdate                             :
+            case json_contains                       :
+            case internal_keys_disabled              :
+            case json_table                          :
+            case st_exteriorring                     :
+            case now                                 :
+            case internal_get_username               :
+            case st_pointfromtext                    :
+            case ord                                 :
+            case internal_index_column_cardinality   :
+            case memberof                           :
+            case gtid_subset                         :
+            case gtid_subtract                       :
+            case internal_get_view_warning_or_error  :
+            case json_object                         :
+            case get_dd_column_privileges            :
+            case st_convexhull                       :
+            case from_days                           :
+            case json_replace                        :
+            case json_insert                         :
+            case internal_avg_row_length             :
+            case any_value                           :
+            case st_latitude                         :
+            case inet_aton                           :
+            case compress                            :
+            case json_quote                          :
+            case multilinestring                     :
+            case benchmark                           :
+            case get_dd_index_sub_part_length        :
+            case geometrycollection                  :
+            case can_access_database                 :
+            case st_centroid                         :
+            case json_type                           :
+            case st_lineinterpolatepoint             :
+            case st_within                           :
+            case geomcollection                      :
+            case inet6_ntoa                          :
+            case json_storage_size                   :
+            case json_search                         :
+            case statement_digest_text               :
+            case mbrintersects                       :
+            case st_dimension                        :
+            case st_crosses                          :
+            case json_arrayagg                       :
+            case st_geomcollfromtext                 :
+            case st_mlinefromtext                    :
+            case format_pico_time                    :
+            case st_mpolyfromwkb                     :
+            case st_geometryn                        :
+            case st_simplify                         :
+            case can_access_column                   :
+            case st_geomfromwkb                      :
+            case json_contains_path                  :
+            case nth_value                           :
+            case collation                           :
+            case st_numinteriorring                  :
+            case random_bytes                        :
+            case strcmp                              :
+            case st_equals                           :
+            case wait_until_sql_thread_after_gtids   :
+            case regexp_like                         :
+            case st_latfromgeohash                   :
+            case found_rows                          :
+            case wait_for_executed_gtid_set          :
+            case uncompress                          :
+            case MYSQL_FIREWALL_FLUSH_STATUS:
+            case json_objectagg                      :
+            case internal_is_mandatory_role          :
+            case values                              :
+            case is_ipv6                             :
+            case is_ipv4                             :
+            case point                               :
+            case json_array_append                   :
+            case st_buffer                           :
+            case statement_digest                    :
+            case st_geohash                          :
+            case st_pointn                           :
+            case get_dd_create_options               :
+            case match                               :
+            case inet_ntoa                           :
+            case json_merge_preserve                 :
+            case load_file                           :
+            case st_mlinefromwkb                     :
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public boolean isDataMaskingFunctions() {
         switch(this) {
             case mask:
@@ -539,33 +1118,64 @@ public enum SQLOperator {
         }
     }
 
+    public boolean isLockingFunctions() {
+        switch(this) {
+            case GET_LOCK:
+            case IS_USED_LOCK:
+            case RELEASE_LOCK:
+            case IS_FREE_LOCK:
+            case RELEASE_ALL_LOCKS:
+                return true;
+            default:
+                return false;
+        }
+    }
     public boolean isMiscFunctions() {
         switch(this) {
-            case LAST_INSERT_ID:
-            case CONNECTION_ID:
-            case CURRENT_USER:
-            case USER:
-            case SESSION_USER:
-            case SYSTEM_USER:
             case logged_in_user:
             case current_database:
-            case DATABASE:
             case version:
             case surrogate_key:
-            // 一个参数
+                // 一个参数
             case hash:
             case MD5:
+            case UUID:
+            case UUID_SHORT:
             case sha1:
             case sha:
             case crc32:
-            // 一个参数+ int
+                // 一个参数+ int
             case sha2:
-            // 一个参数+ string
-            case aes_encrypt:
-            case aes_decrypt:
-            // 函数
+                // 一个参数+ string
+                // 函数
             case java_method:
             case reflect:
+            case REFLECT_2:
+            case GROUPING:
+            case EWAH_BITMAP:
+            case EWAH_BITMAP_EMPTY:
+                return true;
+            default:
+                return false;
+        }
+    }
+    public boolean isInformationFunctions() {
+        switch(this) {
+            case BENCHMARK     :
+            case CHARSET       :
+            case COERCIBILITY  :
+            case COLLATION     :
+            case CONNECTION_ID :
+            case CURRENT_USER  :
+            case DATABASE      :
+            case FOUND_ROWS    :
+            case LAST_INSERT_ID:
+            case ROW_COUNT     :
+            case SCHEMA        :
+            case SESSION_USER  :
+            case SYSTEM_USER   :
+            case USER          :
+            case VERSION       :
                 return true;
             default:
                 return false;
@@ -665,6 +1275,8 @@ public enum SQLOperator {
             case        map_values:
             case        array_contains:
             case         sort_array:
+            case INDEX:
+            case GET_SPLITS:
                 return true;
             default:
                 return false;
@@ -680,6 +1292,7 @@ public enum SQLOperator {
             case TO_CHAR:
             case TO_NUMBER:
             case TO_TIMESTAMP:
+            case TO_BASE_64:
             case SMALLINT:
             case INTEGER:
             case BIGINT:
@@ -704,6 +1317,7 @@ public enum SQLOperator {
             case TIME_FORMAT:
             case TIME_TO_SEC:
             case TIMEDIFF:
+            case INTERNAL_INTERVAL:
             case TIMESTAMP:
                 return true;
             default:
@@ -714,8 +1328,17 @@ public enum SQLOperator {
         switch(this) {
             case from_unixtime:
             case         unix_timestamp:
+            case TO_UNIX_TIMESTAMP:
             case TO_DATE:
+            case TO_SECONDS:
             case YEAR:
+            case FLOOR_YEAR:
+            case FLOOR_MONTH:
+            case FLOOR_HOUR:
+            case FLOOR_WEEK:
+            case FLOOR_DAY:
+            case FLOOR_QUARTER:
+            case FLOOR_SECOND:
             case YEARWEEK:
             case        quarter:
             case MONTH:
@@ -728,6 +1351,7 @@ public enum SQLOperator {
             case        second:
             case SEC_TO_TIME:
             case STR_TO_DATE:
+            case SLEEP:
             case MICROSECOND:
             case MONTHNAME:
             case PERIOD_ADD:
@@ -833,6 +1457,7 @@ public enum SQLOperator {
             case       positive:
             case       negative:
             case trunc:
+            case STD:
             case        e:
             case       shiftleft:
             case       shiftright:
@@ -851,13 +1476,25 @@ public enum SQLOperator {
             case MIN:
             case STDDEV:
             case SUM:
+            case RANK:
+            case DENSE_RANK:
+            case ROW_NUMBER:
+            case PERCENT_RANK:
+            case CUME_DIST:
+            case LAST_VALUE:
+            case FIRST_VALUE:
+            case LEAD:
+            case LAG:
+            case GROUP_CONCAT:
             case variance:
-            case var_pop:
+            case VAR_POP:
             case var_samp:
-            case stddev_pop:
-            case stddev_samp:
+            case BIT_OR:
+            case BIT_AND:
+            case BIT_XOR:
             case collect_set:
             case collect_list:
+            case COMPUTE_STATS:
             // 两个参数
             case covar_pop:
             case covar_samp:
@@ -891,12 +1528,12 @@ public enum SQLOperator {
             case ISINF    :
             case ISNAN    :
             case ISNUMERIC:
-            case  isnotnull:
+            case ISNOTNULL:
             case  nvl:
             case  assert_true:
             case  IF:
             case  COALESCE:
-            case  nullif:
+            case NULLIF:
             case IFNULL:
             case CASE:
                 return true;
@@ -930,6 +1567,25 @@ public enum SQLOperator {
         }
     }
 
+    public boolean isXPathUDF() {
+        switch (this) {
+            case XPATH_STRING:
+            case XPATH_FLOAT:
+            case XPATH_NUMBER:
+            case XPATH_INT:
+            case XPATH_BOOLEAN:
+            case XPATH_DOUBLE:
+            case XPATH_LONG:
+            case XPATH_SHORT:
+            case XPATH:
+            case EXTRACTVALUE:
+            case UPDATEXML:
+                return true;
+            default:
+                return false;
+        }
+    }
+
     public boolean isComplexTypeConstructor() {
         switch (this) {
             case Map:
@@ -937,6 +1593,32 @@ public enum SQLOperator {
             case Array:
             case Named_struct:
             case Create_union:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public boolean isENCRYPT_DECRYPT() {
+        switch (this) {
+            case aes_encrypt:
+            case aes_decrypt:
+            case ASYMMETRIC_DECRYPT:
+            case ASYMMETRIC_ENCRYPT:
+            case ASYMMETRIC_DERIVE:
+            case ASYMMETRIC_SIGN:
+            case ASYMMETRIC_VERIFY:
+            case CREATE_ASYMMETRIC_PRIV_KEY:
+            case CREATE_ASYMMETRIC_PUB_KEY:
+            case CREATE_DH_PARAMETERS:
+            case CREATE_DIGEST:
+            case ENCRYPT:
+            case DECRYPT_BIN:
+            case DECRYPT_CHARs:
+            case DES_DECRYPT:
+            case DES_ENCRYPT:
+            case OLD_PASSWORD:
+            case PASSWORD:
                 return true;
             default:
                 return false;
