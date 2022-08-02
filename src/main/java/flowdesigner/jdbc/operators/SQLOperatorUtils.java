@@ -40,6 +40,25 @@ public class SQLOperatorUtils {
         }
     }
 
+    /**
+     * 系统变量
+     */
+    private static class VariableInfo {
+        /**
+         * 系统变量名
+         */
+        String name;
+        /**
+         * 默认值
+         */
+        String defaultValue;
+
+        public VariableInfo(String name, String defaultValue) {
+            this.name = name;
+            this.defaultValue = defaultValue;
+        }
+    }
+
     public SQLOperatorUtils() {
     }
 
@@ -737,151 +756,55 @@ public class SQLOperatorUtils {
      * set hive.exec.dynamic.partition.mode=nonstrict;
      * set hive.enforce.bucketing=true;
      */
-    public static List<String> getEnvironmentList(DbType dbType) {
-        ArrayList<String> list = new ArrayList<>();
+    public static List<VariableInfo> getEnvironmentList(DbType dbType) {
+        Set<String> variants = new HashSet<>();
 
-        switch (dbType) {
-
-            case other -> {
-            }
-            case jtds -> {
-            }
-            case hsql -> {
-            }
-            case db2 -> {
-            }
-            case postgresql -> {
-            }
-            case sqlserver -> {
-            }
-            case oracle -> {
-            }
-            case mysql -> {
-                list.add("key_buffer_size=int");
-                list.add("max_allowed_packet=int");
-            }
-            case mariadb -> {
-            }
-            case derby -> {
-            }
-            case hive -> {
-                list.add("ngmr.furion.pool=string");
-                list.add("hive.support.concurrency=bool");
-                list.add("hive.groupby.position.alias = bool");
-                list.add("hive.auto.convert.join=bool");
-                list.add("hive.fetch.task.conversion=none|more|minimal");
-                list.add("mapred.max.split.size=bool");
-                list.add("hive.exec.reducers.bytes.per.reducer=int");
-                list.add("hive.exec.reducers.max=int");
-                list.add("hive.groupby.skewindata = bool");
-                list.add("hive.exec.parallel=bool");
-                list.add("hive.exec.parallel.thread.number=int");
-                list.add("hive.exec.dynamic.partition=bool");
-                list.add("hive.exec.dynamic.partition.mode=nonstrict|strict");
-                list.add("hive.enforce.bucketing=bool");
-            }
-            case h2 -> {
-            }
-            case dm -> {
-            }
-            case kingbase -> {
-            }
-            case gbase -> {
-            }
-            case oceanbase -> {
-            }
-            case informix -> {
-            }
-            case odps -> {
-            }
-            case teradata -> {
-            }
-            case phoenix -> {
-            }
-            case edb -> {
-            }
-            case kylin -> {
-            }
-            case sqlite -> {
-            }
-            case ads -> {
-            }
-            case presto -> {
-            }
-            case elastic_search -> {
-            }
-            case hbase -> {
-            }
-            case drds -> {
-            }
-            case clickhouse -> {
-            }
-            case blink -> {
-            }
-            case antspark -> {
-            }
-            case oceanbase_oracle -> {
-            }
-            case polardb -> {
-            }
-            case ali_oracle -> {
-            }
-            case mock -> {
-            }
-            case sybase -> {
-            }
-            case highgo -> {
-            }
-            case greenplum -> {
-            }
-            case gaussdb -> {
-            }
-            case trino -> {
-            }
-            case oscar -> {
-            }
-            case tidb -> {
-            }
-            case tydb -> {
-            }
-            case ingres -> {
-            }
-            case cloudscape -> {
-            }
-            case timesten -> {
-            }
-            case as400 -> {
-            }
-            case sapdb -> {
-            }
-            case kdb -> {
-            }
-            case log4jdbc -> {
-            }
-            case xugu -> {
-            }
-            case firebirdsql -> {
-            }
-            case JSQLConnect -> {
-            }
-            case JTurbo -> {
-            }
-            case interbase -> {
-            }
-            case pointbase -> {
-            }
-            case edbc -> {
-            }
-            case mimer -> {
-            }
+        if (dbType.equals(DbType.oracle)) {
+            //Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_functions", functions);
+        } else if (dbType.equals(DbType.mysql)) {
+            Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_variables", variants);
+        } else if (dbType.equals(DbType.hive)) {
+            Utils.loadFromFile("META-INF/druid/parser/hive/builtin_variables", variants);
         }
-        return list;
+//        } else if (dbType.equals(DbType.postgresql)) {
+//            //Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_functions", variants);
+//        } else if (dbType.equals(DbType.db2)) {
+//            Utils.loadFromFile("META-INF/druid/parser/db2/builtin_functions", variants);
+//        } else if (dbType.equals(DbType.mariadb)) {
+//            Utils.loadFromFile("META-INF/druid/parser/maria/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.sqlserver)) {
+//            Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.sybase)) {
+//            Utils.loadFromFile("META-INF/druid/parser/sybase/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.derby)) {
+//            Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.h2)) {
+//            Utils.loadFromFile("META-INF/druid/parser/h2/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.dm)) {
+//            Utils.loadFromFile("META-INF/druid/parser/dm/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.kingbase)) {
+//            Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.gbase)) {
+//            Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.oceanbase)) {
+//            Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_functions", functions);
+//        } else if (dbType.equals(DbType.informix)) {
+//            Utils.loadFromFile("META-INF/druid/parser/Informix/builtin_functions", functions);
+//        }
+
+        return variants.stream().map(f -> {
+            String[] split = f.split("=");
+            String defaultValue = split.length == 2? split[1]:"";
+            return new VariableInfo(split[0], defaultValue);
+        }).collect(Collectors.toList());
     }
 
     public static String getEnvironmentString(DbType dbType) {
-        Collection<String> list = getEnvironmentList(dbType);
-        return StringUtils.join(list,',');
+        List<VariableInfo> list = getEnvironmentList(dbType);
+        Gson gson = new Gson();
+        return gson.toJson(list);
     }
+
     /**
      * 获取用户定义变量
      * @param dbType 数据库类型
@@ -891,12 +814,14 @@ public class SQLOperatorUtils {
     public static List<String> getVariantList(String dbType, String sql) {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
 
-        return list.stream().filter(s -> s instanceof SQLSetStatement)
+        return list.stream()
+                .filter(s -> s instanceof SQLSetStatement)
                 .flatMap(s -> {
                     Collection<SQLAssignItem> items = ((SQLSetStatement) s).getItems();
                     items.removeIf(i -> i.getTarget() instanceof SQLPropertyExpr);
                     return items.stream().map(i -> i.getTarget().toString());
-                }).toList();
+                })
+                .toList();
     }
 
     public static String getVariantString(String dbType, String sql) {

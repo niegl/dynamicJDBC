@@ -63,7 +63,7 @@ class SQLSelectBuilderImplTest {
 
     @Test
     void whereAnd() {
-        SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.hive);
+        SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.mysql);
         builderEx.select("a","b")
                 .from("tablea","a")
                 .where("data_dt='2022-10'");

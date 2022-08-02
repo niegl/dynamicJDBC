@@ -60,7 +60,7 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
         }
     }
 
-    public SQLSelectBuilderImpl(SQLSelectStatement stmt, DbType dbType){
+    public SQLSelectBuilderImpl(SQLSelectStatement stmt, DbType dbType) {
         this.stmt = stmt;
         this.dbType = dbType;
     }

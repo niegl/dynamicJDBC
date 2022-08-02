@@ -1628,7 +1628,7 @@ public class SQLTest {
 //            visitor.setDesensitize(true);
             visitor.setParameterizedQuesUnMergeInList(true);
             statement.accept(visitor);
-            System.out.println("解析后的SQL 为 : [" + out.toString() +"]");
+            System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
         });
         if (list.size() > 1) {
             throw new SQLSyntaxErrorException("MultiQueries is not supported,use single query instead");

@@ -62,7 +62,7 @@ class SQLOperatorUtilsTest {
 
     @Test
     void getEnvironmentString() {
-        System.out.println(SQLOperatorUtils.getEnvironmentString(DbType.mysql));
+        System.out.println(SQLOperatorUtils.getEnvironmentString(DbType.hive));
     }
 
     @Test
