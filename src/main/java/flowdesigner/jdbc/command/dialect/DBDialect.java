@@ -16,11 +16,9 @@
 package flowdesigner.jdbc.command.dialect;
 
 import flowdesigner.jdbc.command.model.*;
-import flowdesigner.jdbc.operators.SQLOperatorType;
 import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
