@@ -34,4 +34,19 @@ class SQLInsertBuilderImplTest {
         insertBuilder.setQuery("SELECT column1, column2, columnN FROM second_table_name WHERE column1=2;");
         System.out.println(insertBuilder);
     }
+    @Test
+    void addDynamicPartition() {
+        insertBuilder.setInsertColumns("a","b");
+        insertBuilder.addPartition("data_dt",null);
+        insertBuilder.setQuery("SELECT column1, column2, columnN FROM second_table_name WHERE column1=2;");
+        System.out.println(insertBuilder);
+    }
+
+    @Test
+    void addPartition() {
+        insertBuilder.setInsertColumns("a","b");
+        insertBuilder.addPartition("data_dt",null);
+        insertBuilder.setQuery("SELECT column1, column2, columnN FROM second_table_name WHERE column1=2;");
+        System.out.println(insertBuilder);
+    }
 }

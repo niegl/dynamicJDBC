@@ -81,13 +81,6 @@ public class SQLOperatorUtils {
     public static Set<String> getSupportFunctions(Connection connection, DbType dbType) {
         Set<String> functions = new HashSet<>();
 
-//        if (connection != null) {
-//            ExecResult<Set<String>> execResult = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFunctionsImpl, new HashMap<>());
-//            if (execResult.getStatus().equalsIgnoreCase(ExecResult.SUCCESS)) {
-//                functions.addAll(execResult.getBody());
-//            }
-//        }
-
         // 实际数据库中可能获取的不全，需要配置补充
         if (dbType.equals(DbType.oracle)) {
             Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_functions", functions);

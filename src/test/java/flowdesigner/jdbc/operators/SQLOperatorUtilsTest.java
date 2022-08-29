@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+import static flowdesigner.jdbc.operators.SQLFunctionCatalog.ArithmeticOperator;
 import static flowdesigner.jdbc.operators.SQLFunctionCatalog.DatetimeFunctions;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,6 +34,8 @@ class SQLOperatorUtilsTest {
 //        System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "<=>"));
 //        System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive, "DAYOFWEEK"));
         System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive,DatetimeFunctions, "date_add"));
+        System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive,ArithmeticOperator, "mod"));
+        System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive,ArithmeticOperator, "%"));
     }
 
     @Test
