@@ -247,7 +247,14 @@ class CommandManagerTest {
         Gson gson = new Gson();
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{
-            put("ddl","CREATE TABLE table_name (column_name column_type);");
+            put("ddl","CREATE TABLE `pmart.t98_line_person_times_traction_engcspt_period_st`(\n" +
+                    "  `househld_pty_id` varchar(60) COMMENT '当事人', \n" +
+                    "  `househld_pty_nm` varchar(100) COMMENT '当事人名称', \n" +
+                    "  `line_id` varchar(30) COMMENT '线路编号', \n" +
+                    "  `stat_dt` string COMMENT '统计日期', \n" +
+                    "  `stat_indx_cd` varchar(8) COMMENT '统计索引', \n" +
+                    "  `measr_unit` varchar(60) COMMENT '单位', \n" +
+                    "  `stat_val` decimal(18,2) COMMENT '统计值');");
             put("dbType","hive");
         }});
         long end = Instant.now().toEpochMilli();

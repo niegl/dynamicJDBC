@@ -185,6 +185,14 @@ public class SQLTest {
     }
 
     @org.junit.jupiter.api.Test
+    void testTempTable00() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="CREATE TEMPORARY TABLE list_bucket_multiple (col1 STRING, col2 int, col3 STRING);";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
     void testTempTable0() throws SQLSyntaxErrorException {
         String dbType = "mysql";
         String sql ="CREATE TEMPORARY TABLE list_bucket_multiple (col1 STRING, col2 int, col3 STRING);";

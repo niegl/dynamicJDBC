@@ -72,7 +72,12 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
     @Override
     public SQLCreateTableBuilder setTemporary(String temporaryType) {
         SQLCreateTableStatement create = getSQLCreateTableStatement();
-        create.setType(SQLCreateTableStatement.Type.GLOBAL_TEMPORARY);
+        if (dbType.equals(DbType.mysql)) {
+            create.setType(SQLCreateTableStatement.Type.GLOBAL_TEMPORARY);
+        } else {
+            create.setType(SQLCreateTableStatement.Type.TEMPORARY);
+        }
+
         return this;
     }
 

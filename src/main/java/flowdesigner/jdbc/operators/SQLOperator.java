@@ -1235,6 +1235,37 @@ public enum SQLOperator {
         return sig;
     }
 
+    public static ArrayList<SQLOperator> of(DbType dbType, String name) {
+        ArrayList<SQLOperator> operators = new ArrayList<>();
+
+        if (name == null || name.isEmpty()) {
+            return operators;
+        }
+
+        HashSet<SQLFunctionCatalog> catalogs = getCatalog(dbType, name);
+        for (SQLFunctionCatalog catalog: catalogs) {
+            SQLOperator sig = null;
+            for (SQLOperator value : SQLOperator.values()) {
+                if (value.catalog.equals(catalog) && value.name.equalsIgnoreCase(name)) {
+                    // 如果全部符合
+                    if (value.isSupport(dbType)) {
+                        sig = value;
+                        break;
+                    }
+                    // 如果类别和名称符合，检查数据库是否为other
+                    if (value.isSupport(DbType.other)) {
+                        sig = value;
+                    }
+                }
+            }
+            if (sig != null) {
+                operators.add(sig);
+            }
+        }
+
+        return operators;
+    }
+
     public static HashSet<SQLFunctionCatalog> getCatalog(DbType dbType, String name) {
         HashSet<SQLFunctionCatalog> catalogs = new HashSet<>();
 
@@ -1252,4 +1283,5 @@ public enum SQLOperator {
 
         return catalogs;
     }
+
 }

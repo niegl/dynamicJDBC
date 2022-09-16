@@ -19,7 +19,7 @@ class SQLCreateTableBuilderImplTest {
     @BeforeEach
     void setUp() {
 
-        tableBuilder = new SQLCreateTableBuilderImpl(DbType.mysql);
+        tableBuilder = new SQLCreateTableBuilderImpl(DbType.hive);
         tableBuilder.setName("std_line");
         tableBuilder.setSchema("std_pcode");
         tableBuilder.setComment("comment");

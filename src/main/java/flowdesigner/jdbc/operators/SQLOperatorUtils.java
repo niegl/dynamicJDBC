@@ -62,12 +62,18 @@ public class SQLOperatorUtils {
     }
 
     public static String getSupportFunctionsJson(Connection connection, DbType dbType) {
+        Collection<FunctionInfo> functionInfos = new ArrayList<>();
 
-        Collection<String> stringList = getSupportFunctions(connection, dbType);
-        Collection<FunctionInfo> functionInfos = stringList.stream().map(f -> {
-            String catalogs = getFunctionType(dbType, f);
-            return new FunctionInfo(f, catalogs, "");
-        }).collect(Collectors.toList());
+        Collection<String> functions = getSupportFunctions(connection, dbType);
+        for (String function: functions) {
+            ArrayList<SQLOperator> operators = SQLOperator.of(dbType, function);
+            if (operators.isEmpty()) {
+                continue;
+            }
+            operators.forEach(sqlOperator -> {
+                functionInfos.add(new FunctionInfo(sqlOperator.name, sqlOperator.catalog.toString(), sqlOperator.usage));
+            });
+        }
 
         Gson gson = new Gson();
         return gson.toJson(functionInfos);
@@ -317,7 +323,7 @@ public class SQLOperatorUtils {
                 .flatMap(s -> {
                     Collection<SQLAssignItem> items = ((SQLSetStatement) s).getItems();
                     items.removeIf(i -> i.getTarget() instanceof SQLPropertyExpr);
-                    return items.stream().map(i -> i.getTarget().toString());
+                    return items.stream().map(i -> i.getTarget().toString().replaceAll("@","") + "=" + i.getValue());
                 })
                 .toList();
     }
@@ -325,6 +331,270 @@ public class SQLOperatorUtils {
     public static String getVariantString(String dbType, String sql) {
         Collection<String> list = getVariantList(dbType, sql);
         return StringUtils.join(list,',');
+    }
+
+    /**
+     * 环境变量的设置语法
+     * @param dbType 数据库类型
+     * @return 语法格式，变量用?代替
+     */
+    public static String getVariantSetGrammar(DbType dbType) {
+        String grammar = "SET ?= ?;";
+
+        switch (dbType) {
+
+            case other -> {
+            }
+            case jtds -> {
+            }
+            case hsql -> {
+            }
+            case db2 -> {
+            }
+            case postgresql -> {
+            }
+            case sqlserver -> {
+            }
+            case oracle -> {
+            }
+            case mysql -> {
+                grammar = "SET @?= ?;";
+            }
+            case mariadb -> {
+            }
+            case derby -> {
+            }
+            case hive -> {
+                grammar = "SET ?= ?;";
+            }
+            case h2 -> {
+            }
+            case dm -> {
+            }
+            case kingbase -> {
+            }
+            case gbase -> {
+            }
+            case oceanbase -> {
+            }
+            case informix -> {
+            }
+            case odps -> {
+            }
+            case teradata -> {
+            }
+            case phoenix -> {
+            }
+            case edb -> {
+            }
+            case kylin -> {
+            }
+            case sqlite -> {
+            }
+            case ads -> {
+            }
+            case presto -> {
+            }
+            case elastic_search -> {
+            }
+            case hbase -> {
+            }
+            case drds -> {
+            }
+            case clickhouse -> {
+            }
+            case blink -> {
+            }
+            case antspark -> {
+            }
+            case oceanbase_oracle -> {
+            }
+            case polardb -> {
+            }
+            case ali_oracle -> {
+            }
+            case mock -> {
+            }
+            case sybase -> {
+            }
+            case highgo -> {
+            }
+            case greenplum -> {
+            }
+            case gaussdb -> {
+            }
+            case trino -> {
+            }
+            case oscar -> {
+            }
+            case tidb -> {
+            }
+            case tydb -> {
+            }
+            case ingres -> {
+            }
+            case cloudscape -> {
+            }
+            case timesten -> {
+            }
+            case as400 -> {
+            }
+            case sapdb -> {
+            }
+            case kdb -> {
+            }
+            case log4jdbc -> {
+            }
+            case xugu -> {
+            }
+            case firebirdsql -> {
+            }
+            case JSQLConnect -> {
+            }
+            case JTurbo -> {
+            }
+            case interbase -> {
+            }
+            case pointbase -> {
+            }
+            case edbc -> {
+            }
+            case mimer -> {
+            }
+        }
+
+        return grammar;
+    }
+    /**
+     * 环境变量的使用语法
+     * @param dbType 数据库类型
+     * @return 语法格式，变量用?代替
+     */
+    public static String getVariantUseGrammar(DbType dbType) {
+        String grammar = "${?}";
+        switch (dbType) {
+
+            case other -> {
+            }
+            case jtds -> {
+            }
+            case hsql -> {
+            }
+            case db2 -> {
+            }
+            case postgresql -> {
+            }
+            case sqlserver -> {
+            }
+            case oracle -> {
+            }
+            case mysql -> {
+                grammar = "@?";
+            }
+            case mariadb -> {
+            }
+            case derby -> {
+            }
+            case hive -> {
+                grammar = "${hiveconf:?}";
+            }
+            case h2 -> {
+            }
+            case dm -> {
+            }
+            case kingbase -> {
+            }
+            case gbase -> {
+            }
+            case oceanbase -> {
+            }
+            case informix -> {
+            }
+            case odps -> {
+            }
+            case teradata -> {
+            }
+            case phoenix -> {
+            }
+            case edb -> {
+            }
+            case kylin -> {
+            }
+            case sqlite -> {
+            }
+            case ads -> {
+            }
+            case presto -> {
+            }
+            case elastic_search -> {
+            }
+            case hbase -> {
+            }
+            case drds -> {
+            }
+            case clickhouse -> {
+            }
+            case blink -> {
+            }
+            case antspark -> {
+            }
+            case oceanbase_oracle -> {
+            }
+            case polardb -> {
+            }
+            case ali_oracle -> {
+            }
+            case mock -> {
+            }
+            case sybase -> {
+            }
+            case highgo -> {
+            }
+            case greenplum -> {
+            }
+            case gaussdb -> {
+            }
+            case trino -> {
+            }
+            case oscar -> {
+            }
+            case tidb -> {
+            }
+            case tydb -> {
+            }
+            case ingres -> {
+            }
+            case cloudscape -> {
+            }
+            case timesten -> {
+            }
+            case as400 -> {
+            }
+            case sapdb -> {
+            }
+            case kdb -> {
+            }
+            case log4jdbc -> {
+            }
+            case xugu -> {
+            }
+            case firebirdsql -> {
+            }
+            case JSQLConnect -> {
+            }
+            case JTurbo -> {
+            }
+            case interbase -> {
+            }
+            case pointbase -> {
+            }
+            case edbc -> {
+            }
+            case mimer -> {
+            }
+        }
+
+        return  grammar;
     }
 
     private static <T extends Enum<T>> T of(String name, T[] values) {

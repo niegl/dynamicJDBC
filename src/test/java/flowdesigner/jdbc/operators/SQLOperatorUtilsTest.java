@@ -38,28 +38,6 @@ class SQLOperatorUtilsTest {
         System.out.println(SQLOperatorUtils.getFunctionSignature(DbType.hive,ArithmeticOperator, "%"));
     }
 
-    @Test
-    void testGetFunctionSignature() {
-
-        DbType dbType = DbType.mysql;
-        Set<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(null, dbType);
-        supportFunctions.forEach( f -> {
-            HashSet<SQLFunctionCatalog> catalogs = SQLOperator.getCatalog(dbType, f);
-            catalogs.forEach( c -> {
-                String signature = SQLOperatorUtils.getFunctionSignature(dbType,c, f);
-                System.out.println(c + ":" + signature);
-            });
-        });
-    }
-
-    @Test
-    void getSupportFunctions() {
-        System.out.println(SQLOperatorUtils.getSupportFunctions(null, DbType.hive));
-    }
-
-    @Test
-    void getSupportFunctionsAsString() {
-    }
 
     @Test
     void getSupportFunctionsJson() {
@@ -73,6 +51,9 @@ class SQLOperatorUtilsTest {
 
     @Test
     void getVariantString() {
+        System.out.println(SQLOperatorUtils.getVariantString("mysql","set @Var1 = 2*1024*1024*10;"));
         System.out.println(SQLOperatorUtils.getVariantString("mysql","set global max_allowed_packet = 2*1024*1024*10;"));
+
     }
+
 }

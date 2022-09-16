@@ -8,7 +8,7 @@ import flowdesigner.jdbc.builder.impl.SQLInsertBuilderImpl;
 
 public class SQLHiveInsertBuilderImpl extends SQLInsertBuilderImpl {
     public SQLHiveInsertBuilderImpl(DbType dbType) {
-        this(null, dbType);
+        super(dbType);
     }
 
     public SQLHiveInsertBuilderImpl(String sql, DbType dbType) {
