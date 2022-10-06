@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement.Type.*;
+
 public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
 
     private @Nullable SQLCreateTableStatement  stmt;
@@ -71,11 +73,20 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
      */
     @Override
     public SQLCreateTableBuilder setTemporary(String temporaryType) {
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
-        if (dbType.equals(DbType.mysql)) {
-            create.setType(SQLCreateTableStatement.Type.GLOBAL_TEMPORARY);
-        } else {
-            create.setType(SQLCreateTableStatement.Type.TEMPORARY);
+        SQLCreateTableStatement.Type type;
+
+        try {
+            type = SQLCreateTableStatement.Type.valueOf(temporaryType);
+            SQLCreateTableStatement create = getSQLCreateTableStatement();
+            if (dbType.equals(DbType.hive)) {
+                if (GLOBAL_TEMPORARY.equals(type)) {
+                    create.setType(TEMPORARY);
+                }
+            } else {
+                create.setType(type);
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e);
         }
 
         return this;

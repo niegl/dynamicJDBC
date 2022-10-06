@@ -68,7 +68,8 @@ public class DBParseDDLImpl implements Command<ExecResult<List<TableEntity>>> {
                 field.setDefKey(col.getColumnName());
                 field.setDefName(col.getColumnName());
                 field.setComment(col.getComment()!=null? col.getComment().toString():null);
-                field.setTypeName(col.getDataType().getName());
+//                field.setTypeName(col.getDataType().getName());
+                field.setTypeName(col.getDataType().toString());
                 field.setDataType(col.getDataType().jdbcType());
 
                 field.setPrimaryKey(col.isPrimaryKey());

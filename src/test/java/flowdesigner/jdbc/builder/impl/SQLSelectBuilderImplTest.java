@@ -17,6 +17,14 @@ class SQLSelectBuilderImplTest {
     }
 
     @Test
+    void select() {
+        builderEx.select("a/b","b")
+                .from("tablea","a");
+
+        System.out.println(builderEx);
+    }
+
+    @Test
     void join() {
 //        SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.mysql);
         builderEx.select("a","b")

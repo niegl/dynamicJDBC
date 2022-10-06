@@ -42,11 +42,17 @@ public abstract class DBTypeKit {
      */
     public static DBType getDBType(Connection connection) throws SQLException {
         String dbType = getDBTypeStr(connection);
+        if (dbType == null) {
+            return null;
+        }
         return DBType.fromTypeName(dbType.toUpperCase());
     }
 
     public static DBType getDBType(DatabaseMetaData metaData) throws SQLException {
         String dbType = getDBTypeStr(metaData);
+        if (dbType == null) {
+            return null;
+        }
         return DBType.fromTypeName(dbType.toUpperCase());
     }
 
@@ -73,8 +79,14 @@ public abstract class DBTypeKit {
      * @param connection
      * @return
      */
-    public static String getDBTypeStr(Connection connection) throws SQLException {
-        DatabaseMetaData dbMeta = connection.getMetaData();
+    public static String getDBTypeStr(Connection connection) {
+        DatabaseMetaData dbMeta = null;
+        try {
+            dbMeta = connection.getMetaData();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "";
+        }
         return getDBTypeStr(dbMeta);
     }
 

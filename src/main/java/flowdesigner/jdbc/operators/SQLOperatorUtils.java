@@ -9,11 +9,13 @@ import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.ast.statement.SQLDescribeStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSetStatement;
 import com.alibaba.druid.util.Utils;
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
+import com.alibaba.fastjson.JSON;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
@@ -27,7 +29,8 @@ public class SQLOperatorUtils {
     /**
      * 用于向客户端输出JSON格式
      */
-    private static class FunctionInfo {
+    @Data
+    static class FunctionInfo {
         String name;
         String type;
         String signature;
@@ -62,7 +65,7 @@ public class SQLOperatorUtils {
     }
 
     public static String getSupportFunctionsJson(Connection connection, DbType dbType) {
-        Collection<FunctionInfo> functionInfos = new ArrayList<>();
+        ArrayList<FunctionInfo> functionInfos = new ArrayList<>();
 
         Collection<String> functions = getSupportFunctions(connection, dbType);
         for (String function: functions) {
@@ -75,8 +78,7 @@ public class SQLOperatorUtils {
             });
         }
 
-        Gson gson = new Gson();
-        return gson.toJson(functionInfos);
+        return JSON.toJSONString(functionInfos);
     }
 
     /**
@@ -169,13 +171,7 @@ public class SQLOperatorUtils {
     public static String getFunctionDescription(Connection connection, String name) {
         String ret = "";
 
-        DbType dbType = null;
-        try {
-            dbType = DbType.valueOf(DBTypeKit.getDBTypeStr(connection));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return ret;
-        }
+        DbType dbType = DbType.valueOf(DBTypeKit.getDBTypeStr(connection));
 
         SQLDescribeStatement stmt = new SQLDescribeStatement();
         stmt.setDbType(dbType);
@@ -240,7 +236,7 @@ public class SQLOperatorUtils {
     }
 
     /**
-     * 返回指定数据库的可用环境参数设置
+     * 返回用于定义数据库执行上下文的属性(配置参数)，可覆盖覆盖hive-site.xml（hive-default.xml）中的参数值
      * @param dbType 数据库类型
      * @return 可用环境，如：
      * set ngmr.furion.pool=DEFAULT;
@@ -260,7 +256,7 @@ public class SQLOperatorUtils {
      * set hive.exec.dynamic.partition.mode=nonstrict;
      * set hive.enforce.bucketing=true;
      */
-    public static List<VariableInfo> getEnvironmentList(DbType dbType) {
+    public static List<VariableInfo> getContextConfiguration(DbType dbType) {
         Set<String> variants = new HashSet<>();
 
         if (dbType.equals(DbType.oracle)) {
@@ -303,10 +299,9 @@ public class SQLOperatorUtils {
         }).collect(Collectors.toList());
     }
 
-    public static String getEnvironmentString(DbType dbType) {
-        List<VariableInfo> list = getEnvironmentList(dbType);
-        Gson gson = new Gson();
-        return gson.toJson(list);
+    public static String getContextConfigurationString(DbType dbType) {
+        List<VariableInfo> list = getContextConfiguration(dbType);
+        return JSON.toJSONString(list);
     }
 
     /**
@@ -315,7 +310,7 @@ public class SQLOperatorUtils {
      * @param sql set SQL语句
      * @return 变量列表
      */
-    public static List<String> getVariantList(String dbType, String sql) {
+    public static List<String> parseContextDefinition(String dbType, String sql) {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
 
         return list.stream()
@@ -328,17 +323,28 @@ public class SQLOperatorUtils {
                 .toList();
     }
 
-    public static String getVariantString(String dbType, String sql) {
-        Collection<String> list = getVariantList(dbType, sql);
+    public static String parseContextDefinitionASString(String dbType, String sql) {
+        Collection<String> list = parseContextDefinition(dbType, sql);
         return StringUtils.join(list,',');
     }
 
     /**
-     * 环境变量的设置语法
+     * 解析脚本中的需要用户输入的参数。比如hive中以${}为标志的变量
+     * @param dbType 数据库类型
+     * @param sql 脚本
+     * @return 参数列表(带有${}的参数列表,方便客户端直接替换)
+     */
+    public static String getParameters(String dbType, String sql) {
+
+        return dbType;
+    }
+
+    /**
+     * 上下文配置的设置语法
      * @param dbType 数据库类型
      * @return 语法格式，变量用?代替
      */
-    public static String getVariantSetGrammar(DbType dbType) {
+    public static String getContextSetGrammar(DbType dbType) {
         String grammar = "SET ?= ?;";
 
         switch (dbType) {
@@ -470,7 +476,7 @@ public class SQLOperatorUtils {
      * @param dbType 数据库类型
      * @return 语法格式，变量用?代替
      */
-    public static String getVariantUseGrammar(DbType dbType) {
+    public static String getContextUseGrammar(DbType dbType) {
         String grammar = "${?}";
         switch (dbType) {
 

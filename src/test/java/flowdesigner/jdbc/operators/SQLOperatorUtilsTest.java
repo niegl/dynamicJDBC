@@ -3,12 +3,8 @@ package flowdesigner.jdbc.operators;
 import com.alibaba.druid.DbType;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import static flowdesigner.jdbc.operators.SQLFunctionCatalog.ArithmeticOperator;
 import static flowdesigner.jdbc.operators.SQLFunctionCatalog.DatetimeFunctions;
-import static org.junit.jupiter.api.Assertions.*;
 
 class SQLOperatorUtilsTest {
 
@@ -46,13 +42,13 @@ class SQLOperatorUtilsTest {
 
     @Test
     void getEnvironmentString() {
-        System.out.println(SQLOperatorUtils.getEnvironmentString(DbType.hive));
+        System.out.println(SQLOperatorUtils.getContextConfigurationString(DbType.hive));
     }
 
     @Test
     void getVariantString() {
-        System.out.println(SQLOperatorUtils.getVariantString("mysql","set @Var1 = 2*1024*1024*10;"));
-        System.out.println(SQLOperatorUtils.getVariantString("mysql","set global max_allowed_packet = 2*1024*1024*10;"));
+        System.out.println(SQLOperatorUtils.parseContextDefinitionASString("mysql","set @Var1 = 2*1024*1024*10;"));
+        System.out.println(SQLOperatorUtils.parseContextDefinitionASString("mysql","set global max_allowed_packet = 2*1024*1024*10;"));
 
     }
 

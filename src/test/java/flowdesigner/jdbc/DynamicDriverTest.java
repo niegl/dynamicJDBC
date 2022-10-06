@@ -2,7 +2,8 @@ package flowdesigner.jdbc;
 
 import com.alibaba.druid.util.DruidDataSourceUtils;
 import com.alibaba.druid.util.JdbcUtils;
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
+import com.alibaba.fastjson.JSON;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.sql.*;
 import java.util.*;
 
+import static com.alibaba.druid.util.JdbcUtils.close;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DynamicDriverTest {
@@ -48,11 +50,11 @@ class DynamicDriverTest {
             String DATA_TYPE = typeInfo.getString("DATA_TYPE");
             System.out.println("TypeInfo.of(\"" + type_name + "\"," + DATA_TYPE + "),");
         }
-        Gson gson = new Gson();
+
         ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
             put("dbType","mysql");
         }});
-        String s = gson.toJson(cc);
+        String s = JSON.toJSONString(cc);
         System.out.println(s);
 
         return connection;
@@ -170,6 +172,43 @@ class DynamicDriverTest {
             String TYPE_NAME = typeInfo.getString("TYPE_NAME");
             System.out.println(TYPE_NAME);
         }
+    }
+
+    @Test
+    void testScripts() throws SQLException {
+        DynamicDriver driver = getHiveDriver();
+        Connection conn = driver.getConnection();
+
+        String sql = "SET hive.exec.dynamic.partition= true;";
+        JdbcUtils.execute(conn,sql);
+//            stmt = conn.prepareStatement(sql);
+////            setParameters(stmt, parameters);
+//            stmt.executeUpdate();
+
+        sql = "SET hive.exec.dynamic.partition.mode= nonstrict;";
+        JdbcUtils.execute(conn,sql);
+//            stmt = conn.prepareStatement(sql);
+////            setParameters(stmt, parameters);
+//            stmt.executeUpdate();
+
+        sql = "CREATE TEMPORARY TABLE `aa`(`tm` string)";
+        JdbcUtils.execute(conn,sql);
+//            stmt = conn.prepareStatement(sql);
+////            setParameters(stmt, parameters);
+//            stmt.executeUpdate();
+
+        sql = "INSERT INTO TABLE `aa` select '00001'";
+        JdbcUtils.execute(conn,sql);
+//            stmt = conn.prepareStatement(sql);
+////            setParameters(stmt, parameters);
+//            stmt.executeUpdate();
+
+        sql = "INSERT INTO TABLE test.aa select tm from `aa`";
+        JdbcUtils.execute(conn,sql);
+//            stmt = conn.prepareStatement(sql);
+////            setParameters(stmt, parameters);
+//            stmt.executeUpdate();
+
     }
 
 }

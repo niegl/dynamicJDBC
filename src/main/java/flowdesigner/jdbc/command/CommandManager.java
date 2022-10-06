@@ -1,6 +1,7 @@
 package flowdesigner.jdbc.command;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
+import com.alibaba.fastjson.JSON;
 import flowdesigner.jdbc.command.impl.*;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
 
@@ -27,7 +28,7 @@ public class CommandManager {
         put(CMD_DBReverseGetAllTablesList, DBReverseGetAllTablesListImpl.class);  //逆向解析，获取数据表清单
         put(CMD_DBReverseGetTableDDL, DBReverseGetTableDDLImpl.class);            //逆向解析，获取指定数据表DDL
         put(CMD_ParseDDLToTableImpl, DBParseDDLImpl.class);                     //逆向解析，获取指定数据表DDL
-        put(CMD_DBExecuteCommandImpl, DBExecuteQueryImpl.class);              //正向执行，获取SQL语句执行结果
+        put(CMD_DBExecuteCommandImpl, DBExecuteImpl.class);              //正向执行，获取SQL语句执行结果
         put(CMD_DBExecuteUpdateCommandImpl, DBExecuteUpdateImpl.class);
         put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);    //正向执行，获取SQL语句执行结果
         put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);        //正向执行，获取SQL语句执行结果
@@ -43,8 +44,7 @@ public class CommandManager {
      */
     public static String exeCommandJson(Connection connection, CommandKey cmdText, Map<String, String> params) {
         ExecResult result = exeCommand(connection, cmdText, params);
-        Gson gson = new Gson();
-        return gson.toJson(result);
+        return JSON.toJSONString(result);
     }
     /***
      * 客户端调用命令的接口

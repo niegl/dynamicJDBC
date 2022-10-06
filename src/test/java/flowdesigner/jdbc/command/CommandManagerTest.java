@@ -2,7 +2,7 @@ package flowdesigner.jdbc.command;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.util.JdbcUtils;
-import com.google.gson.Gson;
+import com.alibaba.fastjson.JSON;
 import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFunctionsImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
@@ -103,7 +103,6 @@ class CommandManagerTest {
 
     @Test
     void testExecuteUpdate() throws SQLException {
-        Gson gson = new Gson();
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(getMySQL(), CommandKey.CMD_DBExecuteUpdateCommandImpl,new HashMap<String,String>(){{
 //            put("schemaPattern","test");
@@ -112,27 +111,31 @@ class CommandManagerTest {
 //            put("SQL","ALTER TABLE test.tb_emp6 ADD CONSTRAINT fk_emp_dept1 FOREIGN KEY(deptId) REFERENCES tb_dept1(id);");
         }});
         long end = Instant.now().toEpochMilli();
-        String s = gson.toJson(cc);
+        String s = JSON.toJSONString(cc);
         System.out.println(s);
         System.out.println(end - start);
     }
     @Test
-    void testExecuteSelect() throws SQLException {
-        Gson gson = new Gson();
+    void testExecuteSelect() throws SQLException, InterruptedException {
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl,new HashMap<String,String>(){{
             put("SQL","SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm\n" +
                     "FROM std_pcode.t99_cala_stat_index_mapping");
         }});
         long end = Instant.now().toEpochMilli();
-        String s = gson.toJson(cc);
+        String s = JSON.toJSONString(cc);
         System.out.println(s);
         System.out.println(end - start);
+        Thread.sleep(2000);
+        ExecResult rr = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl,new HashMap<String,String>(){{
+            put("SQL","set txdata=11111;");
+        }});
+        String r = JSON.toJSONString(rr);
+        System.out.println(r);
     }
 
     @Test
     void testJDBCProperties() throws SQLException {
-        Gson gson = new Gson();
         DatabaseMetaData metaData = connection.getMetaData();
         ResultSet clientInfoProperties = metaData.getClientInfoProperties();
         while (clientInfoProperties.next()) {
@@ -174,9 +177,8 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandGetSchemas() throws SQLException {
-        Gson gson = new Gson();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetSchemas,new HashMap<String,String>());
-        String s = gson.toJson(cc);
+        String s = JSON.toJSONString(cc);
         System.out.println(s);
 
         DatabaseMetaData meta = connection.getMetaData();
@@ -211,14 +213,14 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandGetDDL() throws SQLException {
-        Gson gson = new Gson();
+
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
             put("schemaPattern","std_pmart");
             put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
         }});
         long end = Instant.now().toEpochMilli();
-        String s = gson.toJson(cc);
+        String s = JSON.toJSONString(cc);
         System.out.println(s);
         System.out.println(end - start);
 
@@ -230,21 +232,21 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandParseDDL() throws SQLException {
-         Gson gson = new Gson();
+
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{
             put("ddl","CREATE TABLE IF NOT EXISTS employee ( eid int, name String,salary String, destination String) COMMENT 'Employee details'");
             put("dbType","hive");
         }});
         long end = Instant.now().toEpochMilli();
-        String s = gson.toJson(cc);
+        String s = JSON.toJSONString(cc);
         System.out.println(s);
         System.out.println(end - start);
     }
 
     @Test
     void testExeCommandParseDDL1() throws SQLException {
-        Gson gson = new Gson();
+
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{
             put("ddl","CREATE TABLE `pmart.t98_line_person_times_traction_engcspt_period_st`(\n" +
@@ -258,7 +260,7 @@ class CommandManagerTest {
             put("dbType","hive");
         }});
         long end = Instant.now().toEpochMilli();
-        String s = gson.toJson(cc);
+        String s = JSON.toJSONString(cc);
         System.out.println(s);
         System.out.println(end - start);
     }
@@ -266,11 +268,11 @@ class CommandManagerTest {
     @Test
     void testExeCommandGetImportedKeys() throws SQLException {
 
-        Gson gson = new Gson();
+
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFKColumnFieldImpl,new HashMap<String,String>(){{
             put("Table","NewTable");
         }});
-        String s = gson.toJson(cc);
+        String s = JSON.toJSONString(cc);
         System.out.println(s);
     }
 
@@ -299,7 +301,7 @@ class CommandManagerTest {
     @Test
     void testExeCommandCrossReference() throws SQLException {
 
-//        Gson gson = new Gson();
+//
 //        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFKColumnFieldImpl,new HashMap<String,String>(){{
 ////            put("schemaPattern","test");
 //            String foreignCatalog = params.get("foreignCatalog").toUpperCase();
@@ -309,7 +311,7 @@ class CommandManagerTest {
 //            put("foreignSchema","NewTable");
 //            put("foreignTable","NewTable");
 //        }});
-//        String s = gson.toJson(cc);
+//        String s = JSON.toJSONString(cc);
         ResultSet rs = connection.getMetaData().getCrossReference(null, null, "tb_emp3",
                 null,null,"NewTable");
         while (rs.next()) {
