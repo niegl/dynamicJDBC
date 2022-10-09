@@ -24,15 +24,18 @@ import flowdesigner.jdbc.util.raw.kit.StringKit;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+
 /**
  * @desc : 数据库逆向，解析表清单的字段以及索引
  */
+@Slf4j
 public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEntity>>> {
     public ExecResult<List<TableEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
 

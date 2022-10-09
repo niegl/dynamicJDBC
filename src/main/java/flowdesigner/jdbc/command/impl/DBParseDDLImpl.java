@@ -10,6 +10,7 @@ import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.model.ColumnField;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.util.raw.kit.IOKit;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -25,9 +26,8 @@ import java.util.logging.Logger;
 /**
  * 利用druid解析DDL
  */
+@Slf4j
 public class DBParseDDLImpl implements Command<ExecResult<List<TableEntity>>> {
-    /** 使用java自带的log工具 */
-    private static final Logger logger = Logger.getLogger("DBParseDDLImpl");
 
     public ExecResult<List<TableEntity>> exec(Connection connection, Map<String, String> params) throws SQLException {
 

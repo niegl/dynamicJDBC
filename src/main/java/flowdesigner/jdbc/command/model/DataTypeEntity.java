@@ -8,11 +8,11 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class TypeInfoEntity {
+public class DataTypeEntity {
     private String TYPE_NAME;//  => Type name
     private int DATA_TYPE;//  => SQL data type from java.sql.Types
 
-    public static TypeInfoEntity of(String TYPE_NAME, int DATA_TYPE) {
-        return new TypeInfoEntity(TYPE_NAME, DATA_TYPE);
+    public static DataTypeEntity of(String TYPE_NAME, int DATA_TYPE) {
+        return new DataTypeEntity(TYPE_NAME, DATA_TYPE);
     }
 }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class TableIndex implements Serializable,Cloneable {
+public class TableIndex {
     private String id;
     private String defKey;          //索引代码
     private boolean unique = false; //索引是否唯一

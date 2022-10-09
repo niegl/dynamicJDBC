@@ -9,21 +9,22 @@ import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * 设计为执行SQL命令的通用类。<p>
  * 支持脚本运行、脚本状态查询（当前运行步骤）、取消脚本运行、单statement运行.
  */
+@Slf4j
 public class DBExecuteImpl implements Command<ExecResult<RunningStatus>> {
-
-    private final Logger logger = Logger.getLogger("DBExecuteQueryImpl");
-
     /**
      * SQL=脚本
      * @param conn
@@ -62,7 +63,7 @@ public class DBExecuteImpl implements Command<ExecResult<RunningStatus>> {
 
         String dbType = DBTypeKit.getDBTypeStr(conn);
         if (dbType == null || dbType.isEmpty()) {
-            logger.info("dbType = null");
+            log.info("dbType = null");
             return null;
         }
 

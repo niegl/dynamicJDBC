@@ -25,6 +25,7 @@ import java.util.logging.Logger;
  * @date : 2021/6/12
  * @desc : 执行命令的抽像
  */
+
 public interface Command<T> {
     /**
      * 接口方法，用于处理命令
@@ -34,5 +35,4 @@ public interface Command<T> {
      * @throws SQLException 普通的SQL类异常全部交由上层统一管理,内部不在处理
      */
     T exec(Connection connection, Map<String, String> params) throws SQLException;
-    Logger logger = Logger.getLogger("Command");
 }

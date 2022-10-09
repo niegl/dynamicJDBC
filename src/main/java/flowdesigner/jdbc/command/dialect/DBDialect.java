@@ -478,14 +478,14 @@ public class DBDialect {
      * @param conn
      * @return
      */
-    public List<TableEntity> getAllTables(Connection conn, String schemaPattern) throws SQLException {
+    public List<TableEntity> getAllTables(Connection conn, String schemaPattern, String[] types) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
 
         String catalog = getCatalogPattern(conn, schemaPattern);
         String schema = getSchemaPattern(conn, schemaPattern);
         String tableNamePattern = getTableNamePattern(conn);
 
-        ResultSet rs = meta.getTables(catalog, schema, tableNamePattern, new String[]{"TABLE"});
+        ResultSet rs = meta.getTables(catalog, schema, tableNamePattern, types);
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
@@ -655,14 +655,14 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public List<TypeInfoEntity> getTypeInfo(Connection conn) throws SQLException {
+    public List<DataTypeEntity> getDataType(Connection conn) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
-        List<TypeInfoEntity> infoEntities = new ArrayList<>();
+        List<DataTypeEntity> infoEntities = new ArrayList<>();
         ResultSet typeInfo = meta.getTypeInfo();
         while (typeInfo.next()) {
             String TYPE_NAME = typeInfo.getString("TYPE_NAME");
             int DATA_TYPE = typeInfo.getInt("DATA_TYPE");
-            TypeInfoEntity typeInfoEntity = new TypeInfoEntity(TYPE_NAME,DATA_TYPE);
+            DataTypeEntity typeInfoEntity = new DataTypeEntity(TYPE_NAME,DATA_TYPE);
             infoEntities.add(typeInfoEntity);
         }
         return infoEntities;

@@ -9,6 +9,7 @@ import flowdesigner.jdbc.command.model.FKColumnField;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,6 +19,7 @@ import java.util.Map;
 /**
  * 通过元数据接口getCrossReference 获取表外键
  */
+@Slf4j
 public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult<List<FKColumnField>>> {
 
     public ExecResult<List<FKColumnField>> exec(Connection conn, Map<String, String> params) throws SQLException {
@@ -42,7 +44,7 @@ public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult<List<FK
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
             tableEntities = dbDialect.getFKColumnField(conn, schemaPattern, table);
         } catch (SQLException e) {
-            logger.severe("读取表清单出错"+ e.getMessage());
+            log.error("读取表清单出错", e);
             throw new RuntimeException(e);
         }
 
@@ -67,7 +69,7 @@ public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult<List<FK
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
             tableEntities = dbDialect.getFKColumnField(conn,foreignCatalog,foreignSchema,foreignTable);
         } catch (SQLException e) {
-            logger.severe("读取表清单出错"+ e.getMessage());
+            log.error("读取表清单出错", e);
             throw new RuntimeException(e);
         }
 

@@ -2,7 +2,7 @@ package flowdesigner.jdbc.command;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.util.JdbcUtils;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFunctionsImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
@@ -85,6 +85,30 @@ class CommandManagerTest {
         System.out.println(supportsCatalogsInTableDefinitions);
         System.out.println(supportsSchemasInTableDefinitions);
         ResultSet rs = meta.getTables(null, null, null, new String[]{"TABLE"});
+        List<TableEntity> tableEntities = new ArrayList<TableEntity>();
+        while (rs.next()) {
+            String tableName = rs.getString("TABLE_NAME");
+            String TABLE_CAT = rs.getString("TABLE_CAT");
+            String TABLE_SCHEM = rs.getString("TABLE_SCHEM");
+
+            System.out.println(tableName + "," + TABLE_CAT + "," + TABLE_SCHEM);
+
+        }
+    }
+
+    @Test
+    void testGetAllView() throws SQLException {
+        DatabaseMetaData meta = connection.getMetaData();
+        String catalog = connection.getCatalog();
+        String schema = connection.getSchema();
+
+        System.out.println(catalog + "," + schema);
+
+        boolean supportsSchemasInTableDefinitions = connection.getMetaData().supportsSchemasInTableDefinitions();
+        boolean supportsCatalogsInTableDefinitions = connection.getMetaData().supportsCatalogsInTableDefinitions();
+        System.out.println(supportsCatalogsInTableDefinitions);
+        System.out.println(supportsSchemasInTableDefinitions);
+        ResultSet rs = meta.getTables(null, null, null, new String[]{"VIEW"});
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
@@ -209,6 +233,16 @@ class CommandManagerTest {
             }
         }
 
+    }
+
+    @Test
+    void testExeCommandGetView() throws SQLException {
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetAllTablesList,new HashMap<String,String>(){{
+//            put("schemaPattern","bmnc_view");
+            put("schemaPattern","pmart");
+        }});
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
     }
 
     @Test

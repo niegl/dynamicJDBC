@@ -20,7 +20,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class ColumnField implements Serializable,Cloneable {
+public class ColumnField {
     private transient TableEntity tableEntity;
     private int rowNo;              //行号，从1开始
     private String defKey;          //字段代码
@@ -44,8 +44,7 @@ public class ColumnField implements Serializable,Cloneable {
     private Boolean hideInGraph = Boolean.FALSE;    //关系图是否隐藏（第15个之前，默认为true)
 
 
-
-    public void fillConvertNames(){
+    public void fillConvertNames() {
         //处理类型名
         StringBuffer buffer = new StringBuffer(typeName);
         if(len != null && len > 0){

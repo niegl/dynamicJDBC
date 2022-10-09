@@ -23,7 +23,7 @@ import java.io.Serializable;
  * 索引引用的字段
  */
 @Data
-public class TableIndexColumnField implements Serializable,Cloneable {
+public class TableIndexColumnField {
     private String id;
     private String fieldDefKey;
     private String ascOrDesc;

@@ -20,23 +20,19 @@ import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.dialect.DBDialect;
 import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
-import flowdesigner.jdbc.command.model.TypeInfoEntity;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 /**
  * 数据库逆向，解析表清单功能
  */
+@Slf4j
 public class DBReverseGetFunctionsImpl implements Command<ExecResult<Set<String>>> {
 
     public ExecResult<Set<String>> exec(Connection conn, Map<String, String> params) throws SQLException {
@@ -60,7 +56,7 @@ public class DBReverseGetFunctionsImpl implements Command<ExecResult<Set<String>
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
             functions = dbDialect.getAllFunctions(conn);
         } catch (SQLException e) {
-            logger.log(Level.SEVERE,"读取函数清单出错", e);
+            log.error("读取函数清单出错", e);
             throw new RuntimeException(e);
         }
 

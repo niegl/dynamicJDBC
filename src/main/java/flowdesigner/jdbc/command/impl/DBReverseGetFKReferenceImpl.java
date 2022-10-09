@@ -8,6 +8,7 @@ import flowdesigner.jdbc.command.model.FKColumnField;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * 获取引用关系。如 A、B为一对多关系，可以获取对A表主键引用的B表中的列。
  */
+@Slf4j
 public class DBReverseGetFKReferenceImpl implements Command<ExecResult<List<FKColumnField>>> {
 
     public ExecResult<List<FKColumnField>> exec(Connection conn, Map<String, String> params) throws SQLException {
@@ -42,7 +44,7 @@ public class DBReverseGetFKReferenceImpl implements Command<ExecResult<List<FKCo
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
             tableEntities = dbDialect.getFKReference(conn, schemaPattern, table);
         } catch (SQLException e) {
-            logger.severe("读取表清单出错"+ e.getMessage());
+            log.error("读取表清单出错", e);
             throw new RuntimeException(e);
         }
 

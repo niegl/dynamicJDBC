@@ -16,6 +16,7 @@
 package flowdesigner.jdbc.command.impl;
 
 
+import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.dialect.DBDialect;
@@ -23,22 +24,25 @@ import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import lombok.extern.slf4j.Slf4j;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 /**
- * 数据库逆向，解析表清单功能
+ * 数据库逆向，解析表清单功能. 支持表和视图
  */
-public class DBReverseGetAllTablesListImpl implements Command<ExecResult<List<TableEntity>>> {
+@Slf4j
+public class DBReverseGetTablesImpl implements Command<ExecResult<List<TableEntity>>> {
 
     public ExecResult<List<TableEntity>> exec(Connection conn,Map<String, String> params) throws SQLException {
         String schema = params.getOrDefault("schemaPattern",null);
+        String types = params.getOrDefault("types","TABLE");
 
         ExecResult<List<TableEntity>> ret = new ExecResult<>();
-        List<TableEntity> tableEntities = fetchTableEntities(conn, schema);
+        List<TableEntity> tableEntities = getTableEntities(conn, schema, types.split(","));
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(tableEntities);
 
@@ -49,17 +53,11 @@ public class DBReverseGetAllTablesListImpl implements Command<ExecResult<List<Ta
      * 获取所有数据表列表
      * @return
      */
-    protected List<TableEntity> fetchTableEntities(Connection conn, String schemaPattern) throws SQLException {
-        List<TableEntity> tableEntities;
-        try {
-            DBType dbType = DBTypeKit.getDBType(conn);
-            DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
-            tableEntities = dbDialect.getAllTables(conn, schemaPattern);
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE,"读取表清单出错", e);
-            throw new RuntimeException(e);
-        }
+    @AutoLog
+    protected List<TableEntity> getTableEntities(Connection conn, String schemaPattern, String[] types) throws SQLException {
+        DBType dbType = DBTypeKit.getDBType(conn);
+        DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
 
-        return tableEntities;
+        return dbDialect.getAllTables(conn, schemaPattern, types);
     }
 }

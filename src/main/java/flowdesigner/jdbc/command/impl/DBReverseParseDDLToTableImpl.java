@@ -20,6 +20,7 @@ import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.util.raw.kit.IOKit;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.sql.Connection;
@@ -36,10 +37,11 @@ import java.util.logging.Logger;
  * @date : 2021/9/11
  * @desc : 将DDL语句解析为表结构
  */
+@Slf4j
 public class DBReverseParseDDLToTableImpl implements Command<ExecResult<List<TableEntity>>> {
     /** 使用java自带的log工具 */
     private static final Logger logger = Logger.getLogger("ParseDDLToTableImpl");
-    private static String DB_URL = "jdbc:h2:mem:MockChiner;DB_CLOSE_DELAY=-1";
+    private static final String DB_URL = "jdbc:h2:mem:MockChiner;DB_CLOSE_DELAY=-1";
 
     public ExecResult<List<TableEntity>> exec(Connection connection,Map<String, String> params) throws SQLException {
         ExecResult<List<TableEntity>> ret = new ExecResult<List<TableEntity>>();
@@ -72,7 +74,7 @@ public class DBReverseParseDDLToTableImpl implements Command<ExecResult<List<Tab
     @SuppressWarnings("unchecked")
     private String getALLTablesString(Connection connection) throws SQLException {
         Map<String,String> params = new HashMap<>();
-        DBReverseGetAllTablesListImpl cmd = new DBReverseGetAllTablesListImpl();
+        DBReverseGetTablesImpl cmd = new DBReverseGetTablesImpl();
 //        cmd.setDbConn(connection);
         ExecResult<List<TableEntity>> ret = cmd.exec(connection, new HashMap<>());
         if(ret.getStatus().equals(ExecResult.SUCCESS)){

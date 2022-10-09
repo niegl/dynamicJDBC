@@ -18,10 +18,11 @@ package flowdesigner.jdbc.command.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.*;
 
 @Data
-public class TableEntity /*implements Serializable,Cloneable*/ {
+public class TableEntity {
     private String id;
     private int rowNo;              //行号，从1开始
     private String TABLE_CAT;

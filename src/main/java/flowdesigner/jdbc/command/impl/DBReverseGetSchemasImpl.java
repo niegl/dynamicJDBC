@@ -7,12 +7,14 @@ import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.SchemaEntity;
 import flowdesigner.jdbc.util.sql.core.DBType;
 import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class DBReverseGetSchemasImpl implements Command<ExecResult<List<SchemaEntity>>> {
     public ExecResult<List<SchemaEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
 
@@ -47,7 +49,7 @@ public class DBReverseGetSchemasImpl implements Command<ExecResult<List<SchemaEn
                 schemaEntities = dbDialect.getAllCatalogs(conn);
             }
         } catch (SQLException e) {
-            logger.severe("读取表清单出错"+ e.getMessage() );
+            log.error("读取表清单出错", e );
             throw new RuntimeException(e);
         }
 
