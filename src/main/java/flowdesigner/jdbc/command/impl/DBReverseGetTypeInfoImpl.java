@@ -1,12 +1,12 @@
 package flowdesigner.jdbc.command.impl;
 
+import com.alibaba.druid.DbType;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.dialect.DBDialect;
 import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.DataTypeEntity;
-import flowdesigner.jdbc.util.sql.core.DBType;
-import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import flowdesigner.jdbc.util.sql.DbTypeKit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +42,7 @@ public class DBReverseGetTypeInfoImpl implements Command<ExecResult<List<DataTyp
     protected List<DataTypeEntity> getTypeInfo(Connection conn) throws SQLException {
         List<DataTypeEntity> infoEntities;
         try {
-            DBType dbType = DBTypeKit.getDBType(conn);
+            DbType dbType = DbTypeKit.getDbType(conn);
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
             infoEntities = dbDialect.getDataType(conn);
         } catch (SQLException e) {

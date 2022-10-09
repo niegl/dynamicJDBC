@@ -13,7 +13,7 @@ import com.alibaba.fastjson2.JSON;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
-import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import flowdesigner.jdbc.util.sql.DbTypeKit;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
@@ -171,7 +171,7 @@ public class SQLOperatorUtils {
     public static String getFunctionDescription(Connection connection, String name) {
         String ret = "";
 
-        DbType dbType = DbType.valueOf(DBTypeKit.getDBTypeStr(connection));
+        DbType dbType = DbTypeKit.getDbType(connection);
 
         SQLDescribeStatement stmt = new SQLDescribeStatement();
         stmt.setDbType(dbType);

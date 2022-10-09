@@ -1,13 +1,13 @@
 package flowdesigner.jdbc.command.impl;
 
+import com.alibaba.druid.DbType;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.dialect.DBDialect;
 import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.FKColumnField;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
-import flowdesigner.jdbc.util.sql.core.DBType;
-import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import flowdesigner.jdbc.util.sql.DbTypeKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -40,7 +40,7 @@ public class DBReverseGetFKReferenceImpl implements Command<ExecResult<List<FKCo
     protected List<FKColumnField> getFKReference(Connection conn, String schemaPattern, String table) throws SQLException {
         List<FKColumnField> tableEntities;
         try {
-            DBType dbType = DBTypeKit.getDBType(conn);
+            DbType dbType = DbTypeKit.getDbType(conn);
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
             tableEntities = dbDialect.getFKReference(conn, schemaPattern, table);
         } catch (SQLException e) {

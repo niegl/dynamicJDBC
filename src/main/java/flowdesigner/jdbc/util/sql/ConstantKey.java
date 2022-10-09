@@ -1,4 +1,4 @@
-package flowdesigner.jdbc.util.sql.core;
+package flowdesigner.jdbc.util.sql;
 
 /**
  * 该类主要用于字典参考

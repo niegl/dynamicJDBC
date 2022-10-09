@@ -2,6 +2,7 @@ package flowdesigner.jdbc.driver;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.alibaba.druid.util.JdbcUtils;
+import flowdesigner.jdbc.util.sql.ConstantKey;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,14 +51,13 @@ public class DynamicDriver {
     @Getter
     @Setter
     private String _errMessage = "success";
+    private static final HashMap<Connection,String> _urls = new HashMap<>();
 
     public DynamicDriver() {
     }
-
     public DynamicDriver(@NotNull String driverDir) {
-        set_driverDir(driverDir);
+        this(Arrays.asList(driverDir.split(",")));
     }
-
     public DynamicDriver(@NotNull List<String> driverDir) {
         _driverDir.addAll(driverDir);
     }
@@ -66,7 +66,7 @@ public class DynamicDriver {
         this._driverDir = driverDir;
     }
     public void set_driverDir(String driverDir) {
-        this._driverDir = Arrays.asList(driverDir.split(","));
+        set_driverDir(Arrays.asList(driverDir.split(",")));
     }
 
     private void createDataSource() {
@@ -104,7 +104,13 @@ public class DynamicDriver {
         }
         if (_ds != null) {
             try {
-                return _ds.getConnection();
+                Connection connection = _ds.getConnection();
+                // 保存到map
+                String o = (String)_propertyInfo.get(ConstantKey.CONSTANT_url);
+                if (o != null) {
+                    _urls.put(connection,  o);
+                }
+                return connection;
             } catch (SQLException e) {
                 set_errMessage(e.getMessage());
             }
@@ -116,6 +122,9 @@ public class DynamicDriver {
      * 释放资源
      */
     public static void close(Connection connection) {
+        if (connection != null) {
+            _urls.remove(connection);
+        }
         JdbcUtils.close(connection);
     }
 
@@ -193,6 +202,18 @@ public class DynamicDriver {
         }
 
         return true;
+    }
+
+    /**
+     * 获取与Connection对应的Url
+     * @param connection
+     * @return Url
+     */
+    public static String getUrl(Connection connection) {
+        if (null == connection) {
+            return null;
+        }
+        return _urls.getOrDefault(connection, null);
     }
 
 }

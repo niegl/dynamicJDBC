@@ -15,20 +15,18 @@
  */
 package flowdesigner.jdbc.command.impl;
 
+import com.alibaba.druid.DbType;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.dialect.DBDialect;
 import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
-import flowdesigner.jdbc.util.sql.core.DBType;
-import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
-import lombok.SneakyThrows;
+import flowdesigner.jdbc.util.sql.DbTypeKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 
@@ -70,7 +68,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
         List<TableEntity> tableEntities = new ArrayList<>();
 
         DatabaseMetaData meta = conn.getMetaData();
-        DBType dbType = DBTypeKit.getDBType(meta);
+        DbType dbType = DbTypeKit.getDbType(conn);
         DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
 
         for (String tableName : tableNameList) {

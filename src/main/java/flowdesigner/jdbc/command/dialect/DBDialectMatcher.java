@@ -15,8 +15,8 @@
  */
 package flowdesigner.jdbc.command.dialect;
 
+import com.alibaba.druid.DbType;
 import flowdesigner.jdbc.command.dialect.impl.*;
-import flowdesigner.jdbc.util.sql.core.DBType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,15 +26,15 @@ import java.util.Map;
  */
 public class DBDialectMatcher {
 
-    private static Map<DBType,DBDialect> dbTypeMap = new HashMap<DBType,DBDialect>(){{
-        put(DBType.MYSQL,new DBDialectMySQL());
-        put(DBType.ORACLE,new DBDialectOracle());
-        put(DBType.POSTGRESQL,new DBDialectPostgreSQL());
-        put(DBType.DB2,new DBDialectDB2());
-        put(DBType.DM,new DBDialectDM());
-        put(DBType.SQL_SERVER,new DBDialectSQLServer());
-        put(DBType.KINGBASE,new DBDialectKingbase());
-        put(DBType.SQLITE,new DBDialectSQLite());
+    private static final Map<DbType,DBDialect> dialects = new HashMap<>() {{
+        put(DbType.mysql, new DBDialectMySQL());
+        put(DbType.oracle, new DBDialectOracle());
+        put(DbType.postgresql, new DBDialectPostgreSQL());
+        put(DbType.db2, new DBDialectDB2());
+        put(DbType.dm, new DBDialectDM());
+        put(DbType.sqlserver, new DBDialectSQLServer());
+        put(DbType.kingbase, new DBDialectKingbase());
+        put(DbType.sqlite, new DBDialectSQLite());
     }};
 
     /**
@@ -42,8 +42,8 @@ public class DBDialectMatcher {
      * @param dbType
      * @return
      */
-    public static DBDialect getDBDialect(DBType dbType){
-        DBDialect dbDialect = dbTypeMap.get(dbType);
+    public static DBDialect getDBDialect(DbType dbType){
+        DBDialect dbDialect = dialects.get(dbType);
         if(dbDialect == null){
             dbDialect = new DBDialect();
         }

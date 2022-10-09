@@ -10,5 +10,6 @@ class SQLKeywordsImplTest {
     void getKeywords() {
         SQLUtils sqlKeywords = new SQLUtils();
         System.out.println(sqlKeywords.getKeywordsAsString(DbType.hive));
+        System.out.println(sqlKeywords.getKeywordsAsString(DbType.mysql));
     }
 }

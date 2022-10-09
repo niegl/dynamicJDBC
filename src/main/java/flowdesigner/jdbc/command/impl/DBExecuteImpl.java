@@ -1,12 +1,13 @@
 package flowdesigner.jdbc.command.impl;
 
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
-import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import flowdesigner.jdbc.util.sql.DbTypeKit;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +62,8 @@ public class DBExecuteImpl implements Command<ExecResult<RunningStatus>> {
     private RunningStatus execute(@NotNull Connection conn, @NotNull String scripts) throws SQLException {
         RunningStatus runningStatus = null;
 
-        String dbType = DBTypeKit.getDBTypeStr(conn);
-        if (dbType == null || dbType.isEmpty()) {
+        DbType dbType = DbTypeKit.getDbType(conn);
+        if (dbType == null) {
             log.info("dbType = null");
             return null;
         }

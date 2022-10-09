@@ -1,12 +1,12 @@
 package flowdesigner.jdbc.command.impl;
 
+import com.alibaba.druid.DbType;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.dialect.DBDialect;
 import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.SchemaEntity;
-import flowdesigner.jdbc.util.sql.core.DBType;
-import flowdesigner.jdbc.util.sql.kit.DBTypeKit;
+import flowdesigner.jdbc.util.sql.DbTypeKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
@@ -35,7 +35,7 @@ public class DBReverseGetSchemasImpl implements Command<ExecResult<List<SchemaEn
     protected List<SchemaEntity> fetchSchemaEntities(Connection conn, String schemaPattern) throws SQLException {
         List<SchemaEntity> schemaEntities;
         try {
-            DBType dbType = DBTypeKit.getDBType(conn);
+            DbType dbType = DbTypeKit.getDbType(conn);
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
 
             /*
