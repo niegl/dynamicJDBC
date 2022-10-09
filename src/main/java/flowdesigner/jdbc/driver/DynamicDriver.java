@@ -1,13 +1,16 @@
 package flowdesigner.jdbc.driver;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.alibaba.druid.util.JdbcUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.EmptyFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -29,50 +32,48 @@ import java.util.*;
  * 通过以上方式将driver功能简单化。如果后续提供不同版本的参数和URL等管理功能，有其他类实现。
  */
 
-public final class DynamicDriver {
-    //定义连接池对象
-    private DataSource m_ds = null;
+@Slf4j
+public class DynamicDriver {
+    /**
+     * 定义连接池对象
+     */
+    private DataSource _ds = null;
     /**
      * jar包驱动路径,用;分隔多个路径
      */
-    @Setter
-    private List<String> m_driverDir = new ArrayList<>();
+    private List<String> _driverDir = new ArrayList<>();
     /**
      * jdbc连接时使用的动态属性配置,至少应该包括 DriverClassName，一般包括用户名和密码
      */
     @Setter
-    private Properties m_propertyInfo;
-
+    private Properties _propertyInfo;
     @Getter
+    @Setter
     private String _errMessage = "success";
 
     public DynamicDriver() {
     }
 
-    public DynamicDriver(String driverDir) {
-        Objects.requireNonNull(driverDir);
-        Arrays.stream(driverDir.split(";")).sequential().forEach( dir -> m_driverDir.add(dir));
+    public DynamicDriver(@NotNull String driverDir) {
+        set_driverDir(driverDir);
     }
 
-    public DynamicDriver(List<String> driverDir) {
-        Objects.requireNonNull(driverDir);
-        m_driverDir.addAll(driverDir);
+    public DynamicDriver(@NotNull List<String> driverDir) {
+        _driverDir.addAll(driverDir);
     }
 
-    public void setM_driverDir(List<String> driverDir) {
-        this.m_driverDir = driverDir;
+    public void set_driverDir(List<String> driverDir) {
+        this._driverDir = driverDir;
     }
-
-    public void setM_driverDir(String driverDir) {
-        this.m_driverDir = Arrays.asList(driverDir.split(","));
+    public void set_driverDir(String driverDir) {
+        this._driverDir = Arrays.asList(driverDir.split(","));
     }
 
     private void createDataSource() {
         try {
-            // 文件后缀为.java且不为空，读子文件夹
+            // 文件后缀为.jar且不为空，读子文件夹
             Collection<File> files = new ArrayList<>();
-            for (String dir :
-                    m_driverDir) {
+            for (String dir : _driverDir) {
                 Collection<File> listFiles = FileUtils.listFiles(new File(dir),
                         FileFilterUtils.and(new SuffixFileFilter("jar"), EmptyFileFilter.NOT_EMPTY),
                         DirectoryFileFilter.INSTANCE);
@@ -81,12 +82,16 @@ public final class DynamicDriver {
                 }
             }
 
+            if (files.isEmpty()) {
+                return;
+            }
             if (loadJar(files)) {
                 //通过prop创建连接池对象
-                m_ds = DruidDataSourceFactory.createDataSource(m_propertyInfo);
+                _ds = DruidDataSourceFactory.createDataSource(_propertyInfo);
             }
+
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -94,14 +99,14 @@ public final class DynamicDriver {
      * 获取连接
      */
     public Connection getConnection() throws SQLException {
-        if (m_ds == null) {
+        if (_ds == null) {
             createDataSource();
         }
-        if (m_ds != null) {
+        if (_ds != null) {
             try {
-                return m_ds.getConnection();
+                return _ds.getConnection();
             } catch (SQLException e) {
-                _errMessage = e.getMessage();
+                set_errMessage(e.getMessage());
             }
         }
         return null;
@@ -110,56 +115,30 @@ public final class DynamicDriver {
     /**
      * 释放资源
      */
-    public static void close(Statement statement, Connection connection) {
-        close(null, statement, connection);
-    }
-
-    /**
-     * 释放资源
-     */
-    public static void close(ResultSet resultSet, Statement statement, Connection connection) {
-        if (resultSet != null) {
-            try {
-                resultSet.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        if (statement != null) {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+    public static void close(Connection connection) {
+        JdbcUtils.close(connection);
     }
 
     /**
      * 获取连接池对象
      */
     public DataSource getDataSource() {
-        return m_ds;
+        return _ds;
     }
 
     /**
-     * 动态加载Jar
+     * 动态加载Jar.支持JDK8和JDK11+
      *
      * @param jarPath jar包文件路径列表
      */
-    public static boolean loadJar(Collection<File> jarPath) {
+    public static boolean loadJar(@NotNull Collection<File> jarPath) {
 
         //文件存在
         if (jarPath.isEmpty()) {
-            System.out.println("jar file is empty.");
+            log.info("jar file is empty.");
             return false;
         }
+
         //从URLClassLoader类加载器中获取类的addURL方法
         Method method = null;
         boolean accessible = false;
@@ -205,7 +184,7 @@ public final class DynamicDriver {
                 }
             }
         } catch (NoSuchMethodException | SecurityException | MalformedURLException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e1) {
-            e1.printStackTrace();
+            log.error(e1.getMessage());
             return false;
         } finally {
             if (method != null) {
@@ -214,10 +193,6 @@ public final class DynamicDriver {
         }
 
         return true;
-    }
-
-    public static void main(String[] args) {
-        System.out.println("start");
     }
 
 }

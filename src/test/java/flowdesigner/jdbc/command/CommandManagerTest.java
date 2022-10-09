@@ -36,7 +36,7 @@ class CommandManagerTest {
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
-        dynamicDriver.setM_propertyInfo(properties);
+        dynamicDriver.set_propertyInfo(properties);
 
         try {
 //            dynamicDriver.createDataSource();
@@ -59,7 +59,7 @@ class CommandManagerTest {
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
-        dynamicDriver.setM_propertyInfo(properties);
+        dynamicDriver.set_propertyInfo(properties);
 
         try {
 //            dynamicDriver.createDataSource();
@@ -186,7 +186,7 @@ class CommandManagerTest {
         Properties properties = new Properties();
         properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
         properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
-        dynamicDriver.setM_propertyInfo(properties);
+        dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
         try {
 //            dynamicDriver.createDataSource();

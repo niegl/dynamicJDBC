@@ -3,6 +3,7 @@ package flowdesigner.jdbc;
 import com.alibaba.druid.util.DruidDataSourceUtils;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson2.JSON;
+import com.github.houbb.auto.log.core.support.proxy.AutoLogProxy;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
@@ -20,7 +21,8 @@ class DynamicDriverTest {
     @Test
     Connection getMysqlConnection() throws SQLException {
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\历史\\历史资料\\hive");
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+        DynamicDriver dynamicDriver = AutoLogProxy.getProxy(new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql"));
         Properties properties = new Properties();
 //        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
 //        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
@@ -29,7 +31,7 @@ class DynamicDriverTest {
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
-        dynamicDriver.setM_propertyInfo(properties);
+        dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
         try {
 //            dynamicDriver.createDataSource();
@@ -83,7 +85,7 @@ class DynamicDriverTest {
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
-        dynamicDriver.setM_propertyInfo(properties);
+        dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
         try {
 //            dynamicDriver.createDataSource();
@@ -105,7 +107,7 @@ class DynamicDriverTest {
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
-        dynamicDriver.setM_propertyInfo(properties);
+        dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
         try {
 //            dynamicDriver.createDataSource();
@@ -127,7 +129,7 @@ class DynamicDriverTest {
         properties.setProperty("username","postgres");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
-        dynamicDriver.setM_propertyInfo(properties);
+        dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
         try {
 //            dynamicDriver.createDataSource();
