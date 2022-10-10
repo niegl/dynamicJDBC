@@ -9,6 +9,7 @@ import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
 import flowdesigner.jdbc.operators.SQLOperatorUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,17 +23,18 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 class CommandManagerTest {
     Connection connection = null;
     @BeforeEach
     void setUp() {
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
-//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
-        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
-//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-//        properties.setProperty("url","jdbc:mysql://localhost:3306");
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+        properties.setProperty("url","jdbc:mysql://localhost:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
@@ -237,31 +239,35 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandGetView() throws SQLException {
+        long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetAllTablesList,new HashMap<String,String>(){{
 //            put("schemaPattern","bmnc_view");
-            put("schemaPattern","pmart");
+//            put("schemaPattern","pmart");
         }});
         String s = JSON.toJSONString(cc);
         System.out.println(s);
+        long end = Instant.now().toEpochMilli();
+
+        log.info("start time" + (end - start));
     }
 
     @Test
-    void testExeCommandGetDDL() throws SQLException {
+    void testExeCommandGetDDL() {
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-            put("schemaPattern","std_pmart");
-            put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
+            put("schemaPattern","test");
+//            put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
         }});
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(cc);
         System.out.println(s);
         System.out.println(end - start);
 
-        ResultSet tables = connection.getMetaData().getTables(null, null, "NewTable", new String[]{"TABLE"});
-        while (tables.next()) {
-            System.out.println(tables.getString("TABLE_NAME"));
-        }
+//        ResultSet tables = connection.getMetaData().getTables(null, null, "NewTable", new String[]{"TABLE"});
+//        while (tables.next()) {
+//            System.out.println(tables.getString("TABLE_NAME"));
+//        }
     }
 
     @Test

@@ -59,15 +59,16 @@ public class DynamicDriver {
         this(Arrays.asList(driverDir.split(",")));
     }
     public DynamicDriver(@NotNull List<String> driverDir) {
-        _driverDir.addAll(driverDir);
+        set_driverDir(driverDir);
     }
 
-    public void set_driverDir(List<String> driverDir) {
-        this._driverDir = driverDir;
-    }
     public void set_driverDir(String driverDir) {
         set_driverDir(Arrays.asList(driverDir.split(",")));
     }
+    public void set_driverDir(List<String> driverDir) {
+        this._driverDir = driverDir;
+    }
+
 
     private void createDataSource() {
         try {

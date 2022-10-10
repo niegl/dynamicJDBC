@@ -23,7 +23,7 @@ public class CommandManager {
         put(CMD_DBReverseGetTypeInfo, DBReverseGetTypeInfoImpl.class);          //逆向解析，获取数据表清单
         put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);            //逆向解析，获取数据表清单
         put(CMD_DBReverseGetAllTablesList, DBReverseGetTablesImpl.class);       //逆向解析，获取数据表清单
-        put(CMD_DBReverseGetTableDDL, DBReverseGetTableDDLImpl.class);          //逆向解析，获取指定数据表DDL
+        put(CMD_DBReverseGetTableDDL, DBReverseGetTablesDDLImpl.class);          //逆向解析，获取指定数据表DDL
         put(CMD_ParseDDLToTableImpl, DBParseDDLImpl.class);                     //逆向解析，获取指定数据表DDL
         put(CMD_DBExecuteCommandImpl, DBExecuteImpl.class);                             //正向执行，获取SQL语句执行结果
         put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);    //正向执行，获取SQL语句执行结果

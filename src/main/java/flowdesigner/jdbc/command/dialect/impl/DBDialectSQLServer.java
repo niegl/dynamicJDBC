@@ -119,20 +119,20 @@ public class DBDialectSQLServer extends DBDialect {
     @Override
     public void fillTableEntityNoColumn(TableEntity tableEntity, Connection conn, ResultSet rs) throws SQLException {
         super.fillTableEntityNoColumn(tableEntity,conn,rs);
-        ResultSet nrs = getResultSet(conn,tableEntity.getDefKey());
+        ResultSet nrs = getResultSet(conn,tableEntity.getTABLE_NAME());
         if(nrs.next()){
             String remarks = nrs.getString("table_comment");
-            String defName = remarks;
-            String comment = "";
+//            String defName = remarks;
+//            String comment = "";
 
             //如果remark中有分号等分割符，则默认之后的就是注释说明文字
-            if(StringKit.isNotBlank(remarks)){
-                Pair<String, String> pair = ConnParseKit.parseNameAndComment(remarks);
-                defName = pair.getLeft();
-                comment = pair.getRight();
-            }
-            tableEntity.setDefName(defName);
-            tableEntity.setComment(comment);
+//            if(StringKit.isNotBlank(remarks)){
+//                Pair<String, String> pair = ConnParseKit.parseNameAndComment(remarks);
+//                defName = pair.getLeft();
+//                comment = pair.getRight();
+//            }
+//            tableEntity.setTABLE_NAME(defName);
+            tableEntity.setREMARKS(remarks);
         }
         JdbcKit.close(nrs);
     }
@@ -141,7 +141,7 @@ public class DBDialectSQLServer extends DBDialect {
     public void fillTableEntity(TableEntity tableEntity, Connection conn) throws SQLException {
         super.fillTableEntity(tableEntity, conn);
 
-        ResultSet nrs = getResultSet(conn,tableEntity.getDefKey());
+        ResultSet nrs = getResultSet(conn,tableEntity.getTABLE_NAME());
         while(nrs.next()){
             String columnName = nrs.getString("column_name");
             String columnIsPrimaryKey = nrs.getString("column_is_primary_key");

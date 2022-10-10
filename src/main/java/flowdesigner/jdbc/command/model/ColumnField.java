@@ -21,7 +21,6 @@ import java.io.Serializable;
 
 @Data
 public class ColumnField {
-    private transient TableEntity tableEntity;
     private int rowNo;              //行号，从1开始
     private String defKey;          //字段代码
     private String defName;         //字段名称

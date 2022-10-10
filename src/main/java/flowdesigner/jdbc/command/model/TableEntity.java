@@ -16,22 +16,25 @@
 package flowdesigner.jdbc.command.model;
 
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.*;
 
 @Data
 public class TableEntity {
-    private String id;
-    private int rowNo;              //行号，从1开始
     private String TABLE_CAT;
     private String TABLE_SCHEM;
-    private String defKey;          //表代码
-    private String defName;         //表名称
-    private String comment = "";    //表注释说明
-    private Map<String,String> properties = new LinkedHashMap<String,String>();     //扩展属性
-    private List<ColumnField> fields = new ArrayList<ColumnField>();                //字段列表
+    @JSONField(name = "defKey")
+    private String TABLE_NAME;
+    /**
+     * Typical types are "TABLE", "VIEW", "SYSTEM TABLE", "GLOBAL TEMPORARY", "LOCAL TEMPORARY", "ALIAS", "SYNONYM".
+     */
+    private String TABLE_TYPE;
+    @JSONField(name = "comment")
+    private String REMARKS;    //表注释说明
+    private Map<String,String> properties = new LinkedHashMap<String,String>();    //扩展属性
+    private List<ColumnField> fields = new ArrayList<ColumnField>();   //字段列表
     private List<TableIndex> indexes = new ArrayList<TableIndex>();             //表索引
 
     /**
@@ -54,7 +57,7 @@ public class TableEntity {
      * @param indexDefKey
      * @return
      */
-    public TableIndex lookupIndex(String indexDefKey){
+    public TableIndex lookupIndex(String indexDefKey) {
         List<TableIndex> indexes = getIndexes();
         for(TableIndex index : indexes){
             if(indexDefKey.equalsIgnoreCase(index.getDefKey())){
@@ -64,10 +67,9 @@ public class TableEntity {
         return null;
     }
 
-    public void fillFieldsCalcValue(){
+    public void fillFieldsCalcValue() {
         for(int i=1;i <= fields.size();i++){
             ColumnField field = fields.get(i-1);
-            field.setTableEntity(this);
             field.fillConvertNames();
             field.setRowNo(i);
         }
@@ -77,11 +79,12 @@ public class TableEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TableEntity entity = (TableEntity) o;
-        return Objects.equals(defKey, entity.defKey) &&
-                Objects.equals(defName, entity.defName);
+        return Objects.equals(TABLE_CAT, entity.TABLE_CAT) &&
+                Objects.equals(TABLE_SCHEM, entity.TABLE_SCHEM) &&
+                Objects.equals(TABLE_NAME, entity.TABLE_NAME);
     }
 
     public int hashCode() {
-        return Objects.hash(defKey, defName);
+        return Objects.hash(TABLE_CAT, TABLE_SCHEM, TABLE_NAME);
     }
 }

@@ -81,7 +81,7 @@ public class DBReverseParseDDLToTableImpl implements Command<ExecResult<List<Tab
             StringBuffer tables = new StringBuffer();
             List<TableEntity> dataList = (List<TableEntity>)ret.getBody();
             dataList.forEach(tableEntity->{
-                tables.append(tableEntity.getDefKey()).append(",");
+                tables.append(tableEntity.getTABLE_NAME()).append(",");
             });
             if(tables.length()>0){
                 return tables.substring(0,tables.length()-1);
@@ -94,7 +94,7 @@ public class DBReverseParseDDLToTableImpl implements Command<ExecResult<List<Tab
         Map<String,String> params = new HashMap<>();
         params.put("tables",tables);
 
-        DBReverseGetTableDDLImpl cmd = new DBReverseGetTableDDLImpl();
+        DBReverseGetTablesDDLImpl cmd = new DBReverseGetTablesDDLImpl();
 //        cmd.setDbConn(connection);
         return cmd.exec(connection, params);
     }

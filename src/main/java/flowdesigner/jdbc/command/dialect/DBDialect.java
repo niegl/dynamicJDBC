@@ -19,20 +19,21 @@ import flowdesigner.jdbc.command.model.*;
 import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import static java.sql.ResultSet.FETCH_REVERSE;
 
 /**
  * @desc : 数据库方言抽象类
  */
+@Slf4j
 public class DBDialect {
-
-    protected Logger logger = Logger.getLogger("DBDialect");
 
     public String getCatalogPattern(Connection conn) throws SQLException{
         boolean supportsCatalogsInTableDefinitions = conn.getMetaData().supportsCatalogsInTableDefinitions();
@@ -97,12 +98,12 @@ public class DBDialect {
      */
     public Pair<ResultSet,ResultSet> getColumnAndPrimaryKeyResultSetPair(Connection conn, TableEntity tableEntity) throws SQLException {
         DatabaseMetaData connMetaData = conn.getMetaData();
-        String catalog = tableEntity.getTABLE_CAT();
-        String schema = tableEntity.getTABLE_SCHEM();//getSchemaPattern(conn);
-        String tableName = tableEntity.getDefKey();
+        String tableCat = tableEntity.getTABLE_CAT();
+        String tableSchem = tableEntity.getTABLE_SCHEM();//getSchemaPattern(conn);
+        String tableName = tableEntity.getTABLE_NAME();
 
-        ResultSet rs = connMetaData.getColumns(catalog, schema, tableName, "%");
-        ResultSet pkRs = connMetaData.getPrimaryKeys(catalog, schema, tableName);
+        ResultSet rs = connMetaData.getColumns(tableCat, tableSchem, tableName, "%");
+        ResultSet pkRs = connMetaData.getPrimaryKeys(tableCat, tableSchem, tableName);
 
         return Pair.of(rs,pkRs);
     }
@@ -129,14 +130,18 @@ public class DBDialect {
      * @param rs
      * @return
      */
-    public TableEntity createTableEntity(Connection connection,ResultSet rs) throws SQLException {
-        TableEntity entity = new TableEntity();
-        fillTableEntityNoColumn(entity, connection, rs);
-        if (StringKit.isNotBlank(entity.getDefKey())) {
-            return entity;
-        } else {
-            return null;
+    public TableEntity createTableEntity(Connection connection,ResultSet rs) {
+        try {
+            TableEntity entity = new TableEntity();
+            fillTableEntityNoColumn(entity, connection, rs);
+            if (StringKit.isNotBlank(entity.getTABLE_NAME())) {
+                return entity;
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
         }
+
+        return null;
     }
 
     /**
@@ -162,24 +167,23 @@ public class DBDialect {
      * @param rs
      * @throws SQLException
      */
-    public void fillTableEntityNoColumn(TableEntity tableEntity, Connection connection, ResultSet rs) throws SQLException {
-        String tableCat = rs.getString("TABLE_CAT");
-        String tableSchem = rs.getString("TABLE_SCHEM");
-        String tableName = rs.getString("TABLE_NAME");
-        String remarks = StringKit.trim(rs.getString("REMARKS"));
-        String defKey = tableName;
-        String defName = remarks;
-        String comment = "";
+    protected void fillTableEntityNoColumn(TableEntity tableEntity, Connection connection, ResultSet rs) throws SQLException {
+        String tableCat = rs.getString(1);
+        String tableSchem = rs.getString(2);
+        String tableName = rs.getString(3);
+        String remarks = StringKit.trim(rs.getString(5));
+//        String defName = remarks;
+//        String comment = "";
 
         //如果remark中有分号等分割符，则默认之后的就是注释说明文字
-        if(StringKit.isNotBlank(remarks)){
-            Pair<String, String> pair = ConnParseKit.parseNameAndComment(remarks);
-            defName = pair.getLeft();
-            comment = pair.getRight();
-        }
-        tableEntity.setDefKey(defKey);
-        tableEntity.setDefName(defName);
-        tableEntity.setComment(comment);
+//        if(StringKit.isNotBlank(remarks)){
+//            Pair<String, String> pair = ConnParseKit.parseNameAndComment(remarks);
+//            defName = pair.getLeft();
+//            comment = pair.getRight();
+//        }
+//        tableEntity.setDefKey(defKey);
+        tableEntity.setTABLE_NAME(tableName);
+        tableEntity.setREMARKS(remarks);
         tableEntity.setTABLE_CAT(tableCat);
         tableEntity.setTABLE_SCHEM(tableSchem);
 
@@ -191,7 +195,7 @@ public class DBDialect {
      * @param conn
      */
     public void fillTableEntity(TableEntity tableEntity, Connection conn) throws SQLException {
-        String tableName = tableEntity.getDefKey();
+        String tableName = tableEntity.getTABLE_NAME();
 
         ResultSet rs = null;
         ResultSet pkRs = null;
@@ -214,7 +218,7 @@ public class DBDialect {
             }
             fillTableIndexes(tableEntity,conn);
         } catch (SQLException e) {
-            logger.log(Level.SEVERE,"读取数据表"+tableName+"的字段明细出错");
+            log.error("读取数据表"+tableName+"的字段明细出错");
 //            throw new RuntimeException("读取数据表"+tableName+"的字段明细出错",e);
         } finally {
             JdbcKit.close(rs);
@@ -363,7 +367,7 @@ public class DBDialect {
     public void fillTableIndexes(TableEntity tableEntity, Connection conn) throws SQLException {
         String cat = tableEntity.getTABLE_CAT();
         String schem = tableEntity.getTABLE_SCHEM();
-        String table = tableEntity.getDefKey();
+        String table = tableEntity.getTABLE_NAME();
         DatabaseMetaData dbMeta = conn.getMetaData();
         ResultSet rs = dbMeta.getIndexInfo(cat,schem, table,false,false);
 
@@ -486,9 +490,13 @@ public class DBDialect {
         String tableNamePattern = getTableNamePattern(conn);
 
         ResultSet rs = meta.getTables(catalog, schema, tableNamePattern, types);
+        // 提高单次获取数据条数，减少请求次数、网络传输，提高效率
+        rs.setFetchSize(200);
+
+
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
-            String tableName = rs.getString("TABLE_NAME");
+            String tableName = rs.getString(3);
             /**
              *  SQL Server系统保留表
              *  trace_xe_action_map,trace_xe_event_map
@@ -500,8 +508,6 @@ public class DBDialect {
                 if(entity != null){
                     tableEntities.add(entity);
                 }
-            }else{
-                continue;
             }
         }
         return tableEntities;
@@ -515,22 +521,26 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public List<TableEntity> createTableEntity(Connection conn, DatabaseMetaData meta, String schemaPattern, String tableName) throws SQLException {
+    public List<TableEntity> createTableEntity(Connection conn, DatabaseMetaData meta, String schemaPattern, String tableName, String[] types) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<>();
         ResultSet rs = null;
-        try{
-            String schema = getSchemaPattern(conn, schemaPattern);
-            String catalog = getCatalogPattern(conn, schemaPattern);
+        try {
+            String schemaPattern1 = getSchemaPattern(conn, schemaPattern);
+            String catalogPattern = getCatalogPattern(conn, schemaPattern);
 
-            rs = meta.getTables(catalog, schema, tableName, new String[]{"TABLE"});
+            rs = meta.getTables(catalogPattern, schemaPattern1, tableName, types);
+            rs.setFetchSize(200);
+
             while (rs.next()) {
                 TableEntity tableEntity = createTableEntity(conn, rs);
-                if (tableEntity == null) {
-                    continue;
+                if (tableEntity != null) {
+                    tableEntities.add(tableEntity);
                 }
-                fillTableEntity(tableEntity, conn);
-                tableEntity.fillFieldsCalcValue();
-                tableEntities.add(tableEntity);
+            }
+
+            for (TableEntity entity : tableEntities) {
+                fillTableEntity(entity, conn);
+                entity.fillFieldsCalcValue();
             }
 
             return tableEntities;

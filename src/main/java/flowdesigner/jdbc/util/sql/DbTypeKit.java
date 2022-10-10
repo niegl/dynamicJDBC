@@ -56,6 +56,11 @@ public abstract class DbTypeKit {
         return dbType;
     }
 
+    /**
+     * 通过driverClassName获取数据库类型
+     * @param driverName 驱动类
+     * @return
+     */
     public static DbType getDbTypeStr(String driverName){
         switch (driverName) {
             case DB2_DRIVER:

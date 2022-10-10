@@ -24,7 +24,7 @@ public class SchemaEntity {
     public TableEntity lookupTable(String defKey){
         List<TableEntity> tableList = getTables();
         for(TableEntity table : tableList){
-            if(defKey.equalsIgnoreCase(table.getDefKey())){
+            if(defKey.equalsIgnoreCase(table.getTABLE_NAME())){
                 return table;
             }
         }

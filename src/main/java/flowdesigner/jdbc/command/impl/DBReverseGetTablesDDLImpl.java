@@ -21,35 +21,36 @@ import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.dialect.DBDialect;
 import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.TableEntity;
-import flowdesigner.jdbc.util.raw.kit.StringKit;
 import flowdesigner.jdbc.util.sql.DbTypeKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
  * @desc : 数据库逆向，解析表清单的字段以及索引
  */
 @Slf4j
-public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEntity>>> {
+public class DBReverseGetTablesDDLImpl implements Command<ExecResult<List<TableEntity>>> {
     public ExecResult<List<TableEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
 
         String schema = params.getOrDefault("schemaPattern",null);
-        String tables = params.getOrDefault("tables",null);
-        if (StringKit.isBlank(schema)) {
-            schema = null;
-        }
-        if (StringKit.isBlank(tables)) {
-            tables = "%";
-        }
-        List<String> tableList = Arrays.stream(tables.split(","))
-                .collect(Collectors.toList());
+        String tables = params.getOrDefault("tables","");
+        String types = params.getOrDefault("types","TABLE");
+//        if (StringKit.isBlank(schema)) {
+//            schema = null;
+//        }
+//        if (StringKit.isBlank(tables)) {
+//            tables = "%";
+//        }
+        String[] tableList = tables.split(",");
 
         ExecResult<List<TableEntity>> ret = new ExecResult<>();
-        List<TableEntity> tableEntities = fillTableEntities(conn, schema, tableList);
+        List<TableEntity> tableEntities = fillTablesEntities(conn, schema, tableList, types.split(","));
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(tableEntities);
 
@@ -64,15 +65,20 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
      * @param tableNameList
      * @return
      */
-    protected List<TableEntity> fillTableEntities(Connection conn, String schemaPattern, List<String> tableNameList) throws SQLException {
+    protected List<TableEntity> fillTablesEntities(Connection conn, String schemaPattern, String[] tableNameList, String[] types) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<>();
 
         DatabaseMetaData meta = conn.getMetaData();
         DbType dbType = DbTypeKit.getDbType(conn);
         DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
 
+        if (1 == tableNameList.length && "".equals(tableNameList[0])) {
+            String tableNamePattern = dbDialect.getTableNamePattern(conn);
+            return dbDialect.createTableEntity(conn, meta, schemaPattern, tableNamePattern, types);
+        }
+
         for (String tableName : tableNameList) {
-            List<TableEntity> tableEntities1 = dbDialect.createTableEntity(conn, meta, schemaPattern, tableName);
+            List<TableEntity> tableEntities1 = dbDialect.createTableEntity(conn, meta, schemaPattern, tableName, types);
             if (tableEntities1.isEmpty()) {
                 continue;
             }
