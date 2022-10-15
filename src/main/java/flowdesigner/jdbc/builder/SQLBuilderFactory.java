@@ -12,8 +12,10 @@ import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
 import flowdesigner.jdbc.builder.impl.*;
 import flowdesigner.jdbc.builder.impl.dialect.db2.DB2SelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.HiveAlterTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.hive.HiveCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.SQLHiveInsertBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLSelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleSelectBuilderImpl;
@@ -109,7 +111,14 @@ public class SQLBuilderFactory {
     }
 
     public static SQLCreateTableBuilder createCreateTableBuilder(DbType dbType) {
-        return new SQLCreateTableBuilderImpl(dbType);
+        switch (dbType) {
+            case hive:
+                return new HiveCreateTableBuilderImpl(dbType);
+            case mysql:
+                return new MySQLCreateTableBuilderImpl(dbType);
+            default:
+                return new SQLCreateTableBuilderImpl(dbType);
+        }
     }
     public static SQLCreateTableBuilder createCreateTableBuilder(String sql, DbType dbType) {
         return new SQLCreateTableBuilderImpl(sql, dbType);

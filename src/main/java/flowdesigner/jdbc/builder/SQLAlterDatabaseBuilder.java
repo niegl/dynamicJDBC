@@ -10,8 +10,8 @@ import java.util.Map;
  *     DEFAULT CHARACTER SET gb2312
  *     DEFAULT COLLATE gb2312_chinese_ci;
  */
-public interface SQLAlterDatabaseBuilder {
-    SQLAlterDatabaseBuilder setType(DbType dbType);
+public interface SQLAlterDatabaseBuilder extends SQLBuilder {
+//    SQLAlterDatabaseBuilder setType(DbType dbType);
 
     SQLAlterDatabaseBuilder setName(String db_name);
 

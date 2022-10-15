@@ -58,7 +58,6 @@ public class DBParseDDLImpl implements Command<ExecResult<List<TableEntity>>> {
             SQLCreateTableStatement stmt = (SQLCreateTableStatement) statement;
 
             tableEntity.setTABLE_NAME(stmt.getTableName());
-//            tableEntity.setDefName(stmt.getTableName());
             tableEntity.setREMARKS(stmt.getComment()!= null? stmt.getComment().toString():"");
             tableEntity.setTABLE_CAT(stmt.getCatalog());
             tableEntity.setTABLE_SCHEM(stmt.getSchema());
@@ -68,7 +67,6 @@ public class DBParseDDLImpl implements Command<ExecResult<List<TableEntity>>> {
                 field.setDefKey(col.getColumnName());
                 field.setDefName(col.getColumnName());
                 field.setComment(col.getComment()!=null? col.getComment().toString():null);
-//                field.setTypeName(col.getDataType().getName());
                 field.setTypeName(col.getDataType().toString());
                 field.setDataType(col.getDataType().jdbcType());
 

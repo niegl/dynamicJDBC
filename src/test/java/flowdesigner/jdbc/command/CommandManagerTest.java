@@ -28,13 +28,13 @@ class CommandManagerTest {
     Connection connection = null;
     @BeforeEach
     void setUp() {
-//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
-//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
-        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-        properties.setProperty("url","jdbc:mysql://localhost:3306");
+        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+//        properties.setProperty("url","jdbc:mysql://localhost:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");

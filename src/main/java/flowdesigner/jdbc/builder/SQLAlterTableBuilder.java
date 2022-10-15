@@ -5,8 +5,8 @@ import com.alibaba.druid.DbType;
 import java.util.Collection;
 import java.util.List;
 
-public interface SQLAlterTableBuilder {
-    SQLAlterTableBuilder setType(DbType dbType);
+public interface SQLAlterTableBuilder extends SQLBuilder {
+//    SQLAlterTableBuilder setType(DbType dbType);
 
     SQLAlterTableBuilder setName(String tableName);
 

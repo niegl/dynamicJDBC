@@ -25,7 +25,7 @@ import java.util.Map;
  * 支持脚本运行、脚本状态查询（当前运行步骤）、取消脚本运行、单statement运行.
  */
 @Slf4j
-public class DBExecuteImpl implements Command<ExecResult<RunningStatus>> {
+public class DBExecuteImpl implements Command<ExecResult<DBExecuteImpl.RunningStatus>> {
     /**
      * SQL=脚本
      * @param conn
@@ -64,8 +64,7 @@ public class DBExecuteImpl implements Command<ExecResult<RunningStatus>> {
 
         DbType dbType = DbTypeKit.getDbType(conn);
         if (dbType == null) {
-            log.info("dbType = null");
-            return null;
+            throw new IllegalArgumentException("dbType is not supported");
         }
 
         List<SQLStatement> statements = SQLUtils.parseStatements(scripts, dbType);
@@ -86,27 +85,27 @@ public class DBExecuteImpl implements Command<ExecResult<RunningStatus>> {
 
     }
 
-}
-
-/**
- * 保存scripts的运行状态
- */
-class RunningStatus {
     /**
-     * 当前运行步骤（SQL语句）
+     * 保存scripts的运行状态
      */
-    @Getter private final String step;
-    @Setter
-    @Getter
-    private int affected = -1;
-    /**
-     * 如果是select，保存查询结果
-     */
-    @Setter
-    @Getter
-    private List<Map<String, Object>> result;
+    static class RunningStatus {
+        /**
+         * 当前运行步骤（SQL语句）
+         */
+        @Getter private final String step;
+        @Setter
+        @Getter
+        private int affected = -1;
+        /**
+         * 如果是select，保存查询结果
+         */
+        @Setter
+        @Getter
+        private List<Map<String, Object>> result;
 
-    RunningStatus(String step) {
-        this.step = step;
+        RunningStatus(String step) {
+            this.step = step;
+        }
     }
+
 }

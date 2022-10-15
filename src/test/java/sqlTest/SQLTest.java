@@ -80,7 +80,19 @@ public class SQLTest {
         SQLStatement statement = parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
-    @org.junit.jupiter.api.Test
+    @Test
+    void testPrimaryHive() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="CREATE TABLE Persons\n" +
+                "(\n" +
+                "vendor_id INTEGER,\n" +
+                "PRIMARY KEY (vendor_id) DISABLE NOVALIDATE RELY\n" +
+                ")";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @Test
     void testPrimary() throws SQLSyntaxErrorException {
         String dbType = "mysql";
         String sql ="CREATE TABLE Persons\n" +

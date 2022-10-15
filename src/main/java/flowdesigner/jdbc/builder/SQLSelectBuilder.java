@@ -2,18 +2,16 @@ package flowdesigner.jdbc.builder;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.statement.SQLSelect;
-import com.alibaba.druid.sql.ast.statement.SQLSelectQueryBlock;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
-import flowdesigner.jdbc.builder.impl.SQLSelectBuilderImpl;
 
 import java.util.List;
 
-public interface SQLSelectBuilder {
+public interface SQLSelectBuilder extends SQLBuilder {
 
     SQLSelect getSQLSelect();
 
-    SQLSelectStatement getSQLSelectStatement();
+    SQLSelectStatement getSQLStatement();
 
     List<String> getSupportMethods();
 

@@ -6,21 +6,20 @@ import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import flowdesigner.jdbc.builder.SQLAlterTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLAlterTableBuilderImpl;
 
-import java.util.Collection;
 import java.util.List;
 
 public class MySQLAlterTableBuilderImpl extends SQLAlterTableBuilderImpl {
     public MySQLAlterTableBuilderImpl() {
-        super(DbType.mysql, new MySqlExprBuilder());
+        super(DbType.mysql, new MySQLExprBuilder());
     }
 
     public MySQLAlterTableBuilderImpl(String sql) {
-        super(sql, DbType.mysql, new MySqlExprBuilder());
+        super(sql, DbType.mysql, new MySQLExprBuilder());
     }
 
     @Override
-    protected MySqlExprBuilder getExprBuilder() {
-        return (MySqlExprBuilder)exprBuilder;
+    protected MySQLExprBuilder getExprBuilder() {
+        return (MySQLExprBuilder)exprBuilder;
     }
 
     @Override

@@ -17,15 +17,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SQLInsertBuilderImpl implements SQLInsertBuilder {
+public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBuilder {
 
     private @Nullable SQLInsertStatement stmt = null;
-    private final @NotNull DbType dbType;
+//    private final @NotNull DbType dbType;
 
-    public SQLInsertBuilderImpl(@NotNull DbType dbType){
-        this.dbType = dbType;
+    public SQLInsertBuilderImpl(@NotNull DbType dbType) {
+        super(dbType);
+//        this.dbType = dbType;
     }
     public SQLInsertBuilderImpl(String sql, @NotNull DbType dbType) {
+        super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
         if (stmtList.isEmpty()) {
             throw new IllegalArgumentException("not support empty-statement :" + sql);
@@ -34,12 +36,13 @@ public class SQLInsertBuilderImpl implements SQLInsertBuilder {
         } else {
             SQLInsertStatement stmt = (SQLInsertStatement)stmtList.get(0);
             this.stmt = stmt;
-            this.dbType = dbType;
+//            this.dbType = dbType;
         }
     }
     public SQLInsertBuilderImpl(@Nullable SQLInsertStatement stmt, @NotNull DbType dbType){
+        super(dbType);
         this.stmt = stmt;
-        this.dbType = dbType;
+//        this.dbType = dbType;
     }
 
     /**
@@ -48,7 +51,7 @@ public class SQLInsertBuilderImpl implements SQLInsertBuilder {
      */
     @Override
     public SQLInsertBuilder setTableSource(String tableName) {
-        SQLInsertStatement statement = getSQLInsertStatement();
+        SQLInsertStatement statement = getSQLStatement();
         statement.setTableSource(new SQLIdentifierExpr(tableName));
         return this;
     }
@@ -60,7 +63,7 @@ public class SQLInsertBuilderImpl implements SQLInsertBuilder {
 
     @Override
     public SQLInsertBuilder setInsertColumns(String... columns) {
-        SQLInsertStatement insert = getSQLInsertStatement();
+        SQLInsertStatement insert = getSQLStatement();
         for (String column : columns) {
             SQLIdentifierExpr expr = new SQLIdentifierExpr(column);
             insert.getColumns().add(expr);
@@ -98,7 +101,7 @@ public class SQLInsertBuilderImpl implements SQLInsertBuilder {
 
     @Override
     public SQLInsertBuilder addPartition(SQLAssignItem partition) {
-        SQLInsertStatement statement = getSQLInsertStatement();
+        SQLInsertStatement statement = getSQLStatement();
         statement.addPartition(partition);
         return this;
     }
@@ -122,7 +125,7 @@ public class SQLInsertBuilderImpl implements SQLInsertBuilder {
 
     @Override
     public SQLInsertBuilder setQuery(SQLSelect query) {
-        SQLInsertStatement statement = getSQLInsertStatement();
+        SQLInsertStatement statement = getSQLStatement();
         if (query != null) {
             query.setParent(statement);
         }
@@ -132,7 +135,7 @@ public class SQLInsertBuilderImpl implements SQLInsertBuilder {
     }
 
     @Override
-    public SQLInsertStatement getSQLInsertStatement() {
+    public SQLInsertStatement getSQLStatement() {
         if (stmt == null) {
             stmt = createSQLInsertStatement();
             stmt.setDbType(dbType);

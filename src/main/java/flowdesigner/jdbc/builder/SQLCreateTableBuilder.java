@@ -8,11 +8,13 @@ import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 
 import java.util.List;
 
-public interface SQLCreateTableBuilder {
+public interface SQLCreateTableBuilder extends SQLBuilder {
 
-    SQLCreateTableBuilder setType(DbType dbType);
+//    SQLCreateTableBuilder setType(DbType dbType);
 
     SQLCreateTableBuilder setTemporary(String temporaryType);
+
+    SQLCreateTableBuilder setTemporary(SQLCreateTableStatement.Type type);
 
     SQLCreateTableBuilder setLike(String tableName);
 
@@ -63,5 +65,5 @@ public interface SQLCreateTableBuilder {
 
     SQLCreateTableBuilder addOption(String name, SQLExpr value);
 
-    SQLCreateTableStatement getSQLCreateTableStatement();
+    SQLCreateTableStatement getSQLStatement();
 }

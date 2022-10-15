@@ -9,24 +9,24 @@ import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.SQLAlterCharacter;
 import com.alibaba.druid.sql.ast.statement.SQLAlterDatabaseStatement;
-import com.alibaba.druid.sql.ast.statement.SQLDeleteStatement;
-import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLAlterDatabaseBuilder;
 
 import java.util.List;
 import java.util.Map;
 
-public class SQLAlterDatabaseBuilderImpl implements SQLAlterDatabaseBuilder {
+public class SQLAlterDatabaseBuilderImpl extends SQLBuilderImpl implements SQLAlterDatabaseBuilder {
 
     private SQLAlterDatabaseStatement stmt;
-    private DbType dbType;
+//    private DbType dbType;
 
 
-    public SQLAlterDatabaseBuilderImpl(DbType dbType){
-        this.dbType = dbType;
+    public SQLAlterDatabaseBuilderImpl(DbType dbType) {
+        super(dbType);
+//        this.dbType = dbType;
     }
     public SQLAlterDatabaseBuilderImpl(String sql, DbType dbType) {
+        super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
         if (stmtList.isEmpty()) {
             throw new IllegalArgumentException("not support empty-statement :" + sql);
@@ -35,23 +35,24 @@ public class SQLAlterDatabaseBuilderImpl implements SQLAlterDatabaseBuilder {
         } else {
             SQLAlterDatabaseStatement stmt = (SQLAlterDatabaseStatement)stmtList.get(0);
             this.stmt = stmt;
-            this.dbType = dbType;
+//            this.dbType = dbType;
         }
     }
     public SQLAlterDatabaseBuilderImpl(SQLAlterDatabaseStatement stmt, DbType dbType){
+        super(dbType);
         this.stmt = stmt;
-        this.dbType = dbType;
+//        this.dbType = dbType;
     }
 
-    @Override
-    public SQLAlterDatabaseBuilder setType(DbType dbType) {
-        this.dbType = dbType;
-        return this;
-    }
+//    @Override
+//    public SQLAlterDatabaseBuilder setType(DbType dbType) {
+//        this.dbType = dbType;
+//        return this;
+//    }
 
     @Override
     public SQLAlterDatabaseBuilder setName(String db_name) {
-        SQLAlterDatabaseStatement statement = getSQLAlterDatabaseStatement();
+        SQLAlterDatabaseStatement statement = getSQLStatement();
         statement.setName(new SQLIdentifierExpr(db_name));
         return this;
     }
@@ -65,7 +66,7 @@ public class SQLAlterDatabaseBuilderImpl implements SQLAlterDatabaseBuilder {
     public SQLAlterDatabaseBuilder alter(String databaseName, Map<String, String> alterOption) {
         setName(databaseName);
 
-        SQLAlterDatabaseStatement statement = getSQLAlterDatabaseStatement();
+        SQLAlterDatabaseStatement statement = getSQLStatement();
         SQLAlterCharacter alterCharacter = statement.getCharacter();
         if (alterCharacter == null) {
             statement.setCharacter(new SQLAlterCharacter());
@@ -104,7 +105,7 @@ public class SQLAlterDatabaseBuilderImpl implements SQLAlterDatabaseBuilder {
         return this;
     }
 
-    public SQLAlterDatabaseStatement getSQLAlterDatabaseStatement() {
+    public SQLAlterDatabaseStatement getSQLStatement() {
         if (stmt == null) {
             stmt = new SQLAlterDatabaseStatement(dbType);
         }

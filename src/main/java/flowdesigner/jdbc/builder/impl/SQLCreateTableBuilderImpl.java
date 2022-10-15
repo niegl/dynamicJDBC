@@ -7,9 +7,11 @@ import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLQueryExpr;
 import com.alibaba.druid.sql.ast.statement.*;
+import com.alibaba.druid.sql.dialect.antspark.ast.AntsparkCreateTableStatement;
+import com.alibaba.druid.sql.dialect.blink.ast.BlinkCreateTableStatement;
+import com.alibaba.druid.sql.dialect.clickhouse.ast.ClickhouseCreateTableStatement;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2CreateTableStatement;
 import com.alibaba.druid.sql.dialect.hive.stmt.HiveCreateTableStatement;
-import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlUnique;
 import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
@@ -23,19 +25,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement.Type.*;
+public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCreateTableBuilder {
 
-public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
+    private SQLCreateTableStatement  stmt;
+//    private DbType dbType;
 
-    private @Nullable SQLCreateTableStatement  stmt;
-    private DbType dbType;
-
-    public SQLCreateTableBuilderImpl(){}
-    public SQLCreateTableBuilderImpl(@NotNull DbType dbType){
-        this.dbType = dbType;
+    public SQLCreateTableBuilderImpl(@NotNull DbType dbType) {
+        super(dbType);
+//        this.dbType = dbType;
     }
 
-    public SQLCreateTableBuilderImpl(String sql, DbType dbType){
+    public SQLCreateTableBuilderImpl(String sql, DbType dbType) {
+        super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
 
         if (stmtList.size() == 0) {
@@ -46,21 +47,23 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
             throw new IllegalArgumentException("not support multi-statement :" + sql);
         }
 
-        SQLCreateTableStatement stmt = (SQLCreateTableStatement) stmtList.get(0);
-        this.stmt = stmt;
-        this.dbType = dbType;
+        if (stmtList.get(0) instanceof SQLCreateTableStatement statement) {
+            this.stmt = statement;
+        }
+//        this.dbType = dbType;
     }
 
-    public SQLCreateTableBuilderImpl(@Nullable SQLCreateTableStatement stmt, @NotNull DbType dbType){
+    public SQLCreateTableBuilderImpl(@Nullable SQLCreateTableStatement stmt, @NotNull DbType dbType) {
+        super(dbType);
         this.stmt = stmt;
-        this.dbType = dbType;
+//        this.dbType = dbType;
     }
 
-    @Override
-    public SQLCreateTableBuilder setType(DbType dbType) {
-        this.dbType = dbType;
-        return this;
-    }
+//    @Override
+//    public SQLCreateTableBuilder setType(DbType dbType) {
+//        this.dbType = dbType;
+//        return this;
+//    }
 
     /**
      * 创建临时表
@@ -72,22 +75,16 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
      * @return
      */
     @Override
-    public SQLCreateTableBuilder setTemporary(String temporaryType) {
+    public SQLCreateTableBuilder setTemporary(String temporaryType) throws IllegalArgumentException {
         SQLCreateTableStatement.Type type;
+        type = SQLCreateTableStatement.Type.valueOf(temporaryType);
+        return setTemporary(type);
+    }
 
-        try {
-            type = SQLCreateTableStatement.Type.valueOf(temporaryType);
-            SQLCreateTableStatement create = getSQLCreateTableStatement();
-            if (dbType.equals(DbType.hive)) {
-                if (GLOBAL_TEMPORARY.equals(type)) {
-                    create.setType(TEMPORARY);
-                }
-            } else {
-                create.setType(type);
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e);
-        }
+    @Override
+    public SQLCreateTableBuilder setTemporary(SQLCreateTableStatement.Type type) {
+        SQLCreateTableStatement create = getSQLStatement();
+        create.setType(type);
 
         return this;
     }
@@ -100,7 +97,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
      */
     @Override
     public SQLCreateTableBuilder setLike(String tableName) {
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         SQLExpr name = SQLUtils.toSQLExpr(tableName, this.dbType);
         if (name instanceof SQLName) {
             create.setLike((SQLName) name);
@@ -117,7 +114,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
      */
     @Override
     public SQLCreateTableBuilder setSelect(String select) {
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         SQLExpr query = SQLUtils.toSQLExpr(select, this.dbType);
         if (query instanceof SQLQueryExpr) {
             stmt.setSelect(((SQLQueryExpr) query).getSubQuery());
@@ -128,7 +125,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
 
     @Override
     public SQLCreateTableBuilder setName(String name) {
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.setTableName(name);
         return this;
     }
@@ -140,14 +137,14 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
      */
     @Override
     public SQLCreateTableBuilder setSchema(String name) {
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.setSchema(name);
         return this;
     }
 
     @Override
     public SQLCreateTableBuilder setIfNotExiists(boolean ifNotExists) {
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.setIfNotExiists(ifNotExists);
 
         return this;
@@ -156,7 +153,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
 
     @Override
     public SQLCreateTableBuilder setBuckets(int buckets) {
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.setBuckets(buckets);
 
         return this;
@@ -164,7 +161,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
 
     @Override
     public SQLCreateTableBuilder setShards(int shards) {
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.setShards(shards);
 
         return this;
@@ -188,7 +185,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         if (comment == null) {
             throw new IllegalArgumentException();
         }
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.setComment(comment);
 
         return this;
@@ -283,7 +280,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         if (column == null) {
             throw new IllegalArgumentException();
         }
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.addColumn(column);
 
         return this;
@@ -299,31 +296,25 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
     public SQLCreateTableBuilder addPrimaryKey(String primaryKeyName, List<String> columnNames) {
         SQLTableConstraint constraint = null;
         boolean hasConstaint = false;
-        SQLName name = null;
 
-        if (primaryKeyName != null) {
-            name = new SQLIdentifierExpr(primaryKeyName);
+        if (primaryKeyName == null) {
+            return this;
         }
 
-        switch (dbType) {
-            case mysql:
-                MySqlPrimaryKey pk = new MySqlPrimaryKey();
-                buildIndex(pk.getIndexDefinition(),Token.PRIMARY.name,"", Token.KEY.name,columnNames);
-                if (name != null) {
-                    pk.setName(name);
-                }
-                pk.setHasConstraint(hasConstaint);
-                constraint = pk;
-            default:
-                break;
+        SQLName name = new SQLIdentifierExpr(primaryKeyName);
+        constraint = createConstraint(columnNames, hasConstaint, name);
+
+        SQLCreateTableStatement create = getSQLStatement();
+        if (constraint != null) {
+            constraint.setParent(create);
+            create.getTableElementList().add(constraint);
         }
-
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
-        constraint.setParent(create);
-
-        create.getTableElementList().add(constraint);
-
         return this;
+    }
+
+    protected SQLTableConstraint createConstraint(List<String> columnNames, boolean hasConstaint, SQLName name) {
+
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -349,7 +340,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
                 break;
         }
 
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         constraint.setParent(create);
 
         create.getTableElementList().add(constraint);
@@ -391,7 +382,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
                 break;
         }
 
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         assert constraint != null;
         constraint.setParent(create);
 
@@ -400,7 +391,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         return this;
     }
 
-    private void buildIndex(SQLIndexDefinition indexDefinition, String token, String globalOrLocal, String indexOrKey, List<String> columnNames) {
+    protected void buildIndex(SQLIndexDefinition indexDefinition, String token, String globalOrLocal, String indexOrKey, List<String> columnNames) {
         if (token.equalsIgnoreCase("FULLTEXT")
                 || token.equalsIgnoreCase("UNIQUE")
                 || token.equalsIgnoreCase("PRIMARY")
@@ -428,7 +419,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
 
     }
 
-    public void buildIndexRest(SQLIndex idx, SQLObject parent, List<String> columnNames) {
+    private void buildIndexRest(SQLIndex idx, SQLObject parent, List<String> columnNames) {
 
         for (String columnName :
                 columnNames) {
@@ -438,7 +429,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         }
     }
 
-    public SQLSelectOrderByItem buildSelectOrderByItem(String columnName) {
+    private SQLSelectOrderByItem buildSelectOrderByItem(String columnName) {
         SQLSelectOrderByItem item = new SQLSelectOrderByItem();
         item.setExpr(new SQLIdentifierExpr(columnName));
 
@@ -498,7 +489,7 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         if (column == null) {
             throw new IllegalArgumentException();
         }
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.addPartitionColumn(column);
 
         return this;
@@ -517,22 +508,28 @@ public class SQLCreateTableBuilderImpl implements SQLCreateTableBuilder {
         if (value == null) {
             throw new IllegalArgumentException();
         }
-        SQLCreateTableStatement create = getSQLCreateTableStatement();
+        SQLCreateTableStatement create = getSQLStatement();
         create.addOption(name,value);
 
         return this;
     }
 
     @Override
-    public SQLCreateTableStatement getSQLCreateTableStatement() {
+    public SQLCreateTableStatement getSQLStatement() {
         if (stmt == null) {
             stmt = createSQLCreateTableStatement();
         }
         return stmt;
     }
 
-    public SQLCreateTableStatement createSQLCreateTableStatement() {
+    private SQLCreateTableStatement createSQLCreateTableStatement() {
         switch (dbType) {
+            case antspark:
+                return new AntsparkCreateTableStatement();
+            case blink:
+                return new BlinkCreateTableStatement();
+            case clickhouse:
+                return new ClickhouseCreateTableStatement();
             case oracle:
                 return new OracleCreateTableStatement();
             case mysql:

@@ -16,18 +16,15 @@
 package flowdesigner.jdbc.command.dialect;
 
 import flowdesigner.jdbc.command.model.*;
-import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
 import flowdesigner.jdbc.util.raw.kit.JdbcKit;
 import flowdesigner.jdbc.util.raw.kit.StringKit;
+import flowdesigner.jdbc.util.sql.kit.ConnParseKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.*;
-import java.util.logging.Level;
-
-import static java.sql.ResultSet.FETCH_REVERSE;
 
 /**
  * @desc : 数据库方言抽象类
@@ -77,7 +74,7 @@ public class DBDialect {
             return schemaPattern;
         }
         return null;
-    };
+    }
     /**
      * 获取数据库TableNamePattern
      * @param conn

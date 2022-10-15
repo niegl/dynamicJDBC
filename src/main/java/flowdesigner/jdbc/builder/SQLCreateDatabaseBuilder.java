@@ -5,9 +5,9 @@ import com.alibaba.druid.DbType;
 import java.util.List;
 import java.util.Map;
 
-public interface SQLCreateDatabaseBuilder {
+public interface SQLCreateDatabaseBuilder extends SQLBuilder {
 
-    SQLCreateDatabaseBuilder setType(DbType dbType);
+//    SQLCreateDatabaseBuilder setType(DbType dbType);
 
     SQLCreateDatabaseBuilder setName(String db_name);
 

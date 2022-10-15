@@ -6,6 +6,7 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import flowdesigner.jdbc.builder.SQLBuilderFactory;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sqlTest.SQLTest;
@@ -18,30 +19,62 @@ class SQLCreateTableBuilderImplTest {
 
     @BeforeEach
     void setUp() {
+    }
 
-        tableBuilder = new SQLCreateTableBuilderImpl(DbType.hive);
+    @AfterEach
+    void tearDown() {
+        System.out.println(tableBuilder);
+    }
+
+    void createBuilder(DbType dbType) {
+        tableBuilder = SQLBuilderFactory.createCreateTableBuilder(dbType);
         tableBuilder.setName("std_line");
         tableBuilder.setSchema("std_pcode");
         tableBuilder.setComment("comment");
-        tableBuilder.setIfNotExiists(true);
+    }
+    @Test
+    void testBuilder() {
+        for (DbType dbType : DbType.values()) {
+            createBuilder(dbType);
+            tableBuilder.addColumn("line_id", "Stirng", false, false, false);
+            tableBuilder.addPrimaryKey("PRIMARY", Arrays.asList("Id_P"));
+            tableBuilder.addUniqueKey("uc_PersonID", Arrays.asList("Id_P","LastName"));
+            tableBuilder.addForeignKey("fk_PerOrders", Arrays.asList("Id_P"),"Persons", Arrays.asList("Id_P","LastName"));
+            tableBuilder.addForeignKey(null, Arrays.asList("Id_P"),"Persons", Arrays.asList("Id_P","LastName"));
+            tableBuilder.addColumnAutoIncrement("Id_P","int");
+            tableBuilder.setTemporary("dd");
+            tableBuilder.setSelect("select a,b from t");
+
+            tableBuilder.addPartitionColumn("stat_dt", "partition");
+            tableBuilder.addPartitionColumn("stat_dt2", "partition");
+            tableBuilder.setComment("commetnst");
+            tableBuilder.setIfNotExiists(true);
+            tableBuilder.setShards(3);
+            tableBuilder.setBuckets(4);
+            tableBuilder.addOption("option1", "options1");
+            System.out.println(tableBuilder.toString());
+        }
     }
 
     @Test
     void addColumn() {
-        tableBuilder.addColumn("line_id","Stirng");
-        System.out.println(tableBuilder);
+        for (DbType dbType : DbType.values()) {
+            createBuilder(dbType);
+            tableBuilder.addColumn("line_id","Stirng");
+            System.out.println(tableBuilder);
+        }
     }
 
     @Test
     void from() {
-        tableBuilder.addColumn("line_id","Stirng", false, false,false);
-        tableBuilder.addPartitionColumn("stat_dt","partition");
-        tableBuilder.addPartitionColumn("stat_dt2","partition");
+        tableBuilder.addColumn("line_id", "Stirng", false, false, false);
+        tableBuilder.addPartitionColumn("stat_dt", "partition");
+        tableBuilder.addPartitionColumn("stat_dt2", "partition");
         tableBuilder.setComment("commetnst");
         tableBuilder.setIfNotExiists(true);
         tableBuilder.setShards(3);
         tableBuilder.setBuckets(4);
-        tableBuilder.addOption("option1","options1");
+        tableBuilder.addOption("option1", "options1");
         System.out.println(tableBuilder.toString());
     }
 
@@ -54,7 +87,8 @@ class SQLCreateTableBuilderImplTest {
 
     @Test
     void addPrimaryKey0() {
-        tableBuilder.addPrimaryKey("pk_PersonID", Arrays.asList("Id_P","LastName"));
+        tableBuilder.addColumn("Id_P","int");
+        tableBuilder.addPrimaryKey("PRIMARY", Arrays.asList("Id_P"));
         System.out.println(tableBuilder.toString());
     }
 

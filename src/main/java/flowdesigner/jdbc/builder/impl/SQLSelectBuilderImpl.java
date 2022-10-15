@@ -19,9 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SQLSelectBuilderImpl implements SQLSelectBuilder {
+public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBuilder {
     private SQLSelectStatement stmt;
-    private DbType             dbType;
+//    private DbType             dbType;
 
     protected static List<String> supportMethods = new ArrayList<>();
     static {
@@ -48,6 +48,7 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
     }
 
     public SQLSelectBuilderImpl(String sql, DbType dbType) {
+        super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
         if (stmtList.isEmpty()) {
             throw new IllegalArgumentException("not support empty-statement :" + sql);
@@ -56,13 +57,14 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
         } else {
             SQLSelectStatement stmt = (SQLSelectStatement)stmtList.get(0);
             this.stmt = stmt;
-            this.dbType = dbType;
+//            this.dbType = dbType;
         }
     }
 
     public SQLSelectBuilderImpl(SQLSelectStatement stmt, DbType dbType) {
+        super(dbType);
         this.stmt = stmt;
-        this.dbType = dbType;
+//        this.dbType = dbType;
     }
 
     @Override
@@ -74,7 +76,10 @@ public class SQLSelectBuilderImpl implements SQLSelectBuilder {
     }
 
     @Override
-    public SQLSelectStatement getSQLSelectStatement() {
+    public SQLSelectStatement getSQLStatement() {
+        if (stmt == null) {
+            stmt = new SQLSelectStatement(dbType);
+        }
         return stmt;
     }
 

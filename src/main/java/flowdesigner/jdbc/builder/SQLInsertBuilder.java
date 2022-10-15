@@ -5,7 +5,7 @@ import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelect;
 import com.alibaba.druid.sql.ast.statement.SQLSelectQuery;
 
-public interface SQLInsertBuilder {
+public interface SQLInsertBuilder extends SQLBuilder {
     SQLInsertBuilder setTableSource(String tableName);
 
     SQLInsertBuilder setInsertColumn(String column);
@@ -23,5 +23,5 @@ public interface SQLInsertBuilder {
 
     SQLInsertBuilder setQuery(SQLSelect query);
 
-    SQLInsertStatement getSQLInsertStatement();
+    SQLInsertStatement getSQLStatement();
 }

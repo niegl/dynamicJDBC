@@ -5,27 +5,24 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.SQLCreateDatabaseStatement;
-import com.alibaba.druid.sql.ast.statement.SQLDeleteStatement;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateDatabaseBuilder;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
-public class SQLCreateDatabaseBuilderImpl implements SQLCreateDatabaseBuilder {
+public class SQLCreateDatabaseBuilderImpl extends SQLBuilderImpl implements SQLCreateDatabaseBuilder {
     private SQLCreateDatabaseStatement  stmt;
-    private DbType dbType;
+//    private DbType dbType;
 
     public SQLCreateDatabaseBuilderImpl(@NotNull DbType dbType){
-        this.dbType = dbType;
+        super(dbType);
+//        this.dbType = dbType;
     }
     public SQLCreateDatabaseBuilderImpl(String sql, DbType dbType) {
+        super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
         if (stmtList.isEmpty()) {
             throw new IllegalArgumentException("not support empty-statement :" + sql);
@@ -34,23 +31,18 @@ public class SQLCreateDatabaseBuilderImpl implements SQLCreateDatabaseBuilder {
         } else {
             SQLCreateDatabaseStatement stmt = (SQLCreateDatabaseStatement)stmtList.get(0);
             this.stmt = stmt;
-            this.dbType = dbType;
+//            this.dbType = dbType;
         }
     }
     public SQLCreateDatabaseBuilderImpl(SQLCreateDatabaseStatement stmt, @NotNull DbType dbType){
+        super(dbType);
         this.stmt = stmt;
-        this.dbType = dbType;
-    }
-
-    @Override
-    public SQLCreateDatabaseBuilder setType(DbType dbType) {
-        this.dbType = dbType;
-        return this;
+//        this.dbType = dbType;
     }
 
     @Override
     public SQLCreateDatabaseBuilder setName(String db_name) {
-        SQLCreateDatabaseStatement create = getSQLCreateDatabaseStatement();
+        SQLCreateDatabaseStatement create = getSQLStatement();
         create.setName(new SQLIdentifierExpr(db_name));
         return this;
     }
@@ -61,14 +53,14 @@ public class SQLCreateDatabaseBuilderImpl implements SQLCreateDatabaseBuilder {
         if (dbType.equals(DbType.mysql)) {
             return this;
         }
-        SQLCreateDatabaseStatement create = getSQLCreateDatabaseStatement();
+        SQLCreateDatabaseStatement create = getSQLStatement();
         create.setComment(new SQLIdentifierExpr(db_comment));
         return this;
     }
 
     @Override
     public SQLCreateDatabaseBuilder setIfNotExists(boolean ifNotExists) {
-        SQLCreateDatabaseStatement create = getSQLCreateDatabaseStatement();
+        SQLCreateDatabaseStatement create = getSQLStatement();
         create.setIfNotExists(ifNotExists);
         return this;
     }
@@ -135,7 +127,7 @@ public class SQLCreateDatabaseBuilderImpl implements SQLCreateDatabaseBuilder {
         return this;
     }
 
-    public SQLCreateDatabaseStatement getSQLCreateDatabaseStatement() {
+    public SQLCreateDatabaseStatement getSQLStatement() {
         if (stmt == null) {
             stmt = createSQLCreateDatabaseStatement();
         }

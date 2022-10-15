@@ -4,9 +4,7 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
-import com.alibaba.druid.sql.ast.statement.SQLDeleteStatement;
 import com.alibaba.druid.sql.ast.statement.SQLDropTableStatement;
-import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import flowdesigner.jdbc.builder.SQLDropTableBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,14 +16,16 @@ import java.util.List;
  * 语法：
  * 1、在 MySQL 中，其语法格式为：DROP DATABASE [ IF EXISTS ] <数据库名>
  */
-public class SQLDropTableBuilderImpl implements SQLDropTableBuilder {
+public class SQLDropTableBuilderImpl extends SQLBuilderImpl implements SQLDropTableBuilder {
     private @Nullable SQLDropTableStatement stmt;
-    private DbType dbType;
+//    private DbType dbType;
 
     public SQLDropTableBuilderImpl(@NotNull DbType dbType){
-        this.dbType = dbType;
+        super(dbType);
+//        this.dbType = dbType;
     }
     public SQLDropTableBuilderImpl(String sql, DbType dbType) {
+        super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
         if (stmtList.isEmpty()) {
             throw new IllegalArgumentException("not support empty-statement :" + sql);
@@ -34,35 +34,36 @@ public class SQLDropTableBuilderImpl implements SQLDropTableBuilder {
         } else {
             SQLDropTableStatement stmt = (SQLDropTableStatement)stmtList.get(0);
             this.stmt = stmt;
-            this.dbType = dbType;
+//            this.dbType = dbType;
         }
     }
     public SQLDropTableBuilderImpl(@Nullable SQLDropTableStatement stmt, @NotNull DbType dbType){
+        super(dbType);
         this.stmt = stmt;
-        this.dbType = dbType;
+//        this.dbType = dbType;
     }
 
-    @Override
-    public SQLDropTableBuilder setType(DbType dbType) {
-        this.dbType = dbType;
-        return this;
-    }
+//    @Override
+//    public SQLDropTableBuilder setType(DbType dbType) {
+//        this.dbType = dbType;
+//        return this;
+//    }
 
     @Override
     public SQLDropTableBuilder dropTable(String table) {
-        SQLDropTableStatement statement = getSQLDropTableStatement();
+        SQLDropTableStatement statement = getSQLStatement();
         statement.setName(new SQLIdentifierExpr(table));
         return this;
     }
 
     @Override
     public SQLDropTableBuilder setIfExists(boolean setIfExists) {
-        SQLDropTableStatement statement = getSQLDropTableStatement();
+        SQLDropTableStatement statement = getSQLStatement();
         if (setIfExists) statement.setIfExists(true);
         return this;
     }
 
-    public SQLDropTableStatement getSQLDropTableStatement() {
+    public SQLDropTableStatement getSQLStatement() {
         if (stmt == null) {
             stmt = new SQLDropTableStatement(dbType);
         }

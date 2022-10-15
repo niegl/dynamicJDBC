@@ -41,12 +41,7 @@ public class DBReverseGetTablesDDLImpl implements Command<ExecResult<List<TableE
         String schema = params.getOrDefault("schemaPattern",null);
         String tables = params.getOrDefault("tables","");
         String types = params.getOrDefault("types","TABLE");
-//        if (StringKit.isBlank(schema)) {
-//            schema = null;
-//        }
-//        if (StringKit.isBlank(tables)) {
-//            tables = "%";
-//        }
+
         String[] tableList = tables.split(",");
 
         ExecResult<List<TableEntity>> ret = new ExecResult<>();

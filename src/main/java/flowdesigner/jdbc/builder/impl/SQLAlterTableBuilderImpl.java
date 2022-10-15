@@ -19,14 +19,14 @@ import java.util.List;
  * 该类主要用于SQLAlterTable相关的操作。
  * 如Rename Table、Alter Column、Alter Table Comment、Delete/Replace Columns，etc
  */
-public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
+public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlterTableBuilder {
 
     protected SQLAlterTableStatement stmt;
-    protected DbType             dbType;
+//    protected DbType             dbType;
     protected SQLExprBuilder     exprBuilder;
 
     public SQLAlterTableBuilderImpl(DbType dbType) {
-        this.dbType = dbType;
+        super(dbType);
         exprBuilder = new SQLExprBuilder();
     }
     public SQLAlterTableBuilderImpl(String sql, DbType dbType) {
@@ -59,11 +59,11 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
         return exprBuilder;
     }
 
-    @Override
-    public SQLAlterTableBuilder setType(DbType dbType) {
-        this.dbType = dbType;
-        return this;
-    }
+//    @Override
+//    public SQLAlterTableBuilder setType(DbType dbType) {
+//        this.dbType = dbType;
+//        return this;
+//    }
     /**
      * 设置原表名
      * @param tableName 原表名
@@ -71,7 +71,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
      */
     @Override
     public SQLAlterTableBuilder setName(String tableName) {
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
         statement.setName(new SQLIdentifierExpr(tableName));
         return this;
     }
@@ -84,7 +84,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
         if (schemaName == null) {
             return null;
         }
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
         SQLName name = statement.getName();
         if (name == null) {
             return null;
@@ -107,7 +107,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
      */
     @Override
     public SQLAlterTableBuilder renameTable(String toName) {
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
         SQLAlterTableRename alterTableRename = new SQLAlterTableRename(new SQLIdentifierExpr(toName));
         statement.addItem(alterTableRename);
         return this;
@@ -121,7 +121,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
      */
     @Override
     public SQLAlterTableBuilder addColumn(String columnName, String columnType) {
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
         SQLAlterTableAddColumn alterTableAddColumn = new SQLAlterTableAddColumn();
         SQLColumnDefinition column = getColumn(columnName, columnType);
         alterTableAddColumn.addColumn(column);
@@ -137,7 +137,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
      */
     @Override
     public SQLAlterTableBuilder dropColomn(String columnName, String columnType) {
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
         SQLColumnDefinition column = getColumn(columnName, columnType);
         switch (dbType) {
             case hive:
@@ -163,7 +163,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
     @Override
     public SQLAlterTableBuilder alterColumn(String columnName, String toColumnName, String toColumnType, String toColumnComment,
                                            String after, boolean first) {
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
         SQLColumnDefinition column = getColumn(toColumnName, toColumnType);
         column.setComment(toColumnComment);
         switch (dbType) {
@@ -237,7 +237,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
      * @return
      */
     private SQLAlterTableBuilder addConstraint(String columnName, boolean hasConstraint, String constraintSymbol, String type, boolean INDEXKEY) {
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
 
         SQLUnique pk = getPrimaryKey();
         if (constraintSymbol != null) {
@@ -288,7 +288,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
     @Override
     public SQLAlterTableBuilder dropPrimaryKey() {
 
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
 
         SQLAlterTableDropPrimaryKey item = new SQLAlterTableDropPrimaryKey();
         statement.addItem(item);
@@ -304,7 +304,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
     @Override
     public SQLAlterTableBuilder dropForeignKey(String Name) {
 
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
 
         SQLAlterTableDropForeignKey item = new SQLAlterTableDropForeignKey();
         item.setIndexName(new SQLIdentifierExpr(Name));
@@ -320,7 +320,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
     @Override
     public SQLAlterTableBuilder dropIndex(String indexName) {
 
-        SQLAlterTableStatement statement = getSQLAlterTableStatement();
+        SQLAlterTableStatement statement = getSQLStatement();
 
         SQLAlterTableDropIndex item = new SQLAlterTableDropIndex();
         item.setIndexName(new SQLIdentifierExpr(indexName));
@@ -329,7 +329,7 @@ public class SQLAlterTableBuilderImpl implements SQLAlterTableBuilder {
         return this;
     }
 
-    public SQLAlterTableStatement getSQLAlterTableStatement() {
+    public SQLAlterTableStatement getSQLStatement() {
         if (stmt == null) {
             stmt = createSQLAlterTableStatement();
         }
