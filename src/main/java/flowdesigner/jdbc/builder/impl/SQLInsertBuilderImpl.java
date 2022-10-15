@@ -144,20 +144,15 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
     }
 
     private SQLInsertStatement createSQLInsertStatement() {
-        switch (dbType) {
-            case postgresql:
-                return new PGInsertStatement();
-            case sqlserver:
-                return new SQLServerInsertStatement();
-            case oracle:
-                return new OracleInsertStatement();
-            case mysql:
-                return new MySqlInsertStatement();
-            case hive:
-                return new HiveInsertStatement();
-        }
+        return switch (dbType) {
+            case postgresql -> new PGInsertStatement();
+            case sqlserver -> new SQLServerInsertStatement();
+            case oracle -> new OracleInsertStatement();
+            case mysql -> new MySqlInsertStatement();
+            case hive -> new HiveInsertStatement();
+            default -> new SQLInsertStatement();
+        };
 
-        return new SQLInsertStatement();
     }
 
     public String toString() {

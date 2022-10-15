@@ -254,8 +254,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
             throw new IllegalStateException("not support from, class : " + query.getClass().getName());
         }
 
-        SQLSelectQueryBlock queryBlock = (SQLSelectQueryBlock) query;
-        return queryBlock;
+        return (SQLSelectQueryBlock) query;
     }
 
     protected SQLSelect createSelect() {
@@ -300,8 +299,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
 
         // 需要判断是否需要括号将 union后半部分括起来，以免本来属于整个union的order by 分配到union后半部分的
         boolean paren = false;
-        if (right instanceof SQLSelectQueryBlock) {
-            SQLSelectQueryBlock rightQuery = (SQLSelectQueryBlock) right;
+        if (right instanceof SQLSelectQueryBlock rightQuery) {
             SQLOrderBy orderBy = rightQuery.getOrderBy();
             if (orderBy != null) {
                 paren = true;
@@ -311,8 +309,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
             if (limit != null) {
                 paren = true;
             }
-        } else if (right instanceof SQLUnionQuery) {
-            SQLUnionQuery rightUnion = (SQLUnionQuery) right;
+        } else if (right instanceof SQLUnionQuery rightUnion) {
             final SQLOrderBy orderBy = rightUnion.getOrderBy();
             if (orderBy != null) {
                 paren = true;

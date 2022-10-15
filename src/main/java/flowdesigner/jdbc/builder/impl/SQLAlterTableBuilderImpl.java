@@ -346,8 +346,7 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
 
     @Override
     public String toString() {
-        String sql = SQLUtils.toSQLString(stmt, dbType);
-        return sql;
+        return SQLUtils.toSQLString(stmt, dbType);
     }
 
     /**

@@ -523,26 +523,17 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     }
 
     private SQLCreateTableStatement createSQLCreateTableStatement() {
-        switch (dbType) {
-            case antspark:
-                return new AntsparkCreateTableStatement();
-            case blink:
-                return new BlinkCreateTableStatement();
-            case clickhouse:
-                return new ClickhouseCreateTableStatement();
-            case oracle:
-                return new OracleCreateTableStatement();
-            case mysql:
-                return new MySqlCreateTableStatement();
-            case db2:
-                return new DB2CreateTableStatement();
-            case hive:
-                return new HiveCreateTableStatement();
-            case odps:
-                return new OdpsCreateTableStatement();
-            default:
-                return new SQLCreateTableStatement();
-        }
+        return switch (dbType) {
+            case antspark -> new AntsparkCreateTableStatement();
+            case blink -> new BlinkCreateTableStatement();
+            case clickhouse -> new ClickhouseCreateTableStatement();
+            case oracle -> new OracleCreateTableStatement();
+            case mysql -> new MySqlCreateTableStatement();
+            case db2 -> new DB2CreateTableStatement();
+            case hive -> new HiveCreateTableStatement();
+            case odps -> new OdpsCreateTableStatement();
+            default -> new SQLCreateTableStatement();
+        };
     }
 
     public String toString() {
