@@ -44,6 +44,7 @@ public class SQLOperatorUtils {
     /**
      * 系统变量
      */
+    @Data
     private static class VariableInfo {
         /**
          * 系统变量名

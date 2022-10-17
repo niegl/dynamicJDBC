@@ -1640,6 +1640,9 @@ public class SQLTest {
         parser(sql, "mysql");
     }
 
+    public static SQLStatement parser(String sql, DbType dbType) throws SQLSyntaxErrorException {
+        return parser(sql,dbType.toString());
+    }
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {

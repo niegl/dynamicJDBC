@@ -12,6 +12,14 @@ public interface SQLCreateTableBuilder extends SQLBuilder {
 
 //    SQLCreateTableBuilder setType(DbType dbType);
 
+    /**
+     * 支持数据库：hive <p>
+     * 语法：CREATE [TEMPORARY] [EXTERNAL] TABLE ...
+     * @param external
+     * @return
+     */
+    SQLCreateTableBuilder setExternal(boolean external);
+
     SQLCreateTableBuilder setTemporary(String temporaryType);
 
     SQLCreateTableBuilder setTemporary(SQLCreateTableStatement.Type type);

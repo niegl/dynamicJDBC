@@ -17,6 +17,7 @@ import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import com.alibaba.druid.sql.dialect.odps.ast.OdpsCreateTableStatement;
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleCreateTableStatement;
+import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
@@ -64,6 +65,18 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
 //        this.dbType = dbType;
 //        return this;
 //    }
+
+    /**
+     * 支持数据库：hive <p>
+     * 语法：CREATE [TEMPORARY] [EXTERNAL] TABLE ...
+     *
+     * @param external
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder setExternal(boolean external) {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * 创建临时表
@@ -288,33 +301,73 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
 
     /**
      * 添加主键约束。适用于多个主键列，如 CONSTRAINT pk_PersonID PRIMARY KEY (Id_P,LastName)
-     * @param primaryKeyName 主键名
+     * @param primaryKeyName 主键名,可以为空。部分数据库如HIVE不指定主键约束名称
      * @param columnNames 用于生成主键的列（一般为多个）
      * @return
      */
     @Override
-    public SQLCreateTableBuilder addPrimaryKey(String primaryKeyName, List<String> columnNames) {
-        SQLTableConstraint constraint = null;
+    public SQLCreateTableBuilder addPrimaryKey(@Nullable String primaryKeyName, List<String> columnNames) {
+        SQLConstraint constraint = null;
         boolean hasConstaint = false;
+        SQLName name = null;
 
-        if (primaryKeyName == null) {
-            return this;
+        if (primaryKeyName != null) {
+            name = new SQLIdentifierExpr(primaryKeyName);
         }
 
-        SQLName name = new SQLIdentifierExpr(primaryKeyName);
-        constraint = createConstraint(columnNames, hasConstaint, name);
+        constraint = createConstraint(Token.PRIMARY, columnNames, hasConstaint, name);
 
         SQLCreateTableStatement create = getSQLStatement();
-        if (constraint != null) {
-            constraint.setParent(create);
-            create.getTableElementList().add(constraint);
-        }
+        constraint.setParent(create);
+        create.getTableElementList().add((SQLTableElement) constraint);
+
         return this;
     }
 
-    protected SQLTableConstraint createConstraint(List<String> columnNames, boolean hasConstaint, SQLName name) {
+    private SQLConstraint createConstraint(Token token, List<String> columnNames, boolean hasConstraint, SQLName name) {
 
-        throw new UnsupportedOperationException();
+        SQLConstraint constraint = switch (token) {
+            case CHECK -> this.createCheck(columnNames);
+            case PRIMARY -> this.createPrimaryKey(columnNames, hasConstraint, name);
+            case KEY, UNIQUE -> this.createUnique(columnNames);
+            case DEFAULT -> this.createDefault(columnNames);
+            case FOREIGN -> this.createForeignKey(columnNames);
+            default -> throw new ParserException("TODO : " + token);
+        };
+
+        return (SQLConstraint) constraint;
+    }
+
+    private SQLConstraint createForeignKey(List<String> columnNames) {
+        return null;
+    }
+
+    private SQLConstraint createDefault(List<String> columnNames) {
+        return null;
+    }
+
+    private SQLConstraint createUnique(List<String> columnNames) {
+        return null;
+    }
+
+    private SQLConstraint createCheck(List<String> columnNames) {
+        return null;
+    }
+
+    @NotNull
+    protected SQLConstraint createPrimaryKey(List<String> columnNames, boolean hasConstraint, SQLName name) {
+        SQLPrimaryKeyImpl pk = new SQLPrimaryKeyImpl();
+
+        for (String columnName : columnNames) {
+            SQLSelectOrderByItem item = new SQLSelectOrderByItem();
+            item.setExpr((SQLExpr)new SQLIdentifierExpr(columnName));
+
+            item.setParent(pk);
+            pk.getColumns().add(item);
+        }
+        pk.setName(name);
+
+        return pk;
     }
 
     @Override

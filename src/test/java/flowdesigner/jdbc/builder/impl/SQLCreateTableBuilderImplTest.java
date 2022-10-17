@@ -1,8 +1,6 @@
 package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
-import com.alibaba.druid.sql.SQLUtils;
-import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import flowdesigner.jdbc.builder.SQLBuilderFactory;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
@@ -79,17 +77,19 @@ class SQLCreateTableBuilderImplTest {
     }
 
     @Test
-    void addPrimaryKey() {
+    void addPrimaryKey() throws SQLSyntaxErrorException {
+        createBuilder(DbType.hive);
         //Id_P int NOT NULL PRIMARY KEY,
         tableBuilder.addColumn("Id_P", "int", true, false,true);
-        System.out.println(tableBuilder.toString());
+        SQLTest.parser(tableBuilder.toString(), DbType.hive);
     }
 
     @Test
-    void addPrimaryKey0() {
+    void addPrimaryKeyConstraint() throws SQLSyntaxErrorException {
+        createBuilder(DbType.hive);
         tableBuilder.addColumn("Id_P","int");
-        tableBuilder.addPrimaryKey("PRIMARY", Arrays.asList("Id_P"));
-        System.out.println(tableBuilder.toString());
+        tableBuilder.addPrimaryKey("PRIMARY_id_p", Arrays.asList("Id_P"));
+        SQLTest.parser(tableBuilder.toString(), DbType.hive);
     }
 
     @Test
