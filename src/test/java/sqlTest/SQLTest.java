@@ -1646,11 +1646,11 @@ public class SQLTest {
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {
-            final StringBuilder out = new StringBuilder();
-            SQLASTOutputVisitor visitor = new SQLASTOutputVisitor(out);
-//            visitor.setDesensitize(true);
-            visitor.setParameterizedQuesUnMergeInList(true);
-            statement.accept(visitor);
+//            final StringBuilder out = new StringBuilder();
+//            SQLASTOutputVisitor visitor = new SQLASTOutputVisitor(out);
+////            visitor.setDesensitize(true);
+//            visitor.setParameterizedQuesUnMergeInList(true);
+//            statement.accept(visitor);
             System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
         });
         if (list.size() > 1) {

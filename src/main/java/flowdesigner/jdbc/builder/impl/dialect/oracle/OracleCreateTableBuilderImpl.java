@@ -20,7 +20,13 @@ public class OracleCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
     @Override
     protected @NotNull SQLConstraint createPrimaryKey(List<String> columnNames, boolean hasConstraint, SQLName name) {
         OraclePrimaryKey primaryKey = new OraclePrimaryKey();
+        if (name != null) {
+            primaryKey.setName(name);
+        }
+        super.orderBy(columnNames, primaryKey.getColumns(), primaryKey);
 
-        return super.createPrimaryKey(columnNames, hasConstraint, name);
+        return primaryKey;
     }
+
+
 }

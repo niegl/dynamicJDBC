@@ -18,6 +18,7 @@ import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLSelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleSelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.pg.PGSelectBuilderImpl;
 
@@ -116,6 +117,8 @@ public class SQLBuilderFactory {
                 return new HiveCreateTableBuilderImpl(dbType);
             case mysql:
                 return new MySQLCreateTableBuilderImpl(dbType);
+            case oracle:
+                return new OracleCreateTableBuilderImpl(dbType);
             default:
                 return new SQLCreateTableBuilderImpl(dbType);
         }

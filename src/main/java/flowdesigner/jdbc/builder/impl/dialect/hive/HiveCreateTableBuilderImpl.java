@@ -2,10 +2,7 @@ package flowdesigner.jdbc.builder.impl.dialect.hive;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLName;
-import com.alibaba.druid.sql.ast.statement.SQLConstraint;
-import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
-import com.alibaba.druid.sql.ast.statement.SQLPrimaryKeyImpl;
-import com.alibaba.druid.sql.ast.statement.SQLTableConstraint;
+import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLCreateTableBuilderImpl;
@@ -71,7 +68,7 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
             primaryKey.setName(null);
             ((SQLPrimaryKeyImpl)primaryKey).setDisableNovalidate(true);
             // 以下代码目前不起作用
-            ((SQLPrimaryKeyImpl)primaryKey).setRely(false);
+            ((SQLPrimaryKeyImpl)primaryKey).setRely(Boolean.TRUE);
         }
 
         return primaryKey;
@@ -79,7 +76,7 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
 
     /**
      * 添加主键列.<p>
-     * HIVE 数据库对 column_constraint_specification 语法中 PRIMARY KEY 的支持存在问题（虽然官网说2.1.0以后支持，但执行报错），故调用该接口只添加字段。
+     * 注意：HIVE 数据库对 column_constraint_specification 语法中 PRIMARY KEY 的支持存在问题（虽然官网说2.1.0以后支持，但执行报错）。
      * @param columnName 列名
      * @param dataType   列类型
      * @param primary    是否主键列
@@ -89,6 +86,10 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
      */
     @Override
     public SQLCreateTableBuilder addColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull) {
-        return super.addColumn(columnName, dataType);
+        if (primary) {
+            throw new IllegalArgumentException("PRIMARY KEY not supported in current Hive version");
+        }
+
+        return super.addColumn(columnName, dataType, false, unique, notNull);
     }
 }

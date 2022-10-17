@@ -324,7 +324,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         return this;
     }
 
-    private SQLConstraint createConstraint(Token token, List<String> columnNames, boolean hasConstraint, SQLName name) {
+    protected SQLConstraint createConstraint(Token token, List<String> columnNames, boolean hasConstraint, SQLName name) {
 
         SQLConstraint constraint = switch (token) {
             case CHECK -> this.createCheck(columnNames);
@@ -358,16 +358,26 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     protected SQLConstraint createPrimaryKey(List<String> columnNames, boolean hasConstraint, SQLName name) {
         SQLPrimaryKeyImpl pk = new SQLPrimaryKeyImpl();
 
+        orderBy(columnNames, pk.getColumns(), pk);
+        pk.setName(name);
+
+        return pk;
+    }
+
+    /**
+     * 生成SQL语句中括号中的部分orderBy部分，也可以表示约束语句中的括号内部分（如：PRIMARY KEY(po_nr)）。
+     * @param columnNames
+     * @param items
+     * @param parent
+     */
+    protected void orderBy(List<String> columnNames, List<SQLSelectOrderByItem> items, SQLObject parent) {
         for (String columnName : columnNames) {
             SQLSelectOrderByItem item = new SQLSelectOrderByItem();
             item.setExpr((SQLExpr)new SQLIdentifierExpr(columnName));
 
-            item.setParent(pk);
-            pk.getColumns().add(item);
+            item.setParent(parent);
+            items.add(item);
         }
-        pk.setName(name);
-
-        return pk;
     }
 
     @Override
