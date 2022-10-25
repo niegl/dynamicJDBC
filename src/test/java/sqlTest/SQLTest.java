@@ -121,10 +121,10 @@ public class SQLTest {
 
     @org.junit.jupiter.api.Test
     void testUnique0() throws SQLSyntaxErrorException {
-        String dbType = "mysql";
+        String dbType = "hive";
         String sql ="CREATE TABLE Persons\n" +
                 "(\n" +
-                "CONSTRAINT uc_PersonID UNIQUE (Id_P,LastName)\n" +
+                "CONSTRAINT uc_PersonID UNIQUE (Id_P,LastName) DISABLE NOVALIDATE NORELY\n" +
                 ")";
         SQLStatement statement = parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");

@@ -29,11 +29,9 @@ import java.util.List;
 public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCreateTableBuilder {
 
     private SQLCreateTableStatement  stmt;
-//    private DbType dbType;
 
     public SQLCreateTableBuilderImpl(@NotNull DbType dbType) {
         super(dbType);
-//        this.dbType = dbType;
     }
 
     public SQLCreateTableBuilderImpl(String sql, DbType dbType) {
@@ -51,23 +49,15 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         if (stmtList.get(0) instanceof SQLCreateTableStatement statement) {
             this.stmt = statement;
         }
-//        this.dbType = dbType;
     }
 
     public SQLCreateTableBuilderImpl(@Nullable SQLCreateTableStatement stmt, @NotNull DbType dbType) {
         super(dbType);
         this.stmt = stmt;
-//        this.dbType = dbType;
     }
 
-//    @Override
-//    public SQLCreateTableBuilder setType(DbType dbType) {
-//        this.dbType = dbType;
-//        return this;
-//    }
-
     /**
-     * 支持数据库：hive <p>
+     * 支持数据库：hive,db2 <p>
      * 语法：CREATE [TEMPORARY] [EXTERNAL] TABLE ...
      *
      * @param external
@@ -75,7 +65,11 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
      */
     @Override
     public SQLCreateTableBuilder setExternal(boolean external) {
-        throw new UnsupportedOperationException();
+        SQLCreateTableStatement statement = getSQLStatement();
+        if (statement != null) {
+            statement.setExternal(external);
+        }
+        return this;
     }
 
     /**
@@ -127,10 +121,10 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
      */
     @Override
     public SQLCreateTableBuilder setSelect(String select) {
-        SQLCreateTableStatement create = getSQLStatement();
+        SQLCreateTableStatement statement = getSQLStatement();
         SQLExpr query = SQLUtils.toSQLExpr(select, this.dbType);
         if (query instanceof SQLQueryExpr) {
-            stmt.setSelect(((SQLQueryExpr) query).getSubQuery());
+            statement.setSelect(((SQLQueryExpr) query).getSubQuery());
         }
 
         return this;
@@ -220,7 +214,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     @Override
     public SQLCreateTableBuilder addColumn(String columnName, String dataType, String comment) {
 
-        SQLColumnDefinition column = getColumn(columnName, dataType, false, false, false, false);
+        SQLColumnDefinition column = getColumn(columnName, dataType, false, false, false, false,false);
         column.setComment(comment);
         addColumn(column);
         return this;
@@ -237,12 +231,12 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     @Override
     public SQLCreateTableBuilder addColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull) {
 
-        SQLColumnDefinition column = getColumn(columnName, dataType, primary, unique, notNull, false);
+        SQLColumnDefinition column = getColumn(columnName, dataType, notNull,false, primary, unique,false);
         addColumn(column);
         return this;
     }
 
-    private SQLColumnDefinition getColumn(String columnName, String dataType, boolean primary, boolean unique, boolean notNull, boolean autoIncrement) {
+    private SQLColumnDefinition getColumn(String columnName, String dataType, boolean notNull, boolean Null, boolean primary, boolean unique, boolean autoIncrement) {
         SQLColumnDefinition column = new SQLColumnDefinition();
         column.setDbType(dbType);
         column.setName(columnName);
@@ -250,9 +244,40 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
                 SQLParserUtils.createExprParser(dataType, dbType).parseDataType()
         );
 
+        return getColumnRest(column, null, notNull, Null, primary, unique, autoIncrement);
+
+    }
+
+    /**
+     * 设置列定义中的约束部分
+     * @param column
+     * @param defaultValue 默认值，没有设置为null。由于数字和字符等各种类型都是通过String类型传递数据，当数据本身为String类 类型时，应添加'', 如 “‘abc’”;字符直接为"123"
+     * @param primary
+     * @param unique
+     * @param notNull
+     * @param autoIncrement
+     * @return
+     */
+    public SQLColumnDefinition getColumnRest(SQLColumnDefinition column, @Nullable String defaultValue, boolean notNull, boolean Null,
+                                             boolean primary, boolean unique, boolean autoIncrement) {
+
+        SQLExpr defaultExpr = null;
+        if (defaultValue != null) {
+            defaultExpr = SQLUtils.toSQLExpr(defaultValue);
+        }
+        column.setDefaultExpr(defaultExpr);
+
         if (notNull) {
             SQLNotNullConstraint nullConstraint = new SQLNotNullConstraint();
             column.addConstraint(nullConstraint);
+        } else {
+            column.getConstraints().removeIf(c -> c instanceof SQLNotNullConstraint);
+        }
+
+        if (Null) {
+            column.getConstraints().add(new SQLNullConstraint());
+        } else {
+            column.getConstraints().removeIf(c -> c instanceof SQLNullConstraint);
         }
 
         if (primary) {
@@ -260,12 +285,22 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
             if (autoIncrement) {
                 column.setAutoIncrement(true);
             }
-        } else if (unique) {
+        } else {
+            column.getConstraints().removeIf(c -> c instanceof SQLColumnPrimaryKey);
+            if (!autoIncrement) {
+                column.setAutoIncrement(false);
+            }
+        }
+
+        if (unique) {
             column.addConstraint(new SQLColumnUniqueKey());
+        } else {
+            column.getConstraints().removeIf(c -> c instanceof SQLColumnUniqueKey);
         }
 
         return column;
     }
+
 
     /**
      *
@@ -283,7 +318,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
      */
     @Override
     public SQLCreateTableBuilder addColumnAutoIncrement(String columnName, String dataType) {
-        SQLColumnDefinition column = getColumn(columnName, dataType, true, false, false, true);
+        SQLColumnDefinition column = getColumn(columnName, dataType, false, false, true, false, true);
         addColumn(column);
         return this;
     }
@@ -308,28 +343,41 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     @Override
     public SQLCreateTableBuilder addPrimaryKey(@Nullable String primaryKeyName, List<String> columnNames) {
         SQLConstraint constraint = null;
-        boolean hasConstaint = false;
-        SQLName name = null;
 
-        if (primaryKeyName != null) {
-            name = new SQLIdentifierExpr(primaryKeyName);
+        constraint = createConstraint(Token.PRIMARY, columnNames, primaryKeyName);
+        if (constraint != null) {
+            SQLCreateTableStatement create = getSQLStatement();
+            constraint.setParent(create);
+            create.getTableElementList().add((SQLTableElement) constraint);
         }
+        return this;
+    }
 
-        constraint = createConstraint(Token.PRIMARY, columnNames, hasConstaint, name);
+    @Override
+    public SQLCreateTableBuilder addUniqueKey(String uniqueKeyName, List<String> columnNames) {
+        SQLConstraint constraint;
 
-        SQLCreateTableStatement create = getSQLStatement();
-        constraint.setParent(create);
-        create.getTableElementList().add((SQLTableElement) constraint);
+        constraint = createConstraint(Token.UNIQUE, columnNames, uniqueKeyName);
+        if (constraint != null) {
+            SQLCreateTableStatement create = getSQLStatement();
+            constraint.setParent(create);
+            create.getTableElementList().add((SQLTableElement) constraint);
+        }
 
         return this;
     }
 
-    protected SQLConstraint createConstraint(Token token, List<String> columnNames, boolean hasConstraint, SQLName name) {
+    protected SQLConstraint createConstraint(Token token, List<String> columnNames, String name) {
+        SQLName nameConstraint = null;
+
+        if (name != null) {
+            nameConstraint = new SQLIdentifierExpr(name);
+        }
 
         SQLConstraint constraint = switch (token) {
             case CHECK -> this.createCheck(columnNames);
-            case PRIMARY -> this.createPrimaryKey(columnNames, hasConstraint, name);
-            case KEY, UNIQUE -> this.createUnique(columnNames);
+            case PRIMARY -> this.createPrimaryKey(columnNames, nameConstraint);
+            case KEY, UNIQUE -> this.createUnique(columnNames, nameConstraint);
             case DEFAULT -> this.createDefault(columnNames);
             case FOREIGN -> this.createForeignKey(columnNames);
             default -> throw new ParserException("TODO : " + token);
@@ -346,22 +394,29 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         return null;
     }
 
-    private SQLConstraint createUnique(List<String> columnNames) {
-        return null;
-    }
+
 
     private SQLConstraint createCheck(List<String> columnNames) {
         return null;
     }
 
     @NotNull
-    protected SQLConstraint createPrimaryKey(List<String> columnNames, boolean hasConstraint, SQLName name) {
+    protected SQLConstraint createPrimaryKey(List<String> columnNames, SQLName name) {
         SQLPrimaryKeyImpl pk = new SQLPrimaryKeyImpl();
 
         orderBy(columnNames, pk.getColumns(), pk);
         pk.setName(name);
 
         return pk;
+    }
+
+    protected SQLConstraint createUnique(List<String> columnNames, SQLName name) {
+        SQLUnique unique = new SQLUnique();
+
+        orderBy(columnNames, unique.getColumns(), unique);
+        unique.setName(name);
+//
+        return unique;
     }
 
     /**
@@ -378,37 +433,6 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
             item.setParent(parent);
             items.add(item);
         }
-    }
-
-    @Override
-    public SQLCreateTableBuilder addUniqueKey(String uniqueKeyName, List<String> columnNames) {
-        SQLTableConstraint constraint = null;
-        boolean hasConstaint = true;
-        SQLName name = null;
-
-        if (uniqueKeyName != null) {
-            name = new SQLIdentifierExpr(uniqueKeyName);
-        }
-
-        switch (dbType) {
-            case mysql:
-                MySqlUnique unique = new MySqlUnique();
-                if (name != null) {
-                    unique.setName(name);
-                }
-                buildIndex(unique.getIndexDefinition(),Token.UNIQUE.name,"", Token.KEY.name,columnNames);
-                unique.setHasConstraint(hasConstaint);
-                constraint = unique;
-            default:
-                break;
-        }
-
-        SQLCreateTableStatement create = getSQLStatement();
-        constraint.setParent(create);
-
-        create.getTableElementList().add(constraint);
-
-        return this;
     }
 
     /**

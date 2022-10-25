@@ -3,11 +3,9 @@ package flowdesigner.jdbc.builder.impl.dialect.hive;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.statement.*;
-import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLCreateTableBuilderImpl;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -15,30 +13,6 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
 
     public HiveCreateTableBuilderImpl(@NotNull DbType dbType) {
         super(dbType);
-    }
-
-    public HiveCreateTableBuilderImpl(String sql, DbType dbType) {
-        super(sql, dbType);
-    }
-
-    public HiveCreateTableBuilderImpl(@Nullable SQLCreateTableStatement stmt, @NotNull DbType dbType) {
-        super(stmt, dbType);
-    }
-
-    /**
-     * 支持数据库：hive <p>
-     * 语法：CREATE [TEMPORARY] [EXTERNAL] TABLE ...
-     *
-     * @param external
-     * @return
-     */
-    @Override
-    public SQLCreateTableBuilder setExternal(boolean external) {
-        SQLCreateTableStatement statement = getSQLStatement();
-        if (statement != null) {
-            statement.setExternal(external);
-        }
-        return this;
     }
 
     /**
@@ -56,22 +30,32 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
      * Hive需要在PRIMARY KEY 后面增加 NOVALIDATE关键字（默认）.<p>
      * 语法：[, PRIMARY KEY (col_name, ...) DISABLE NOVALIDATE RELY/NORELY ]
      * @param columnNames
-     * @param hasConstraint
      * @param name
      * @return
      */
     @Override
-    protected @NotNull SQLConstraint createPrimaryKey(List<String> columnNames, boolean hasConstraint, SQLName name) {
+    protected @NotNull SQLConstraint createPrimaryKey(List<String> columnNames, SQLName name) {
 
-        SQLConstraint primaryKey = super.createPrimaryKey( columnNames, hasConstraint, name);
-        if (primaryKey instanceof SQLPrimaryKeyImpl) {
-            primaryKey.setName(null);
-            ((SQLPrimaryKeyImpl)primaryKey).setDisableNovalidate(true);
+        SQLConstraint constraint = super.createPrimaryKey( columnNames, name);
+        if (constraint instanceof SQLPrimaryKeyImpl primaryKey) {
+            constraint.setName(null);
+            primaryKey.setDisableNovalidate(true);
             // 以下代码目前不起作用
-            ((SQLPrimaryKeyImpl)primaryKey).setRely(Boolean.TRUE);
+            primaryKey.setRely(Boolean.TRUE);
         }
 
-        return primaryKey;
+        return constraint;
+    }
+
+    /**
+     * hive目前不支持，执行报错
+     * @param columnNames
+     * @param name
+     * @return
+     */
+    @Override
+    protected SQLConstraint createUnique(List<String> columnNames, SQLName name) {
+        return null;
     }
 
     /**

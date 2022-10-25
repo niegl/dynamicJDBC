@@ -6,11 +6,17 @@ import flowdesigner.jdbc.builder.SQLBuilderFactory;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import sqlTest.SQLTest;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.Arrays;
+import java.util.stream.Stream;
+
 
 class SQLCreateTableBuilderImplTest {
     SQLCreateTableBuilder tableBuilder;
@@ -86,14 +92,14 @@ class SQLCreateTableBuilderImplTest {
 
     @Test
     void addPrimaryKeyConstraint() throws SQLSyntaxErrorException {
-        createBuilder(DbType.hive);
+        createBuilder(DbType.db2);
         tableBuilder.addColumn("Id_P","int");
         tableBuilder.addPrimaryKey("PRIMARY_id_p", Arrays.asList("Id_P"));
-        SQLTest.parser(tableBuilder.toString(), DbType.hive);
+        SQLTest.parser(tableBuilder.toString(), DbType.db2);
     }
 
     @Test
-    void addUniqueKey() {
+    void addUniqueKeyMySQL() {
         tableBuilder.addUniqueKey("uc_PersonID", Arrays.asList("Id_P","LastName"));
         System.out.println(tableBuilder.toString());
     }
@@ -145,7 +151,7 @@ class SQLCreateTableBuilderImplTest {
 
     @Test
     void setTemporary() {
-        tableBuilder.setTemporary("dd");
+        tableBuilder.setTemporary("TEMPORARY");
         tableBuilder.addColumn("line_id","Stirng");
         System.out.println(tableBuilder);
     }
@@ -163,4 +169,33 @@ class SQLCreateTableBuilderImplTest {
         tableBuilder.setSelect("select a,b from t");
         System.out.println(tableBuilder);
     }
+
+    @Test
+    void setExternal() {
+        tableBuilder.setExternal(true);
+    }
+
+    /**
+     * methodSource不指定方法名.默认方法名与测试方法相同
+     * @param dbType
+     * @param expected
+     */
+    @ParameterizedTest
+    @MethodSource()
+    void createUnique(DbType dbType, String expected) {
+        tableBuilder = SQLBuilderFactory.createCreateTableBuilder(dbType);
+        tableBuilder.setName("std_line");
+        tableBuilder.setSchema("std_pcode");
+        tableBuilder.addUniqueKey("uc_PersonID", Arrays.asList("Id_P","LastName"));
+        Assertions.assertEquals(expected,tableBuilder.toString());
+    }
+
+    static Stream<Arguments> createUnique() {
+        return Stream.of(Arguments.arguments(DbType.mysql, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tUNIQUE uc_PersonID (Id_P, LastName)\n" +
+                        ")"),
+                Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line")
+        );
+    }
+
 }

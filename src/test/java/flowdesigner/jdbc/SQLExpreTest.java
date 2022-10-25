@@ -142,5 +142,15 @@ public class SQLExpreTest {
         SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
         System.out.println(expr);
     }
+    @org.junit.jupiter.api.Test
+    void testIndentifier() throws SQLSyntaxErrorException {
+        DbType dbType = JdbcConstants.HIVE;
+        String sql = "123";
+        SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
+        System.out.println(expr);
+        String sql1 = "\"123\"";
+        SQLExpr expr1 = SQLUtils.toSQLExpr(sql1, dbType);
+        System.out.println(expr1);
+    }
 
 }
