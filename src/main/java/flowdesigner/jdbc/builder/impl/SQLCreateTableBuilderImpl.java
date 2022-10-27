@@ -12,8 +12,6 @@ import com.alibaba.druid.sql.dialect.blink.ast.BlinkCreateTableStatement;
 import com.alibaba.druid.sql.dialect.clickhouse.ast.ClickhouseCreateTableStatement;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2CreateTableStatement;
 import com.alibaba.druid.sql.dialect.hive.stmt.HiveCreateTableStatement;
-import com.alibaba.druid.sql.dialect.mysql.ast.MySqlUnique;
-import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import com.alibaba.druid.sql.dialect.odps.ast.OdpsCreateTableStatement;
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleCreateTableStatement;
@@ -24,6 +22,7 @@ import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 
 public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCreateTableBuilder {
@@ -344,7 +343,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     public SQLCreateTableBuilder addPrimaryKey(@Nullable String primaryKeyName, List<String> columnNames) {
         SQLConstraint constraint = null;
 
-        constraint = createConstraint(Token.PRIMARY, columnNames, primaryKeyName);
+        constraint = createConstraint(Token.PRIMARY, primaryKeyName, columnNames, null,null, null);
         if (constraint != null) {
             SQLCreateTableStatement create = getSQLStatement();
             constraint.setParent(create);
@@ -357,7 +356,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     public SQLCreateTableBuilder addUniqueKey(String uniqueKeyName, List<String> columnNames) {
         SQLConstraint constraint;
 
-        constraint = createConstraint(Token.UNIQUE, columnNames, uniqueKeyName);
+        constraint = createConstraint(Token.UNIQUE, uniqueKeyName, columnNames,null,null, null);
         if (constraint != null) {
             SQLCreateTableStatement create = getSQLStatement();
             constraint.setParent(create);
@@ -367,54 +366,133 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         return this;
     }
 
-    protected SQLConstraint createConstraint(Token token, List<String> columnNames, String name) {
-        SQLName nameConstraint = null;
+    /**
+     * 添加外键。
+     * 两种类型外键：1、foreignKeyName=null为单纯外键；2、foreignKeyName为外键键值时为外键约束。
+     * @param foreignKeyName 1、foreignKeyName=null为单纯外键；2、foreignKeyName为外键键值时为外键约束。
+     * @param referencingColumns 源表外键
+     * @param referencedTableName 目标表名
+     * @param referencedColumns 目标表参考键（一般为主键）
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder addForeignKey(String foreignKeyName, List<String> referencingColumns,
+                                               String referencedTableName, List<String> referencedColumns) {
+        SQLConstraint constraint = null;
 
-        if (name != null) {
-            nameConstraint = new SQLIdentifierExpr(name);
+        constraint = createConstraint(Token.FOREIGN, foreignKeyName, referencingColumns,referencedTableName,referencedColumns, null);
+
+        if (constraint != null) {
+            SQLCreateTableStatement create = getSQLStatement();
+            constraint.setParent(create);
+
+            create.getTableElementList().add((SQLTableElement) constraint);
         }
 
+        return this;
+    }
+
+    @Override
+    public SQLCreateTableBuilder addCheckConstraint(String name, String checkExpr) {
+        SQLConstraint constraint = null;
+
+        if (checkExpr == null) {
+            return this;
+        }
+
+        constraint = createConstraint(Token.CHECK, name,null,null,null, checkExpr);
+
+        if (constraint != null) {
+            SQLCreateTableStatement create = getSQLStatement();
+            constraint.setParent(create);
+
+            create.getTableElementList().add((SQLTableElement) constraint);
+        }
+
+        return this;
+    }
+
+    private SQLConstraint createConstraint(Token token, String name, List<String> columnNames
+            ,String referencedTableName, List<String> referencedColumns
+            ,String checkExpr) {
+        StringBuffer nameConstraint = new StringBuffer(name);
+
         SQLConstraint constraint = switch (token) {
-            case CHECK -> this.createCheck(columnNames);
-            case PRIMARY -> this.createPrimaryKey(columnNames, nameConstraint);
-            case KEY, UNIQUE -> this.createUnique(columnNames, nameConstraint);
-            case DEFAULT -> this.createDefault(columnNames);
-            case FOREIGN -> this.createForeignKey(columnNames);
+            case CHECK -> this.buildCheck(checkExpr, nameConstraint);
+            case PRIMARY -> this.buildPrimaryKey(columnNames, nameConstraint);
+            case KEY, UNIQUE -> this.buildUnique(columnNames, nameConstraint);
+            case DEFAULT -> this.buildDefault( columnNames);
+            case FOREIGN -> this.buildForeignKey(nameConstraint, columnNames, referencedTableName, referencedColumns);
             default -> throw new ParserException("TODO : " + token);
         };
+
+        if (!nameConstraint.isEmpty()) {
+            if (constraint != null) {
+                constraint.setName(new SQLIdentifierExpr(nameConstraint.toString()));
+            }
+        }
 
         return (SQLConstraint) constraint;
     }
 
-    private SQLConstraint createForeignKey(List<String> columnNames) {
+    private SQLConstraint buildForeignKey(StringBuffer name, List<String> referencingColumns,
+                                          String referencedTableName, List<String> referencedColumns) {
+        SQLForeignKeyImpl fk = createForeignKey(name);
+        buildForeignKey(fk, referencingColumns, referencedTableName, referencedColumns);
+
+        return fk;
+    }
+
+    public final void names(Collection<SQLName> exprCol, SQLObject parent) {
+
+    }
+
+    private SQLConstraint buildDefault(List<String> columnNames) {
         return null;
     }
 
-    private SQLConstraint createDefault(List<String> columnNames) {
-        return null;
-    }
+    private SQLConstraint buildCheck(String checkExpr, StringBuffer name) {
+        SQLCheck check = createCheck(name);
+        SQLExpr expr = SQLUtils.toSQLExpr(checkExpr, getDbType());
+        if (expr != null) {
+            check.setExpr(expr);
+        }
 
-
-
-    private SQLConstraint createCheck(List<String> columnNames) {
-        return null;
+        return check;
     }
 
     @NotNull
-    protected SQLConstraint createPrimaryKey(List<String> columnNames, SQLName name) {
-        SQLPrimaryKeyImpl pk = new SQLPrimaryKeyImpl();
+    protected SQLConstraint buildPrimaryKey(List<String> columnNames, StringBuffer name) {
+        SQLPrimaryKeyImpl pk = createPrimaryKey(name);
 
         orderBy(columnNames, pk.getColumns(), pk);
-        pk.setName(name);
+//        pk.setName(name);
 
         return pk;
     }
 
-    protected SQLConstraint createUnique(List<String> columnNames, SQLName name) {
-        SQLUnique unique = new SQLUnique();
+    @NotNull
+    protected SQLPrimaryKeyImpl createPrimaryKey(StringBuffer name) {
+        return new SQLPrimaryKeyImpl();
+    }
+    @NotNull
+    protected SQLUnique createUnique(StringBuffer name) {
+        return new SQLUnique();
+    }
+    @NotNull
+    protected SQLForeignKeyImpl createForeignKey(StringBuffer name) {
+        return new SQLForeignKeyImpl();
+    }
+    @NotNull
+    protected SQLCheck createCheck(StringBuffer name) {
+        return new SQLCheck();
+    }
+
+    protected SQLConstraint buildUnique(List<String> columnNames, StringBuffer name) {
+        SQLUnique unique = createUnique(name);
 
         orderBy(columnNames, unique.getColumns(), unique);
-        unique.setName(name);
+//        unique.setName(name);
 //
         return unique;
     }
@@ -435,48 +513,6 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         }
     }
 
-    /**
-     * 添加外键。
-     * 两种类型外键：1、foreignKeyName=null为单纯外键；2、foreignKeyName为外键键值时为外键约束。
-     * @param foreignKeyName 1、foreignKeyName=null为单纯外键；2、foreignKeyName为外键键值时为外键约束。
-     * @param referencingColumns 源表外键
-     * @param referencedTableName 目标表名
-     * @param referencedColumns 目标表参考键（一般为主键）
-     * @return
-     */
-    @Override
-    public SQLCreateTableBuilder addForeignKey(String foreignKeyName, List<String> referencingColumns,
-                                               String referencedTableName, List<String> referencedColumns) {
-        SQLTableConstraint constraint = null;
-        boolean hasConstaint = false;
-        SQLName name = null;
-
-        if (foreignKeyName != null) {
-            name = new SQLIdentifierExpr(foreignKeyName);
-            hasConstaint = true;
-        }
-
-        switch (dbType) {
-            case mysql:
-                MysqlForeignKey pk = new MysqlForeignKey();
-                buildForeignKey(pk,referencingColumns,referencedTableName,referencedColumns);
-                if (name != null) {
-                    pk.setName(name);
-                }
-                pk.setHasConstraint(hasConstaint);
-                constraint = pk;
-            default:
-                break;
-        }
-
-        SQLCreateTableStatement create = getSQLStatement();
-        assert constraint != null;
-        constraint.setParent(create);
-
-        create.getTableElementList().add(constraint);
-
-        return this;
-    }
 
     protected void buildIndex(SQLIndexDefinition indexDefinition, String token, String globalOrLocal, String indexOrKey, List<String> columnNames) {
         if (token.equalsIgnoreCase("FULLTEXT")
@@ -523,8 +559,8 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         return item;
     }
 
-    public SQLForeignKeyImpl buildForeignKey(SQLForeignKeyImpl fk, List<String> referencingColumns,
-                                             String referencedTableName,List<String> referencedColumns) {
+    public void buildForeignKey(SQLForeignKeyImpl fk, List<String> referencingColumns,
+                                String referencedTableName, List<String> referencedColumns) {
 //        MysqlForeignKey fk = new MysqlForeignKey();
 
 //        if (lexer.token() != Token.LPAREN) {
@@ -535,7 +571,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
                 referencingColumns) {
             SQLName name = new SQLIdentifierExpr(col);
             name.setParent(fk);
-            fk.getReferencingColumns().add(new SQLIdentifierExpr(col));
+            fk.getReferencingColumns().add(name);
         }
 
         fk.setReferencedTableName(new SQLIdentifierExpr(referencedTableName));
@@ -544,10 +580,9 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
                 referencedColumns) {
             SQLName name = new SQLIdentifierExpr(col);
             name.setParent(fk);
-            fk.getReferencedColumns().add(new SQLIdentifierExpr(col));
+            fk.getReferencedColumns().add(name);
         }
 
-        return fk;
     }
 
     @Override

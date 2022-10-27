@@ -1,12 +1,12 @@
 package flowdesigner.jdbc.builder.impl.dialect.mysql;
 
 import com.alibaba.druid.DbType;
-import com.alibaba.druid.sql.ast.SQLName;
+import com.alibaba.druid.sql.ast.statement.SQLCheck;
 import com.alibaba.druid.sql.ast.statement.SQLConstraint;
-import com.alibaba.druid.sql.ast.statement.SQLPrimaryKeyImpl;
-import com.alibaba.druid.sql.ast.statement.SQLTableConstraint;
+import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlUnique;
+import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLCreateTableBuilderImpl;
@@ -20,25 +20,50 @@ public class MySQLCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
     }
 
     @Override
-    protected @NotNull SQLConstraint createPrimaryKey(List<String> columnNames, SQLName name) {
+    protected @NotNull SQLConstraint buildPrimaryKey(List<String> columnNames, StringBuffer name) {
         MySqlPrimaryKey pk = new MySqlPrimaryKey();
         buildIndex(pk.getIndexDefinition(), Token.PRIMARY.name,"", Token.KEY.name, columnNames);
         if (name != null) {
-            pk.setName(name);
+            pk.setName(String.valueOf(name));
         }
         pk.setHasConstraint(true);
         return pk;
     }
 
     @Override
-    protected SQLConstraint createUnique(List<String> columnNames, SQLName name) {
+    protected SQLConstraint buildUnique(List<String> columnNames, StringBuffer name) {
         MySqlUnique unique = new MySqlUnique();
         if (name != null) {
-            unique.setName(name);
+            unique.setName(String.valueOf(name));
             unique.setHasConstraint(true);
         }
         buildIndex(unique.getIndexDefinition(), Token.UNIQUE.name, "", "", columnNames);
         return unique;
+    }
+
+    @Override
+    protected @NotNull SQLForeignKeyImpl createForeignKey(StringBuffer name) {
+        MysqlForeignKey foreignKey = new MysqlForeignKey();
+        if (name != null) {
+            foreignKey.setName(String.valueOf(name));
+            foreignKey.setHasConstraint(true);
+        }
+
+        foreignKey.setOnUpdate(SQLForeignKeyImpl.Option.CASCADE);
+        foreignKey.setOnDelete(SQLForeignKeyImpl.Option.RESTRICT);
+
+        return foreignKey;
+    }
+
+    /**
+     * 支持MySQL 8.0.16之前的语法，去掉CONSTRAINT [symbol]
+     * @param name
+     * @return
+     */
+    @Override
+    protected @NotNull SQLCheck createCheck(StringBuffer name) {
+        name.setLength(0);
+        return super.createCheck(name);
     }
 
     /**

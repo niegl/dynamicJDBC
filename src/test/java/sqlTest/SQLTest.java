@@ -120,6 +120,16 @@ public class SQLTest {
     }
 
     @org.junit.jupiter.api.Test
+    void testCheck() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="CREATE TABLE t1(\n" +
+                "  CHECK (c1 > c3)\n" +
+                ");";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
     void testUnique0() throws SQLSyntaxErrorException {
         String dbType = "hive";
         String sql ="CREATE TABLE Persons\n" +
@@ -141,6 +151,16 @@ public class SQLTest {
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
 
+    @org.junit.jupiter.api.Test
+    void testFOREIGNHive() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="CREATE TABLE Persons\n" +
+                "(\n" +
+                "CONSTRAINT constraint_name FOREIGN KEY (Id_P) REFERENCES Persons(Id_P) DISABLE NOVALIDATE\n" +
+                ")";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
     @org.junit.jupiter.api.Test
     void testDatabase() throws SQLSyntaxErrorException {
         String dbType = "hive";
@@ -1637,6 +1657,12 @@ public class SQLTest {
     @org.junit.jupiter.api.Test
     void testMySQLEnvironment() throws SQLSyntaxErrorException {
         String sql = "set global max_allowed_packet = 2*1024*1024*10;";
+        parser(sql, "mysql");
+    }
+
+    @org.junit.jupiter.api.Test
+    void testAddBeforeComment() throws SQLSyntaxErrorException {
+        String sql = "--插入开始时间用来计算跑批时间\nCREATE TABLE tbl_name(name VARCHAR(20));";
         parser(sql, "mysql");
     }
 

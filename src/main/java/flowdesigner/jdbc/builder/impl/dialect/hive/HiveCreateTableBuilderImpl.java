@@ -1,7 +1,6 @@
 package flowdesigner.jdbc.builder.impl.dialect.hive;
 
 import com.alibaba.druid.DbType;
-import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.statement.*;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLCreateTableBuilderImpl;
@@ -34,9 +33,9 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
      * @return
      */
     @Override
-    protected @NotNull SQLConstraint createPrimaryKey(List<String> columnNames, SQLName name) {
+    protected @NotNull SQLConstraint buildPrimaryKey(List<String> columnNames, StringBuffer name) {
 
-        SQLConstraint constraint = super.createPrimaryKey( columnNames, name);
+        SQLConstraint constraint = super.buildPrimaryKey( columnNames, name);
         if (constraint instanceof SQLPrimaryKeyImpl primaryKey) {
             constraint.setName(null);
             primaryKey.setDisableNovalidate(true);
@@ -54,8 +53,16 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
      * @return
      */
     @Override
-    protected SQLConstraint createUnique(List<String> columnNames, SQLName name) {
+    protected SQLConstraint buildUnique(List<String> columnNames, StringBuffer name) {
         return null;
+    }
+
+    @Override
+    protected @NotNull SQLForeignKeyImpl createForeignKey(StringBuffer name) {
+        SQLForeignKeyImpl foreignKey = super.createForeignKey(name);
+        foreignKey.setDisableNovalidate(true);
+
+        return foreignKey;
     }
 
     /**

@@ -92,10 +92,10 @@ class SQLCreateTableBuilderImplTest {
 
     @Test
     void addPrimaryKeyConstraint() throws SQLSyntaxErrorException {
-        createBuilder(DbType.db2);
-        tableBuilder.addColumn("Id_P","int");
+        createBuilder(DbType.mysql);
+//        tableBuilder.addColumn("Id_P","int");
         tableBuilder.addPrimaryKey("PRIMARY_id_p", Arrays.asList("Id_P"));
-        SQLTest.parser(tableBuilder.toString(), DbType.db2);
+        SQLTest.parser(tableBuilder.toString(), DbType.mysql);
     }
 
     @Test
@@ -175,6 +175,8 @@ class SQLCreateTableBuilderImplTest {
         tableBuilder.setExternal(true);
     }
 
+
+
     /**
      * methodSource不指定方法名.默认方法名与测试方法相同
      * @param dbType
@@ -195,6 +197,72 @@ class SQLCreateTableBuilderImplTest {
                         "\tUNIQUE uc_PersonID (Id_P, LastName)\n" +
                         ")"),
                 Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource()
+    void testAddForeignKey(DbType dbType, String expected) {
+        tableBuilder = SQLBuilderFactory.createCreateTableBuilder(dbType);
+        tableBuilder.setName("std_line");
+        tableBuilder.setSchema("std_pcode");
+        tableBuilder.addForeignKey("uc_PersonID", Arrays.asList("Id_P","LastName"), "tbl_name", Arrays.asList("col_name"));
+        Assertions.assertEquals(expected,tableBuilder.toString());
+    }
+
+    static Stream<Arguments> testAddForeignKey() {
+        return Stream.of(Arguments.arguments(DbType.mysql, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCONSTRAINT uc_PersonID FOREIGN KEY (Id_P, LastName) REFERENCES tbl_name (col_name) ON DELETE RESTRICT ON UPDATE CASCADE\n" +
+                        ")"),
+                Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCONSTRAINT uc_PersonID FOREIGN KEY (Id_P, LastName)\n" +
+                        "\t\tREFERENCES tbl_name (col_name) DISABLE NOVALIDATE\n" +
+                        ")")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource()
+    void testAddPrimaryKey(DbType dbType, String expected) {
+        createBuilder(dbType);
+        tableBuilder.addPrimaryKey("PRIMARY_id_p", Arrays.asList("Id_P"));
+
+        Assertions.assertEquals(expected,tableBuilder.toString());
+    }
+    static Stream<Arguments> testAddPrimaryKey() {
+        return Stream.of(Arguments.arguments(DbType.mysql, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tPRIMARY KEY (Id_P)\n" +
+                        ") COMMENT 'comment'"),
+                Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCONSTRAINT PRIMARY_id_p PRIMARY KEY (Id_P) DISABLE NOVALIDATE\n" +
+                        ")\n" +
+                        "COMMENT 'comment'"),
+                Arguments.arguments(DbType.db2, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCONSTRAINT PRIMARY_id_p PRIMARY KEY (Id_P)\n" +
+                        ")")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource()
+    void addCheckConstraint(DbType dbType, String expected) {
+        createBuilder(dbType);
+        tableBuilder.addCheckConstraint("PRIMARY_id_p", "c1 > c3");
+
+        Assertions.assertEquals(expected,tableBuilder.toString());
+    }
+
+    static Stream<Arguments> addCheckConstraint() {
+        return Stream.of(Arguments.arguments(DbType.mysql, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCHECK (c1 > c3)\n" +
+                        ") COMMENT 'comment'"),
+                Arguments.arguments(DbType.db2, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCONSTRAINT PRIMARY_id_p CHECK (c1 > c3)\n" +
+                        ")"),
+                Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCONSTRAINT PRIMARY_id_p CHECK (c1 > c3)\n" +
+                        ")\n" +
+                        "COMMENT 'comment'")
         );
     }
 

@@ -63,6 +63,8 @@ public interface SQLCreateTableBuilder extends SQLBuilder {
     SQLCreateTableBuilder addForeignKey(String foreignKeyName, List<String> referencingColumns,
                                         String referencedTableName, List<String> referencedColumns);
 
+    SQLCreateTableBuilder addCheckConstraint(String name, String checkExpr);
+
     SQLCreateTableBuilder addPartitionColumn(String columnName);
 
     SQLCreateTableBuilder addPartitionColumn(String columnName, String columnComment);
