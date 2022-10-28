@@ -438,9 +438,9 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         }
     }
 
-    public String toString() {
-        return SQLUtils.toSQLString(stmt, dbType);
-    }
+//    public String toString() {
+//        return SQLUtils.toSQLString(stmt, dbType);
+//    }
 
     /**
      * 以下为MYSQL适配接口

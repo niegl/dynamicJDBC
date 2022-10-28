@@ -14,6 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import sqlTest.SQLTest;
 
 import java.sql.SQLSyntaxErrorException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -34,8 +35,10 @@ class SQLCreateTableBuilderImplTest {
         tableBuilder = SQLBuilderFactory.createCreateTableBuilder(dbType);
         tableBuilder.setName("std_line");
         tableBuilder.setSchema("std_pcode");
-        tableBuilder.setComment("comment");
     }
+
+
+
     @Test
     void testBuilder() {
         for (DbType dbType : DbType.values()) {
@@ -60,13 +63,58 @@ class SQLCreateTableBuilderImplTest {
         }
     }
 
-    @Test
-    void addColumn() {
+    @ParameterizedTest
+    @MethodSource()
+    void addColumn(DbType dbType, String expected) {
+        createBuilder(dbType);
+        tableBuilder.addColumn("line_id","int");
+        Assertions.assertEquals(expected,tableBuilder.toString());
+    }
+    static Stream<Arguments> addColumn() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
         for (DbType dbType : DbType.values()) {
-            createBuilder(dbType);
-            tableBuilder.addColumn("line_id","Stirng");
-            System.out.println(tableBuilder);
+            if (dbType == DbType.odps) {
+                arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id INT\n" +
+                        ")"));
+                continue;
+            }
+
+            arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                    "\tline_id int\n" +
+                    ")"));
+
         }
+
+        return arguments.stream();
+    }
+
+    @ParameterizedTest
+    @MethodSource()
+    void addColumnWithComment(DbType dbType, String expected) {
+        createBuilder(dbType);
+        tableBuilder.addColumn("line_id","int","comment");
+        Assertions.assertEquals(expected,tableBuilder.toString());
+    }
+    static Stream<Arguments> addColumnWithComment() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            if (dbType == DbType.odps) {
+                arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id INT COMMENT 'comment'\n" +
+                        ")"));
+            } else if (dbType == DbType.jtds || dbType == DbType.sqlserver) {
+                arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id int\n" +
+                        ")"));
+            } else {
+                arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id int COMMENT 'comment'\n" +
+                        ")"));
+            }
+        }
+
+        return arguments.stream();
     }
 
     @Test

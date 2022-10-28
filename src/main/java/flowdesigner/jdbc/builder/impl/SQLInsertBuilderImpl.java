@@ -155,8 +155,8 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
 
     }
 
-    public String toString() {
-        return SQLUtils.toSQLString(stmt, dbType);
-    }
+//    public String toString() {
+//        return SQLUtils.toSQLString(stmt, dbType);
+//    }
 
 }

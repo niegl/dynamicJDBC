@@ -559,7 +559,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         return item;
     }
 
-    public void buildForeignKey(SQLForeignKeyImpl fk, List<String> referencingColumns,
+    protected void buildForeignKey(SQLForeignKeyImpl fk, List<String> referencingColumns,
                                 String referencedTableName, List<String> referencedColumns) {
 //        MysqlForeignKey fk = new MysqlForeignKey();
 
@@ -658,7 +658,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         };
     }
 
-    public String toString() {
-        return SQLUtils.toSQLString(stmt, dbType);
-    }
+//    public String toString() {
+//        return SQLUtils.toSQLString(stmt, dbType);
+//    }
 }

@@ -138,7 +138,7 @@ public class SQLCreateDatabaseBuilderImpl extends SQLBuilderImpl implements SQLC
         return new SQLCreateDatabaseStatement(dbType);
     }
 
-    public String toString() {
-        return SQLUtils.toSQLString(stmt, dbType);
-    }
+//    public String toString() {
+//        return SQLUtils.toSQLString(stmt, dbType);
+//    }
 }

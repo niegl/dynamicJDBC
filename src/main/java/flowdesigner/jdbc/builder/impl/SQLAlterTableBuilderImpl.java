@@ -344,10 +344,10 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         return stmt;
     }
 
-    @Override
-    public String toString() {
-        return SQLUtils.toSQLString(stmt, dbType);
-    }
+//    @Override
+//    public String toString() {
+//        return SQLUtils.toSQLString(stmt, dbType);
+//    }
 
     /**
      * ALTER TABLE <数据表名> ADD CONSTRAINT <外键名> FOREIGN KEY(<列名>) REFERENCES <主表名> (<列名>);

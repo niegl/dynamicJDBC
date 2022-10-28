@@ -70,7 +70,7 @@ public class SQLDropTableBuilderImpl extends SQLBuilderImpl implements SQLDropTa
         return stmt;
     }
 
-    public String toString() {
-        return SQLUtils.toSQLString(stmt, dbType);
-    }
+//    public String toString() {
+//        return SQLUtils.toSQLString(stmt, dbType);
+//    }
 }
