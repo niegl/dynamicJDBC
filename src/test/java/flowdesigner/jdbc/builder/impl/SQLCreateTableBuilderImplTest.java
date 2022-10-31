@@ -2,6 +2,7 @@ package flowdesigner.jdbc.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 import flowdesigner.jdbc.builder.SQLBuilderFactory;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import org.junit.jupiter.api.AfterEach;
@@ -37,30 +38,46 @@ class SQLCreateTableBuilderImplTest {
         tableBuilder.setSchema("std_pcode");
     }
 
-
-
-    @Test
-    void testBuilder() {
-        for (DbType dbType : DbType.values()) {
+    @ParameterizedTest
+    @MethodSource()
+    void testBuilder(DbType dbType, String expected) throws SQLSyntaxErrorException {
             createBuilder(dbType);
             tableBuilder.addColumn("line_id", "Stirng", false, false, false);
-            tableBuilder.addPrimaryKey("PRIMARY", Arrays.asList("Id_P"));
+            tableBuilder.addPrimaryKey("PRIMARY_P", Arrays.asList("Id_P"));
             tableBuilder.addUniqueKey("uc_PersonID", Arrays.asList("Id_P","LastName"));
             tableBuilder.addForeignKey("fk_PerOrders", Arrays.asList("Id_P"),"Persons", Arrays.asList("Id_P","LastName"));
             tableBuilder.addForeignKey(null, Arrays.asList("Id_P"),"Persons", Arrays.asList("Id_P","LastName"));
             tableBuilder.addColumnAutoIncrement("Id_P","int");
-            tableBuilder.setTemporary("dd");
-            tableBuilder.setSelect("select a,b from t");
+            tableBuilder.setTemporary(SQLCreateTableStatement.Type.TEMPORARY);
+//            tableBuilder.setSelect("select a,b from t");
 
-            tableBuilder.addPartitionColumn("stat_dt", "partition");
-            tableBuilder.addPartitionColumn("stat_dt2", "partition");
+            tableBuilder.addPartitionColumn("stat_dt", "String");
+            tableBuilder.addPartitionColumn("stat_dt2", "String");
             tableBuilder.setComment("commetnst");
-            tableBuilder.setIfNotExiists(true);
-            tableBuilder.setShards(3);
-            tableBuilder.setBuckets(4);
-            tableBuilder.addOption("option1", "options1");
-            System.out.println(tableBuilder.toString());
+            tableBuilder.setIfNotExiists(false);
+//            tableBuilder.setShards(3);
+//            tableBuilder.setBuckets(4);
+            //tableBuilder.addOption("option1", "options1");
+
+            SQLTest.parser(tableBuilder.toString(), dbType  );
+    }
+    static Stream<Arguments> testBuilder() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            if (dbType == DbType.odps) {
+                arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id INT\n" +
+                        ")"));
+                continue;
+            }
+
+            arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                    "\tline_id int\n" +
+                    ")"));
+
         }
+
+        return arguments.stream();
     }
 
     @ParameterizedTest

@@ -38,6 +38,9 @@ public class SQLUtils{
 
     public static ArrayList<String> searchDriverClassName(List<String> files) {
         ArrayList<String> strings = new ArrayList<>();
+        if (files == null) {
+            return strings;
+        }
 
         for (String file : files) {
             Collection<File> jarFiles = FileUtils.listFiles(new File(file),

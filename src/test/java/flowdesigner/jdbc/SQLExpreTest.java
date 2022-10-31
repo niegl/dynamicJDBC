@@ -33,7 +33,7 @@ public class SQLExpreTest {
     @org.junit.jupiter.api.Test
     void testPARTITIONBY() throws SQLSyntaxErrorException {
         DbType dbType = JdbcConstants.HIVE;
-        String sql = "PARTITION BY Customercity";
+        String sql = "PARTITIONED BY ( `data_dt` string)";
         SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
         System.out.println(expr);
     }

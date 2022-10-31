@@ -1599,7 +1599,16 @@ public class SQLTest {
         SQLStatement statement = parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
-
+    @org.junit.jupiter.api.Test
+    void testPartitionBy() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="CREATE TABLE `pmart.t98_line_person_km_engcspt_period_st`(\n" +
+                "  `engcspt_val` decimal(18,2) COMMENT '百人公里能耗')\n" +
+                "PARTITIONED BY ( \n" +
+                "  `data_dt` string)";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
     @Test
     void testExportParamized() {
         String sql = "select name,age from test_tab1 where name='name' and age = 11 and id in  ('A','B')";

@@ -65,9 +65,9 @@ public interface SQLCreateTableBuilder extends SQLBuilder {
 
     SQLCreateTableBuilder addCheckConstraint(String name, String checkExpr);
 
-    SQLCreateTableBuilder addPartitionColumn(String columnName);
+    SQLCreateTableBuilder addPartitionColumn(String columnName, String columnType);
 
-    SQLCreateTableBuilder addPartitionColumn(String columnName, String columnComment);
+    SQLCreateTableBuilder addPartitionColumn(String columnName, String columnType, String columnComment);
 
     SQLCreateTableBuilder addPartitionColumn(SQLColumnDefinition column);
 

@@ -415,7 +415,10 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     private SQLConstraint createConstraint(Token token, String name, List<String> columnNames
             ,String referencedTableName, List<String> referencedColumns
             ,String checkExpr) {
-        StringBuffer nameConstraint = new StringBuffer(name);
+        StringBuffer nameConstraint = new StringBuffer();
+        if (name != null) {
+            nameConstraint = new StringBuffer(name);
+        }
 
         SQLConstraint constraint = switch (token) {
             case CHECK -> this.buildCheck(checkExpr, nameConstraint);
@@ -586,21 +589,24 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     }
 
     @Override
-    public SQLCreateTableBuilder addPartitionColumn(String columnName) {
-        SQLColumnDefinition column = new SQLColumnDefinition();
-        column.setDbType(dbType);
-        column.setName(columnName);
-        addPartitionColumn(column);
-
-        return this;
+    public SQLCreateTableBuilder addPartitionColumn(String columnName, String columnType) {
+        return addPartitionColumn(columnName, columnType, null);
     }
 
     @Override
-    public SQLCreateTableBuilder addPartitionColumn(String columnName, String columnComment) {
+    public SQLCreateTableBuilder addPartitionColumn(String columnName, String columnType, String columnComment) {
+        if (columnName == null || columnType == null) {
+            return this;
+        }
         SQLColumnDefinition column = new SQLColumnDefinition();
         column.setDbType(dbType);
         column.setName(columnName);
-        column.setComment(columnComment);
+        column.setDataType(
+                SQLParserUtils.createExprParser(columnType, dbType).parseDataType()
+        );
+        if (columnComment != null) {
+            column.setComment(columnComment);
+        }
         addPartitionColumn(column);
 
         return this;
