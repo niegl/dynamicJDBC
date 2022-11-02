@@ -10,6 +10,7 @@ import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
 import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
 import flowdesigner.jdbc.builder.impl.*;
+import flowdesigner.jdbc.builder.impl.dialect.blink.BlinkCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.db2.DB2CreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.db2.DB2SelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.HiveAlterTableBuilderImpl;
@@ -18,6 +19,7 @@ import flowdesigner.jdbc.builder.impl.dialect.hive.SQLHiveInsertBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLSelectBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.odps.OdpsCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleSelectBuilderImpl;
@@ -101,6 +103,8 @@ public class SQLBuilderFactory {
             case mysql -> new MySQLCreateTableBuilderImpl(dbType);
             case oracle -> new OracleCreateTableBuilderImpl(dbType);
             case db2 -> new DB2CreateTableBuilderImpl(dbType);
+            case odps -> new OdpsCreateTableBuilderImpl(dbType);
+            case blink -> new BlinkCreateTableBuilderImpl(dbType);
             default -> new SQLCreateTableBuilderImpl(dbType);
         };
     }

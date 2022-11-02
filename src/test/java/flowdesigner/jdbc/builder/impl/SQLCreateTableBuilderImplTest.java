@@ -320,14 +320,13 @@ class SQLCreateTableBuilderImplTest {
     static Stream<Arguments> addCheckConstraint() {
         return Stream.of(Arguments.arguments(DbType.mysql, "CREATE TABLE std_pcode.std_line (\n" +
                         "\tCHECK (c1 > c3)\n" +
-                        ") COMMENT 'comment'"),
+                        ")"),
                 Arguments.arguments(DbType.db2, "CREATE TABLE std_pcode.std_line (\n" +
                         "\tCONSTRAINT PRIMARY_id_p CHECK (c1 > c3)\n" +
                         ")"),
                 Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line (\n" +
                         "\tCONSTRAINT PRIMARY_id_p CHECK (c1 > c3)\n" +
-                        ")\n" +
-                        "COMMENT 'comment'")
+                        ")")
         );
     }
 

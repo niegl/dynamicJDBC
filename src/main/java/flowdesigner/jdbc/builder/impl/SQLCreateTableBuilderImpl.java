@@ -441,6 +441,9 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     private SQLConstraint buildForeignKey(StringBuffer name, List<String> referencingColumns,
                                           String referencedTableName, List<String> referencedColumns) {
         SQLForeignKeyImpl fk = createForeignKey(name);
+        if (fk == null) {
+            return null;
+        }
         buildForeignKey(fk, referencingColumns, referencedTableName, referencedColumns);
 
         return fk;
@@ -456,6 +459,10 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
 
     private SQLConstraint buildCheck(String checkExpr, StringBuffer name) {
         SQLCheck check = createCheck(name);
+        if (check == null) {
+            return null;
+        }
+
         SQLExpr expr = SQLUtils.toSQLExpr(checkExpr, getDbType());
         if (expr != null) {
             check.setExpr(expr);
@@ -464,36 +471,38 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         return check;
     }
 
-    @NotNull
     protected SQLConstraint buildPrimaryKey(List<String> columnNames, StringBuffer name) {
         SQLPrimaryKeyImpl pk = createPrimaryKey(name);
-
+        if (pk == null) {
+            return null;
+        }
         orderBy(columnNames, pk.getColumns(), pk);
 //        pk.setName(name);
 
         return pk;
     }
 
-    @NotNull
     protected SQLPrimaryKeyImpl createPrimaryKey(StringBuffer name) {
         return new SQLPrimaryKeyImpl();
     }
-    @NotNull
+
     protected SQLUnique createUnique(StringBuffer name) {
         return new SQLUnique();
     }
-    @NotNull
+
     protected SQLForeignKeyImpl createForeignKey(StringBuffer name) {
         return new SQLForeignKeyImpl();
     }
-    @NotNull
+
     protected SQLCheck createCheck(StringBuffer name) {
         return new SQLCheck();
     }
 
     protected SQLConstraint buildUnique(List<String> columnNames, StringBuffer name) {
         SQLUnique unique = createUnique(name);
-
+        if (unique == null) {
+            return null;
+        }
         orderBy(columnNames, unique.getColumns(), unique);
 //        unique.setName(name);
 //
