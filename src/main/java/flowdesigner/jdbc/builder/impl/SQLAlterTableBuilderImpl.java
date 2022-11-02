@@ -23,7 +23,7 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
 
     protected SQLAlterTableStatement stmt;
 //    protected DbType             dbType;
-    protected SQLExprBuilder     exprBuilder;
+//    protected SQLExprBuilder     exprBuilder;
 
     public SQLAlterTableBuilderImpl(DbType dbType) {
         super(dbType);

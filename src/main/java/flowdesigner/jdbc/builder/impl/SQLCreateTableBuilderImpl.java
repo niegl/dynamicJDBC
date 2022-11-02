@@ -65,9 +65,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     @Override
     public SQLCreateTableBuilder setExternal(boolean external) {
         SQLCreateTableStatement statement = getSQLStatement();
-        if (statement != null) {
-            statement.setExternal(external);
-        }
+        statement.setExternal(external);
         return this;
     }
 
@@ -558,17 +556,10 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
 
         for (String columnName :
                 columnNames) {
-            SQLSelectOrderByItem selectOrderByItem = buildSelectOrderByItem(columnName);
+            SQLSelectOrderByItem selectOrderByItem = exprBuilder.buildSelectOrderByItem(columnName);
             selectOrderByItem.setParent(parent);
             idx.getColumns().add(selectOrderByItem);
         }
-    }
-
-    private SQLSelectOrderByItem buildSelectOrderByItem(String columnName) {
-        SQLSelectOrderByItem item = new SQLSelectOrderByItem();
-        item.setExpr(new SQLIdentifierExpr(columnName));
-
-        return item;
     }
 
     protected void buildForeignKey(SQLForeignKeyImpl fk, List<String> referencingColumns,
@@ -632,6 +623,27 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         return this;
     }
 
+    /**
+     * 大部分数据库不支持 CLUSTERED BY (col_name, col_name, ...)
+     * @param items
+     */
+    @Override
+    public void addClusteredByItem(List<String> items) {
+    }
+
+    /**
+     * 支持语法： SORTED BY (col_name [ASC|DESC], ...)
+     * @param itemName 字段名称
+     * @param orderingSpecification ASC|DSC
+     */
+    public void addSortedByItem(String itemName, @Nullable SQLOrderingSpecification orderingSpecification) {
+
+        SQLCreateTableStatement stmt = getSQLStatement();
+        SQLSelectOrderByItem item = this.exprBuilder.buildSelectOrderByItem(itemName);
+        stmt.addSortedByItem(item);
+
+    }
+
     @Override
     public SQLCreateTableBuilder addOption(String name, String value) {
         SQLCharExpr expr = new SQLCharExpr(value);
@@ -652,6 +664,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     }
 
     @Override
+    @NotNull
     public SQLCreateTableStatement getSQLStatement() {
         if (stmt == null) {
             stmt = createSQLCreateTableStatement();

@@ -10,6 +10,7 @@ import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
 import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
 import flowdesigner.jdbc.builder.impl.*;
+import flowdesigner.jdbc.builder.impl.dialect.antspark.AntSparkCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.blink.BlinkCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.db2.DB2CreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.db2.DB2SelectBuilderImpl;
@@ -105,6 +106,7 @@ public class SQLBuilderFactory {
             case db2 -> new DB2CreateTableBuilderImpl(dbType);
             case odps -> new OdpsCreateTableBuilderImpl(dbType);
             case blink -> new BlinkCreateTableBuilderImpl(dbType);
+            case antspark -> new AntSparkCreateTableBuilderImpl(dbType);
             default -> new SQLCreateTableBuilderImpl(dbType);
         };
     }

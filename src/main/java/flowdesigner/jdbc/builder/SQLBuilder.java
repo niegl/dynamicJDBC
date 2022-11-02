@@ -20,5 +20,4 @@ public interface SQLBuilder {
     void addAfterComment(String var1);
     void addAfterComment(List<String> var1);
 
-
 }

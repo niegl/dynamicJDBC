@@ -71,6 +71,8 @@ public interface SQLCreateTableBuilder extends SQLBuilder {
 
     SQLCreateTableBuilder addPartitionColumn(SQLColumnDefinition column);
 
+    void addClusteredByItem(List<String> items);
+
     SQLCreateTableBuilder addOption(String name, String value);
 
     SQLCreateTableBuilder addOption(String name, SQLExpr value);

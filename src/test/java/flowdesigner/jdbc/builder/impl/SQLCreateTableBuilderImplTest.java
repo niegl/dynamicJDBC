@@ -17,6 +17,7 @@ import sqlTest.SQLTest;
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 
@@ -35,6 +36,7 @@ class SQLCreateTableBuilderImplTest {
     void createBuilder(DbType dbType) {
         tableBuilder = SQLBuilderFactory.createCreateTableBuilder(dbType);
         tableBuilder.setName("std_line");
+        tableBuilder.addColumn("line_id", "String");
         tableBuilder.setSchema("std_pcode");
     }
 
@@ -42,7 +44,7 @@ class SQLCreateTableBuilderImplTest {
     @MethodSource()
     void testBuilder(DbType dbType, String expected) throws SQLSyntaxErrorException {
             createBuilder(dbType);
-            tableBuilder.addColumn("line_id", "Stirng", false, false, false);
+            tableBuilder.addColumn("line_id", "String", false, false, false);
             tableBuilder.addPrimaryKey("PRIMARY_P", Arrays.asList("Id_P"));
             tableBuilder.addUniqueKey("uc_PersonID", Arrays.asList("Id_P","LastName"));
             tableBuilder.addForeignKey("fk_PerOrders", Arrays.asList("Id_P"),"Persons", Arrays.asList("Id_P","LastName"));
@@ -57,7 +59,7 @@ class SQLCreateTableBuilderImplTest {
             tableBuilder.setIfNotExiists(false);
 //            tableBuilder.setShards(3);
 //            tableBuilder.setBuckets(4);
-            //tableBuilder.addOption("option1", "options1");
+//            tableBuilder.addOption("option1", "options1");
 
             SQLTest.parser(tableBuilder.toString(), dbType  );
     }
@@ -134,17 +136,36 @@ class SQLCreateTableBuilderImplTest {
         return arguments.stream();
     }
 
-    @Test
-    void from() {
-        tableBuilder.addColumn("line_id", "Stirng", false, false, false);
-        tableBuilder.addPartitionColumn("stat_dt", "partition");
-        tableBuilder.addPartitionColumn("stat_dt2", "partition");
-        tableBuilder.setComment("commetnst");
-        tableBuilder.setIfNotExiists(true);
-        tableBuilder.setShards(3);
-        tableBuilder.setBuckets(4);
-        tableBuilder.addOption("option1", "options1");
-        System.out.println(tableBuilder.toString());
+    @ParameterizedTest
+    @MethodSource()
+    void addClusteredByItem(DbType dbType, String expected) throws SQLSyntaxErrorException {
+        SQLTest.parser(expected, dbType  );
+        createBuilder(dbType);
+        tableBuilder.addClusteredByItem(List.of("column1", "column2"));
+        Assertions.assertEquals(expected,tableBuilder.toString());
+    }
+    static Stream<Arguments> addClusteredByItem() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            if (dbType == DbType.hive || dbType == DbType.antspark) {
+                arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id String\n" +
+                        ")\n" +
+                        "CLUSTERED BY (column1,column2)\n" +
+                        "INTO 2 BUCKETS"));
+            } else if (dbType == DbType.odps) {
+                arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id STRING\n" +
+                        ")"));
+            } else {
+                arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id String\n" +
+                        ")"));
+            }
+
+        }
+
+        return arguments.stream();
     }
 
     @Test
@@ -204,20 +225,20 @@ class SQLCreateTableBuilderImplTest {
 
     @Test
     void testAddColumn() {
-        tableBuilder.addColumn("line_id","Stirng","commentcol");
+        tableBuilder.addColumn("line_id","String","commentcol");
         System.out.println(tableBuilder);
     }
 
     @Test
     void testTempTable0() {
-        tableBuilder.addColumn("line_id","Stirng","commentcol");
+        tableBuilder.addColumn("line_id","String","commentcol");
         System.out.println(tableBuilder);
     }
 
     @Test
     void setTemporary() {
         tableBuilder.setTemporary("TEMPORARY");
-        tableBuilder.addColumn("line_id","Stirng");
+        tableBuilder.addColumn("line_id","String");
         System.out.println(tableBuilder);
     }
 
@@ -296,13 +317,15 @@ class SQLCreateTableBuilderImplTest {
     }
     static Stream<Arguments> testAddPrimaryKey() {
         return Stream.of(Arguments.arguments(DbType.mysql, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id String,\n" +
                         "\tPRIMARY KEY (Id_P)\n" +
-                        ") COMMENT 'comment'"),
+                        ")"),
                 Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id String,\n" +
                         "\tCONSTRAINT PRIMARY_id_p PRIMARY KEY (Id_P) DISABLE NOVALIDATE\n" +
-                        ")\n" +
-                        "COMMENT 'comment'"),
+                        ")"),
                 Arguments.arguments(DbType.db2, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id String,\n" +
                         "\tCONSTRAINT PRIMARY_id_p PRIMARY KEY (Id_P)\n" +
                         ")")
         );
@@ -319,12 +342,15 @@ class SQLCreateTableBuilderImplTest {
 
     static Stream<Arguments> addCheckConstraint() {
         return Stream.of(Arguments.arguments(DbType.mysql, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id String,\n" +
                         "\tCHECK (c1 > c3)\n" +
                         ")"),
                 Arguments.arguments(DbType.db2, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id String,\n" +
                         "\tCONSTRAINT PRIMARY_id_p CHECK (c1 > c3)\n" +
                         ")"),
                 Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tline_id String,\n" +
                         "\tCONSTRAINT PRIMARY_id_p CHECK (c1 > c3)\n" +
                         ")")
         );

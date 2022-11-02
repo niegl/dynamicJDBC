@@ -9,9 +9,14 @@ import java.util.List;
 
 public abstract class SQLBuilderImpl implements SQLBuilder {
     protected DbType dbType;
+    /**
+     * exprBuilder用于通用的expr的生成
+     */
+    protected SQLExprBuilder     exprBuilder;
 
     public SQLBuilderImpl(DbType dbType) {
         this.dbType = dbType;
+        exprBuilder = new SQLExprBuilder();
     }
 
     @Override

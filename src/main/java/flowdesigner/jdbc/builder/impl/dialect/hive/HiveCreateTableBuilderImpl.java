@@ -2,10 +2,13 @@ package flowdesigner.jdbc.builder.impl.dialect.hive;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.statement.*;
+import com.alibaba.druid.sql.dialect.hive.stmt.HiveCreateTableStatement;
+import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLCreateTableBuilderImpl;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.List;
 
 public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
@@ -83,4 +86,25 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
 
         return super.addColumn(columnName, dataType, false, unique, notNull);
     }
+
+    /**
+     * 支持语法： [CLUSTERED BY (col_name, col_name, ...) [SORTED BY (col_name [ASC|DESC], ...)] INTO num_buckets BUCKETS]。<p>
+     * 即CLUSTERED BY后面必有 INTO num_buckets BUCKETS, 这里自动默认添加后半部分。
+     * @param items
+     */
+    @Override
+    public void addClusteredByItem(List<String> items) {
+        SQLCreateTableStatement stmt = getSQLStatement();
+
+        for (String item :
+                items) {
+            SQLSelectOrderByItem selectOrderByItem = exprBuilder.buildSelectOrderByItem(item);
+            selectOrderByItem.setParent(stmt);
+            stmt.addClusteredByItem(selectOrderByItem);
+        }
+
+        // 补全必须的部分
+        super.setBuckets(2);
+    }
+
 }
