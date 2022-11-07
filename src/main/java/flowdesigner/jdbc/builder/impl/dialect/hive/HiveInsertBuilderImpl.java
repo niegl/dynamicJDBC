@@ -1,16 +1,17 @@
 package flowdesigner.jdbc.builder.impl.dialect.hive;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.dialect.hive.ast.HiveInsertStatement;
 import flowdesigner.jdbc.builder.SQLInsertBuilder;
 import flowdesigner.jdbc.builder.impl.SQLInsertBuilderImpl;
 
-public class SQLHiveInsertBuilderImpl extends SQLInsertBuilderImpl {
-    public SQLHiveInsertBuilderImpl(DbType dbType) {
+public class HiveInsertBuilderImpl extends SQLInsertBuilderImpl {
+    public HiveInsertBuilderImpl(DbType dbType) {
         super(dbType);
     }
 
-    public SQLHiveInsertBuilderImpl(String sql, DbType dbType) {
+    public HiveInsertBuilderImpl(String sql, DbType dbType) {
         super(sql, dbType);
     }
 
@@ -22,4 +23,8 @@ public class SQLHiveInsertBuilderImpl extends SQLInsertBuilderImpl {
         return this;
     }
 
+    @Override
+    protected HiveInsertStatement createSQLInsertStatement() {
+        return new HiveInsertStatement();
+    }
 }

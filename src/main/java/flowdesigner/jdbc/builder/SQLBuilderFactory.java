@@ -2,8 +2,6 @@ package flowdesigner.jdbc.builder;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
-import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
-import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.builder.SQLDeleteBuilder;
 import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
@@ -12,24 +10,35 @@ import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
 import flowdesigner.jdbc.builder.impl.*;
 import flowdesigner.jdbc.builder.impl.dialect.antspark.AntSparkCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.blink.BlinkCreateTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.clickhouse.ClickhouseCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.db2.DB2CreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.db2.DB2SelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.HiveAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.HiveCreateTableBuilderImpl;
-import flowdesigner.jdbc.builder.impl.dialect.hive.SQLHiveInsertBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.hive.HiveInsertBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLCreateTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLInsertBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLSelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.odps.OdpsCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleCreateTableBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleInsertBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleSelectBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.pg.PGInsertBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.pg.PGSelectBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.sqlserver.SQLServerInsertBuilderImpl;
 
 public class SQLBuilderFactory {
 
     public static SQLSelectBuilder createSelectSQLBuilder(DbType dbType) {
-        return createSelectSQLBuilder(null, dbType);
+        return switch (dbType) {
+            case mysql -> new MySQLSelectBuilderImpl( dbType);
+            case db2 -> new DB2SelectBuilderImpl( dbType);
+            case oracle -> new OracleSelectBuilderImpl( dbType);
+            case postgresql -> new PGSelectBuilderImpl( dbType);
+            default -> new SQLSelectBuilderImpl( dbType);
+        };
     }
 
     /**
@@ -39,7 +48,7 @@ public class SQLBuilderFactory {
      * @return builder
      */
     public static SQLSelectBuilder createSelectSQLBuilder(String sql, DbType dbType) {
-        SQLSelectStatement statement = new SQLSelectStatement(dbType);
+        SQLSelectStatement statement = null;
         if (sql != null && !sql.isEmpty()) {
             statement = (SQLSelectStatement) SQLUtils.parseSingleStatement(sql, dbType, null);
         }
@@ -101,8 +110,8 @@ public class SQLBuilderFactory {
     public static SQLCreateTableBuilder createCreateTableBuilder(DbType dbType) {
         return switch (dbType) {
             case hive -> new HiveCreateTableBuilderImpl(dbType);
-            case mysql, mariadb, drds -> new MySQLCreateTableBuilderImpl(DbType.mysql);
-            case elastic_search -> new MySQLCreateTableBuilderImpl(DbType.elastic_search);
+            case clickhouse -> new ClickhouseCreateTableBuilderImpl(dbType);
+            case mysql, mariadb, drds, elastic_search -> new MySQLCreateTableBuilderImpl(dbType);
             case oracle -> new OracleCreateTableBuilderImpl(dbType);
             case db2 -> new DB2CreateTableBuilderImpl(dbType);
             case odps -> new OdpsCreateTableBuilderImpl(dbType);
@@ -124,13 +133,17 @@ public class SQLBuilderFactory {
 
     public static SQLInsertBuilder createInsertBuilder(DbType dbType) {
         return switch (dbType) {
-            case hive -> new SQLHiveInsertBuilderImpl(dbType);
+            case postgresql -> new PGInsertBuilderImpl(dbType);
+            case sqlserver -> new SQLServerInsertBuilderImpl(dbType);
+            case oracle -> new OracleInsertBuilderImpl(dbType);
+            case mysql -> new MySQLInsertBuilderImpl(dbType);
+            case hive -> new HiveInsertBuilderImpl(dbType);
             default -> new SQLInsertBuilderImpl(dbType);
         };
     }
     public static SQLInsertBuilder createInsertBuilder(String sql, DbType dbType) {
         return switch (dbType) {
-            case hive -> new SQLHiveInsertBuilderImpl(sql, dbType);
+            case hive -> new HiveInsertBuilderImpl(sql, dbType);
             default -> new SQLInsertBuilderImpl(sql, dbType);
         };
     }

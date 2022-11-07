@@ -42,11 +42,12 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         supportMethods.add("join");
     }
 
-    public SQLSelectBuilderImpl(DbType dbType){
+    public SQLSelectBuilderImpl(DbType dbType) {
         this(new SQLExprBuilder(dbType), dbType);
     }
     public SQLSelectBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
         super( exprBuilder, dbType);
+        this.stmt = new SQLSelectStatement(dbType);
     }
 
     public SQLSelectBuilderImpl(String sql, DbType dbType) {

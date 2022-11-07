@@ -142,7 +142,7 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
         return stmt;
     }
 
-    private SQLInsertStatement createSQLInsertStatement() {
+    protected SQLInsertStatement createSQLInsertStatement() {
         return switch (dbType) {
             case postgresql -> new PGInsertStatement();
             case sqlserver -> new SQLServerInsertStatement();

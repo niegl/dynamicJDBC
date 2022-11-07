@@ -674,14 +674,14 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
 
     protected SQLCreateTableStatement createSQLCreateTableStatement() {
         return switch (dbType) {
-            case antspark -> new AntsparkCreateTableStatement();
-            case blink -> new BlinkCreateTableStatement();
-            case clickhouse -> new ClickhouseCreateTableStatement();
-            case oracle -> new OracleCreateTableStatement();
-            case mysql -> new MySqlCreateTableStatement();
-            case db2 -> new DB2CreateTableStatement();
             case hive -> new HiveCreateTableStatement();
+            case clickhouse -> new ClickhouseCreateTableStatement();
+            case mysql -> new MySqlCreateTableStatement();
+            case oracle -> new OracleCreateTableStatement();
+            case db2 -> new DB2CreateTableStatement();
             case odps -> new OdpsCreateTableStatement();
+            case blink -> new BlinkCreateTableStatement();
+            case antspark -> new AntsparkCreateTableStatement();
             default -> new SQLCreateTableStatement();
         };
     }

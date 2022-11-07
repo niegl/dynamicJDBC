@@ -4,6 +4,7 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.statement.SQLCreateDatabaseStatement;
 import com.alibaba.druid.sql.ast.statement.SQLDropTableStatement;
 import flowdesigner.jdbc.builder.SQLDropTableBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -65,9 +66,13 @@ public class SQLDropTableBuilderImpl extends SQLBuilderImpl implements SQLDropTa
 
     public SQLDropTableStatement getSQLStatement() {
         if (stmt == null) {
-            stmt = new SQLDropTableStatement(dbType);
+            stmt = createSQLDropTableStatement();
         }
         return stmt;
+    }
+
+    protected SQLDropTableStatement createSQLDropTableStatement() {
+        return new SQLDropTableStatement(dbType);
     }
 
 //    public String toString() {
