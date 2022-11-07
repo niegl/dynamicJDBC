@@ -3,6 +3,7 @@ package flowdesigner.jdbc.builder.impl.dialect.antspark;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelectOrderByItem;
+import com.alibaba.druid.sql.dialect.antspark.ast.AntsparkCreateTableStatement;
 import flowdesigner.jdbc.builder.impl.SQLCreateTableBuilderImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,5 +32,10 @@ public class AntSparkCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
 
         // 补全必须的部分
         super.setBuckets(2);
+    }
+
+    @Override
+    protected AntsparkCreateTableStatement createSQLCreateTableStatement() {
+        return new AntsparkCreateTableStatement();
     }
 }

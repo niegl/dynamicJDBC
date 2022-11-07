@@ -10,13 +10,17 @@ import java.util.List;
 public abstract class SQLBuilderImpl implements SQLBuilder {
     protected DbType dbType;
     /**
-     * exprBuilder用于通用的expr的生成
+     * exprBuilder用于expr的生成
      */
     protected SQLExprBuilder     exprBuilder;
 
     public SQLBuilderImpl(DbType dbType) {
         this.dbType = dbType;
-        exprBuilder = new SQLExprBuilder();
+        exprBuilder = new SQLExprBuilder(dbType);
+    }
+    public SQLBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
+        this.dbType = dbType;
+        this.exprBuilder = exprBuilder;
     }
 
     @Override
@@ -33,6 +37,10 @@ public abstract class SQLBuilderImpl implements SQLBuilder {
     public final SQLBuilder setType(DbType dbType) {
         this.dbType = dbType;
         return this;
+    }
+
+    protected SQLExprBuilder getExprBuilder() {
+        return exprBuilder;
     }
 
     @Override

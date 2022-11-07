@@ -30,22 +30,21 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     private SQLCreateTableStatement  stmt;
 
     public SQLCreateTableBuilderImpl(@NotNull DbType dbType) {
-        super(dbType);
+        this(new SQLExprBuilder(dbType), dbType);
+    }
+    public SQLCreateTableBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
+        super( exprBuilder, dbType);
     }
 
     public SQLCreateTableBuilderImpl(String sql, DbType dbType) {
         super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
 
-        if (stmtList.size() == 0) {
+        if (stmtList.isEmpty()) {
             throw new IllegalArgumentException("not support empty-statement :" + sql);
-        }
-
-        if (stmtList.size() > 1) {
+        } else if (stmtList.size() > 1) {
             throw new IllegalArgumentException("not support multi-statement :" + sql);
-        }
-
-        if (stmtList.get(0) instanceof SQLCreateTableStatement statement) {
+        } else if (stmtList.get(0) instanceof SQLCreateTableStatement statement) {
             this.stmt = statement;
         }
     }
@@ -631,6 +630,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
     public void addClusteredByItem(List<String> items) {
     }
 
+    @Override
     /**
      * 支持语法： SORTED BY (col_name [ASC|DESC], ...)
      * @param itemName 字段名称
@@ -672,7 +672,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         return stmt;
     }
 
-    private SQLCreateTableStatement createSQLCreateTableStatement() {
+    protected SQLCreateTableStatement createSQLCreateTableStatement() {
         return switch (dbType) {
             case antspark -> new AntsparkCreateTableStatement();
             case blink -> new BlinkCreateTableStatement();

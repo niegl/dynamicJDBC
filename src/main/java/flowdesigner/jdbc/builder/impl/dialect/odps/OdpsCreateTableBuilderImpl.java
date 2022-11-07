@@ -5,6 +5,7 @@ import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl;
 import com.alibaba.druid.sql.ast.statement.SQLPrimaryKeyImpl;
 import com.alibaba.druid.sql.ast.statement.SQLUnique;
+import com.alibaba.druid.sql.dialect.odps.ast.OdpsCreateTableStatement;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLCreateTableBuilderImpl;
 import org.jetbrains.annotations.NotNull;
@@ -53,5 +54,22 @@ public class OdpsCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
         return this;
     }
 
+    /**
+     * 支持数据库：hive,db2 <p>
+     * 语法：CREATE [TEMPORARY] [EXTERNAL] TABLE ...
+     *
+     * @param external
+     * @return
+     */
+    @Override
+    public SQLCreateTableBuilder setExternal(boolean external) {
+        SQLCreateTableStatement statement = getSQLStatement();
+        statement.setExternal(external);
+        return this;
+    }
 
+    @Override
+    protected OdpsCreateTableStatement createSQLCreateTableStatement() {
+        return new OdpsCreateTableStatement();
+    }
 }

@@ -3,8 +3,10 @@ package flowdesigner.jdbc.builder;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
+import com.alibaba.druid.sql.ast.SQLOrderingSpecification;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -72,6 +74,13 @@ public interface SQLCreateTableBuilder extends SQLBuilder {
     SQLCreateTableBuilder addPartitionColumn(SQLColumnDefinition column);
 
     void addClusteredByItem(List<String> items);
+
+    /**
+     * 支持语法： SORTED BY (col_name [ASC|DESC], ...)
+     * @param itemName 字段名称
+     * @param orderingSpecification ASC|DSC
+     */
+    void addSortedByItem(String itemName, @Nullable SQLOrderingSpecification orderingSpecification);
 
     SQLCreateTableBuilder addOption(String name, String value);
 

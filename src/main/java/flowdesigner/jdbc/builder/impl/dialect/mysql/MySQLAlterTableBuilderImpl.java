@@ -10,11 +10,11 @@ import java.util.List;
 
 public class MySQLAlterTableBuilderImpl extends SQLAlterTableBuilderImpl {
     public MySQLAlterTableBuilderImpl() {
-        super(DbType.mysql, new MySQLExprBuilder());
+        super(new MySQLExprBuilder(DbType.mysql), DbType.mysql);
     }
 
     public MySQLAlterTableBuilderImpl(String sql) {
-        super(sql, DbType.mysql, new MySQLExprBuilder());
+        super(sql, DbType.mysql);
     }
 
     @Override

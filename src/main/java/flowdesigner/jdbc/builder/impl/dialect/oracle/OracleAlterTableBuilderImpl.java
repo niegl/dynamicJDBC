@@ -12,10 +12,10 @@ import java.util.List;
 
 public class OracleAlterTableBuilderImpl extends SQLAlterTableBuilderImpl {
     public OracleAlterTableBuilderImpl() {
-        super(DbType.oracle, new OracleExprBuilder());
+        super(new OracleExprBuilder(DbType.oracle), DbType.oracle);
     }
     public OracleAlterTableBuilderImpl(String sql) {
-        super(sql, DbType.oracle, new OracleExprBuilder());
+        super(sql, DbType.oracle);
     }
 
     @Override

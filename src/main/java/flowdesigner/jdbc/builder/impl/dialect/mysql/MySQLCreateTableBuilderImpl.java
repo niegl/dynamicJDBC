@@ -3,10 +3,12 @@ package flowdesigner.jdbc.builder.impl.dialect.mysql;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.statement.SQLCheck;
 import com.alibaba.druid.sql.ast.statement.SQLConstraint;
+import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlUnique;
 import com.alibaba.druid.sql.dialect.mysql.ast.MysqlForeignKey;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlCreateTableStatement;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLCreateTableBuilder;
 import flowdesigner.jdbc.builder.impl.SQLCreateTableBuilderImpl;
@@ -78,4 +80,8 @@ public class MySQLCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
         return this;
     }
 
+    @Override
+    protected MySqlCreateTableStatement createSQLCreateTableStatement() {
+        return new MySqlCreateTableStatement();
+    }
 }

@@ -1,5 +1,6 @@
 package flowdesigner.jdbc.builder.impl;
 
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLOrderingSpecification;
@@ -16,9 +17,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 /**
- * 用于通用的expr的生成，功能类似 SQLExprParser
+ * SQLExprBuilder用来生成每个数据库特有的exper.<p>
+ * 当不同的createBuilder，如SQLCreateTableBuilder、SQLCreateDatabaseBuilder...使用SQLExpr时就不用多次生成。
  */
 public class SQLExprBuilder {
+
+    public SQLExprBuilder(DbType dbType) {
+        this.dbType = dbType;
+    }
+
+    /**
+     * 不同的数据库可能会使用同一个ExprBuilder，通过dbType可以区分，进一步适配
+     */
+    private DbType dbType;
 
     /**
      * 支持hive的 CONSTRAINT constraint_name FOREIGN KEY (col_name, ...) REFERENCES table_name(col_name, ...) DISABLE NOVALIDATE

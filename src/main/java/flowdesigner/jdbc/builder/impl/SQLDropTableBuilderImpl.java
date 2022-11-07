@@ -17,13 +17,15 @@ import java.util.List;
  * 1、在 MySQL 中，其语法格式为：DROP DATABASE [ IF EXISTS ] <数据库名>
  */
 public class SQLDropTableBuilderImpl extends SQLBuilderImpl implements SQLDropTableBuilder {
-    private @Nullable SQLDropTableStatement stmt;
-//    private DbType dbType;
+    private SQLDropTableStatement stmt;
 
     public SQLDropTableBuilderImpl(@NotNull DbType dbType){
-        super(dbType);
-//        this.dbType = dbType;
+        this(new SQLExprBuilder(dbType), dbType);
     }
+    public SQLDropTableBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
+        super( exprBuilder, dbType);
+    }
+
     public SQLDropTableBuilderImpl(String sql, DbType dbType) {
         super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
@@ -34,13 +36,11 @@ public class SQLDropTableBuilderImpl extends SQLBuilderImpl implements SQLDropTa
         } else {
             SQLDropTableStatement stmt = (SQLDropTableStatement)stmtList.get(0);
             this.stmt = stmt;
-//            this.dbType = dbType;
         }
     }
     public SQLDropTableBuilderImpl(@Nullable SQLDropTableStatement stmt, @NotNull DbType dbType){
         super(dbType);
         this.stmt = stmt;
-//        this.dbType = dbType;
     }
 
 //    @Override

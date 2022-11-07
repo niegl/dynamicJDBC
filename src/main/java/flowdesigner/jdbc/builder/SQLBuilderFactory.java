@@ -101,7 +101,8 @@ public class SQLBuilderFactory {
     public static SQLCreateTableBuilder createCreateTableBuilder(DbType dbType) {
         return switch (dbType) {
             case hive -> new HiveCreateTableBuilderImpl(dbType);
-            case mysql -> new MySQLCreateTableBuilderImpl(dbType);
+            case mysql, mariadb, drds -> new MySQLCreateTableBuilderImpl(DbType.mysql);
+            case elastic_search -> new MySQLCreateTableBuilderImpl(DbType.elastic_search);
             case oracle -> new OracleCreateTableBuilderImpl(dbType);
             case db2 -> new DB2CreateTableBuilderImpl(dbType);
             case odps -> new OdpsCreateTableBuilderImpl(dbType);

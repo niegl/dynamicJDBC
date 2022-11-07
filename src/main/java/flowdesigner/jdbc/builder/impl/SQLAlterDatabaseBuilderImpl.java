@@ -11,6 +11,7 @@ import com.alibaba.druid.sql.ast.statement.SQLAlterCharacter;
 import com.alibaba.druid.sql.ast.statement.SQLAlterDatabaseStatement;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLAlterDatabaseBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,16 @@ import java.util.Map;
 public class SQLAlterDatabaseBuilderImpl extends SQLBuilderImpl implements SQLAlterDatabaseBuilder {
 
     private SQLAlterDatabaseStatement stmt;
-//    private DbType dbType;
-
 
     public SQLAlterDatabaseBuilderImpl(DbType dbType) {
+        this(new SQLExprBuilder(dbType), dbType);
+    }
+    public SQLAlterDatabaseBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
+        super( exprBuilder, dbType);
+    }
+    public SQLAlterDatabaseBuilderImpl( SQLAlterDatabaseStatement stmt, DbType dbType) {
         super(dbType);
-//        this.dbType = dbType;
+        this.stmt = stmt;
     }
     public SQLAlterDatabaseBuilderImpl(String sql, DbType dbType) {
         super(dbType);
@@ -35,14 +40,9 @@ public class SQLAlterDatabaseBuilderImpl extends SQLBuilderImpl implements SQLAl
         } else {
             SQLAlterDatabaseStatement stmt = (SQLAlterDatabaseStatement)stmtList.get(0);
             this.stmt = stmt;
-//            this.dbType = dbType;
         }
     }
-    public SQLAlterDatabaseBuilderImpl(SQLAlterDatabaseStatement stmt, DbType dbType){
-        super(dbType);
-        this.stmt = stmt;
-//        this.dbType = dbType;
-    }
+
 
 //    @Override
 //    public SQLAlterDatabaseBuilder setType(DbType dbType) {

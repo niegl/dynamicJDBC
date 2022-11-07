@@ -13,6 +13,7 @@ import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.jdbc.builder.SQLAlterTableBuilder;
 
+import java.sql.Statement;
 import java.util.List;
 
 /**
@@ -22,15 +23,15 @@ import java.util.List;
 public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlterTableBuilder {
 
     protected SQLAlterTableStatement stmt;
-//    protected DbType             dbType;
-//    protected SQLExprBuilder     exprBuilder;
 
     public SQLAlterTableBuilderImpl(DbType dbType) {
-        super(dbType);
-        exprBuilder = new SQLExprBuilder();
+        this(new SQLExprBuilder(dbType),dbType);
+    }
+    public SQLAlterTableBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
+        super( exprBuilder, dbType);
     }
     public SQLAlterTableBuilderImpl(String sql, DbType dbType) {
-        this(dbType);
+        super(dbType);
 
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
         if (stmtList.isEmpty()) {
@@ -42,21 +43,9 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
             this.stmt = stmt;
         }
     }
-    public SQLAlterTableBuilderImpl(SQLAlterTableStatement stmt, DbType dbType){
-        this(dbType);
-        this.stmt = stmt;
-    }
-    public SQLAlterTableBuilderImpl(DbType dbType, SQLExprBuilder exprBuilder) {
-        this(dbType);
-        this.exprBuilder = exprBuilder;
-    }
-    public SQLAlterTableBuilderImpl(String sql, DbType dbType, SQLExprBuilder exprBuilder) {
-        this(sql, dbType);
-        this.exprBuilder = exprBuilder;
-    }
-
-    protected SQLExprBuilder getExprBuilder() {
-        return exprBuilder;
+    public SQLAlterTableBuilderImpl(SQLAlterTableStatement statement, DbType dbType ) {
+        super(dbType);
+        this.stmt = statement;
     }
 
 //    @Override
@@ -336,12 +325,8 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         return stmt;
     }
 
-    private SQLAlterTableStatement createSQLAlterTableStatement() {
-
-        if (stmt == null) {
-            stmt = new SQLAlterTableStatement(dbType);
-        }
-        return stmt;
+    protected SQLAlterTableStatement createSQLAlterTableStatement() {
+        return new SQLAlterTableStatement(dbType);
     }
 
 //    @Override

@@ -107,4 +107,8 @@ public class HiveCreateTableBuilderImpl extends SQLCreateTableBuilderImpl {
         super.setBuckets(2);
     }
 
+    @Override
+    protected HiveCreateTableStatement createSQLCreateTableStatement() {
+        return new HiveCreateTableStatement();
+    }
 }

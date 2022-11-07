@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBuilder {
-    private SQLSelectStatement stmt;
-//    private DbType             dbType;
+    protected SQLSelectStatement stmt;
 
     protected static List<String> supportMethods = new ArrayList<>();
     static {
@@ -44,7 +43,10 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
     }
 
     public SQLSelectBuilderImpl(DbType dbType){
-        this(new SQLSelectStatement(), dbType);
+        this(new SQLExprBuilder(dbType), dbType);
+    }
+    public SQLSelectBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
+        super( exprBuilder, dbType);
     }
 
     public SQLSelectBuilderImpl(String sql, DbType dbType) {
@@ -57,14 +59,12 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         } else {
             SQLSelectStatement stmt = (SQLSelectStatement)stmtList.get(0);
             this.stmt = stmt;
-//            this.dbType = dbType;
         }
     }
 
     public SQLSelectBuilderImpl(SQLSelectStatement stmt, DbType dbType) {
         super(dbType);
         this.stmt = stmt;
-//        this.dbType = dbType;
     }
 
     @Override
@@ -372,17 +372,21 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
                 joinTableSource.setJoinType(SQLJoinTableSource.JoinType.FULL_OUTER_JOIN);
             } else if (joinType.equalsIgnoreCase("CROSS JOIN")) {
                 joinTableSource.setJoinType(SQLJoinTableSource.JoinType.CROSS_JOIN);
+            } else if (joinType.equalsIgnoreCase("COMMA")) {
+                joinTableSource.setJoinType(SQLJoinTableSource.JoinType.COMMA);
             }
 
             SQLExprTableSource right = new SQLExprTableSource(new SQLIdentifierExpr(table), alias);
             joinTableSource.setRight(right);
 
-            if (conditionOperator.equalsIgnoreCase("=")) {
-                SQLBinaryOpExpr binaryOpExpr = new SQLBinaryOpExpr(queryBlock.getDbType());
-                binaryOpExpr.setLeft(new SQLIdentifierExpr(conditionLeft));
-                binaryOpExpr.setRight(new SQLIdentifierExpr(conditionRight));
-                binaryOpExpr.setOperator(SQLBinaryOperator.Equality);
-                joinTableSource.setCondition(binaryOpExpr);
+            if (conditionOperator != null) {
+                if (conditionOperator.equalsIgnoreCase("=")) {
+                    SQLBinaryOpExpr binaryOpExpr = new SQLBinaryOpExpr(queryBlock.getDbType());
+                    binaryOpExpr.setLeft(new SQLIdentifierExpr(conditionLeft));
+                    binaryOpExpr.setRight(new SQLIdentifierExpr(conditionRight));
+                    binaryOpExpr.setOperator(SQLBinaryOperator.Equality);
+                    joinTableSource.setCondition(binaryOpExpr);
+                }
             }
         }
 

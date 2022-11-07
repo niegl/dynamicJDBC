@@ -39,6 +39,16 @@ class SQLCreateTableBuilderImplTest {
         tableBuilder.addColumn("line_id", "String");
         tableBuilder.setSchema("std_pcode");
     }
+    static Stream<Arguments> getTypes() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
+                    "\tline_id String\n" +
+                    ")"));
+        }
+
+        return arguments.stream();
+    }
 
     @ParameterizedTest
     @MethodSource()
@@ -256,11 +266,24 @@ class SQLCreateTableBuilderImplTest {
         System.out.println(tableBuilder);
     }
 
-    @Test
-    void setExternal() {
+    @ParameterizedTest
+    @MethodSource("getTypes")
+    void setExternal(DbType dbType, String expected) throws SQLSyntaxErrorException {
+        createBuilder(dbType);
+        tableBuilder.setName("std_line");
         tableBuilder.setExternal(true);
+        SQLStatement statement = SQLTest.parser(tableBuilder.toString(), dbType);
     }
-
+    static Stream<Arguments> setExternal() {
+        return Stream.of(Arguments.arguments(DbType.mysql, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCONSTRAINT uc_PersonID FOREIGN KEY (Id_P, LastName) REFERENCES tbl_name (col_name) ON DELETE RESTRICT ON UPDATE CASCADE\n" +
+                        ")"),
+                Arguments.arguments(DbType.hive, "CREATE TABLE std_pcode.std_line (\n" +
+                        "\tCONSTRAINT uc_PersonID FOREIGN KEY (Id_P, LastName)\n" +
+                        "\t\tREFERENCES tbl_name (col_name) DISABLE NOVALIDATE\n" +
+                        ")")
+        );
+    }
 
 
     /**

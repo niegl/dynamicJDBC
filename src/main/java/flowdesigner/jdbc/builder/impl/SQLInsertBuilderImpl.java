@@ -19,12 +19,13 @@ import java.util.List;
 
 public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBuilder {
 
-    private @Nullable SQLInsertStatement stmt = null;
-//    private final @NotNull DbType dbType;
+    protected @Nullable SQLInsertStatement stmt = null;
 
     public SQLInsertBuilderImpl(@NotNull DbType dbType) {
-        super(dbType);
-//        this.dbType = dbType;
+        this(new SQLExprBuilder(dbType), dbType);
+    }
+    public SQLInsertBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
+        super( exprBuilder, dbType);
     }
     public SQLInsertBuilderImpl(String sql, @NotNull DbType dbType) {
         super(dbType);
@@ -36,13 +37,11 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
         } else {
             SQLInsertStatement stmt = (SQLInsertStatement)stmtList.get(0);
             this.stmt = stmt;
-//            this.dbType = dbType;
         }
     }
     public SQLInsertBuilderImpl(@Nullable SQLInsertStatement stmt, @NotNull DbType dbType){
         super(dbType);
         this.stmt = stmt;
-//        this.dbType = dbType;
     }
 
     /**

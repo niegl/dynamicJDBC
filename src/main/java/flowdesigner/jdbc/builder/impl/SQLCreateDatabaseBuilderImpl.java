@@ -15,12 +15,14 @@ import java.util.Map;
 
 public class SQLCreateDatabaseBuilderImpl extends SQLBuilderImpl implements SQLCreateDatabaseBuilder {
     private SQLCreateDatabaseStatement  stmt;
-//    private DbType dbType;
 
-    public SQLCreateDatabaseBuilderImpl(@NotNull DbType dbType){
-        super(dbType);
-//        this.dbType = dbType;
+    public SQLCreateDatabaseBuilderImpl(@NotNull DbType dbType) {
+        this(new SQLExprBuilder(dbType), dbType);
     }
+    public SQLCreateDatabaseBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
+        super( exprBuilder, dbType);
+    }
+
     public SQLCreateDatabaseBuilderImpl(String sql, DbType dbType) {
         super(dbType);
         List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
@@ -31,13 +33,11 @@ public class SQLCreateDatabaseBuilderImpl extends SQLBuilderImpl implements SQLC
         } else {
             SQLCreateDatabaseStatement stmt = (SQLCreateDatabaseStatement)stmtList.get(0);
             this.stmt = stmt;
-//            this.dbType = dbType;
         }
     }
     public SQLCreateDatabaseBuilderImpl(SQLCreateDatabaseStatement stmt, @NotNull DbType dbType){
         super(dbType);
         this.stmt = stmt;
-//        this.dbType = dbType;
     }
 
     @Override
@@ -134,7 +134,7 @@ public class SQLCreateDatabaseBuilderImpl extends SQLBuilderImpl implements SQLC
         return stmt;
     }
 
-    public SQLCreateDatabaseStatement createSQLCreateDatabaseStatement() {
+    protected SQLCreateDatabaseStatement createSQLCreateDatabaseStatement() {
         return new SQLCreateDatabaseStatement(dbType);
     }
 

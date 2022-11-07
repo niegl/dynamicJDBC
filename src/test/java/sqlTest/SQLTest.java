@@ -67,6 +67,14 @@ public class SQLTest {
     }
 
     @org.junit.jupiter.api.Test
+    void from2() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="SELECT building_t.idbuilding_t FROM building_t, BTable";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
     void testPrimary0() throws SQLSyntaxErrorException {
         String dbType = "mysql";
         String sql ="CREATE TABLE Persons\n" +

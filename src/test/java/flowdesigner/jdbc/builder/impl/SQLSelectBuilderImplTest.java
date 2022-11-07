@@ -47,7 +47,15 @@ class SQLSelectBuilderImplTest {
 
         System.out.println(builder);
     }
-
+    @Test
+    void from2() {
+        SQLSelectBuilder builder = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder.select("a", "b");
+        builder.from("AT");
+        builder.join("COMMA","BT", null,null,null,null);
+        builder.join("COMMA","CT", null,null,null,null);
+                System.out.println(builder);
+    }
     @Test
     void union() {
         SQLSelectBuilder builder = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
