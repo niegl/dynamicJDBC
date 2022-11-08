@@ -16,10 +16,7 @@ import flowdesigner.jdbc.builder.impl.dialect.db2.DB2SelectBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.HiveAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.HiveCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.hive.HiveInsertBuilderImpl;
-import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLAlterTableBuilderImpl;
-import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLCreateTableBuilderImpl;
-import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLInsertBuilderImpl;
-import flowdesigner.jdbc.builder.impl.dialect.mysql.MySQLSelectBuilderImpl;
+import flowdesigner.jdbc.builder.impl.dialect.mysql.*;
 import flowdesigner.jdbc.builder.impl.dialect.odps.OdpsCreateTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleAlterTableBuilderImpl;
 import flowdesigner.jdbc.builder.impl.dialect.oracle.OracleCreateTableBuilderImpl;
@@ -91,20 +88,13 @@ public class SQLBuilderFactory {
             default -> new SQLAlterTableBuilderImpl(dbType);
         };
     }
-    public static SQLAlterTableBuilder createAlterTableBuilder(String sql, DbType dbType) {
-        return switch (dbType) {
-            case mysql -> new MySQLAlterTableBuilderImpl(sql);
-            case oracle -> new OracleAlterTableBuilderImpl(sql);
-            case hive -> new HiveAlterTableBuilderImpl(sql);
-            default -> new SQLAlterTableBuilderImpl(sql, dbType);
-        };
-    }
 
     public static SQLCreateDatabaseBuilder createCreateDatabaseBuilder(DbType dbType) {
-        return new SQLCreateDatabaseBuilderImpl(dbType);
-    }
-    public static SQLCreateDatabaseBuilder createCreateDatabaseBuilder(String sql, DbType dbType) {
-        return new SQLCreateDatabaseBuilderImpl(sql, dbType);
+        return switch (dbType) {
+
+            case mysql,mariadb,h2, elastic_search, drds -> new MySQLCreateDatabaseBuilderImpl(dbType);
+            default -> new SQLCreateDatabaseBuilderImpl(dbType);
+        };
     }
 
     public static SQLCreateTableBuilder createCreateTableBuilder(DbType dbType) {
@@ -120,15 +110,9 @@ public class SQLBuilderFactory {
             default -> new SQLCreateTableBuilderImpl(dbType);
         };
     }
-    public static SQLCreateTableBuilder createCreateTableBuilder(String sql, DbType dbType) {
-        return new SQLCreateTableBuilderImpl(sql, dbType);
-    }
 
     public static SQLDropTableBuilder createDropTableBuilder(DbType dbType) {
         return new SQLDropTableBuilderImpl(dbType);
-    }
-    public static SQLDropTableBuilder createDropTableBuilder(String sql, DbType dbType) {
-        return new SQLDropTableBuilderImpl(sql, dbType);
     }
 
     public static SQLInsertBuilder createInsertBuilder(DbType dbType) {
@@ -139,12 +123,6 @@ public class SQLBuilderFactory {
             case mysql -> new MySQLInsertBuilderImpl(dbType);
             case hive -> new HiveInsertBuilderImpl(dbType);
             default -> new SQLInsertBuilderImpl(dbType);
-        };
-    }
-    public static SQLInsertBuilder createInsertBuilder(String sql, DbType dbType) {
-        return switch (dbType) {
-            case hive -> new HiveInsertBuilderImpl(sql, dbType);
-            default -> new SQLInsertBuilderImpl(sql, dbType);
         };
     }
 

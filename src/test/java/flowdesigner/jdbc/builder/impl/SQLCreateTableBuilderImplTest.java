@@ -130,7 +130,8 @@ class SQLCreateTableBuilderImplTest {
         for (DbType dbType : DbType.values()) {
             if (dbType == DbType.odps) {
                 arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
-                        "\tline_id INT COMMENT 'comment'\n" +
+                        "\tline_id String,\n" +
+                        "\tline_id int COMMENT 'comment'\n" +
                         ")"));
             } else if (dbType == DbType.jtds || dbType == DbType.sqlserver) {
                 arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
@@ -138,7 +139,8 @@ class SQLCreateTableBuilderImplTest {
                         ")"));
             } else {
                 arguments.add(Arguments.of(dbType, "CREATE TABLE std_pcode.std_line (\n" +
-                        "\tline_id int COMMENT 'comment'\n" +
+                        "\tline_id String,\n" +
+                        "\tline_id int\n" +
                         ")"));
             }
         }
@@ -178,93 +180,6 @@ class SQLCreateTableBuilderImplTest {
         return arguments.stream();
     }
 
-    @Test
-    void addPrimaryKey() throws SQLSyntaxErrorException {
-        createBuilder(DbType.hive);
-        //Id_P int NOT NULL PRIMARY KEY,
-        tableBuilder.addColumn("Id_P", "int", true, false,true);
-        SQLTest.parser(tableBuilder.toString(), DbType.hive);
-    }
-
-    @Test
-    void addPrimaryKeyConstraint() throws SQLSyntaxErrorException {
-        createBuilder(DbType.mysql);
-//        tableBuilder.addColumn("Id_P","int");
-        tableBuilder.addPrimaryKey("PRIMARY_id_p", Arrays.asList("Id_P"));
-        SQLTest.parser(tableBuilder.toString(), DbType.mysql);
-    }
-
-    @Test
-    void addUniqueKeyMySQL() {
-        tableBuilder.addUniqueKey("uc_PersonID", Arrays.asList("Id_P","LastName"));
-        System.out.println(tableBuilder.toString());
-    }
-
-    @Test
-    void addForeignKey() {
-        tableBuilder.addForeignKey("fk_PerOrders", Arrays.asList("Id_P"),"Persons", Arrays.asList("Id_P","LastName"));
-        System.out.println(tableBuilder.toString());
-    }
-    @Test
-    void addForeignKeyNoName() {
-        tableBuilder.addForeignKey(null, Arrays.asList("Id_P"),"Persons", Arrays.asList("Id_P","LastName"));
-        System.out.println(tableBuilder.toString());
-    }
-
-    @Test
-    void testAutoIncrease() throws SQLSyntaxErrorException {
-        String dbType = "mysql";
-        String sql ="ALTER DATABASE test_db CHARACTER SET = gb2312 COLLATE gb2312_chinese_ci;";
-        SQLStatement statement = SQLTest.parser(sql, dbType);
-        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
-    }
-
-    @Test
-    void addColumnAutoIncrement() throws SQLSyntaxErrorException {
-        String dbType = "mysql";
-        String sql ="CREATE TABLE tb_student(\n" +
-                " id INT(4) PRIMARY KEY AUTO_INCREMENT,\n" +
-                "  name VARCHAR(25) NOT NULL\n" +
-                "  );";
-        SQLStatement statement = SQLTest.parser(sql, dbType);
-        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
-
-        tableBuilder.addColumnAutoIncrement("Id_P","int");
-        System.out.println(tableBuilder.toString());
-    }
-
-    @Test
-    void testAddColumn() {
-        tableBuilder.addColumn("line_id","String","commentcol");
-        System.out.println(tableBuilder);
-    }
-
-    @Test
-    void testTempTable0() {
-        tableBuilder.addColumn("line_id","String","commentcol");
-        System.out.println(tableBuilder);
-    }
-
-    @Test
-    void setTemporary() {
-        tableBuilder.setTemporary("TEMPORARY");
-        tableBuilder.addColumn("line_id","String");
-        System.out.println(tableBuilder);
-    }
-
-    @Test
-    void setLike() {
-        tableBuilder.setTemporary("dd");
-        tableBuilder.setLike("abc");
-        System.out.println(tableBuilder);
-    }
-
-    @Test
-    void setSelect() {
-        tableBuilder.setTemporary("dd");
-        tableBuilder.setSelect("select a,b from t");
-        System.out.println(tableBuilder);
-    }
 
     @ParameterizedTest
     @MethodSource("getTypes")

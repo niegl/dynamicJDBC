@@ -78,7 +78,7 @@ public class SQLCreateDatabaseBuilderImpl extends SQLBuilderImpl implements SQLC
         for (int i = 0; i < create_option_key.size(); i++) {
             hashMap.put(create_option_key.get(i),create_option_value.get(i));
         }
-        return createDatabase(ifNotExists,db_name,hashMap);
+        return createDatabase(ifNotExists, db_name, hashMap);
     }
     /**
      * CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name
@@ -138,7 +138,4 @@ public class SQLCreateDatabaseBuilderImpl extends SQLBuilderImpl implements SQLC
         return new SQLCreateDatabaseStatement(dbType);
     }
 
-//    public String toString() {
-//        return SQLUtils.toSQLString(stmt, dbType);
-//    }
 }

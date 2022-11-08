@@ -360,22 +360,13 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
 
         }
 
-        if (joinTableSource != null) {
-            if(joinType.equalsIgnoreCase("INNER")) {
-                joinTableSource.setJoinType(SQLJoinTableSource.JoinType.INNER_JOIN);
-            } else if (joinType.equalsIgnoreCase("INNER JOIN")) {
-                joinTableSource.setJoinType(SQLJoinTableSource.JoinType.INNER_JOIN);
-            } else if (joinType.equalsIgnoreCase("LEFT JOIN")) {
-                joinTableSource.setJoinType(SQLJoinTableSource.JoinType.LEFT_OUTER_JOIN);
-            } else if (joinType.equalsIgnoreCase("RIGHT JOIN")) {
-                joinTableSource.setJoinType(SQLJoinTableSource.JoinType.RIGHT_OUTER_JOIN);
-            } else if (joinType.equalsIgnoreCase("FULL JOIN")) {
-                joinTableSource.setJoinType(SQLJoinTableSource.JoinType.FULL_OUTER_JOIN);
-            } else if (joinType.equalsIgnoreCase("CROSS JOIN")) {
-                joinTableSource.setJoinType(SQLJoinTableSource.JoinType.CROSS_JOIN);
-            } else if (joinType.equalsIgnoreCase("COMMA")) {
-                joinTableSource.setJoinType(SQLJoinTableSource.JoinType.COMMA);
-            }
+        if (joinTableSource == null) {
+            return this;
+        }
+
+        try {
+            SQLJoinTableSource.JoinType SQLJoinType = SQLJoinTableSource.JoinType.valueOf(joinType);
+            joinTableSource.setJoinType(SQLJoinType);
 
             SQLExprTableSource right = new SQLExprTableSource(new SQLIdentifierExpr(table), alias);
             joinTableSource.setRight(right);
@@ -389,9 +380,10 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
                     joinTableSource.setCondition(binaryOpExpr);
                 }
             }
-        }
 
-        queryBlock.setFrom(joinTableSource);
+            queryBlock.setFrom(joinTableSource);
+        } catch (IllegalArgumentException ignored) {
+        }
 
         return this;
     }
