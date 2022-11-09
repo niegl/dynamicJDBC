@@ -13,12 +13,15 @@ import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
+import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.jdbc.builder.SQLSelectBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBuilder {
     protected SQLSelectStatement stmt;
 
@@ -345,19 +348,31 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
      * @return
      */
     @Override
+    @AutoLog
     public SQLSelectBuilder join(String joinType, String table, String alias,
                                    String conditionLeft, String conditionRight, String conditionOperator) {
-        SQLSelectQueryBlock queryBlock = getQueryBlock();
-        SQLTableSource from = queryBlock.getFrom();
+
         SQLJoinTableSource joinTableSource = null;
+        SQLTableSource from = null;
 
-        if (from instanceof SQLExprTableSource || from instanceof SQLJoinTableSource) {
-            joinTableSource = new SQLJoinTableSource();
-            joinTableSource.setLeft(from);
-        } else if (from instanceof SQLUnionQueryTableSource) {
+        if (joinType == null || table == null) {
+            return this;
+        }
 
-        } else if (from instanceof SQLValuesTableSource) {
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        if (queryBlock != null) {
+            from = queryBlock.getFrom();
+        }
 
+        if (from != null) {
+            if (from instanceof SQLExprTableSource || from instanceof SQLJoinTableSource) {
+                joinTableSource = new SQLJoinTableSource();
+                joinTableSource.setLeft(from);
+            } else if (from instanceof SQLUnionQueryTableSource) {
+
+            } else if (from instanceof SQLValuesTableSource) {
+
+            }
         }
 
         if (joinTableSource == null) {
@@ -365,7 +380,8 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         }
 
         try {
-            SQLJoinTableSource.JoinType SQLJoinType = SQLJoinTableSource.JoinType.valueOf(joinType);
+            String joinType1 = joinType.replaceAll(" ", "_").toUpperCase();
+            SQLJoinTableSource.JoinType SQLJoinType = SQLJoinTableSource.JoinType.valueOf(joinType1);
             joinTableSource.setJoinType(SQLJoinType);
 
             SQLExprTableSource right = new SQLExprTableSource(new SQLIdentifierExpr(table), alias);
@@ -382,7 +398,8 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
             }
 
             queryBlock.setFrom(joinTableSource);
-        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalArgumentException exception) {
+            log.error(exception.toString());
         }
 
         return this;

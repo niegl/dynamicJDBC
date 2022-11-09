@@ -34,8 +34,6 @@ class SQLSelectBuilderImplTest {
         builderEx.joinOr("d","B.d","=");
         builderEx.join("inner join","tablec","c","c.cc","b.bb","=");
 
-        System.out.println(builderEx);
-
     }
 
     @Test

@@ -43,13 +43,6 @@ public class SQLAlterDatabaseBuilderImpl extends SQLBuilderImpl implements SQLAl
         }
     }
 
-
-//    @Override
-//    public SQLAlterDatabaseBuilder setType(DbType dbType) {
-//        this.dbType = dbType;
-//        return this;
-//    }
-
     @Override
     public SQLAlterDatabaseBuilder setName(String db_name) {
         SQLAlterDatabaseStatement statement = getSQLStatement();
@@ -111,9 +104,5 @@ public class SQLAlterDatabaseBuilderImpl extends SQLBuilderImpl implements SQLAl
         }
         return stmt;
     }
-
-//    public String toString() {
-//        return SQLUtils.toSQLString(stmt, dbType);
-//    }
 
 }
