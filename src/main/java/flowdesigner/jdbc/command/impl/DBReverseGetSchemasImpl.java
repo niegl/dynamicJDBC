@@ -6,7 +6,7 @@ import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.dialect.DBDialect;
 import flowdesigner.jdbc.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.SchemaEntity;
-import flowdesigner.util.sql.DbTypeKit;
+import flowdesigner.util.DbTypeKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;

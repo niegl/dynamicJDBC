@@ -2,7 +2,7 @@ package flowdesigner.jdbc.driver;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.alibaba.druid.util.JdbcUtils;
-import flowdesigner.util.sql.ConstantKey;
+import flowdesigner.jdbc.JdbcConstantKey;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -107,7 +108,7 @@ public class DynamicDriver {
             try {
                 Connection connection = _ds.getConnection();
                 // 保存到map
-                String o = (String)_propertyInfo.get(ConstantKey.CONSTANT_url);
+                String o = (String)_propertyInfo.get(JdbcConstantKey.CONSTANT_url);
                 if (o != null) {
                     _urls.put(connection,  o);
                 }

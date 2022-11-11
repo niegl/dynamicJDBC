@@ -18,7 +18,7 @@ package flowdesigner.jdbc.dialect.impl;
 import flowdesigner.jdbc.command.model.ColumnField;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.dialect.DBDialect;
-import flowdesigner.util.sql.kit.ConnParseKit;
+import flowdesigner.util.sql.ConnParseKit;
 import flowdesigner.util.raw.kit.JdbcKit;
 import flowdesigner.util.raw.kit.StringKit;
 import org.apache.commons.lang3.tuple.Pair;

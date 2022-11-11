@@ -18,7 +18,7 @@ package flowdesigner.jdbc.dialect;
 import flowdesigner.jdbc.command.model.*;
 import flowdesigner.util.raw.kit.JdbcKit;
 import flowdesigner.util.raw.kit.StringKit;
-import flowdesigner.util.sql.kit.ConnParseKit;
+import flowdesigner.util.sql.ConnParseKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;

@@ -1,9 +1,9 @@
-package flowdesigner.util.sql;
+package flowdesigner.jdbc;
 
 /**
  * 该类主要用于字典参考
  */
-public final class ConstantKey {
+public final class JdbcConstantKey {
     public static final String CONSTANT_url = "url";
     public static final String CONSTANT_database = "database";
     public static final String CONSTANT_host = "host";
