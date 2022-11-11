@@ -1,0 +1,155 @@
+package flowdesigner.sql.builder.impl;
+
+import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.SQLStatement;
+import flowdesigner.sql.builder.SQLAlterTableBuilder;
+import flowdesigner.sql.builder.SQLBuilderFactory;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import sqlTest.SQLTest;
+
+import java.sql.SQLSyntaxErrorException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Stream;
+
+class SQLAlterTableBuilderImplTest {
+    SQLAlterTableBuilder alterTableBuilder;
+
+    @BeforeEach
+    void setUp() {
+    }
+
+    @AfterEach
+    void tearDown() {
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void alterColumn() {
+        alterTableBuilder.alterColumn("srccolumn","dstcolumn","string","comment thisi s",null,true);
+        System.out.println(alterTableBuilder);
+    }
+
+    @org.junit.jupiter.api.Test
+    void testPrimary() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="ALTER TABLE 数据表名 ADD PRIMARY KEY(字段名);";
+        SQLStatement statement = SQLTest.parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @Test
+    void addPrimaryKey() {
+        alterTableBuilder.addPrimaryKey("primary", true, null);
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void addUniqueKey() {
+        alterTableBuilder.addUniqueKey("primary", true, null);
+        System.out.println(alterTableBuilder);
+        alterTableBuilder.addUniqueIndex("primary", true, null);
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void addUniqueIndex() {
+        alterTableBuilder.addUniqueIndex("primary", true, null);
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void dropDropForeignKey() {
+        alterTableBuilder.dropForeignKey("primary");
+        System.out.println(alterTableBuilder);
+    }
+
+    @Test
+    void addForeignKey() throws SQLSyntaxErrorException {
+        String dbType = "hive";
+        String sql ="ALTER TABLE tb_emp2\n" +
+                " ADD CONSTRAINT fk_tb_dept1\n" +
+                " FOREIGN KEY(deptId)\n" +
+                " REFERENCES tb_dept1(id) DISABLE NOVALIDATE;";
+        SQLStatement statement = SQLTest.parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("deptId");
+        alterTableBuilder.addForeignKey(true,"fk_tb_dept1","index_name", strings,
+                "tb_dept1",Arrays.asList("id"));
+        System.out.println(alterTableBuilder);
+    }
+
+
+
+
+    @ParameterizedTest
+    @MethodSource()
+    void addColumn(DbType dbType, String expected) throws SQLSyntaxErrorException {
+        SQLTest.parser(expected, dbType);
+        alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
+        alterTableBuilder.setName("db_name");
+        alterTableBuilder.addColumn("line_id","int");
+
+        Assertions.assertEquals(expected, alterTableBuilder.toString());
+    }
+    static Stream<Arguments> addColumn() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                case hive -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMNS (line_id int)";
+                case odps -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMNS (line_id INT)";
+                case oracle, oceanbase_oracle -> "ALTER TABLE db_name\n" +
+                        "\tADD (line_id int)";
+                case db2 -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMN line_id int";
+                default -> "ALTER TABLE db_name\n" +
+                        "\tADD line_id int";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
+    }
+
+    @ParameterizedTest
+    @MethodSource()
+    void dropColomn(DbType dbType, String expected) throws SQLSyntaxErrorException {
+
+        alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
+        alterTableBuilder.setName("db_name");
+        alterTableBuilder.dropColomn("line_id","int");
+
+        SQLTest.parser(expected, dbType);
+        Assertions.assertEquals(expected, alterTableBuilder.toString());
+    }
+    static Stream<Arguments> dropColomn() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                case hive -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMNS (line_id int)";
+                case odps -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMNS (line_id INT)";
+                case oracle, oceanbase_oracle -> "ALTER TABLE db_name\n" +
+                        "\tADD (line_id int)";
+                case db2 -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMN line_id int";
+                default -> "ALTER TABLE db_name\n" +
+                        "\tADD line_id int";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
+    }
+
+}

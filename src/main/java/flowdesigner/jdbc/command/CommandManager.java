@@ -3,7 +3,7 @@ package flowdesigner.jdbc.command;
 import com.alibaba.fastjson2.JSON;
 import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.jdbc.command.impl.*;
-import flowdesigner.jdbc.util.raw.kit.StringKit;
+import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;

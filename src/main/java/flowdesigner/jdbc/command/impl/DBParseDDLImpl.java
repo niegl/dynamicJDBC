@@ -4,24 +4,17 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
 import com.alibaba.druid.sql.ast.statement.SQLCreateTableStatement;
-import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
 import flowdesigner.jdbc.command.Command;
-import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.model.ColumnField;
 import flowdesigner.jdbc.command.model.TableEntity;
-import flowdesigner.jdbc.util.raw.kit.IOKit;
+import flowdesigner.jdbc.command.ExecResult;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * 利用druid解析DDL

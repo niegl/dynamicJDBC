@@ -18,7 +18,6 @@ package flowdesigner.jdbc.command;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * @author : 杨松<yangsong158@qq.com>

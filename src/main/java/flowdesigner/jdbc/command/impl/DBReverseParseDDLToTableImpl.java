@@ -19,7 +19,7 @@ package flowdesigner.jdbc.command.impl;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.model.TableEntity;
-import flowdesigner.jdbc.util.raw.kit.IOKit;
+import flowdesigner.util.raw.kit.IOKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;

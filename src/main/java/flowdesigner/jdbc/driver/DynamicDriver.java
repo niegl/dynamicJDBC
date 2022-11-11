@@ -2,7 +2,7 @@ package flowdesigner.jdbc.driver;
 
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.alibaba.druid.util.JdbcUtils;
-import flowdesigner.jdbc.util.sql.ConstantKey;
+import flowdesigner.util.sql.ConstantKey;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

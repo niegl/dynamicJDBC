@@ -17,7 +17,6 @@ package flowdesigner.jdbc.command.model;
 
 
 import lombok.Data;
-import java.io.Serializable;
 
 /**
  * 索引引用的字段

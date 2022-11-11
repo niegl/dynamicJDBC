@@ -3,10 +3,10 @@ package flowdesigner.jdbc.command.impl;
 import com.alibaba.druid.DbType;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
-import flowdesigner.jdbc.command.dialect.DBDialect;
-import flowdesigner.jdbc.command.dialect.DBDialectMatcher;
+import flowdesigner.jdbc.dialect.DBDialect;
+import flowdesigner.jdbc.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.DataTypeEntity;
-import flowdesigner.jdbc.util.sql.DbTypeKit;
+import flowdesigner.util.sql.DbTypeKit;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

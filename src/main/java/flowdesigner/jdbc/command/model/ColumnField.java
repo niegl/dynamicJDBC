@@ -17,8 +17,6 @@ package flowdesigner.jdbc.command.model;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 @Data
 public class ColumnField {
     private int rowNo;              //行号，从1开始
