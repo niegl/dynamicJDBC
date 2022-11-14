@@ -99,7 +99,7 @@ public class SQLUtils {
                                      VisitorFeature... features) {
         StringBuilder out = new StringBuilder();
         SQLASTOutputVisitor visitor = createOutputVisitor(out, dbType);
-System.out.println(visitor.getClass());
+
         if (option == null) {
             option = DEFAULT_FORMAT_OPTION;
         }

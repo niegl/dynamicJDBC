@@ -14,6 +14,7 @@ import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.sql.builder.SQLAlterTableBuilder;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 该类主要用于SQLAlterTable相关的操作。
@@ -119,18 +120,14 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
      * @return
      */
     @Override
-    public SQLAlterTableBuilder dropColomn(String columnName, String columnType) {
+    public SQLAlterTableBuilder dropColumn(String columnName) {
         SQLAlterTableStatement statement = getSQLStatement();
-        SQLColumnDefinition column = getColumn(columnName, columnType);
         switch (dbType) {
             case hive:
-                SQLAlterTableReplaceColumn alterTableReplaceColumn = new SQLAlterTableReplaceColumn();
-                alterTableReplaceColumn.addColumn(column);
-                statement.addItem(alterTableReplaceColumn);
-                break;
+                throw new UnsupportedOperationException("use replaceColumn for hive.");
             default:
                 SQLAlterTableDropColumnItem alterTableDropColumnItem = new SQLAlterTableDropColumnItem();
-                alterTableDropColumnItem.addColumn(new SQLIdentifierExpr(columnName));
+                alterTableDropColumnItem.addColumn((SQLName) SQLUtils.toSQLExpr(columnName));
                 statement.addItem(alterTableDropColumnItem);
                 break;
         }
@@ -138,6 +135,15 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         return this;
     }
 
+    /**
+     * 适配hive语法：ALTER TABLE db_name REPLACE COLUMNS (line_id int, b int)
+     * @param columns
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder replaceColumn(Map<String, String> columns) {
+        return this;
+    }
     /**
      * 修改字段 操作
      * 语法：Change Column Name/Type/Position/Comment
@@ -171,13 +177,16 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         return this;
     }
 
-    private SQLColumnDefinition getColumn(String columnName, String columnType) {
+    protected SQLColumnDefinition getColumn(String columnName, String columnType) {
         SQLColumnDefinition column = new SQLColumnDefinition();
         column.setDbType(dbType);
         column.setName(columnName);
-        column.setDataType(
-                SQLParserUtils.createExprParser(columnType, dbType).parseDataType()
-        );
+        if (columnType != null) {
+            column.setDataType(
+                    SQLParserUtils.createExprParser(columnType, dbType).parseDataType()
+            );
+        }
+
         return column;
     }
 

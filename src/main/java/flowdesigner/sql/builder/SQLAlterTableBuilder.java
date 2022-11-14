@@ -1,6 +1,7 @@
 package flowdesigner.sql.builder;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SQLAlterTableBuilder extends SQLBuilder {
 //    SQLAlterTableBuilder setType(DbType dbType);
@@ -13,10 +14,12 @@ public interface SQLAlterTableBuilder extends SQLBuilder {
 
     SQLAlterTableBuilder addColumn(String columnName, String columnType);
 
-    SQLAlterTableBuilder dropColomn(String columnName, String columnType);
+    SQLAlterTableBuilder dropColumn(String columnName);
+
+    SQLAlterTableBuilder replaceColumn(Map<String, String> columns);
 
     SQLAlterTableBuilder alterColumn(String columnName, String toColumnName, String toColumnType, String toColumnComment,
-                                    String after, boolean first);
+                                     String after, boolean first);
 
     SQLAlterTableBuilder addPrimaryKey(String columnName, boolean hasConstraint, String constraintSymbol);
 

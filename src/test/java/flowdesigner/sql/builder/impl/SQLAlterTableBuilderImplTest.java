@@ -13,9 +13,11 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import sqlTest.SQLTest;
 
+import java.awt.*;
 import java.sql.SQLSyntaxErrorException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.stream.Stream;
 
 class SQLAlterTableBuilderImplTest {
@@ -127,7 +129,13 @@ class SQLAlterTableBuilderImplTest {
 
         alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
         alterTableBuilder.setName("db_name");
-        alterTableBuilder.dropColomn("line_id","int");
+        if (dbType == DbType.hive) {
+            HashMap<String, String> stringStringHashMap = new HashMap<>();
+            stringStringHashMap.put("line_id","int");
+            stringStringHashMap.put("b","int");
+            alterTableBuilder.replaceColumn(stringStringHashMap);
+        } else
+        alterTableBuilder.dropColumn("line_id");
 
         SQLTest.parser(expected, dbType);
         Assertions.assertEquals(expected, alterTableBuilder.toString());
@@ -137,15 +145,9 @@ class SQLAlterTableBuilderImplTest {
         for (DbType dbType : DbType.values()) {
             String syntax =  switch (dbType) {
                 case hive -> "ALTER TABLE db_name\n" +
-                        "\tADD COLUMNS (line_id int)";
-                case odps -> "ALTER TABLE db_name\n" +
-                        "\tADD COLUMNS (line_id INT)";
-                case oracle, oceanbase_oracle -> "ALTER TABLE db_name\n" +
-                        "\tADD (line_id int)";
-                case db2 -> "ALTER TABLE db_name\n" +
-                        "\tADD COLUMN line_id int";
+                        "\tREPLACE COLUMNS (b int, line_id int)";
                 default -> "ALTER TABLE db_name\n" +
-                        "\tADD line_id int";
+                        "\tDROP COLUMN line_id";
             };
             arguments.add(Arguments.of(dbType, syntax));
         }
