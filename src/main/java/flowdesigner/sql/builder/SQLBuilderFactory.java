@@ -16,7 +16,7 @@ import flowdesigner.sql.dialect.db2.DB2SelectBuilderImpl;
 import flowdesigner.sql.dialect.hive.HiveAlterTableBuilderImpl;
 import flowdesigner.sql.dialect.hive.HiveCreateTableBuilderImpl;
 import flowdesigner.sql.dialect.hive.HiveInsertBuilderImpl;
-import flowdesigner.sql.dialect.mysql.*;
+import flowdesigner.sql.dialect.mysql.builder.*;
 import flowdesigner.sql.dialect.odps.OdpsCreateTableBuilderImpl;
 import flowdesigner.sql.dialect.oracle.OracleAlterTableBuilderImpl;
 import flowdesigner.sql.dialect.oracle.OracleCreateTableBuilderImpl;

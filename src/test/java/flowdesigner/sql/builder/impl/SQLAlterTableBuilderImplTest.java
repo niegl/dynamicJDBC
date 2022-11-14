@@ -108,9 +108,9 @@ class SQLAlterTableBuilderImplTest {
                         "\tADD COLUMNS (line_id int)";
                 case odps -> "ALTER TABLE db_name\n" +
                         "\tADD COLUMNS (line_id INT)";
-                case oracle, oceanbase_oracle -> "ALTER TABLE db_name\n" +
+                case oracle, oceanbase_oracle, h2 -> "ALTER TABLE db_name\n" +
                         "\tADD (line_id int)";
-                case db2 -> "ALTER TABLE db_name\n" +
+                case db2,mysql,mariadb,postgresql,ads,presto,clickhouse, oscar, tidb -> "ALTER TABLE db_name\n" +
                         "\tADD COLUMN line_id int";
                 default -> "ALTER TABLE db_name\n" +
                         "\tADD line_id int";

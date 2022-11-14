@@ -19,6 +19,27 @@ public class SQLASTOutputVisitorV2 extends SQLASTOutputVisitor {
 
     @Override
     public boolean visit(SQLAlterTableAddColumn x) {
-        return super.visit(x);
+
+        if (DbType.odps != this.dbType && DbType.hive != this.dbType) {
+            this.print0(this.ucase ? "ADD " : "add ");
+        } else {
+            this.print0(this.ucase ? "ADD COLUMNS (" : "add columns (");
+        }
+
+        this.printAndAccept(x.getColumns(), ", ");
+        if (DbType.odps == this.dbType || DbType.hive == this.dbType) {
+            this.print(')');
+        }
+
+        Boolean restrict = x.getRestrict();
+        if (restrict != null && restrict) {
+            this.print0(this.ucase ? " RESTRICT" : " restrict");
+        }
+
+        if (x.isCascade()) {
+            this.print0(this.ucase ? " CASCADE" : " cascade");
+        }
+
+        return false;
     }
 }

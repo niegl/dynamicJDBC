@@ -1,4 +1,4 @@
-package flowdesigner.sql.dialect.mysql;
+package flowdesigner.sql.dialect.mysql.builder;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.statement.SQLCheck;
