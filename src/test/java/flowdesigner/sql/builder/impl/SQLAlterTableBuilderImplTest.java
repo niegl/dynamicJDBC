@@ -92,7 +92,8 @@ class SQLAlterTableBuilderImplTest {
     @ParameterizedTest
     @MethodSource()
     void addColumn(DbType dbType, String expected) throws SQLSyntaxErrorException {
-        SQLTest.parser(expected, dbType);
+        SQLStatement statement = SQLTest.parser(expected, dbType);
+
         alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
         alterTableBuilder.setName("db_name");
         alterTableBuilder.addColumn("line_id","int");

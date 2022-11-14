@@ -10,6 +10,7 @@ import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
 import com.alibaba.druid.sql.visitor.VisitorFeature;
 import commonUtility.file.FileKit;
+import flowdesigner.sql.dialect.db2.DB2OutputVisitorV2;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.EmptyFileFilter;
@@ -84,7 +85,7 @@ public class SQLUtils {
                                      VisitorFeature... features) {
         StringBuilder out = new StringBuilder();
         SQLASTOutputVisitor visitor = createOutputVisitor(out, dbType);
-
+System.out.println(visitor.getClass());
         if (option == null) {
             option = DEFAULT_FORMAT_OPTION;
         }
@@ -122,7 +123,7 @@ public class SQLUtils {
 
         switch (dbType) {
             case db2:
-                return new DB2OutputVisitor(out);
+                return new DB2OutputVisitorV2(out);
             default:
                 return com.alibaba.druid.sql.SQLUtils.createOutputVisitor(out, dbType);
         }
