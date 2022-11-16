@@ -9,6 +9,7 @@ import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.hive.ast.HiveInsertStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlInsertStatement;
 import com.alibaba.druid.sql.dialect.oracle.ast.stmt.OracleInsertStatement;
+import com.alibaba.druid.sql.dialect.oscar.ast.stmt.OscarInsertStatement;
 import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGInsertStatement;
 import com.alibaba.druid.sql.dialect.sqlserver.ast.stmt.SQLServerInsertStatement;
 import flowdesigner.sql.builder.SQLInsertBuilder;
@@ -144,6 +145,7 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
 
     protected SQLInsertStatement createSQLInsertStatement() {
         return switch (dbType) {
+            case oscar -> new OscarInsertStatement();
             case postgresql -> new PGInsertStatement();
             case sqlserver -> new SQLServerInsertStatement();
             case oracle -> new OracleInsertStatement();
@@ -153,9 +155,5 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
         };
 
     }
-
-//    public String toString() {
-//        return SQLUtils.toSQLString(stmt, dbType);
-//    }
 
 }

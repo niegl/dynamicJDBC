@@ -12,6 +12,9 @@ import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
+import com.alibaba.druid.sql.dialect.oscar.ast.stmt.OscarSelectStatement;
+import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGSelectStatement;
+import com.alibaba.druid.sql.dialect.presto.ast.stmt.PrestoSelectStatement;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import com.github.houbb.auto.log.annotation.AutoLog;
@@ -90,9 +93,18 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
     @Override
     public SQLSelectStatement getSQLStatement() {
         if (stmt == null) {
-            stmt = new SQLSelectStatement(dbType);
+            stmt = createSelectStatement(dbType);
         }
         return stmt;
+    }
+
+    protected SQLSelectStatement createSelectStatement(DbType dbType) {
+        return switch (dbType) {
+            case oscar -> new OscarSelectStatement();
+            case postgresql -> new PGSelectStatement();
+            case presto -> new PrestoSelectStatement();
+            default -> new SQLSelectStatement(dbType);
+        };
     }
 
     /**

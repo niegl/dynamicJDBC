@@ -43,12 +43,6 @@ public class SQLDropTableBuilderImpl extends SQLBuilderImpl implements SQLDropTa
         this.stmt = stmt;
     }
 
-//    @Override
-//    public SQLDropTableBuilder setType(DbType dbType) {
-//        this.dbType = dbType;
-//        return this;
-//    }
-
     @Override
     public SQLDropTableBuilder dropTable(String table) {
         SQLDropTableStatement statement = getSQLStatement();
@@ -74,7 +68,4 @@ public class SQLDropTableBuilderImpl extends SQLBuilderImpl implements SQLDropTa
         return new SQLDropTableStatement(dbType);
     }
 
-//    public String toString() {
-//        return SQLUtils.toSQLString(stmt, dbType);
-//    }
 }

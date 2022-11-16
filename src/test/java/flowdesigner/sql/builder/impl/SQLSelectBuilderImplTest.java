@@ -7,9 +7,14 @@ import flowdesigner.sql.builder.SQLSelectBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import sqlTest.SQLTest;
 
 import java.sql.SQLSyntaxErrorException;
+import java.util.ArrayList;
+import java.util.stream.Stream;
 
 class SQLSelectBuilderImplTest {
 
@@ -38,29 +43,6 @@ class SQLSelectBuilderImplTest {
                 "WHERE B.a = 1\n" +
                 "\tAND tablea.b = 2\n" +
                 "\tAND B.c = 3");
-    }
-
-    @Test
-    void join() throws SQLSyntaxErrorException {
-        SQLStatement statement = SQLTest.parser("SELECT a.househld_pty_id, a.motor_lighting_val, a.stat_mon, b.area, c.fac_point_id\n" +
-                "\t, d.sup_househld_pty_id, d.househld_pty_nm\n" +
-                "FROM pmart.t98_station_engcspt_stat_month a\n" +
-                "\tINNER JOIN pdata.t01_pty_area_h b ON a.househld_pty_id = b.pty_id\n" +
-                "\tINNER JOIN pdata.t02_fac_point_pty_rel_h c ON a.househld_pty_id = c.fac_point_id\n" +
-                "\tINNER JOIN pdata.t01_househld_pty d ON a.househld_pty_id = d.househld_pty_id\n" +
-                "WHERE t01_pty_area_h.area_typ_cd = '00'\n" +
-                "\tAND t02_fac_point_pty_rel_h.fac_point_pty_rel_ctgy_cd = '06'\n" +
-                "\tAND t01_pty_area_h.area != 0;\n", DbType.mysql);
-//        SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.mysql);
-        builderEx.select("househld_pty_id","stat_mon")
-                .from("pmart.t98_station_engcspt_stat_month","a");
-        builderEx.where("t01_pty_area_h.area_typ_cd = '00'")
-                .whereAnd("t02_fac_point_pty_rel_h.fac_point_pty_rel_ctgy_cd = '06'")
-                .whereAnd("t01_pty_area_h.area != 0");
-        builderEx.join("inner join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
-        builderEx.join("inner join","pdata.t02_fac_point_pty_rel_h","c","a.househld_pty_id","c.fac_point_id","=");
-        builderEx.join("inner join","pdata.t01_househld_pty","c","a.househld_pty_id","d.househld_pty_id","=");
-
     }
 
     @Test
@@ -131,28 +113,105 @@ class SQLSelectBuilderImplTest {
         builderEx.setBufferResult(true);
     }
 
-    @Test
-    void setCache() {
-        builderEx.select("a","b")
-                .from("tablea","a")
-                .where("data_dt='2022-10'");
-        builderEx.setCache(true);
+    @ParameterizedTest
+    @MethodSource()
+    void join(DbType dbType, String expected) throws SQLSyntaxErrorException {
+        builderEx = SQLBuilderFactory.createSelectSQLBuilder( dbType);
+        builderEx.select("househld_pty_id","stat_mon")
+                .from("pmart.t98_station_engcspt_stat_month","a");
+        builderEx.where("t01_pty_area_h.area_typ_cd = '00'")
+                .whereAnd("t02_fac_point_pty_rel_h.fac_point_pty_rel_ctgy_cd = '06'")
+                .whereAnd("t01_pty_area_h.area != 0");
+        builderEx.join("inner join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
+        builderEx.join("inner join","pdata.t02_fac_point_pty_rel_h","c","a.househld_pty_id","c.fac_point_id","=");
+        builderEx.join("inner join","pdata.t01_househld_pty","c","a.househld_pty_id","d.househld_pty_id","=");
+
+        SQLTest.parser(builderEx.toString(),dbType);
+        Assertions.assertEquals(expected, builderEx.toString());
+    }
+    static Stream<Arguments> join() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                case odps -> "SELECT househld_pty_id, stat_mon\n" +
+                        "FROM pmart.t98_station_engcspt_stat_month a\n" +
+                        "INNER JOIN pdata.t01_pty_area_h b\n" +
+                        "ON a.househld_pty_id = b.pty_id\n" +
+                        "INNER JOIN pdata.t02_fac_point_pty_rel_h c\n" +
+                        "ON a.househld_pty_id = c.fac_point_id\n" +
+                        "INNER JOIN pdata.t01_househld_pty c\n" +
+                        "ON a.househld_pty_id = d.househld_pty_id\n" +
+                        "WHERE b.area_typ_cd = '00'\n" +
+                        "\tAND c.fac_point_pty_rel_ctgy_cd = '06'\n" +
+                        "\tAND b.area != 0";
+                default -> "SELECT househld_pty_id, stat_mon\n" +
+                        "FROM pmart.t98_station_engcspt_stat_month a\n" +
+                        "\tINNER JOIN pdata.t01_pty_area_h b ON a.househld_pty_id = b.pty_id\n" +
+                        "\tINNER JOIN pdata.t02_fac_point_pty_rel_h c ON a.househld_pty_id = c.fac_point_id\n" +
+                        "\tINNER JOIN pdata.t01_househld_pty c ON a.househld_pty_id = d.househld_pty_id\n" +
+                        "WHERE b.area_typ_cd = '00'\n" +
+                        "\tAND c.fac_point_pty_rel_ctgy_cd = '06'\n" +
+                        "\tAND b.area != 0";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
     }
 
-    @Test
-    void setCalcFoundRows() {
-
-        builderEx.select("a","b")
-                .from("tablea","a")
-                .where("data_dt='2022-10'");
-        builderEx.setCalcFoundRows(true);
-    }
-
-    @Test
-    void orderBy() {
+    @ParameterizedTest
+    @MethodSource()
+    void orderBy(DbType dbType, String expected) throws SQLSyntaxErrorException {
+        builderEx = SQLBuilderFactory.createSelectSQLBuilder( dbType);
         builderEx.select("a","b")
             .from("tablea","a")
             .where("data_dt='2022-10'");
         builderEx.orderBy("root_t.a asc","b");
+        SQLTest.parser(expected,dbType);
+        Assertions.assertEquals(expected, builderEx.toString());
     }
+    static Stream<Arguments> orderBy() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                case odps -> "SELECT a, b\n" +
+                        "FROM tablea a\n" +
+                        "WHERE data_dt = '2022-10'\n" +
+                        "ORDER BY root_t.a ASC, \n" +
+                        "\tb";
+                default -> "SELECT a, b\n" +
+                        "FROM tablea a\n" +
+                        "WHERE data_dt = '2022-10'\n" +
+                        "ORDER BY root_t.a ASC, b";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
+    }
+
+    @ParameterizedTest
+    @MethodSource()
+    void where(DbType dbType, String expected) throws SQLSyntaxErrorException {
+        builderEx = SQLBuilderFactory.createSelectSQLBuilder( dbType);
+        builderEx.select("a","b")
+                .from("tablea","a")
+                .where("data_dt='2022-10'");
+        SQLTest.parser(expected,dbType);
+        Assertions.assertEquals(expected, builderEx.toString());
+    }
+    static Stream<Arguments> where() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                default -> "SELECT a, b\n" +
+                        "FROM tablea a\n" +
+                        "WHERE data_dt = '2022-10'";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
+    }
+
 }
