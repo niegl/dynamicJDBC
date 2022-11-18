@@ -54,26 +54,6 @@ class SQLSelectBuilderImplTest {
         builder.join("COMMA","CT", null,null,null,null);
                 System.out.println(builder);
     }
-    @Test
-    void union() {
-        SQLSelectBuilder builder = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
-        builder.select("a", "b")
-                .from("(SELECT building_t.idbuilding_t, building_t.name, building_t.floors, campus_t.idcampus_t FROM test.building_t INNER JOIN test.campus_t  ON building_t.campus_id = campus_t.idcampus_t)"
-                        ,"vv");
-
-        SQLSelectBuilder builder2 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
-        builder2.select("c", "d")
-                .from("test.building_t"
-                        ,"tt");
-        builder.union(builder2, "");
-
-        SQLSelectBuilder builder3 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
-        builder3.select("e", "f")
-                .from("test.building_t2"
-                        ,"tt");
-        builder.union(builder3, "DISTINCT");
-        System.out.println(builder);
-    }
 
     @Test
     void whereAnd() {
@@ -93,7 +73,31 @@ class SQLSelectBuilderImplTest {
     }
 
     @Test
-    void testJoin() {
+    void testUnionJoin() throws SQLSyntaxErrorException {
+        SQLStatement statement = SQLTest.parser(" SELECT *\n" +
+                "    FROM (VALUES ('p','q'),('x','y')) AS TableLiteral(Col1, Col2)", DbType.mysql);
+        SQLStatement statement0 = SQLTest.parser("select A.id  from pmart.t97_input_engcspt_sum A union all select B.engcspt_rel_ordr_num  from pmart.t98_engcspt_rel_day_stat B ORDER BY id", DbType.mysql);
+        SQLStatement statement1 = SQLTest.parser("SELECT * FROM (\n" +
+                "select A.id  from pmart.t97_input_engcspt_sum A union all select B.engcspt_rel_ordr_num  from pmart.t98_engcspt_rel_day_stat B ) C ORDER BY C.id", DbType.mysql);
+        SQLStatement statement2 = SQLTest.parser("SELECT  * from (select A.id  from pmart.t97_input_engcspt_sum A union all select B.engcspt_rel_ordr_num  from pmart.t98_engcspt_rel_day_stat B) J join pmart.t98_engcspt_rel_mth_stat C on J.id = C.engcspt_rel_ordr_num ", DbType.mysql);
+
+        SQLSelectBuilder builder2 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder2.select("c", "d")
+                .from("test.building_t"
+                        ,"tt");
+
+        SQLSelectBuilder builder3 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder3.select("e", "f")
+                .from("test.building_t2"
+                        ,"tt");
+        builder2.union(builder3, "DISTINCT");
+
+        builder2.join("inner join","pdata.t01_househld_pty","c","a.househld_pty_id","d.househld_pty_id","=");
+
+        builder2.select("*");
+
+        SQLTest.parser(builder2.toString(),DbType.mysql);
+
     }
 
 
@@ -111,6 +115,52 @@ class SQLSelectBuilderImplTest {
                 .from("tablea","a")
                 .where("data_dt='2022-10'");
         builderEx.setBufferResult(true);
+    }
+
+    @ParameterizedTest
+    @MethodSource()
+    void union(DbType dbType, String expected) throws SQLSyntaxErrorException {
+        SQLSelectBuilder builder = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder.select("a", "b")
+                .from("(SELECT building_t.idbuilding_t, building_t.name, building_t.floors, campus_t.idcampus_t FROM test.building_t INNER JOIN test.campus_t  ON building_t.campus_id = campus_t.idcampus_t)"
+                        ,"vv");
+
+        SQLSelectBuilder builder2 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder2.select("c", "d")
+                .from("test.building_t"
+                        ,"tt");
+        builder.union(builder2, "");
+
+        SQLSelectBuilder builder3 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder3.select("e", "f")
+                .from("test.building_t2"
+                        ,"tt");
+        builder.union(builder3, "DISTINCT");
+
+        SQLTest.parser(builder.toString(),dbType);
+        Assertions.assertEquals(expected, builder.toString());
+    }
+    static Stream<Arguments> union() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                default -> "SELECT a, b\n" +
+                        "FROM (\n" +
+                        "\tSELECT building_t.idbuilding_t, building_t.name, building_t.floors, campus_t.idcampus_t\n" +
+                        "\tFROM test.building_t\n" +
+                        "\t\tINNER JOIN test.campus_t ON building_t.campus_id = campus_t.idcampus_t\n" +
+                        ") vv\n" +
+                        "UNION\n" +
+                        "SELECT c, d\n" +
+                        "FROM test.building_t tt\n" +
+                        "UNION DISTINCT\n" +
+                        "SELECT e, f\n" +
+                        "FROM test.building_t2 tt";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
     }
 
     @ParameterizedTest

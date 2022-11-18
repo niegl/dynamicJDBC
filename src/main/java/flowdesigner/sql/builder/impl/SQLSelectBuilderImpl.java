@@ -29,12 +29,7 @@ import java.util.List;
 
 @Slf4j
 public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBuilder {
-    protected SQLSelectStatement stmt;
-
-    /**
-     * 别名，用于替换输入的全名,包括select部分、where部分
-     */
-    protected HashMap<String,String> aliasMap = new HashMap<>();
+    protected SQLSelectStatement stmt = null;
 
     protected static List<String> supportMethods = new ArrayList<>();
     static {
@@ -61,7 +56,6 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
     }
     public SQLSelectBuilderImpl(SQLExprBuilder exprBuilder, DbType dbType ) {
         super( exprBuilder, dbType);
-        this.stmt = new SQLSelectStatement(dbType);
     }
 
     public SQLSelectBuilderImpl(String sql, DbType dbType) {
@@ -84,6 +78,8 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
 
     @Override
     public SQLSelect getSQLSelect() {
+        stmt = getSQLStatement();
+
         if (stmt.getSelect() == null) {
             stmt.setSelect(createSelect());
         }
@@ -159,11 +155,6 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         SQLExpr toSQLExpr = SQLUtils.toSQLExpr(table, dbType);
         SQLExprTableSource from = new SQLExprTableSource(toSQLExpr, alias);
         queryBlock.setFrom(from);
-
-        if (alias != null) {
-            updateAlias(toSQLExpr, alias);
-            aliasMap.put(table, alias);
-        }
 
         return this;
     }
@@ -349,18 +340,29 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
     }
 
     protected SQLSelectQueryBlock getQueryBlock() {
-        SQLSelect select = getSQLSelect();
-        SQLSelectQuery query = select.getQuery();
-        if (query == null) {
-            query = SQLParserUtils.createSelectQueryBlock(dbType);
-            select.setQuery(query);
-        }
+        SQLSelectQuery query = getQuery();
 
         if (!(query instanceof SQLSelectQueryBlock)) {
             throw new IllegalStateException("not support from, class : " + query.getClass().getName());
         }
 
         return (SQLSelectQueryBlock) query;
+    }
+
+    /**
+     * select.setQuery(query)的query类型可能为：SelectQueryBlock或SQLUnionQuery。<p>
+     *     （1）第一次调用getQueryBlock默认生成的 是SelectQueryBlock；<p>
+     *     （2）在调用 union接口后会通过select.setQuery(SQLUnionQuery)设置为SQLUnionQuery，;
+     * @return SelectQueryBlock或SQLUnionQuery
+     */
+    private SQLSelectQuery getQuery() {
+        SQLSelect select = getSQLSelect();
+        SQLSelectQuery query = select.getQuery();
+        if (query == null) {
+            query = createSelectQueryBlock();
+            select.setQuery(query);
+        }
+        return query;
     }
 
     protected SQLSelect createSelect() {
@@ -461,19 +463,23 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
             return this;
         }
 
-        SQLSelectQueryBlock queryBlock = getQueryBlock();
-        if (queryBlock != null) {
-            from = queryBlock.getFrom();
+        // 考虑SelectQuery为 SQLSelectQueryBlock 和 SQLUnionQuery的情况
+        SQLSelectQuery query = getQuery();
+        if (query instanceof SQLUnionQuery unionQuery) {
+            from = new SQLUnionQueryTableSource(unionQuery);
+            SQLSelectQuery selectQueryBlock = createSelectQueryBlock();
+            getSQLSelect().setQuery(selectQueryBlock);
+        } else if (query instanceof SQLSelectQueryBlock selectQueryBlock) {
+            from = selectQueryBlock.getFrom();
         }
 
         if (from != null) {
-            if (from instanceof SQLExprTableSource || from instanceof SQLJoinTableSource) {
+            if (from instanceof SQLExprTableSource
+                    || from instanceof SQLJoinTableSource
+                    || from instanceof SQLUnionQueryTableSource
+                    || from instanceof SQLValuesTableSource) {
                 joinTableSource = new SQLJoinTableSource();
                 joinTableSource.setLeft(from);
-            } else if (from instanceof SQLUnionQueryTableSource) {
-
-            } else if (from instanceof SQLValuesTableSource) {
-
             }
         }
 
@@ -492,7 +498,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
 
             if (conditionOperator != null) {
                 if (conditionOperator.equalsIgnoreCase("=")) {
-                    SQLBinaryOpExpr binaryOpExpr = new SQLBinaryOpExpr(queryBlock.getDbType());
+                    SQLBinaryOpExpr binaryOpExpr = new SQLBinaryOpExpr(dbType);
                     binaryOpExpr.setLeft(new SQLIdentifierExpr(conditionLeft));
                     binaryOpExpr.setRight(new SQLIdentifierExpr(conditionRight));
                     binaryOpExpr.setOperator(SQLBinaryOperator.Equality);
@@ -500,6 +506,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
                 }
             }
 
+            SQLSelectQueryBlock queryBlock = getQueryBlock();
             queryBlock.setFrom(joinTableSource);
 
             updateAlias(exprTable, alias);
