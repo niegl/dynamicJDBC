@@ -1,23 +1,32 @@
-VARCHAR2
-NVARCHAR2
-NUMBER
-FLOAT
-LONG
-DATE
 BINARY_FLOAT
 BINARY_DOUBLE
-TIMESTAMP
-TIMESTAMP WITH TIME ZONE
-TIMESTAMP WITH LOCAL TIME ZONE
-INTERVAL YEAR TO MONTH
-INTERVAL DAY TO SECOND
-RAW(size)
-LONG RAW
-ROWID
-UROWID[(size)]
-CHAR [(size [BYTE | CHAR])]
-NCHAR[(size)]
-CLOB
-NCLOB
 BLOB
 BFILE
+blob
+char
+CHAR(size)
+clob
+date
+float
+interval day to second
+interval year to second
+long
+long raw
+NCHAR
+NCHAR(size)
+NCLOB
+number
+nvarchar2
+raw
+ROWID
+real
+ref
+sdo_geometry
+struct
+timestamp
+timestamp with local time zone
+timestamp with time zone
+varchar2
+UROWID
+UROWID(size)
+xmltype

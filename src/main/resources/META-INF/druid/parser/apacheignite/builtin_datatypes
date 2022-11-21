@@ -1,0 +1,15 @@
+bigint
+binary
+boolean
+char
+date
+decimadouble
+geometry
+int
+rea
+smallint
+time
+timestamp
+tinyint
+uuid
+varchar

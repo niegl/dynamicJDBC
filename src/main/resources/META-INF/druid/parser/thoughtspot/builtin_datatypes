@@ -1,0 +1,9 @@
+bigint
+date
+datetime
+double precision
+float
+integer
+time
+timestamp
+varchar

@@ -1,0 +1,12 @@
+binary varying
+blob
+character warying
+date
+decimal
+int
+longvarbinary
+numeric
+time
+timestamp
+varbinary
+varchar

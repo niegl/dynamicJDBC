@@ -1,0 +1,18 @@
+bigint
+boolean
+char
+date
+decima
+double precision
+float
+geometry
+hashtype
+integer
+interval day to second
+interval year to month
+long varchar
+smallint
+timestamp
+timestamp with local time zone
+tinyint
+varchar

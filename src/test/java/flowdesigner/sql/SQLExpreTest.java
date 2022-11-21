@@ -28,7 +28,13 @@ public class SQLExpreTest {
         SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
         System.out.println(expr);
     }
-
+    @org.junit.jupiter.api.Test
+    void testUnion() throws SQLSyntaxErrorException {
+        DbType dbType = JdbcConstants.HIVE;
+        String sql = "select A.id  from pmart.t97_input_engcspt_sum A union all select B.engcspt_rel_ordr_num  from pmart.t98_engcspt_rel_day_stat B";
+        SQLExpr expr = SQLUtils.toSQLExpr(sql, dbType);
+        System.out.println(expr);
+    }
     @org.junit.jupiter.api.Test
     void testPARTITIONBY() throws SQLSyntaxErrorException {
         DbType dbType = JdbcConstants.HIVE;

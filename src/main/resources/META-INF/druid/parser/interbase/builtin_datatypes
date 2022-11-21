@@ -1,0 +1,13 @@
+blob
+boolean
+char
+date
+decimal
+double precision
+float
+integer
+numeric
+smallint
+time
+timestamp
+varchar

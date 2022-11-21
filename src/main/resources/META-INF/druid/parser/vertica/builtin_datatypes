@@ -1,0 +1,27 @@
+Binary
+Boolean
+Char
+Date
+Float
+Integer
+Interval Day
+Interval Day to Hour
+Interval Day to Minute
+Interval Day to Second
+Interval Hour
+Interval Hour to Minute
+Interval Hour to Second
+Interval Minute
+Interval Minute to Second
+Interval Month
+Interval Second
+Interval Year
+Interval Year to Month
+Numeric
+Time
+TimeTz
+Timestamp
+TimestampTz
+Varbinary
+Varchar
+auto_increment

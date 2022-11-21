@@ -1,0 +1,23 @@
+bigint
+blob
+boolean
+char
+char () for bit data
+clob
+date
+decimal
+double
+float
+integer
+json
+long varchar
+long varchar for bit data
+numeric
+object
+real
+smallint
+time
+timestamp
+varchar
+varchar () for bit data
+xml

@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -150,10 +149,26 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         if (table == null) {
             return this;
         }
-        SQLSelectQueryBlock queryBlock = getQueryBlock();
 
         SQLExpr toSQLExpr = SQLUtils.toSQLExpr(table, dbType);
-        SQLExprTableSource from = new SQLExprTableSource(toSQLExpr, alias);
+
+        return from(toSQLExpr, alias);
+    }
+
+    /**
+     * 支持 SQLExpr 为 SQLExprTableSource、SQLJoinTableSource、SQLUnionQueryTableSource、SQLValuesTableSource
+     * @param expr SQLExprTableSource、SQLJoinTableSource、SQLUnionQueryTableSource、SQLValuesTableSource
+     * @param alias
+     * @return
+     */
+    @Override
+    public SQLSelectBuilder from(SQLExpr expr, String alias) {
+        if (expr == null) {
+            return this;
+        }
+
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        SQLExprTableSource from = new SQLExprTableSource(expr, alias);
         queryBlock.setFrom(from);
 
         return this;

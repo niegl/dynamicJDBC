@@ -1,0 +1,27 @@
+bigint
+binary
+bit
+char
+date
+datetime
+decimal
+float
+image
+integer
+long binary
+ong varchar
+money
+numeric
+real
+smalldatetime
+smallint
+smallmoney
+text
+time
+timestamp
+tinyint
+unsigned bigint
+unsigned int
+unsigned smallint
+varbinary
+varchar

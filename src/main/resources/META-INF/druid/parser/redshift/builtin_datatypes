@@ -1,0 +1,12 @@
+bigint
+boolean
+char
+date
+decimal
+double precision
+integer
+real
+smallint
+timestamp
+timestamptz
+varchar

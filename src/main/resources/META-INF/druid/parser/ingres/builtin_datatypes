@@ -1,0 +1,22 @@
+ansidate
+bigint
+boolean
+byte
+byte varying
+char
+decimal
+double precision
+float
+ingresdate
+integer
+integer1
+long byte
+long nvarchar
+long varchar
+nchar
+nvarchar
+real
+smallint
+time
+timestamp
+varchar
