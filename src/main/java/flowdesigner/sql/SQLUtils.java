@@ -44,9 +44,7 @@ public class SQLUtils {
     public static FormatOption DEFAULT_FORMAT_OPTION = new FormatOption(true, true);
     public static FormatOption DEFAULT_LCASE_FORMAT_OPTION
             = new FormatOption(false, true);
-
-
-
+    
     /**
      * 获取用户定义变量
      * @param dbType 数据库类型
