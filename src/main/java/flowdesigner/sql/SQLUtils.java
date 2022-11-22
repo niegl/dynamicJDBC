@@ -3,6 +3,9 @@ package flowdesigner.sql;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
+import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
+import com.alibaba.druid.sql.ast.statement.SQLSetStatement;
 import com.alibaba.druid.sql.dialect.ads.visitor.AdsOutputVisitor;
 import com.alibaba.druid.sql.dialect.antspark.visitor.AntsparkOutputVisitor;
 import com.alibaba.druid.sql.dialect.blink.vsitor.BlinkOutputVisitor;
@@ -14,30 +17,23 @@ import com.alibaba.druid.sql.dialect.odps.visitor.OdpsOutputVisitor;
 import com.alibaba.druid.sql.dialect.oracle.visitor.OracleOutputVisitor;
 import com.alibaba.druid.sql.dialect.oscar.visitor.OscarOutputVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
-import com.alibaba.druid.sql.dialect.presto.visitor.PrestoOutputVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
-import com.alibaba.druid.sql.parser.Lexer;
 import com.alibaba.druid.sql.parser.SQLParserFeature;
-import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
 import com.alibaba.druid.sql.visitor.VisitorFeature;
-import commonUtility.file.FileKit;
 import flowdesigner.sql.dialect.db2.DB2OutputVisitorV2;
 import flowdesigner.sql.dialect.presto.visitor.PrestoOutputVisitorV2;
 import flowdesigner.sql.visitor.SQLASTOutputVisitorV2;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.EmptyFileFilter;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
+import static com.alibaba.druid.sql.SQLUtils.parseStatements;
+
+/**
+ * SQL语句相关的对象方法。
+ */
 public class SQLUtils {
 
     private static final SQLParserFeature[] FORMAT_DEFAULT_FEATURES = {
@@ -49,40 +45,30 @@ public class SQLUtils {
     public static FormatOption DEFAULT_LCASE_FORMAT_OPTION
             = new FormatOption(false, true);
 
-    public static Set<String> getKeywords(DbType dbType) {
-        Lexer lexer = SQLParserUtils.createLexer("select *", dbType);
-        return lexer.getKeywords().getKeywords().keySet();
-    }
+
 
     /**
-     * 返回数据库关键字
+     * 获取用户定义变量
      * @param dbType 数据库类型
-     * @return 以逗号分隔的关键字列表
+     * @param sql set SQL语句
+     * @return 变量列表
      */
-    public static String getKeywordsAsString(DbType dbType) {
-        Set<String> keywords = getKeywords(dbType);
-        return StringUtils.join(keywords,",");
+    public static List<String> parseContextDefinition(String dbType, String sql) {
+        List<SQLStatement> list = parseStatements(sql, dbType);
+
+        return list.stream()
+                .filter(s -> s instanceof SQLSetStatement)
+                .flatMap(s -> {
+                    Collection<SQLAssignItem> items = ((SQLSetStatement) s).getItems();
+                    items.removeIf(i -> i.getTarget() instanceof SQLPropertyExpr);
+                    return items.stream().map(i -> i.getTarget().toString().replaceAll("@","") + "=" + i.getValue());
+                })
+                .toList();
     }
 
-    public static ArrayList<String> searchDriverClassName(List<String> files) {
-        ArrayList<String> strings = new ArrayList<>();
-        if (files == null) {
-            return strings;
-        }
-
-        for (String file : files) {
-            Collection<File> jarFiles = FileUtils.listFiles(new File(file),
-                    FileFilterUtils.and(new SuffixFileFilter("jar"), EmptyFileFilter.NOT_EMPTY),
-                    DirectoryFileFilter.INSTANCE);
-            jarFiles.forEach(jarFile -> {
-                String className = FileKit.readFileFromJar( jarFile,"java.sql.Driver");
-                if (!className.isEmpty()) {
-                    strings.add(className);
-                }
-            });
-        }
-
-        return strings;
+    public static String parseContextDefinitionASString(String dbType, String sql) {
+        Collection<String> list = parseContextDefinition(dbType, sql);
+        return StringUtils.join(list,',');
     }
 
     public static String toSQLString(SQLObject sqlObject, DbType dbType) {

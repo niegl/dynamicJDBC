@@ -1,4 +1,4 @@
-package flowdesigner.sql.operators;
+package flowdesigner.db.operators;
 
 public enum SQLFunctionCatalog {
     //Built-in Operators

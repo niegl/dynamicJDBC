@@ -1,11 +1,11 @@
-package flowdesigner.sql.operators;
+package flowdesigner.db.operators;
 
 import com.alibaba.druid.DbType;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static flowdesigner.sql.operators.SQLFunctionCatalog.*;
+import static flowdesigner.db.operators.SQLFunctionCatalog.*;
 
 public enum SQLOperator {
 

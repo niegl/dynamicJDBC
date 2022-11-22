@@ -3,6 +3,7 @@ package flowdesigner.sql.command;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson2.JSON;
+import flowdesigner.db.DbUtils;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
@@ -11,7 +12,7 @@ import flowdesigner.jdbc.command.impl.DBReverseGetFunctionsImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
-import flowdesigner.sql.operators.SQLOperatorUtils;
+import flowdesigner.db.operators.SQLOperatorUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -381,19 +382,19 @@ class CommandManagerTest {
 //        System.out.println(supportFunctions);
 
         Connection mySQL = getMySQL();
-        Collection<String> supportFunctions2 = SQLOperatorUtils.getSupportFunctions(mySQL, DbType.mysql);
+        Collection<String> supportFunctions2 = DbUtils.getFunctions(mySQL, DbType.mysql);
         System.out.println(supportFunctions2);
 //        supportFunctions2.removeIf( f -> supportFunctions.contains(f.toUpperCase()) || supportFunctions.contains(f.toLowerCase()));
 //        System.out.println(supportFunctions2);
     }
     @Test
     void getSupportFunctions3() throws SQLException {
-        Collection<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(null, DbType.oracle);
+        Collection<String> supportFunctions = DbUtils.getFunctions(null, DbType.oracle);
         System.out.println(supportFunctions);
     }
     @Test
     void getSupportFunctionUsage() throws SQLException {
-        String usage = SQLOperatorUtils.getFunctionDescription(connection,"acos");
+        String usage = DbUtils.getFunctionDescription(connection,"acos");
     }
     @Test
     void getSupportFunctionType() throws SQLException {

@@ -1,10 +1,13 @@
 package flowdesigner.sql.operators;
 
 import com.alibaba.druid.DbType;
+import flowdesigner.db.DbUtils;
+import flowdesigner.db.operators.SQLOperatorUtils;
+import flowdesigner.sql.SQLUtils;
 import org.junit.jupiter.api.Test;
 
-import static flowdesigner.sql.operators.SQLFunctionCatalog.ArithmeticOperator;
-import static flowdesigner.sql.operators.SQLFunctionCatalog.DatetimeFunctions;
+import static flowdesigner.db.operators.SQLFunctionCatalog.ArithmeticOperator;
+import static flowdesigner.db.operators.SQLFunctionCatalog.DatetimeFunctions;
 
 class SQLOperatorUtilsTest {
 
@@ -37,18 +40,18 @@ class SQLOperatorUtilsTest {
 
     @Test
     void getSupportFunctionsJson() {
-        System.out.println(SQLOperatorUtils.getSupportFunctionsJson(null, DbType.mysql));
+        System.out.println(SQLOperatorUtils.getFunctionsJson(null, DbType.mysql));
     }
 
     @Test
     void getEnvironmentString() {
-        System.out.println(SQLOperatorUtils.getContextConfigurationString(DbType.hive));
+        System.out.println(DbUtils.getContextConfigurationString(DbType.hive));
     }
 
     @Test
     void getVariantString() {
-        System.out.println(SQLOperatorUtils.parseContextDefinitionASString("mysql","set @Var1 = 2*1024*1024*10;"));
-        System.out.println(SQLOperatorUtils.parseContextDefinitionASString("mysql","set global max_allowed_packet = 2*1024*1024*10;"));
+        System.out.println(SQLUtils.parseContextDefinitionASString("mysql","set @Var1 = 2*1024*1024*10;"));
+        System.out.println(SQLUtils.parseContextDefinitionASString("mysql","set global max_allowed_packet = 2*1024*1024*10;"));
 
     }
 
