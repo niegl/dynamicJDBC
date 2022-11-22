@@ -41,6 +41,7 @@ public class SQLUtils {
             SQLParserFeature.EnableSQLBinaryOpExprGroup
     };
 
+    
     public static FormatOption DEFAULT_FORMAT_OPTION = new FormatOption(true, true);
     public static FormatOption DEFAULT_LCASE_FORMAT_OPTION
             = new FormatOption(false, true);
