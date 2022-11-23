@@ -7,6 +7,7 @@ import flowdesigner.db.DbUtils;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
+import flowdesigner.jdbc.command.impl.DBExecuteImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFunctionsImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
@@ -134,34 +135,28 @@ class CommandManagerTest {
     @Test
     void testExecuteUpdate() throws SQLException {
         long start = Instant.now().toEpochMilli();
-        ExecResult cc = CommandManager.exeCommand(getMySQL(), CommandKey.CMD_DBExecuteUpdateCommandImpl,new HashMap<String,String>(){{
-//            put("schemaPattern","test");
-            put("SQL","ALTER TABLE test_db11.test_db111 ADD PRIMARY KEY(id);");
-            put("SQL","ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
-//            put("SQL","ALTER TABLE test.tb_emp6 ADD CONSTRAINT fk_emp_dept1 FOREIGN KEY(deptId) REFERENCES tb_dept1(id);");
-        }});
+        DBExecuteImpl dbExecute = new DBExecuteImpl();
+        var exec = dbExecute.exec(connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
+
         long end = Instant.now().toEpochMilli();
-        String s = JSON.toJSONString(cc);
+        String s = JSON.toJSONString(exec);
         System.out.println(s);
         System.out.println(end - start);
     }
     @Test
     void testExecuteSelect() throws SQLException, InterruptedException {
         long start = Instant.now().toEpochMilli();
-        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl,new HashMap<String,String>(){{
-            put("SQL","SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm\n" +
-                    "FROM std_pcode.t99_cala_stat_index_mapping");
-        }});
-        long end = Instant.now().toEpochMilli();
-        String s = JSON.toJSONString(cc);
+        DBExecuteImpl dbExecute = new DBExecuteImpl();
+        var exec = dbExecute.exec(connection, "SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm FROM std_pcode.t99_cala_stat_index_mapping");
+
+        String s = JSON.toJSONString(exec);
         System.out.println(s);
-        System.out.println(end - start);
-        Thread.sleep(2000);
-        ExecResult rr = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl,new HashMap<String,String>(){{
-            put("SQL","set txdata=11111;");
-        }});
-        String r = JSON.toJSONString(rr);
-        System.out.println(r);
+
+        var exec1 =dbExecute.queryNext(200);
+        String s1 = JSON.toJSONString(exec1);
+        System.out.println(s1);
+
+        dbExecute.release();
     }
 
     @Test

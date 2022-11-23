@@ -19,8 +19,12 @@ package flowdesigner.util;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.driver.DynamicDriver;
+import flowdesigner.util.raw.kit.StringKit;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 
 import static com.alibaba.druid.util.JdbcConstants.*;
 
@@ -29,6 +33,7 @@ import static com.alibaba.druid.util.JdbcConstants.*;
  * 1、使用阿里接口，通过URL获取；<p>
  * 2、当获取不到URL时，使用自定义函数通过getDriverClassName获取.
  */
+@Slf4j
 public abstract class DbTypeKit {
 
     /**
@@ -37,12 +42,23 @@ public abstract class DbTypeKit {
      */
     public static DbType getDbType(Connection connection) {
         DbType dbType = null;
+        String url = null;
 
         if (null == connection ) {
             return null;
         }
 
-        String url = DynamicDriver.getUrl(connection);
+        try {
+            DatabaseMetaData metaData = connection.getMetaData();
+            url = metaData.getURL();
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+        }
+
+        if (url == null) {
+            url = DynamicDriver.getUrl(connection);
+        }
+
         if (url != null) {
             dbType = JdbcUtils.getDbTypeRaw(url.toLowerCase(), null);
         }

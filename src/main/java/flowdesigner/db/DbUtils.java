@@ -10,6 +10,7 @@ import com.alibaba.fastjson2.JSON;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
+import flowdesigner.jdbc.command.impl.DBExecuteImpl;
 import flowdesigner.util.DbTypeKit;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
@@ -469,23 +470,22 @@ public class DbUtils {
         stmt.setObject(new SQLIdentifierExpr("function"));
         stmt.setColumn(new SQLIdentifierExpr(name));
 
-        ExecResult<ResultSet> execResult = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl, new HashMap<String,String>(){{
-            put("SQL",stmt.toString());
-        }});
+        DBExecuteImpl dbExecute = new DBExecuteImpl();
+        var exec = dbExecute.exec(connection, stmt.toString());
 
-        if (execResult.getStatus().equalsIgnoreCase(ExecResult.FAILED)) {
+        if (exec.getStatus().equalsIgnoreCase(ExecResult.FAILED)) {
             return ret;
         }
 
-        ResultSet rs = execResult.getBody();
-        while (true) {
-            try {
-                if (!rs.next()) break;
-                ret = (rs.getString("tab_name"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+//        ResultSet rs = exec.getBody();
+//        while (true) {
+//            try {
+//                if (!rs.next()) break;
+//                ret = (rs.getString("tab_name"));
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         return ret;
     }
