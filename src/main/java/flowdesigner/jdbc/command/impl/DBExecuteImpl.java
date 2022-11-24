@@ -38,20 +38,18 @@ public class DBExecuteImpl {
      * or (3) row data for SQL select statements
      * @throws SQLException
      */
-    public ExecResult<RunningStatus<Object>> exec(@NotNull Connection conn, @NotNull String scripts) {
-        ExecResult<RunningStatus<Object>> ret = new ExecResult<>();
-        RunningStatus<Object> runningStatus;
+    public RunningStatus<Object> exec(@NotNull Connection conn, @NotNull String scripts) {
+        RunningStatus<Object> runningStatus = new RunningStatus<>();
 
         try {
             runningStatus = execute(conn, scripts);
-            ret.setStatus(ExecResult.SUCCESS);
-            ret.setBody(runningStatus);
+            runningStatus.setStatus(ExecResult.SUCCESS);
         } catch (SQLException e) {
-            ret.setStatus(ExecResult.FAILED);
-            ret.setBody(null);
+            runningStatus.setStatus(ExecResult.FAILED);
+            runningStatus.setResult(e.getMessage());
         }
 
-        return ret;
+        return runningStatus;
     }
 
     /**
@@ -99,6 +97,12 @@ public class DBExecuteImpl {
 
     }
 
+    /**
+     * 获取剩余查询结果
+     * @param num 获取行数
+     * @return
+     * @throws SQLException
+     */
     public List<Map<String, Object>> queryNext(int num) throws SQLException {
         List<Map<String, Object>> rows = new ArrayList<>();
 
@@ -138,7 +142,7 @@ public class DBExecuteImpl {
     /**
      * 保存scripts的运行状态
      */
-    static class RunningStatus<T> {
+    public static class RunningStatus<T> {
         /**
          * 当前运行步骤（SQL语句）
          */
@@ -152,7 +156,16 @@ public class DBExecuteImpl {
         @Getter
         private SQLStatementType statementType;
         /**
-         * 如果是select，保存查询结果; 如果是更新等其他操作，显示影响行数
+         * 运行结果：成功还是失败
+         */
+        @Setter
+        @Getter
+        private String status;
+        /**
+         * 运行结果数据内容：
+         *   <li>  如果是select，保存查询结果;
+         *   <li>  如果是更新等其他操作，显示影响行数
+         *   <li>  如果失败，保存失败原因
          */
         @Setter
         @Getter
