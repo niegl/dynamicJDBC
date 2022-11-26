@@ -1,12 +1,24 @@
 package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
+import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.sql.SQLUtils;
 import flowdesigner.sql.builder.SQLBuilder;
 
 import java.util.List;
+import java.util.Map;
 
+import static com.alibaba.druid.sql.SQLUtils.toSQLExpr;
+
+/**
+ * 此类对应解析过程中的 SQLStatementParser
+ */
 public abstract class SQLBuilderImpl implements SQLBuilder {
     protected DbType dbType;
     /**
@@ -75,4 +87,19 @@ public abstract class SQLBuilderImpl implements SQLBuilder {
             statement.addAfterComment(comments);
         }
     }
+
+    protected void buildAssignItems(List<? super SQLAssignItem> items, SQLObject parent, boolean variant,
+                                 Map<String, String> targetValues) {
+
+        for (Map.Entry<String,String> entry : targetValues.entrySet()) {
+            SQLExpr target = toSQLExpr(entry.getKey(), dbType);
+            SQLExpr value = toSQLExpr(entry.getValue(), dbType);
+
+            SQLAssignItem item = this.exprBuilder.buildAssignItem(variant, parent, target, value);
+            item.setParent(parent);
+            items.add(item);
+        }
+
+    }
+
 }

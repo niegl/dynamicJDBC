@@ -101,9 +101,8 @@ public class DBExecuteImpl {
      * 获取剩余查询结果
      * @param num 获取行数
      * @return
-     * @throws SQLException
      */
-    public List<Map<String, Object>> queryNext(int num) throws SQLException {
+    public List<Map<String, Object>> queryNext(int num) {
         List<Map<String, Object>> rows = new ArrayList<>();
 
         try {
@@ -129,6 +128,7 @@ public class DBExecuteImpl {
         } catch (SQLException e){
             close(rs);
             close((Statement)stmt);
+            log.error(e.getMessage());
         }
 
         return rows;

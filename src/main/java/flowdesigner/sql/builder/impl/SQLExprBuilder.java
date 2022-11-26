@@ -1,10 +1,12 @@
 package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLOrderingSpecification;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.ast.statement.SQLForeignKeyConstraint;
 import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl;
 import com.alibaba.druid.sql.ast.statement.SQLSelectOrderByItem;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 /**
+ * 此类对应解析过程中的 SQLExprParser。<p>
  * SQLExprBuilder用来生成每个数据库特有的exper.<p>
  * 当不同的createBuilder，如SQLCreateTableBuilder、SQLCreateDatabaseBuilder...使用SQLExpr时就不用多次生成。
  */
@@ -91,6 +94,23 @@ public class SQLExprBuilder {
             name.setParent(parent);
             exprCol.add(name);
         }
+    }
+
+    /**
+     * 生成 target=value 形式的 SQLAssignItem，包括但不限于 分区赋值、表属性赋值（未实现）等。
+     * @param variant
+     * @param parent
+     * @param target
+     * @param value
+     * @return
+     */
+    public SQLAssignItem buildAssignItem(boolean variant, SQLObject parent,
+                                         SQLExpr target,SQLExpr value) {
+        SQLAssignItem item = new SQLAssignItem();
+        item.setTarget(target);
+        item.setValue(value);
+
+        return item;
     }
 
 }

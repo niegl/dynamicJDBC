@@ -14,6 +14,8 @@ public interface SQLAlterTableBuilder extends SQLBuilder {
 
     SQLAlterTableBuilder addColumn(String columnName, String columnType);
 
+    SQLAlterTableBuilder addPartition(Map<String, String> targetValues, boolean ifNotExists, String location);
+
     SQLAlterTableBuilder dropColumn(String columnName);
 
     SQLAlterTableBuilder replaceColumn(Map<String, String> columns);

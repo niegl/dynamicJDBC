@@ -2,6 +2,7 @@ package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
@@ -113,10 +114,33 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         return this;
     }
 
+    @Override
+    public SQLAlterTableBuilder addPartition(Map<String, String> targetValues, boolean ifNotExists, String location) {
+
+        if (!(dbType == DbType.postgresql || dbType == DbType.hive ||
+                dbType == DbType.odps || dbType == DbType.edb || dbType == DbType.antspark)) {
+            return this;
+        }
+
+        SQLAlterTableAddPartition addPartition = new SQLAlterTableAddPartition();
+        addPartition.setIfNotExists(ifNotExists);
+
+        this.buildAssignItems(addPartition.getPartitions(), addPartition, false, targetValues);
+
+        if (location != null) {
+            SQLExpr exprLocation = SQLUtils.toSQLExpr(location, dbType);
+            addPartition.setLocation(exprLocation);
+        }
+
+        SQLAlterTableStatement statement = getSQLStatement();
+        statement.addItem(addPartition);
+
+        return this;
+    }
+
     /**
      * 删除列 操作
      * @param columnName 删除列名
-     * @param columnType 删除列类型（hive库需要）
      * @return
      */
     @Override

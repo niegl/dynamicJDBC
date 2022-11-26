@@ -597,6 +597,14 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         if (columnName == null || columnType == null) {
             return this;
         }
+        SQLColumnDefinition column = createColumnDefinition(columnName, columnType, columnComment);
+        addPartitionColumn(column);
+
+        return this;
+    }
+
+    @NotNull
+    private SQLColumnDefinition createColumnDefinition(String columnName, String columnType, String columnComment) {
         SQLColumnDefinition column = new SQLColumnDefinition();
         column.setDbType(dbType);
         column.setName(columnName);
@@ -606,9 +614,7 @@ public class SQLCreateTableBuilderImpl extends SQLBuilderImpl implements SQLCrea
         if (columnComment != null) {
             column.setComment(columnComment);
         }
-        addPartitionColumn(column);
-
-        return this;
+        return column;
     }
 
     @Override
