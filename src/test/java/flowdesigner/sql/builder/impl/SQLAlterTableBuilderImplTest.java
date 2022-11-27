@@ -90,6 +90,31 @@ class SQLAlterTableBuilderImplTest {
 
     @ParameterizedTest
     @MethodSource()
+    void dropPartition(DbType dbType, String expected) throws SQLSyntaxErrorException {
+
+        alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
+        alterTableBuilder.setName("table_name");
+        alterTableBuilder.dropPartition(new HashMap<String,String>(){{
+            put("partCol","'value1'");
+        }});
+
+        SQLStatement statement = SQLTest.parser(alterTableBuilder.toString(), dbType);
+//        Assertions.assertEquals(expected, alterTableBuilder.toString());
+    }
+    static Stream<Arguments> dropPartition() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                default -> "ALTER TABLE table_name DROP PARTITION (partCol = 'value1')";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
+    }
+
+    @ParameterizedTest
+    @MethodSource()
     void addPartition(DbType dbType, String expected) throws SQLSyntaxErrorException {
 
         alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);

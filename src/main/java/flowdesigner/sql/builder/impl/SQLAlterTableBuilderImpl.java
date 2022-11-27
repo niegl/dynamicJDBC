@@ -5,6 +5,7 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.*;
@@ -14,6 +15,7 @@ import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.sql.builder.SQLAlterTableBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -114,12 +116,39 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         return this;
     }
 
+    /**
+     * ALTER TABLE table_name DROP PARTITION (partCol = 'value1')
+     * @param targetValues
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder dropPartition(Map<String, String> targetValues) {
+        if (!(dbType == DbType.postgresql || dbType == DbType.hive ||
+                dbType == DbType.odps || dbType == DbType.edb || dbType == DbType.antspark)) {
+            throw new UnsupportedOperationException("dropPartition not support dbType: " + dbType);
+        }
+
+        SQLAlterTableDropPartition dropPartition = new SQLAlterTableDropPartition();
+
+        ArrayList<SQLExpr> exprs = new ArrayList<>();
+        for (Map.Entry<String,String> entry : targetValues.entrySet()) {
+            exprs.add(this.exprBuilder.exprSQLBinaryOpExpr(entry.getKey(), entry.getValue(), SQLBinaryOperator.Equality));
+        }
+
+        this.exprBuilder.exprList(dropPartition.getPartitions(), dropPartition, exprs);
+
+        SQLAlterTableStatement statement = getSQLStatement();
+        statement.addItem(dropPartition);
+
+        return this;
+    }
+
     @Override
     public SQLAlterTableBuilder addPartition(Map<String, String> targetValues, boolean ifNotExists, String location) {
 
         if (!(dbType == DbType.postgresql || dbType == DbType.hive ||
                 dbType == DbType.odps || dbType == DbType.edb || dbType == DbType.antspark)) {
-            return this;
+            throw new UnsupportedOperationException("addPartition not support dbType: " + dbType);
         }
 
         SQLAlterTableAddPartition addPartition = new SQLAlterTableAddPartition();
