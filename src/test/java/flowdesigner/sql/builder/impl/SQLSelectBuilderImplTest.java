@@ -1,7 +1,11 @@
 package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLQueryExpr;
+import com.alibaba.druid.sql.ast.statement.SQLSelect;
 import flowdesigner.sql.builder.SQLBuilderFactory;
 import flowdesigner.sql.builder.SQLSelectBuilder;
 import org.junit.jupiter.api.AfterEach;
@@ -115,6 +119,20 @@ class SQLSelectBuilderImplTest {
                 .from("tablea","a")
                 .where("data_dt='2022-10'");
         builderEx.setBufferResult(true);
+    }
+    @Test
+    void withSubqueryClause() throws SQLSyntaxErrorException {
+        builderEx.select("a","b");
+        builderEx.from("LL");
+
+        SQLExpr expr = SQLUtils.toSQLExpr("select * from std_pcode.t98_std_line");
+        if (expr instanceof SQLQueryExpr queryExpr) {
+            SQLSelect subQuery = queryExpr.getSubQuery();
+            if (subQuery != null) {
+                builderEx.addWithSubqueryClause("LL",subQuery);
+            }
+        }
+
     }
 
     @ParameterizedTest

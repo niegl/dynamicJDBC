@@ -6,10 +6,7 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLLimit;
 import com.alibaba.druid.sql.ast.SQLOrderBy;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
-import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
-import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
-import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
+import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
 import com.alibaba.druid.sql.dialect.oscar.ast.stmt.OscarSelectStatement;
@@ -342,6 +339,46 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         return this;
     }
 
+    /**
+     * 添加with Subquery 语句,支持 with查询语法: [WITH CommonTableExpression (, CommonTableExpression)*]
+     * SELECT [ALL | DISTINCT] select_expr, select_expr, ...
+     * @param alias Subquery别名，不能为空
+     * @param select CommonTableExpression（select语句）
+     * @return
+     */
+    @Override
+    public SQLSelectBuilder addWithSubqueryClause(String alias, String select) {
+        SQLSelect subQuery = null;
+
+        if (alias == null || select == null) {
+            throw new IllegalArgumentException("parameter alias||select should not be null");
+        }
+
+        SQLExpr expr = SQLUtils.toSQLExpr(select, dbType);
+        if (expr instanceof SQLQueryExpr queryExpr) {
+            subQuery = queryExpr.getSubQuery();
+        }
+
+        if (subQuery != null) {
+            addWithSubqueryClause(alias, subQuery);
+        }
+
+        return this;
+    }
+
+    @Override
+    public SQLSelectBuilder addWithSubqueryClause(String alias, SQLSelect select) {
+        SQLWithSubqueryClause withSubQuery = getWithSubQuery();
+
+        if (alias == null || select == null) {
+            throw new IllegalArgumentException("parameter alias||select should not be null");
+        }
+
+        withSubQuery.addEntry(new SQLWithSubqueryClause.Entry(alias, select));
+
+        return this;
+    }
+
     @Override
     public SQLSelectBuilder limit(int rowCount) {
         return limit(rowCount, 0);
@@ -380,6 +417,16 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         return query;
     }
 
+    private SQLWithSubqueryClause getWithSubQuery() {
+        SQLSelect select = getSQLSelect();
+        SQLWithSubqueryClause withSubQuery = select.getWithSubQuery();
+        if (withSubQuery == null) {
+            withSubQuery = createWithSubqueryClause();
+            select.setWithSubQuery(withSubQuery);
+        }
+        return withSubQuery;
+    }
+
     protected SQLSelect createSelect() {
         return new SQLSelect();
     }
@@ -387,7 +434,9 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
     protected SQLSelectQuery createSelectQueryBlock() {
         return SQLParserUtils.createSelectQueryBlock(dbType);
     }
-
+    protected SQLWithSubqueryClause createWithSubqueryClause() {
+        return new SQLWithSubqueryClause();
+    }
     protected SQLOrderBy createOrderBy() {
         return new SQLOrderBy();
     }

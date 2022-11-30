@@ -5,6 +5,7 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
@@ -132,7 +133,8 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
 
         ArrayList<SQLExpr> exprs = new ArrayList<>();
         for (Map.Entry<String,String> entry : targetValues.entrySet()) {
-            exprs.add(this.exprBuilder.exprSQLBinaryOpExpr(entry.getKey(), entry.getValue(), SQLBinaryOperator.Equality));
+            SQLBinaryOpExpr expr = this.exprBuilder.exprSQLBinaryOpExpr(entry.getKey(), entry.getValue(), SQLBinaryOperator.Equality);
+            exprs.add(expr);
         }
 
         this.exprBuilder.exprList(dropPartition.getPartitions(), dropPartition, exprs);
