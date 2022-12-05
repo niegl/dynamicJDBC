@@ -8,6 +8,7 @@ public class Dependency {
     private String artifactId;
     private String version;
     private String scope;
+    private boolean optional = false;
 
     public Dependency() {
     }

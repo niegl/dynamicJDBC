@@ -5,14 +5,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,7 +28,7 @@ public class MavenDownload {
      * @return 下载成功返回 下载后文件地址，失败返回 null
      * @throws IOException
      */
-    public static String download(String url, String scope,
+    private static String download(String url, String scope,
                                   String repository, String groupId, String artifactId, String version) throws IOException {
         if (!url.endsWith("/")) {
             url = url +"/";
@@ -42,7 +38,7 @@ public class MavenDownload {
         }
 
         Dependency dependency = new Dependency(groupId, artifactId, version);
-        String toPath = repository + dependency.toPath();
+        String toPath = repository + dependency.getGroupId();
         File path = new File(toPath);
         if (!path.exists()) {
             boolean b = path.mkdirs();
@@ -54,17 +50,30 @@ public class MavenDownload {
         return jar;
     }
 
-    public static String downloadRecursive(String url, String scope,
-                                  String repository, String groupId, String artifactId, String version) throws IOException {
+    public static List<String> downloadRecursive(String url, String scope, String repository,
+                                           String groupId, String artifactId, String version) {
+        ArrayList<String> locations = new ArrayList<>();
+        try {
+            downloadRecursive(url, scope, repository,groupId,artifactId,version, locations);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return locations;
+    }
+
+    private static void downloadRecursive(String url, String scope, String repository,
+                                          String groupId, String artifactId, String version, List<String> locations) throws IOException {
 
         String jar = download(url, scope, repository, groupId, artifactId, version);
         if (jar == null) {
-            return null;
+            return;
         }
         File jarFile = new File(jar);
         if (!jarFile.exists()) {
-            return null;
+            return;
         }
+
+        locations.add(jar);
 
         String absolutePath = jarFile.getAbsolutePath();
         String pomNext = absolutePath.replace(".jar",".pom");
@@ -75,10 +84,11 @@ public class MavenDownload {
             String version1 = dependency.getVersion();
             String scope1 = dependency.getScope();
 
-            if (scope1 != null) {
-                if (scope1.equals("test")) {
-                    continue;
-                }
+            if (scope1 != null && scope1.equals("test")) {
+                continue;
+            }
+            if (dependency.isOptional()) {
+                continue;
             }
 
             // 如果版本为空，那么默认下载最新的版本
@@ -91,10 +101,9 @@ public class MavenDownload {
                 version1 = versions.get(versions.size()-1);
             }
 
-            downloadRecursive(url, scope, repository, groupId1, artifactId1, version1);
+            downloadRecursive(url, scope, repository, groupId1, artifactId1, version1, locations);
         }
 
-        return jar;
     }
 
     /**
@@ -115,6 +124,7 @@ public class MavenDownload {
                 netPath.append("/");
             }
             netPath = getUrlScope(url, scope);
+            groupId = groupId.replaceAll("\\.","/");
             netPath.append(groupId).append("/").append(artifactId);
 
             URL url1 = new URL(netPath.toString());
@@ -147,11 +157,6 @@ public class MavenDownload {
         netPath.append(dependency.toPath());
         netPath.append(dependency.toPom());
 
-//        File file = new File(netPath.toString());
-//        if (file.exists()) {
-//            return netPath.toString();
-//        }
-
         return NetDownload.download(netPath.toString(), repository);
     }
 
@@ -161,11 +166,6 @@ public class MavenDownload {
         StringBuilder netPath = getUrlScope(url, scope);
         netPath.append(dependency.toPath());
         netPath.append(dependency.toJar());
-
-//        File file = new File(netPath.toString());
-//        if (file.exists()) {
-//            return netPath.toString();
-//        }
 
         return NetDownload.download(netPath.toString(), repository);
     }

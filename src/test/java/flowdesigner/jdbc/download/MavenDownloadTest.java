@@ -16,12 +16,6 @@ class MavenDownloadTest {
                 "C:/test/");
     }
 
-    @Test
-    void downLoad() throws IOException {
-        MavenDownload.download("https://repo1.maven.org/maven2/", "", "C:/test/",
-                "mysql", "mysql-connector-java","8.0.30");
-    }
-
     @org.junit.jupiter.api.Test
     void testVersions() throws IOException {
 
@@ -32,8 +26,9 @@ class MavenDownloadTest {
 
     @Test
     void downloadRecursive() throws IOException, ParserConfigurationException, SAXException {
-        MavenDownload.downloadRecursive("https://repo1.maven.org/maven2/", "", "C:/test/",
-                "mysql", "mysql-connector-java","8.0.30");
+        Collection<String> strings = MavenDownload.downloadRecursive("https://repo1.maven.org/maven2/", "", "C:/test/",
+                "mysql", "mysql-connector-java", "8.0.30");
+        System.out.println(strings);
     }
 
 }

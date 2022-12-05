@@ -13,6 +13,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PomParser {
+    private static final String properties = "properties";
+
+    private static final String dependencies = "dependencies";
+    private static final String dependency = "dependency";
+    private static final String groupId = "groupId";
+    private static final String artifactId = "artifactId";
+    private static final String version = "version";
+    private static final String optional = "optional";
+    private static final String scope = "scope";
 
     public static Dependency getArtifact(Document document) {
 
@@ -27,12 +36,10 @@ public class PomParser {
             Node node = nodes.item(i);
             String nodeName = node.getNodeName();
             String nodeValue = node.getNodeValue();
-            if (nodeName.equals("groupId")) {
-                dependency.setGroupId(nodeValue);
-            } else if (nodeName.equals("artifactId")) {
-                dependency.setGroupId(nodeValue);
-            } else if (nodeName.equals("version")) {
-                dependency.setGroupId(nodeValue);
+            switch (nodeName) {
+                case groupId -> dependency.setGroupId(nodeValue);
+                case artifactId -> dependency.setArtifactId(nodeValue);
+                case version -> dependency.setVersion(nodeValue);
             }
         }
 
@@ -62,26 +69,43 @@ public class PomParser {
 
     public static List<Dependency> getDependencies(Document document) {
         // 用于保存解析后的Dependency对象
-        List<Dependency> dependencies = new ArrayList<>();
+        List<Dependency> dependencyList = new ArrayList<>();
         if (document == null) {
-            return dependencies;
+            return dependencyList;
         }
 
         HashMap<String, String> properties = getProperties(document);
 
-        // 按文档顺序返回在文档中，具有book标签的所有Node
-        NodeList dependencyNodes = document.getElementsByTagName("dependency");
+        // 找到正确的dependences
+        Node nodeDependencies = null;
+        Element documentElement = document.getDocumentElement();
+        NodeList childNodes = documentElement.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node node = childNodes.item(i);
+            String nodeName = node.getNodeName();
+            if (nodeName.equals(dependencies)) {
+                nodeDependencies = node;
+                break;
+            }
+        }
+
+        if (nodeDependencies == null) {
+            return dependencyList;
+        }
+
+        NodeList dependencyNodes = nodeDependencies.getChildNodes();
+
         // 遍历具有book标签的所有Node
-        for (int i = 0; i < dependencyNodes.getLength(); i++) {
+        for (int i = 1; i < dependencyNodes.getLength(); i+=2) {
             // 获取第i个dependency结点
             Node node = dependencyNodes.item(i);
 
             // 获取dependency结点的子节点,包含了text类型的换行
-            NodeList childNodes = node.getChildNodes();
+            NodeList childNodes1 = node.getChildNodes();
             Dependency dependency = new Dependency();
             // 这里由于偶数行是text类型无用节点，所以只取1,3,5,7节点
-            for (int j = 1; j < childNodes.getLength(); j += 2) {
-                Node childNode = childNodes.item(j);
+            for (int j = 1; j < childNodes1.getLength(); j += 2) {
+                Node childNode = childNodes1.item(j);
                 String nodeName = childNode.getNodeName();
                 if (nodeName.equals("#comment")) {
                     continue;
@@ -90,34 +114,37 @@ public class PomParser {
                 String content = childNode.getFirstChild().getTextContent();
 
                 switch (nodeName) {
-                    case "groupId" -> dependency.setGroupId(content);
-                    case "artifactId" -> dependency.setArtifactId(content);
-                    case "version" -> {
+                    case groupId -> dependency.setGroupId(content);
+                    case artifactId -> dependency.setArtifactId(content);
+                    case version -> {
                         if (content.startsWith("$")) {
                             content = properties.getOrDefault(content, "");
                         }
                         dependency.setVersion(content);
                     }
-                    case "test" -> dependency.setScope(content);
+                    case scope -> dependency.setScope(content);
+                    case optional -> dependency.setOptional(Boolean.parseBoolean(content));
                 }
             }
 
             // 将解析好的book加入返回列表
-            dependencies.add(dependency);
+            if (dependency.getGroupId() != null) {
+                dependencyList.add(dependency);
+            }
         }
 
-        return dependencies;
+        return dependencyList;
 
     }
 
     public static HashMap<String, String> getProperties(Document document) {
         // 用于保存解析后的 key=value
-        HashMap<String, String> properties = new HashMap<>();
+        HashMap<String, String> propertiesMap = new HashMap<>();
 
         // 按文档顺序返回在文档中，具有book标签的所有Node
-        NodeList propertiesNodes = document.getElementsByTagName("properties");
+        NodeList propertiesNodes = document.getElementsByTagName(properties);
         if (propertiesNodes.getLength() == 0) {
-            return properties;
+            return propertiesMap;
         }
 
         Node node = propertiesNodes.item(0);
@@ -128,11 +155,11 @@ public class PomParser {
             String nodeName = childNode.getNodeName();
             if (childNode.getFirstChild() != null) {
                 String content = childNode.getFirstChild().getTextContent();
-                properties.put(nodeName, content);
+                propertiesMap.put(nodeName, content);
             }
         }
 
-        return properties;
+        return propertiesMap;
 
     }
 
