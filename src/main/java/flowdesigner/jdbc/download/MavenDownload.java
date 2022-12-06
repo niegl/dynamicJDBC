@@ -1,6 +1,7 @@
 package flowdesigner.jdbc.download;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,15 +31,13 @@ public class MavenDownload {
      */
     private static String download(String url, String scope,
                                   String repository, String groupId, String artifactId, String version) throws IOException {
-        if (!url.endsWith("/")) {
-            url = url +"/";
-        }
-        if (!repository.endsWith("/")) {
-            repository = repository +"/";
+
+        if (url.isEmpty() || repository.isEmpty() || groupId.isEmpty() || artifactId.isEmpty() || version.isEmpty()) {
+            return null;
         }
 
         Dependency dependency = new Dependency(groupId, artifactId, version);
-        String toPath = repository + dependency.getGroupId();
+        String toPath = dependency.toLocalPath(repository).toString();
         File path = new File(toPath);
         if (!path.exists()) {
             boolean b = path.mkdirs();
@@ -117,45 +116,43 @@ public class MavenDownload {
     public static List<String> getVersions(String url, String scope,
                                                    String groupId, String artifactId) {
         ArrayList<String> versions = new ArrayList<>();
-        StringBuilder netPath = new StringBuilder(url);
 
+        Dependency dependency = new Dependency(groupId, artifactId);
+        StringBuilder netPath = dependency.toNetPath(url, scope);
+
+        Document document = null;
         try {
-            if (!url.endsWith("/")) {
-                netPath.append("/");
-            }
-            netPath = getUrlScope(url, scope);
-            groupId = groupId.replaceAll("\\.","/");
-            netPath.append(groupId).append("/").append(artifactId);
-
             URL url1 = new URL(netPath.toString());
-            Document document = Jsoup.parse(url1, 10000);
-            Elements postItems = document.getElementsByTag("a");
-            String REGEX ="[^(0-9).]";
-            for (Element postItem : postItems) {
-                // 包含数字和点的认为是版本号
-                String text = postItem.text();
-                String versionNumber = Pattern.compile(REGEX).matcher(text).replaceAll("").trim();
-                if (!versionNumber.isEmpty() && !(versionNumber.startsWith(".") || versionNumber.endsWith("."))) {
-                    // 版本存在8.7.7-snapshot或8.7.0dmr的情况,仅保留正式的版本号
-                    if (text.startsWith(versionNumber + "/")) {
-                        versions.add(versionNumber);
-                    }
-                }
-            }
-
+            document = Jsoup.parse(url1, 10000);
         } catch (IOException e) {
             log.error(e.getMessage());
+            return versions;
+        }
+
+        String REGEX ="[^(0-9).]";
+        Elements versionElements = document.getElementsByTag("a");
+        for (Element element : versionElements) {
+            // 包含数字和点的认为是版本号
+            String text = element.text();
+            String versionNumber = Pattern.compile(REGEX).matcher(text).replaceAll("").trim();
+            if (versionNumber.isEmpty() ||
+                    versionNumber.startsWith(".") || versionNumber.endsWith(".")) {
+                continue;
+            }
+            // 版本存在8.7.7-snapshot或8.7.0dmr的情况,仅保留正式的版本号
+            if (text.startsWith(versionNumber + "/")) {
+                versions.add(versionNumber);
+            }
         }
 
         return versions;
     }
 
-    private static String downloadPom(String url, String scope, Dependency dependency,
+    private static String downloadPom(String url, String scope, @NotNull Dependency dependency,
                                       String repository) throws IOException {
 
-        StringBuilder netPath = getUrlScope(url, scope);
-        netPath.append(dependency.toPath());
-        netPath.append(dependency.toPom());
+        StringBuilder netPath = dependency.toNetPath(url, scope);
+        netPath.append(dependency.toFileName()).append(".pom");
 
         return NetDownload.download(netPath.toString(), repository);
     }
@@ -163,21 +160,10 @@ public class MavenDownload {
     private static String downloadJar(String url, String scope, Dependency dependency,
                                       String repository ) throws IOException {
 
-        StringBuilder netPath = getUrlScope(url, scope);
-        netPath.append(dependency.toPath());
-        netPath.append(dependency.toJar());
+        StringBuilder netPath = dependency.toNetPath(url, scope);
+        netPath.append(dependency.toFileName()).append(".jar");
 
         return NetDownload.download(netPath.toString(), repository);
-    }
-
-    private static StringBuilder getUrlScope(String url, String scope) {
-        StringBuilder netPath = new StringBuilder(url);
-        if (!scope.isEmpty()) {
-            netPath.append(scope.replaceAll("\\.", "/"));
-            netPath.append("/");
-        }
-
-        return netPath;
     }
 
 }

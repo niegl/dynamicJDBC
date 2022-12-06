@@ -13,6 +13,11 @@ public class Dependency {
     public Dependency() {
     }
 
+    public Dependency(String groupId, String artifactId) {
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+    }
+
     public Dependency(String groupId, String artifactId, String version) {
         this.groupId = groupId;
         this.artifactId = artifactId;
@@ -26,15 +31,43 @@ public class Dependency {
         this.scope = scope;
     }
 
-    public String toPath() {
-        return groupId.replaceAll("\\.","/") + "/" + artifactId + "/" + version + "/";
+    public StringBuilder toNetPath(String url, String scopePath) {
+        StringBuilder netPath = new StringBuilder(url);
+
+        if (!url.endsWith("/")) {
+            netPath.append("/");
+        }
+        if (!scopePath.isEmpty()) {
+            netPath.append(scopePath.replaceAll("\\.", "/"));
+            netPath.append("/");
+        }
+
+        netPath.append(groupId.replaceAll("\\.","/"))
+                .append("/")
+                .append(artifactId)
+                .append("/");
+
+        if (version != null && !version.isEmpty()) {
+            netPath.append(version)
+                    .append("/");
+        }
+
+        return netPath;
     }
 
-    public String toPom() {
-        return artifactId + "-" + version + ".pom";
+    public StringBuilder toLocalPath(String repository) {
+        StringBuilder stringBuilder = new StringBuilder(repository);
+
+        if (!repository.endsWith("/")) {
+            stringBuilder.append("/");
+        }
+
+        return stringBuilder.append(groupId)
+                .append("/");
     }
 
-    public String toJar() {
-        return artifactId + "-" + version + ".jar" ;
+    public String toFileName() {
+        return artifactId + "-" + version;
     }
+
 }
