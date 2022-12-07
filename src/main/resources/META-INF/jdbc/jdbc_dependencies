@@ -17,6 +17,10 @@
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.31</version>
+        <className>com.mysql.cj.jdbc.Driver</className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port>3306</port>
+        <description>Driver for MySQL 8 and later</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependency>
@@ -24,6 +28,10 @@
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
         <version>5.1.4</version>
+        <className>com.mysql.jdbc.Driver</className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port>2881</port>
+        <description>Driver for OceanBase-MySQL</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.hsqldb/hsqldb -->
     <dependency>
@@ -31,6 +39,10 @@
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>2.7.1</version>
+        <className>org.hsqldb.jdbcDriver</className>
+        <template>jdbc:hsqldb:hsql://{host}[:{port}]/[{database}]</template>
+        <port>9001</port>
+        <description>HyperSQL DataBase - Server Mode</description>
     </dependency>
     <!-- 和Hsqldb Server模板不同 -->
     <dependency>
@@ -38,6 +50,10 @@
         <groupId>org.hsqldb</groupId>
         <artifactId>hsqldb</artifactId>
         <version>2.7.1</version>
+        <className>org.hsqldb.jdbc.JDBCDriver</className>
+        <template>jdbc:hsqldb:file:{folder}</template>
+        <port></port>
+        <description>HyperSQL DataBase - Embedded Mode</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
     <dependency>
@@ -45,6 +61,10 @@
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>42.5.0</version>
+        <className>org.postgresql.Driver</className>
+        <template>jdbc:postgresql://{host}[:{port}]/[{database}]</template>
+        <port>5432</port>
+        <description>PostgreSQL 标准驱动</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
     <dependency>
@@ -52,6 +72,10 @@
         <groupId>org.postgresql</groupId>
         <artifactId>postgresql</artifactId>
         <version>42.5.0</version>
+        <className>org.postgresql.Driver</className>
+        <template>jdbc:postgresql://{host}[:{port}]/[{database}]</template>
+        <port>5432</port>
+        <description>Greenplum JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
     <dependency>
@@ -59,6 +83,9 @@
         <groupId>org.xerial</groupId>
         <artifactId>sqlite-jdbc</artifactId>
         <version>3.40.0.0</version>
+        <className>org.sqlite.JDBC</className>
+        <template>jdbc:sqlite:{file}</template>
+        <description>SQLite JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.hive/hive-jdbc -->
     <dependency>
@@ -66,6 +93,10 @@
         <groupId>org.apache.hive</groupId>
         <artifactId>hive-jdbc</artifactId>
         <version>3.1.3</version>
+        <className>org.apache.hive.jdbc.HiveDriver</className>
+        <template>jdbc:hive2://{host}[:{port}][/{database}]</template>
+        <port>10000</port>
+        <description>Apache Hive JDBC</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
     <dependency>
@@ -73,13 +104,10 @@
         <groupId>com.microsoft.sqlserver</groupId>
         <artifactId>mssql-jdbc</artifactId>
         <version>11.2.1.jre17</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.typesafe.play/play-jdbc -->
-    <dependency>
-        <name>Play</name>
-        <groupId>com.typesafe.play</groupId>
-        <artifactId>play-jdbc_2.13</artifactId>
-        <version>2.8.18</version>
+        <className>com.microsoft.sqlserver.jdbc.SQLServerDriver</className>
+        <template>jdbc:sqlserver://{host}[:{port}][;databaseName={database}]</template>
+        <port>1433</port>
+        <description>Microsoft JDBC Driver for SQL Server (MSSQL)</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/net.snowflake/snowflake-jdbc -->
     <dependency>
@@ -87,6 +115,10 @@
         <groupId>net.snowflake</groupId>
         <artifactId>snowflake-jdbc</artifactId>
         <version>3.13.25</version>
+        <className>net.snowflake.client.jdbc.SnowflakeDriver</className>
+        <template>jdbc:snowflake://{host}[:port]/?[db={database}]</template>
+        <port>443</port>
+        <description>Snowflake JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.derby/derby -->
     <dependency>
@@ -94,7 +126,10 @@
         <groupId>org.apache.derby</groupId>
         <artifactId>derby</artifactId>
         <version>10.16.1.1</version>
-        <scope>test</scope>
+        <className>org.apache.derby.jdbc.EmbeddedDriver</className>
+        <template>jdbc:derby:{folder}</template>
+        <port></port>
+        <description>Derby (Java DB) embedded driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.derby/derbyclient -->
     <dependency>
@@ -102,6 +137,10 @@
         <groupId>org.apache.derby</groupId>
         <artifactId>derbyclient</artifactId>
         <version>10.16.1.1</version>
+        <className>org.apache.derby.client.ClientAutoloadedDriver</className>
+        <template>jdbc:derby://{host}:{port}/{database};create=false</template>
+        <port>1527</port>
+        <description>Derby (Java DB) server driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-jdbc-driver -->
     <dependency>
@@ -109,20 +148,21 @@
         <groupId>org.neo4j</groupId>
         <artifactId>neo4j-jdbc-driver</artifactId>
         <version>4.0.6</version>
+        <className>org.neo4j.jdbc.Driver</className>
+        <template>jdbc:neo4j:bolt://{host}[:{port}]/</template>
+        <port>7687</port>
+        <description>Neo4j JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
     <dependency>
         <name>Mongodb</name>
         <groupId>org.mongodb</groupId>
-        <artifactId>mongo-java-driver</artifactId>
-        <version>3.12.11</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.impetus.eth/eth-jdbc-driver -->
-    <dependency>
-        <name>Ethereum</name>
-        <groupId>com.impetus.eth</groupId>
-        <artifactId>eth-jdbc-driver</artifactId>
-        <version>1.1.1</version>
+        <artifactId>mongodb-jdbc</artifactId>
+        <version>2.0.0</version>
+        <className>com.mongodb.jdbc.MongoDriver</className>
+        <template>mongodb://[{username}:{password}@]{host}[:{port}][/{database}]</template>
+        <port>27017</port>
+        <description>Mongodb JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.nuodb.jdbc/nuodb-jdbc -->
     <dependency>
@@ -130,14 +170,10 @@
         <groupId>com.nuodb.jdbc</groupId>
         <artifactId>nuodb-jdbc</artifactId>
         <version>23.0.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.lens/lens-driver-jdbc -->
-    <dependency>
-        <name>Lens</name>
-        <groupId>org.apache.lens</groupId>
-        <artifactId>lens-driver-jdbc</artifactId>
-        <version>2.7.1</version>
-        <scope>test</scope>
+        <className>com.nuodb.jdbc.Driver</className>
+        <template>jdbc:com.nuodb://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description>NuoDB</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.github.jinahya/cubrid-jdbc-driver-10.1.1.7691 -->
     <dependency>
@@ -145,6 +181,10 @@
         <groupId>com.github.jinahya</groupId>
         <artifactId>cubrid-jdbc-driver-10.1.1.7691</artifactId>
         <version>10.1.1.7691-1.0.0</version>
+        <className>cubrid.jdbc.driver.CUBRIDDriver</className>
+        <template>jdbc:CUBRID:{host}:{port}:{database}:::</template>
+        <port>33000</port>
+        <description>CUBRID JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.clickhouse/clickhouse-jdbc -->
     <dependency>
@@ -152,6 +192,10 @@
         <groupId>com.clickhouse</groupId>
         <artifactId>clickhouse-jdbc</artifactId>
         <version>0.3.2-patch11</version>
+        <className>com.clickhouse.jdbc.ClickHouseDriver</className>
+        <template>jdbc:clickhouse://{host}:{port}[/{database}]</template>
+        <port>8123</port>
+        <description>Yandex ClickHouse driver (server version 21.3+)</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.kylin/kylin-jdbc -->
     <dependency>
@@ -159,13 +203,10 @@
         <groupId>org.apache.kylin</groupId>
         <artifactId>kylin-jdbc</artifactId>
         <version>4.0.2</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.impetus.fabric/fabric-jdbc-driver -->
-    <dependency>
-        <name>Fabric</name>
-        <groupId>com.impetus.fabric</groupId>
-        <artifactId>fabric-jdbc-driver</artifactId>
-        <version>1.1.0</version>
+        <className>org.apache.kylin.jdbc.Driver</className>
+        <template>jdbc:kylin://{host}:{port}/{database}</template>
+        <port>443</port>
+        <description>Apache Kylin JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.itmuch.redis/redis-jdbc-driver -->
     <dependency>
@@ -173,6 +214,10 @@
         <groupId>com.itmuch.redis</groupId>
         <artifactId>redis-jdbc-driver</artifactId>
         <version>0.0.1</version>
+        <className>com.itmuch.redis.jdbc.redis.RedisDriver;com.itmuch.redis.jdbc.cluster.RedisClusterDriver</className>
+        <template>jdbc:redis://{host}[:{port}]/[{database}]</template>
+        <port>6379</port>
+        <description>Redis JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8 -->
     <dependency>
@@ -180,6 +225,10 @@
         <groupId>com.oracle.database.jdbc</groupId>
         <artifactId>ojdbc8</artifactId>
         <version>21.7.0.0</version>
+        <className>oracle.jdbc.OracleDriver</className>
+        <template>jdbc:oracle:thin:@{host}[:{port}]/[{database}]</template>
+        <port>1521</port>
+        <description>Oracle JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.amazon.redshift/redshift-jdbc42 -->
     <dependency>
@@ -187,20 +236,21 @@
         <groupId>com.amazon.redshift</groupId>
         <artifactId>redshift-jdbc42</artifactId>
         <version>2.1.0.10</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.googlecode.log4jdbc/log4jdbc -->
-    <dependency>
-        <name>Log4jdbc</name>
-        <groupId>com.googlecode.log4jdbc</groupId>
-        <artifactId>log4jdbc</artifactId>
-        <version>1.2</version>
+        <className>com.amazon.redshift.jdbc42.Driver</className>
+        <template>jdbc:redshift://{host}:{port}/{database}</template>
+        <port>5439</port>
+        <description>AWS Redshift JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/net.sourceforge.jtds/jtds -->
     <dependency>
-        <name>Synbase jTDS</name>
+        <name>Sybase jTDS</name>
         <groupId>net.sourceforge.jtds</groupId>
         <artifactId>jtds</artifactId>
         <version>1.3.1</version>
+        <className>net.sourceforge.jtds.jdbc.Driver</className>
+        <template>jdbc:jtds:sybase://{host}[:{port}]/[{database}]</template>
+        <port>5000</port>
+        <description>Sybase jTDS driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.neo4j/neo4j-jdbc -->
     <dependency>
@@ -208,6 +258,10 @@
         <groupId>org.neo4j</groupId>
         <artifactId>neo4j-jdbc</artifactId>
         <version>4.0.6</version>
+        <className>org.neo4j.jdbc.Driver</className>
+        <template>jdbc:neo4j:bolt://{host}[:{port}]/</template>
+        <port>7687</port>
+        <description>Neo4j JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.exasol/exasol-jdbc -->
     <dependency>
@@ -216,6 +270,10 @@
         <artifactId>exasol-jdbc</artifactId>
         <version>7.1.16</version>
         <scope>runtime</scope>
+        <className>com.exasol.jdbc.EXADriver</className>
+        <template>jdbc:exa:{host}[:{port}][;schema={database}]</template>
+        <port>8563</port>
+        <description>Exasol JDBC 驱动</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.opengauss/opengauss-jdbc -->
     <dependency>
@@ -223,13 +281,10 @@
         <groupId>org.opengauss</groupId>
         <artifactId>opengauss-jdbc</artifactId>
         <version>3.1.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.herddb/herddb-jdbc -->
-    <dependency>
-        <name>Herddb</name>
-        <groupId>org.herddb</groupId>
-        <artifactId>herddb-jdbc</artifactId>
-        <version>0.25.0</version>
+        <className>org.postgresql.Driver</className>
+        <template>jdbc:postgresql://{host}[:{port}]/[{database}]</template>
+        <port>5432</port>
+        <description>Opengauss JDBC 驱动</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/monetdb/monetdb-jdbc -->
     <dependency>
@@ -237,6 +292,10 @@
         <groupId>monetdb</groupId>
         <artifactId>monetdb-jdbc</artifactId>
         <version>11.19.15</version>
+        <className>nl.cwi.monetdb.jdbc.MonetDriver</className>
+        <template>jdbc:monetdb://{host}[:{port}]/[{database}]</template>
+        <port>50000</port>
+        <description>MonetDB JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.orientechnologies/orientdb-jdbc -->
     <dependency>
@@ -244,13 +303,10 @@
         <groupId>com.orientechnologies</groupId>
         <artifactId>orientdb-jdbc</artifactId>
         <version>3.2.12</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/io.vertx/vertx-jdbc-client -->
-    <dependency>
-        <name>Vertx</name>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-jdbc-client</artifactId>
-        <version>4.3.5</version>
+        <className>com.orientechnologies.orient.jdbc.OrientJdbcDriver</className>
+        <template>jdbc:orient:remote:{host}/{database}</template>
+        <port></port>
+        <description>OrientDB JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
     <dependency>
@@ -258,7 +314,10 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>1.4.200</version>
-        <scope>test</scope>
+        <className>org.h2.Driver</className>
+        <template>jdbc:h2:{file}</template>
+        <port></port>
+        <description>H2 Embedded</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
     <dependency>
@@ -266,6 +325,10 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>2.1.214</version>
+        <className>org.h2.Driver</className>
+        <template>jdbc:h2:{file}</template>
+        <port></port>
+        <description>H2 Embedded V.2</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
     <dependency>
@@ -273,20 +336,10 @@
         <groupId>com.h2database</groupId>
         <artifactId>h2</artifactId>
         <version>1.4.200</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/kingbase/kingbase8 -->
-    <dependency>
-        <name>Kingbase</name>
-        <groupId>kingbase</groupId>
-        <artifactId>kingbase8</artifactId>
-        <version>8</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.esen.jdbc/gbase -->
-    <dependency>
-        <name>Gbase</name>
-        <groupId>com.esen.jdbc</groupId>
-        <artifactId>gbase</artifactId>
-        <version>8.3.81.53</version>
+        <className>org.h2.Driver</className>
+        <template>jdbc:h2:tcp://{host}[:{port}]/{database}</template>
+        <port>9092</port>
+        <description>H2 Server</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.ibm.informix/jdbc -->
     <dependency>
@@ -294,13 +347,10 @@
         <groupId>com.ibm.informix</groupId>
         <artifactId>jdbc</artifactId>
         <version>4.50.9</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.aliyun.odps/odps-jdbc -->
-    <dependency>
-        <name>Odps</name>
-        <groupId>com.aliyun.odps</groupId>
-        <artifactId>odps-jdbc</artifactId>
-        <version>3.3.6</version>
+        <className>com.informix.jdbc.IfxDriver</className>
+        <template>jdbc:informix-sqli://{host}:{port}/{database}:INFORMIXSERVER={server}</template>
+        <port>1533</port>
+        <description>IBM Informix Dynamic Server</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.teradata.jdbc/terajdbc4 -->
     <dependency>
@@ -308,6 +358,10 @@
         <groupId>com.teradata.jdbc</groupId>
         <artifactId>terajdbc4</artifactId>
         <version>17.20.00.12</version>
+        <className>com.ncr.teradata.TeraDriver</className>
+        <template>jdbc:teradata://{host}/DATABASE={database},DBS_PORT={port}</template>
+        <port>1025</port>
+        <description>Teradata JDBC Type 4 driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.phoenix/phoenix-client -->
     <dependency>
@@ -315,6 +369,10 @@
         <groupId>org.apache.phoenix</groupId>
         <artifactId>phoenix-client</artifactId>
         <version>4.15.0-HBase-1.5</version>
+        <className>org.apache.phoenix.jdbc.PhoenixDriver</className>
+        <template>jdbc:phoenix:{host}[:{port}]</template>
+        <port>2181</port>
+        <description>Thin driver for Apache Phoenix HBase Database</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.prestosql/presto-jdbc -->
     <dependency>
@@ -322,6 +380,10 @@
         <groupId>io.prestosql</groupId>
         <artifactId>presto-jdbc</artifactId>
         <version>350</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.elasticsearch.plugin/x-pack-sql-jdbc -->
     <dependency>
@@ -329,6 +391,10 @@
         <groupId>org.elasticsearch.plugin</groupId>
         <artifactId>x-pack-sql-jdbc</artifactId>
         <version>8.5.2</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.machbase/machjdbc -->
     <dependency>
@@ -336,6 +402,10 @@
         <groupId>com.machbase</groupId>
         <artifactId>machjdbc</artifactId>
         <version>7.0.6</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.trino/trino-jdbc -->
     <dependency>
@@ -343,6 +413,10 @@
         <groupId>io.trino</groupId>
         <artifactId>trino-jdbc</artifactId>
         <version>403</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.csicit.thirdparty/oscar -->
     <dependency>
@@ -350,6 +424,10 @@
         <groupId>com.csicit.thirdparty</groupId>
         <artifactId>oscar</artifactId>
         <version>1.0.1</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.tidb/tidb-jdbc -->
     <dependency>
@@ -357,6 +435,10 @@
         <groupId>io.tidb</groupId>
         <artifactId>tidb-jdbc</artifactId>
         <version>0.0.4</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.ingres.jdbc/iijdbc -->
     <dependency>
@@ -364,6 +446,10 @@
         <groupId>com.ingres.jdbc</groupId>
         <artifactId>iijdbc</artifactId>
         <version>10.2-4.1.10</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.duckdb/duckdb_jdbc -->
     <dependency>
@@ -371,6 +457,10 @@
         <groupId>org.duckdb</groupId>
         <artifactId>duckdb_jdbc</artifactId>
         <version>0.6.0</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.firebirdsql.jdbc/jaybird-jdk17 -->
     <dependency>
@@ -378,7 +468,10 @@
         <groupId>org.firebirdsql.jdbc</groupId>
         <artifactId>jaybird-jdk17</artifactId>
         <version>4.0.8.java7</version>
-        <type>pom</type>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.mimer.jdbc/mimjdbc -->
     <dependency>
@@ -386,9 +479,10 @@
         <groupId>com.mimer.jdbc</groupId>
         <artifactId>mimjdbc</artifactId>
         <version>3.42.3</version>
+        <className></className>
+        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <port></port>
+        <description></description>
     </dependency>
-
-
-
 
 </dependencies>
