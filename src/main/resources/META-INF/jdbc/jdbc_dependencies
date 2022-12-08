@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
+    <!-- https://mvnrepository.com/artifact/com.ibm.db2/jcc -->
+    <dependency>
+        <name>DB2 LUW</name>
+        <groupId>com.ibm.db2</groupId>
+        <artifactId>jcc</artifactId>
+        <version>11.5.8.0</version>
+        <className>com.ibm.db2.jcc.DB2Driver</className>
+        <template>jdbc:db2://{host}[:{port}]/[{database}]</template>
+        <port>50000</port>
+        <description>IBM Data Server Driver For JDBC and SQLJ</description>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.ibm.db2/jcc -->
+    <dependency>
+        <name>DB2 z/OS</name>
+        <groupId>com.ibm.db2</groupId>
+        <artifactId>jcc</artifactId>
+        <version>11.5.8.0</version>
+        <className>com.ibm.db2.jcc.DB2Driver</className>
+        <template>jdbc:db2://{host}[:{port}]/[{database}]</template>
+        <port>50000</port>
+        <description>IBM Data Server Driver For JDBC and SQLJ</description>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
     <dependency>
         <name>Mariadb</name>
@@ -380,10 +402,21 @@
         <groupId>io.prestosql</groupId>
         <artifactId>presto-jdbc</artifactId>
         <version>350</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
-        <port></port>
-        <description></description>
+        <className>io.prestosql.jdbc.PrestoDriver</className>
+        <template>jdbc:presto://{host}:{port}[/{database}]</template>
+        <port>8080</port>
+        <description>Community Presto (prestosql) JDBC driver, use Trino for newer releases</description>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.facebook.presto/presto-jdbc -->
+    <dependency>
+        <name>PrestoDB</name>
+        <groupId>com.facebook.presto</groupId>
+        <artifactId>presto-jdbc</artifactId>
+        <version>0.278</version>
+        <className>com.facebook.presto.jdbc.PrestoDriver</className>
+        <template>jdbc:presto://{host}:{port}[/{database}]</template>
+        <port>8080</port>
+        <description>Facebook Presto (prestodb) JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.elasticsearch.plugin/x-pack-sql-jdbc -->
     <dependency>
@@ -391,10 +424,10 @@
         <groupId>org.elasticsearch.plugin</groupId>
         <artifactId>x-pack-sql-jdbc</artifactId>
         <version>8.5.2</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
-        <port></port>
-        <description></description>
+        <className>org.elasticsearch.xpack.sql.jdbc.EsDriver</className>
+        <template>jdbc:es://{host}:{port}/</template>
+        <port>9200</port>
+        <description>Elasticsearch JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.machbase/machjdbc -->
     <dependency>
@@ -402,10 +435,10 @@
         <groupId>com.machbase</groupId>
         <artifactId>machjdbc</artifactId>
         <version>7.0.6</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
-        <port></port>
-        <description></description>
+        <className>com.machbase.jdbc.driver</className>
+        <template>jdbc:machbase://{host}/mhdb</template>
+        <port>5656</port>
+        <description>MACHBASE standard driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/io.trino/trino-jdbc -->
     <dependency>
@@ -413,32 +446,10 @@
         <groupId>io.trino</groupId>
         <artifactId>trino-jdbc</artifactId>
         <version>403</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
-        <port></port>
-        <description></description>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.csicit.thirdparty/oscar -->
-    <dependency>
-        <name>Oscar</name>
-        <groupId>com.csicit.thirdparty</groupId>
-        <artifactId>oscar</artifactId>
-        <version>1.0.1</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
-        <port></port>
-        <description></description>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/io.tidb/tidb-jdbc -->
-    <dependency>
-        <name>Tide</name>
-        <groupId>io.tidb</groupId>
-        <artifactId>tidb-jdbc</artifactId>
-        <version>0.0.4</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
-        <port></port>
-        <description></description>
+        <className>io.trino.jdbc.TrinoDriver</className>
+        <template>jdbc:trino://{host}:{port}[/{database}]</template>
+        <port>8080</port>
+        <description>Trino JDBC driver, newer replacement for PrestoSQL</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.ingres.jdbc/iijdbc -->
     <dependency>
@@ -446,10 +457,10 @@
         <groupId>com.ingres.jdbc</groupId>
         <artifactId>iijdbc</artifactId>
         <version>10.2-4.1.10</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
-        <port></port>
-        <description></description>
+        <className>com.ingres.jdbc.IngresDriver</className>
+        <template>jdbc:ingres://{host}:{port}/{database}</template>
+        <port>117</port>
+        <description>Ingres Database</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.duckdb/duckdb_jdbc -->
     <dependency>
@@ -468,21 +479,21 @@
         <groupId>org.firebirdsql.jdbc</groupId>
         <artifactId>jaybird-jdk17</artifactId>
         <version>4.0.8.java7</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
+        <className>org.duckdb.DuckDBDriver</className>
+        <template>jdbc:duckdb:{file}</template>
         <port></port>
-        <description></description>
+        <description>DuckDB JDBC driver</description>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.mimer.jdbc/mimjdbc -->
     <dependency>
-        <name>Mimer</name>
+        <name>Mimer SQL</name>
         <groupId>com.mimer.jdbc</groupId>
         <artifactId>mimjdbc</artifactId>
         <version>3.42.3</version>
-        <className></className>
-        <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
-        <port></port>
-        <description></description>
+        <className>com.mimer.jdbc.Driver</className>
+        <template>jdbc:mimer:tcp://{host}:{port}/{database}</template>
+        <port>1360</port>
+        <description>Mimer SQL TCP/IP driver</description>
     </dependency>
 
 </dependencies>
