@@ -42,7 +42,33 @@
         <className>com.mysql.cj.jdbc.Driver</className>
         <template>jdbc:mysql://{host}[:{port}]/[{database}]</template>
         <port>3306</port>
+        <defaultDatabase></defaultDatabase>
+        <defaultUser>root</defaultUser>
         <description>Driver for MySQL 8 and later</description>
+        <connectProperties>
+            <property>
+                <catalog>user property</catalog>
+                <name>connectTimeout</name>
+                <valueType>number</valueType>
+                <candidates>20000</candidates>
+                <default>20000</default>
+                <sinceVersion>3.0.1</sinceVersion>
+                <description>Timeout for socket connect (in milliseconds), with 0 being no timeout.</description>
+            </property>
+        </connectProperties>
+        <driverProperties>
+            <property>
+                <catalog>driver property</catalog>
+                <name>useSSL</name>
+                <valueType>bool</valueType>
+                <candidates>true|false</candidates>
+                <default>true</default>
+                <sinceVersion>3.0.2</sinceVersion>
+                <description>DEPRECATED: See 'sslMode' property description for details.
+                    For 8.0.12 and earlier: Use SSL when communicating with the server, default is "true" when connecting to MySQL 5.5.45+, 5.6.26+ or 5.7.6+, otherwise default is "false".
+                    For 8.0.13 and later: Default is "true".</description>
+            </property>
+        </driverProperties>
     </dependency>
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependency>

@@ -44,7 +44,7 @@ public class DBExecuteImpl {
         try {
             runningStatus = execute(conn, scripts);
             runningStatus.setStatus(ExecResult.SUCCESS);
-        } catch (SQLException e) {
+        } catch (SQLException | IllegalArgumentException e) {
             runningStatus.setStatus(ExecResult.FAILED);
             runningStatus.setResult(e.getMessage());
         }
@@ -80,9 +80,9 @@ public class DBExecuteImpl {
                 close(rs);
             }
 
+            stm.setAfterSemi(false);
             String sql = stm.toString();
             stmt = conn.prepareStatement(sql);
-
             if (stm instanceof SQLSelectStatement) {
                 rs = stmt.executeQuery();
                 List<Map<String, Object>> query = queryNext(200);

@@ -1,6 +1,7 @@
 package flowdesigner.sql.command;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson2.JSON;
 import flowdesigner.db.DbUtils;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -33,16 +35,17 @@ class CommandManagerTest {
     Connection connection = null;
     @BeforeEach
     void setUp() {
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
-//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
-        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
-//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-//        properties.setProperty("url","jdbc:mysql://localhost:3306");
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+        properties.setProperty("url","jdbc:mysql://localhost:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
+        properties.setProperty("connectTimeout","3000");
         dynamicDriver.set_propertyInfo(properties);
 
         try {
@@ -53,6 +56,12 @@ class CommandManagerTest {
             e.printStackTrace();
         }
         assertNotNull(connection);
+
+        DataSource dataSource = dynamicDriver.getDataSource();
+        if (dataSource instanceof DruidDataSource druidDataSource) {
+            String properties1 = druidDataSource.getProperties();
+            System.out.println(properties1);
+        }
     }
 
     Connection getMySQL() {
@@ -169,6 +178,33 @@ class CommandManagerTest {
             String DESCRIPTION = clientInfoProperties.getString("DESCRIPTION");
 
             System.out.println(NAME.concat(",") + DEFAULT_VALUE + "," + DESCRIPTION);
+        }
+//        ResultSet attributes = metaData.getAttributes();
+//        while (clientInfoProperties.next()) {
+//            String NAME = clientInfoProperties.getString("NAME");
+//            String DEFAULT_VALUE = clientInfoProperties.getString("DEFAULT_VALUE");
+//            String DESCRIPTION = clientInfoProperties.getString("DESCRIPTION");
+//
+//            System.out.println(NAME.concat(",") + DEFAULT_VALUE + "," + DESCRIPTION);
+//        }
+    }
+
+    @Test
+    void getAttributes() throws SQLException {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet clientInfoProperties = metaData.getAttributes(null,null,null,null);
+        while (clientInfoProperties.next()) {
+            String NAME = clientInfoProperties.getString("ATTR_NAME");
+            String DEFAULT_VALUE = clientInfoProperties.getString("TYPE_NAME");
+            String DESCRIPTION = clientInfoProperties.getString("ATTR_TYPE_NAME");
+
+            System.out.println(NAME.concat(",") + DEFAULT_VALUE + "," + DESCRIPTION);
+        }
+
+        Properties clientInfo = connection.getClientInfo();
+        for (var info : clientInfo.entrySet()) {
+            System.out.println(info.getKey());
+            System.out.println(info.getValue());
         }
 //        ResultSet attributes = metaData.getAttributes();
 //        while (clientInfoProperties.next()) {
