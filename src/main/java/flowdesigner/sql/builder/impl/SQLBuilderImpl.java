@@ -2,10 +2,13 @@ package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableDropConstraint;
+import com.alibaba.druid.sql.ast.statement.SQLAlterTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.sql.SQLUtils;
@@ -100,6 +103,30 @@ public abstract class SQLBuilderImpl implements SQLBuilder {
             items.add(item);
         }
 
+    }
+
+    /**
+     * ALTER TABLE table_name DROP CONSTRAINT constraint_name;(对应parseAlterDrop)
+     * @param stmt
+     * @param constraintName
+     */
+    public void buildAlterDropConstraint(SQLAlterTableStatement stmt, SQLName constraintName,
+                                         Token token) {
+
+        if (stmt == null || constraintName == null) {
+            return;
+        }
+
+        SQLAlterTableDropConstraint item = new SQLAlterTableDropConstraint();
+        item.setConstraintName(constraintName);
+
+        if (token == Token.RESTRICT) {
+            item.setRestrict(true);
+        } else if (token == Token.CASCADE) {
+            item.setCascade(true);
+        }
+
+        stmt.addItem(item);
     }
 
 }

@@ -66,10 +66,27 @@ class SQLAlterTableBuilderImplTest {
         System.out.println(alterTableBuilder);
     }
 
-    @Test
-    void dropDropForeignKey() {
-        alterTableBuilder.dropForeignKey("primary");
-        System.out.println(alterTableBuilder);
+    @ParameterizedTest
+    @MethodSource()
+    void dropDropForeignKey(DbType dbType, String expected) throws SQLSyntaxErrorException {
+
+        alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
+        alterTableBuilder.setName("table_name");
+        alterTableBuilder.dropForeignKey("constraint_name");
+
+        SQLStatement statement = SQLTest.parser(alterTableBuilder.toString(), dbType);
+    }
+
+    static Stream<Arguments> dropDropForeignKey() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                default -> "ALTER TABLE table_name DROP CONSTRAINT constraint_name;";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
     }
 
     @Test

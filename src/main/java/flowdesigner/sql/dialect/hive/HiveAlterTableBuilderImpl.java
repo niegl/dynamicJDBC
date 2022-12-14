@@ -1,9 +1,13 @@
 package flowdesigner.sql.dialect.hive;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableReplaceColumn;
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLColumnDefinition;
+import com.alibaba.druid.sql.parser.ParserException;
 import flowdesigner.sql.builder.SQLAlterTableBuilder;
 import flowdesigner.sql.builder.impl.SQLAlterTableBuilderImpl;
 
@@ -42,4 +46,26 @@ public class HiveAlterTableBuilderImpl extends SQLAlterTableBuilderImpl {
 
         return this;
     }
+
+    /**
+     * ALTER TABLE table_name DROP CONSTRAINT constraint_name;
+     *
+     * @param name 外键约束名
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder dropForeignKey(String name) {
+        return dropConstraint(name);
+    }
+
+    /**
+     * 删除主键
+     *
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder dropPrimaryKey(String name) {
+        return dropConstraint(name);
+    }
+
 }

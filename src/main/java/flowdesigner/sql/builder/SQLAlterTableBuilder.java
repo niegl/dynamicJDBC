@@ -31,7 +31,7 @@ public interface SQLAlterTableBuilder extends SQLBuilder {
 
     SQLAlterTableBuilder addUniqueIndex(String columnName, boolean hasConstraint, String constraintSymbol);
 
-    SQLAlterTableBuilder dropPrimaryKey();
+    SQLAlterTableBuilder dropPrimaryKey(String name);
 
     SQLAlterTableBuilder dropForeignKey(String Name);
 

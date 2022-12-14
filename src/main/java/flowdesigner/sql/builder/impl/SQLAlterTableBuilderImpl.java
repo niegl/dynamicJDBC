@@ -333,12 +333,27 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
      * @return
      */
     @Override
-    public SQLAlterTableBuilder dropPrimaryKey() {
+    public SQLAlterTableBuilder dropPrimaryKey(String name) {
 
         SQLAlterTableStatement statement = getSQLStatement();
 
         SQLAlterTableDropPrimaryKey item = new SQLAlterTableDropPrimaryKey();
         statement.addItem(item);
+
+        return this;
+    }
+
+    /**
+     * 删除约束
+     * @return
+     */
+    protected SQLAlterTableBuilder dropConstraint(String constraintName) {
+
+        SQLAlterTableStatement statement = getSQLStatement();
+        if (statement != null) {
+            SQLName expr = (SQLName) SQLUtils.toSQLExpr(constraintName, dbType);
+            super.buildAlterDropConstraint(statement, expr, null);
+        }
 
         return this;
     }
