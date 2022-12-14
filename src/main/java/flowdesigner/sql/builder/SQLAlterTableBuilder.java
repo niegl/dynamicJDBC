@@ -35,6 +35,8 @@ public interface SQLAlterTableBuilder extends SQLBuilder {
 
     SQLAlterTableBuilder dropForeignKey(String Name);
 
+    SQLAlterTableBuilder dropUniqueKey(String name);
+
     SQLAlterTableBuilder dropIndex(String indexName);
 
     SQLAlterTableBuilder addForeignKey(boolean hasConstraint, List<String> columnName,

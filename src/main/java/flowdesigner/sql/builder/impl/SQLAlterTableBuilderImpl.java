@@ -328,19 +328,50 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         }
     }
 
+//    /**
+//     * 删除主键
+//     * @return
+//     */
+//    @Override
+//    public SQLAlterTableBuilder dropPrimaryKey(String name) {
+//
+//        SQLAlterTableStatement statement = getSQLStatement();
+//
+//        SQLAlterTableDropPrimaryKey item = new SQLAlterTableDropPrimaryKey();
+//        statement.addItem(item);
+//
+//        return this;
+//    }
+
+    /**
+     * ALTER TABLE table_name DROP CONSTRAINT constraint_name;
+     *
+     * @param name 外键约束名
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder dropForeignKey(String name) {
+        return dropConstraint(name);
+    }
+
     /**
      * 删除主键
+     *
      * @return
      */
     @Override
     public SQLAlterTableBuilder dropPrimaryKey(String name) {
+        return dropConstraint(name);
+    }
 
-        SQLAlterTableStatement statement = getSQLStatement();
-
-        SQLAlterTableDropPrimaryKey item = new SQLAlterTableDropPrimaryKey();
-        statement.addItem(item);
-
-        return this;
+    /**
+     * 删除唯一键
+     *
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder dropUniqueKey(String name) {
+        return dropConstraint(name);
     }
 
     /**
@@ -358,22 +389,22 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         return this;
     }
 
-    /**
-     * ALTER TABLE <表名> DROP FOREIGN KEY <外键约束名>;
-     * @param Name 外键约束名
-     * @return
-     */
-    @Override
-    public SQLAlterTableBuilder dropForeignKey(String Name) {
-
-        SQLAlterTableStatement statement = getSQLStatement();
-
-        SQLAlterTableDropForeignKey item = new SQLAlterTableDropForeignKey();
-        item.setIndexName(new SQLIdentifierExpr(Name));
-        statement.addItem(item);
-
-        return this;
-    }
+//    /**
+//     * ALTER TABLE <表名> DROP FOREIGN KEY <外键约束名>;
+//     * @param Name 外键约束名
+//     * @return
+//     */
+//    @Override
+//    public SQLAlterTableBuilder dropForeignKey(String Name) {
+//
+//        SQLAlterTableStatement statement = getSQLStatement();
+//
+//        SQLAlterTableDropForeignKey item = new SQLAlterTableDropForeignKey();
+//        item.setIndexName(new SQLIdentifierExpr(Name));
+//        statement.addItem(item);
+//
+//        return this;
+//    }
 
     /**
      * 删除索引/[mysql] 删除唯一约束unique
