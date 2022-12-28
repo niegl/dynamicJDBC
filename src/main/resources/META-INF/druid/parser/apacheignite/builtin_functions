@@ -1,0 +1,87 @@
+[Aggregate Functions]
+:AVG (?)
+:AVG_DISTINCT (DISTINCT ?)
+:BIT_AND (?)
+:BIT_OR (?)
+:COUNT (*)
+:COUNT_DISTINCT (DISTINCT ?)
+:GROUP_CONCAT([DISTINCT] expression || [expression || [expression ...]]  [ORDER BY expression [ASC|DESC], [[ORDER BY expression [ASC|DESC]]]]  [SEPARATOR expression])
+:MAX (?)
+:MIN (?)
+:SUM (?)
+:SUM_DISTINCT (DISTINCT ?)
+[Numeric Functions]
+:ABS (?)
+:ACOS (?)
+:ASIN (?)
+:ATAN (?)
+:COS (?)
+:COSH (?)
+:COT (?)
+:SIN (?)
+:SINH (?)
+:TAN (?)
+:TANH (?)
+:ATAN2 (y, x)
+:BITAND (y, x)
+:BITGET (y, x)
+:BITOR (y, x)
+:BITXOR (y, x)
+:MOD (y, x)
+:CEIL (?)
+:CEILING (?)
+:DEGREES (?)
+:EXP (?)
+:FLOOR (?)
+:LOG (?)
+:LN (?)
+:LOG10 (?)
+:RADIANS (?)
+:SQRT (?)
+:PI (?)
+:POWER (X, Y)
+:RAND ([?])
+:RANDOM([expression])
+:RANDOM_UUID ()
+:UUID ()
+:ROUND ( ? [, precision] )
+:ROUNDMAGIC (?)
+:SECURE_RAND (int)
+:SIGN (?)
+:ENCRYPT (algorithmString , keyBytes , dataBytes)
+:TRUNC ({numeric, digitsInt} | timestamp | date | timestampString)
+:TRUNCATE ({numeric, digitsInt} | timestamp | date | timestampString)
+:COMPRESS(dataBytes [, algorithmString])
+:EXPAND(dataBytes)
+:ZERO()
+[String Functions]
+:ASCII(string)
+:BIT_LENGTH(string)
+:LENGTH(string)
+:CHAR_LENGTH(string)
+:CHARACTER_LENGTH (string)
+:OCTET_LENGTH(string)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
