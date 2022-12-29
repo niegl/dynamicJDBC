@@ -61,26 +61,93 @@
 :CHAR_LENGTH(string)
 :CHARACTER_LENGTH (string)
 :OCTET_LENGTH(string)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+:CHAR(int)
+:CHR(int)
+:CONCAT(string, string [,...])
+:CONCAT_WS(separatorString, string, string [,...])
+:DIFFERENCE(X, Y)
+:HEXTORAW(string)
+:RAWTOHEX(string)
+:INSTR(string, searchString, [, startInt])
+:INSERT(originalString, startInt, lengthInt, addString)
+:LOWER(string)
+:LCASE(string)
+:UPPER(string)
+:UCASE(string)
+:LEFT(string, int)
+:RIGHT(string, int)
+:LOCATE(searchString, string [, startInt])
+:POSITION(searchString, string)
+:LPAD(string, int[, paddingString])
+:RPAD(string, int[, paddingString])
+:LTRIM(string)
+:RTRIM(string)
+:TRIM ([{LEADING | TRAILING | BOTH} [string] FROM] string)
+:REGEXP_REPLACE(inputString, regexString, replacementString [, flagsString])
+:REGEXP_LIKE(inputString, regexString [, flagsString])
+:REPEAT(string, int)
+:REPLACE(string, searchString [, replacementString])
+:SOUNDEX(string)
+:SPACE(int)
+:STRINGDECODE(string)
+:STRINGENCODE(string)
+:STRINGTOUTF8(string)
+:SUBSTRING(string, startInt [, lengthInt])
+:SUBSTR(string, startInt [, lengthInt])
+:UTF8TOSTRING(bytes)
+:XMLATTR(nameString, valueString)
+:XMLNODE(elementString [, attributesString [, contentString [, indentBoolean]]])
+:XMLCOMMENT(commentString)
+:XMLCDATA(valueString)
+:XMLSTARTDOC()
+:TO_CHAR(value [, formatString[, nlsParamString]])
+:TRANSLATE(value , searchString, replacementString]])
+[Date and Time Functions]
+CURRENT_DATE:CURRENT_DATE
+CURRENT_DATE():CURRENT_DATE()
+:CURDATE()
+SYSDATE:SYSDATE
+TODAY:TODAY
+CURRENT_TIME:CURRENT_TIME
+CURRENT_TIME():CURRENT_TIME()
+:CURTIME()
+CURRENT_TIMESTAMP:CURRENT_TIMESTAMP
+CURRENT_TIMESTAMP(int):CURRENT_TIMESTAMP(int)
+NOW:NOW()
+NOW(int):NOW(int)
+:DATEADD(unitString, addIntLong, timestamp)
+:TIMESTAMPADD(unitString, addIntLong, timestamp)
+:DATEDIFF (unitString, aTimestamp, bTimestamp)
+:TIMESTAMPDIFF (unitString, aTimestamp, bTimestamp)
+:DAYNAME(date)
+:DAY_OF_MONTH(date)
+:DAY_OF_WEEK(date)
+:DAY_OF_YEAR(date)
+:EXTRACT ({EPOCH | YEAR | YY | QUARTER | MONTH | MM | WEEK | ISO_WEEK | DAY | DD | DAY_OF_YEAR | DOY | DAY_OF_WEEK | DOW | ISO_DAY_OF_WEEK | HOUR | HH | MINUTE | MI | SECOND | SS | MILLISECOND | MS | MICROSECOND | MCS | NANOSECOND | NS} FROM timestamp)
+:FORMATDATETIME (timestamp, formatString [,localeString [,timeZoneString]])
+:HOUR(timestamp)
+:MINUTE(timestamp)
+:MONTH(timestamp)
+:MONTHNAME(date)
+:PARSEDATETIME(string, formatString [, localeString [, timeZoneString]])
+:QUARTER(timestamp)
+:SECOND(timestamp)
+:WEEK(timestamp)
+:YEAR(timestamp)
+[System Functions]
+:COALESCE(aValue, bValue [,...])
+:NVL(aValue, bValue [,...])
+:DECODE(value, whenValue, thenValue [,...])
+:GREATEST(aValue, bValue [,...])
+:IFNULL(aValue, bValue)
+:LEAST(aValue, bValue [,...])
+:NULLIF(aValue, bValue)
+:NVL2(testValue, aValue, bValue)
+:CASEWHEN (boolean , aValue , bValue)
+:CAST (value AS dataType)
+:CONVERT (value , dataType)
+:TABLE(name dataType = expression)
+:TABLE_DISTINCT	(name dataType = expression)
 
 
 
