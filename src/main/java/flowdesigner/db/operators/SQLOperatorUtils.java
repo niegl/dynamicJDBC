@@ -20,7 +20,7 @@ public class SQLOperatorUtils {
      * 用于向客户端输出JSON格式
      */
     @Data
-    static class FunctionInfo {
+    public static class FunctionInfo {
         String name;
         String type;
         String signature;
@@ -47,6 +47,24 @@ public class SQLOperatorUtils {
         }
 
         return JSON.toJSONString(functionInfos);
+    }
+
+    public static ArrayList<FunctionInfo> getFunctionInfo(Connection connection, DbType dbType) {
+        ArrayList<FunctionInfo> functionInfos = new ArrayList<>();
+
+        Collection<String> functions = getFunctions(connection, dbType);
+        for (String function: functions) {
+            ArrayList<SQLOperator> operators = SQLOperator.of(dbType, function);
+            if (operators.isEmpty()) {
+                functionInfos.add(new FunctionInfo(function, "", ""));
+                continue;
+            }
+            operators.forEach(sqlOperator -> {
+                functionInfos.add(new FunctionInfo(sqlOperator.name, sqlOperator.catalog.toString(), sqlOperator.usage));
+            });
+        }
+
+        return functionInfos;
     }
 
     /**

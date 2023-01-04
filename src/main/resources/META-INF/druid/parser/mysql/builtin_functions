@@ -1,662 +1,548 @@
-ABS                                
-ACOS                               
-ADDDATE                            
-ADDTIME                            
-AES_DECRYPT                        
-AES_ENCRYPT                        
-AND
-&&
-ANY_VALUE                          
-ASCII                              
-ASIN                               
-ATAN                               
-ATAN2                              
-AVG                                
-BENCHMARK                          
-BETWEEN ... AND ...	               
-BIN                                
-BIN_TO_UUID                        
-BINARY	                           
-BIT_AND                            
-BIT_COUNT                          
-BIT_LENGTH                         
-BIT_OR                             
-BIT_XOR
-CASE
-CAST                               
-CEIL                               
-CEILING                            
-CHAR                               
-CHAR_LENGTH                        
-CHARACTER_LENGTH                   
-CHARSET                            
-COALESCE                           
-COERCIBILITY                       
-COLLATION                          
-COMPRESS                           
-CONCAT                             
-CONCAT_WS                          
-CONNECTION_ID                      
-CONV                               
-CONVERT                            
-CONVERT_TZ                         
-COS                                
-COT                                
-COUNT                              
-COUNT(DISTINCT)
-CRC32                              
-CUME_DIST                          
-CURDATE                            
-CURRENT_DATE                       
-CURRENT_ROLE                       
-CURRENT_TIME                       
-CURRENT_TIMESTAMP                  
-CURRENT_USER                       
-CURTIME                            
-DATABASE                           
-DATE                               
-DATE_ADD                           
-DATE_FORMAT                        
-DATE_SUB                           
-DATEDIFF                           
-DAY                                
-DAYNAME                            
-DAYOFMONTH                         
-DAYOFWEEK                          
-DAYOFYEAR                          
-DEFAULT                            
-DEGREES                            
-DENSE_RANK                         
-DIV
-ELT                                
-EXP                                
-EXPORT_SET                         
-EXTRACT                            
-ExtractValue                       
-FIELD                              
-FIND_IN_SET                        
-FIRST_VALUE                        
-FLOOR                              
-FORMAT                             
-FORMAT_BYTES                       
-FORMAT_PICO_TIME                   
-FOUND_ROWS                         
-FROM_BASE64                        
-FROM_DAYS                          
-FROM_UNIXTIME                      
-GeomCollection                     
-GeometryCollection                 
-GET_DD_COLUMN_PRIVILEGES           
-GET_DD_CREATE_OPTIONS              
-GET_DD_INDEX_SUB_PART_LENGTH       
-GET_FORMAT                         
-GET_LOCK                           
-GREATEST                           
-GROUP_CONCAT                       
-GROUPING                           
-GTID_SUBSET                        
-GTID_SUBTRACT                      
-HEX                                
-HOUR                               
-ICU_VERSION                        
-IF                                 
-IFNULL                             
-IN                                 
-INET_ATON                          
-INET_NTOA                          
-INET6_ATON                         
-INET6_NTOA                         
-INSERT                             
-INSTR
-INTERVAL                           
-IS	                               
-IS_FREE_LOCK                       
-IS_IPV4                            
-IS_IPV4_COMPAT                     
-IS_IPV4_MAPPED                     
-IS_IPV6                            
-IS NOT	                           
-IS NOT NULL	                       
-IS_USED_LOCK
-IS_UUID                            
-ISNULL                             
-JSON_ARRAY                         
-JSON_ARRAY_APPEND                  
-JSON_ARRAY_INSERT                  
-JSON_ARRAYAGG                      
-JSON_CONTAINS                      
-JSON_CONTAINS_PATH                 
-JSON_DEPTH                         
-JSON_EXTRACT                       
-JSON_INSERT                        
-JSON_KEYS                          
-JSON_LENGTH                        
-JSON_MERGE                         
-JSON_MERGE_PATCH                   
-JSON_MERGE_PRESERVE                
-JSON_OBJECT                        
-JSON_OBJECTAGG                     
-JSON_OVERLAPS                      
-JSON_PRETTY                        
-JSON_QUOTE                         
-JSON_REMOVE                        
-JSON_REPLACE                       
-JSON_SCHEMA_VALID                  
-JSON_SCHEMA_VALIDATION_REPORT      
-JSON_SEARCH                        
-JSON_SET                           
-JSON_STORAGE_FREE                  
-JSON_STORAGE_SIZE                  
-JSON_TABLE                         
-JSON_TYPE                          
-JSON_UNQUOTE                       
-JSON_VALID                         
-JSON_VALUE                         
-LAG                                
-LAST_DAY	                       
-LAST_INSERT_ID                     
-LAST_VALUE                         
-LCASE                              
-LEAD                               
-LEAST                              
-LEFT                               
-LENGTH                             
-LIKE	                           
-LineString                         
-LN                                 
-LOAD_FILE                          
-LOCALTIME                          
-LOCALTIMESTAMP
-LOCATE                             
-LOG                                
-LOG10                              
-LOG2                               
-LOWER                              
-LPAD                               
-LTRIM                              
-MAKE_SET                           
-MAKEDATE                           
-MAKETIME                           
-MASTER_POS_WAIT                    
-MATCH                              
-MAX                                
-MBRContains                        
-MBRCoveredBy                       
-MBRCovers                          
-MBRDisjoint                        
-MBREquals                          
-MBRIntersects                      
-MBROverlaps                        
-MBRTouches                         
-MBRWithin                          
-MD5                                
-MEMBER OF                          
-MICROSECOND                        
-MID                                
-MIN                                
-MINUTE                             
-MOD                                
-MONTH                              
-MONTHNAME                          
-MultiLineString                    
-MultiPoint                         
-MultiPolygon                       
-NAME_CONST                         
-NOT
-!
-NOT BETWEEN ... AND ...	           
-NOT IN                             
-NOT LIKE	                       
-NOT REGEXP	                       
-NOW                                
-NTH_VALUE                          
-NTILE                              
-NULLIF                             
-OCT                                
-OCTET_LENGTH                       
-OR
-||
-ORD                                
-PERCENT_RANK                       
-PERIOD_ADD                         
-PERIOD_DIFF                        
-PI                                 
-Point                              
-Polygon                            
-POSITION                           
-POW                                
-POWER                              
-PS_CURRENT_THREAD_ID               
-PS_THREAD_ID                       
-QUARTER                            
-QUOTE                              
-RADIANS                            
-RAND                               
-RANDOM_BYTES                       
-RANK                               
-REGEXP	                           
-REGEXP_INSTR                       
-REGEXP_LIKE                        
-REGEXP_REPLACE                     
-REGEXP_SUBSTR                      
-RELEASE_ALL_LOCKS                  
-RELEASE_LOCK                       
-REPEAT                             
-REPLACE                            
-REVERSE                            
-RIGHT                              
-RLIKE	                           
-ROLES_GRAPHML                      
-ROUND                              
-ROW_COUNT                          
-ROW_NUMBER                         
-RPAD                               
-RTRIM                              
-SCHEMA                             
-SEC_TO_TIME                        
-SECOND                             
-SESSION_USER                       
-SHA1                               
-SHA2                               
-SIGN                               
-SIN                                
-SLEEP                              
-SOUNDEX                            
-SOUNDS LIKE	                       
-SOURCE_POS_WAIT                    
-SPACE                              
-SQRT                               
-ST_Area                            
-ST_AsBinary                        
-ST_AsGeoJSON                       
-ST_AsText                          
-ST_Buffer                          
-ST_Buffer_Strategy                 
-ST_Centroid                        
-ST_Collect                         
-ST_Contains                        
-ST_ConvexHull                      
-ST_Crosses                         
-ST_Difference                      
-ST_Dimension                       
-ST_Disjoint                        
-ST_Distance                        
-ST_Distance_Sphere                 
-ST_EndPoint                        
-ST_Envelope                        
-ST_Equals                          
-ST_ExteriorRing                    
-ST_FrechetDistance                 
-ST_GeoHash                         
-ST_GeomCollFromText                
-ST_GeomCollFromWKB                 
-ST_GeometryN                       
-ST_GeometryType                    
-ST_GeomFromGeoJSON                 
-ST_GeomFromText                    
-ST_GeomFromWKB                     
-ST_HausdorffDistance               
-ST_InteriorRingN                   
-ST_Intersection                    
-ST_Intersects                      
-ST_IsClosed                        
-ST_IsEmpty                         
-ST_IsSimple                        
-ST_IsValid                         
-ST_LatFromGeoHash                  
-ST_Latitude                        
-ST_Length                          
-ST_LineFromText                    
-ST_LineFromWKB                     
-ST_LineInterpolatePoint            
-ST_LineInterpolatePoints           
-ST_LongFromGeoHash                 
-ST_Longitude                       
-ST_MakeEnvelope                    
-ST_MLineFromText                   
-ST_MLineFromWKB                    
-ST_MPointFromText                  
-ST_MPointFromWKB                   
-ST_MPolyFromText                   
-ST_MPolyFromWKB                    
-ST_NumGeometries                   
-ST_NumInteriorRing                 
-ST_NumPoints                       
-ST_Overlaps                        
-ST_PointAtDistance                 
-ST_PointFromGeoHash                
-ST_PointFromText                   
-ST_PointFromWKB                    
-ST_PointN                          
-ST_PolyFromText                    
-ST_PolyFromWKB                     
-ST_Simplify                        
-ST_SRID                            
-ST_StartPoint                      
-ST_SwapXY                          
-ST_SymDifference                   
-ST_Touches                         
-ST_Transform                       
-ST_Union                           
-ST_Validate                        
-ST_Within                          
-ST_X                               
-ST_Y                               
-STATEMENT_DIGEST                   
-STATEMENT_DIGEST_TEXT              
-STD                                
-STDDEV                             
-STDDEV_POP                         
-STDDEV_SAMP                        
-STR_TO_DATE                        
-STRCMP                             
-SUBDATE                            
-SUBSTR                             
-SUBSTRING                          
-SUBSTRING_INDEX                    
-SUBTIME                            
-SUM                                
-SYSDATE                            
-SYSTEM_USER                        
-TAN                                
-TIME                               
-TIME_FORMAT                        
-TIME_TO_SEC                        
-TIMEDIFF                           
-TIMESTAMP                          
-TIMESTAMPADD                       
-TIMESTAMPDIFF                      
-TO_BASE64                          
-TO_DAYS                            
-TO_SECONDS                         
-TRIM                               
-TRUNCATE                           
-UCASE                              
-UNCOMPRESS                         
-UNCOMPRESSED_LENGTH                
-UNHEX                              
-UNIX_TIMESTAMP                     
-UpdateXML                          
-UPPER                              
-USER                               
-UTC_DATE                           
-UTC_TIME                           
-UTC_TIMESTAMP                      
-UUID                               
-UUID_SHORT                         
-UUID_TO_BIN                        
-VALIDATE_PASSWORD_STRENGTH         
-VALUES                             
-VAR_POP                            
-VAR_SAMP                           
-VARIANCE                           
-VERSION                            
-WAIT_FOR_EXECUTED_GTID_SET         
-WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS  
-WEEK                               
-WEEKDAY                            
-WEEKOFYEAR                         
-WEIGHT_STRING                      
-XOR
-YEAR                               
-YEARWEEK                           
-|	                               
-~
-asymmetric_decrypt
-asymmetric_encrypt
-asymmetric_derive
-asymmetric_sign
-asymmetric_verify
-create_asymmetric_priv_key
-create_asymmetric_pub_key
-create_dh_parameters
-create_digest
-mysql_firewall_flush_status
-normalize_statement
-read_firewall_users
-read_firewall_whitelist
-set_firewall_mode
-CASE
-IF
-IFNULL
-NULLIF
-%
-MOD
-*
-+
--
--
-/
-ABS
-ACOS
-ASIN
-ATAN
-ATAN2
-ATAN
-CEIL
-CEILING
-CONV
-COS
-COT
-CRC32
-DEGREES
-DIV
-EXP
-FLOOR
-LN
-LOG
-LOG10
-LOG2
-MOD
-PI
-POW
-POWER
-RADIANS
-RAND
-ROUND
-SIGN
-SIN
-SQRT
-TAN
-TRUNCATE
-ADDDATE
-ADDTIME
-CONVERT_TZ
-CURDATE
-CURRENT_DATE
-CURRENT_TIME
-CURRENT_TIMESTAMP
-CURTIME
-DATE
-DATE_ADD
-DATE_FORMAT
-DATE_SUB
-DATEDIFF
-DAY
-DAYNAME
-DAYOFMONTH
-DAYOFWEEK
-DAYOFYEAR
-EXTRACT
-FROM_DAYS
-FROM_UNIXTIME
-GET_FORMAT
-HOUR
-LAST_DAY
-LOCALTIME
-LOCALTIMESTAMP
-LOCALTIMESTAMP
-MAKEDATE
-MAKETIME
-MICROSECOND
-MINUTE
-MONTH
-MONTHNAME
-NOW
-PERIOD_ADD
-PERIOD_DIFF
-QUARTER
-SEC_TO_TIME
-SECOND
-STR_TO_DATE
-SUBDATE
-SUBTIME
-SYSDATE
-TIME
-TIME_FORMAT
-TIME_TO_SEC
-TIMEDIFF
-TIMESTAMP
-TIMESTAMPADD
-TIMESTAMPDIFF
-TO_DAYS
-TO_SECONDS
-UNIX_TIMESTAMP
-UTC_DATE
-UTC_TIME
-UTC_TIMESTAMP
-WEEK
-WEEKDAY
-WEEKOFYEAR
-YEAR
-YEARWEEK
-ASCII
-BIN
-BIT_LENGTH
-CHAR
-CHAR_LENGTH
-CHARACTER_LENGTH
-CONCAT
-CONCAT_WS
-ELT
-EXPORT_SET
-FIELD
-FIND_IN_SET
-FORMAT
-FROM_BASE64
-HEX
-INSERT
-INSTR
-LCASE
-LEFT
-LENGTH
-LIKE
-LOAD_FILE
-LOCATE
-LOWER
-LPAD
-LTRIM
-MAKE_SET
-MATCH
-MID
-NOT LIKE
-NOT REGEXP
-OCT
-OCTET_LENGTH
-ORD
-POSITION
-QUOTE
-REGEXP
-REPEAT
-REPLACE
-REVERSE
-RIGHT
-RLIKE
-RPAD
-RTRIM
-SOUNDEX
-SOUNDS LIKE
-SPACE
-STRCMP
-SUBSTR
-SUBSTRING
-SUBSTRING_INDEX
-TO_BASE64
-TRIM
-UCASE
-UNHEX
-UPPER
-WEIGHT_STRING
-BINARY
-CAST
-CONVERT
-USING BINARY
-AS BINARY
-ExtractValue
-UpdateXML
-&
->>
-<<
-^
-BIT_COUNT
-|
-~
-AES_DECRYPT
-AES_ENCRYPT
-COMPRESS
-DECODE
-DES_DECRYPT
-DES_ENCRYPT
-ENCODE
-ENCRYPT
-MD5
-OLD_PASSWORD
-PASSWORD
-RANDOM_BYTES
-SHA1
-SHA
-SHA2
-UNCOMPRESS
-UNCOMPRESSED_LENGTH
-VALIDATE_PASSWORD_STRENGTH
-GET_LOCK
-IS_FREE_LOCK
-IS_USED_LOCK
-RELEASE_LOCK
-BENCHMARK
-CHARSET
-COERCIBILITY
-COLLATION
-CONNECTION_ID
-CURRENT_USER
-DATABASE
-FOUND_ROWS
-LAST_INSERT_ID
-ROW_COUNT
-SCHEMA
-SESSION_USER
-SYSTEM_USER
-USER
-VERSION
-BENCHMARK
-CHARSET
-COERCIBILITY
-COLLATION
-CONNECTION_ID
-CURRENT_USER
-DATABASE
-FOUND_ROWS
-LAST_INSERT_ID
-ROW_COUNT
-SCHEMA
-SESSION_USER
-SYSTEM_USER
-USER
-VERSION
-AVG
-BIT_AND
-BIT_OR
-BIT_XOR
-COUNT
-COUNT(DISTINCT)
-GROUP_CONCAT
-MAX
-MIN
-STD
-STDDEV
-STDDEV_POP
-STDDEV_SAMP
-SUM
-VAR_POP
-VAR_SAMP
-VARIANCE
+[Comparison Functions and Operators]
+>:? > expr:Greater than operator
+>=:? >= expr:Greater than or equal operator
+<:? < expr:	Less than operator
+<>:? <> expr:Not equal operator
+!=:? != expr:Not equal operator
+<=:? <= expr:Less than or equal operator
+<=>:? <=> expr:NULL-safe equal to operator
+= : ? = expr : Equal operator
+BETWEEN ... AND ... :? BETWEEN min AND max :Whether a value is within a range of values
+COALESCE:COALESCE(T v1, T v2, ...) :Return the first non-NULL argument
+GREATEST:GREATEST(x1, x2, ...):Return the largest argument
+IN : ? IN (value,...) :Whether a value is within a set of values
+INTERVAL:INTERVAL():Return the index of the argument that is less than the first argument
+IS	: ? IS boolean_value:Test a value against a boolean
+IS NOT	: ? IS NOT boolean_value:Test a value against a boolean
+IS NOT NULL	:? IS NOT NULL:NOT NULL value test
+IS NULL	:? IS NULL :NULL value test
+ISNULL() : ISNULL(?):Test whether the argument is NULL
+LEAST()	: LEAST(value1,value2,...):Return the smallest argument
+NOT BETWEEN ... AND ...	:? NOT BETWEEN min AND max:Whether a value is not within a range of values
+NOT IN()	:? NOT IN (value,...):Whether a value is not within a set of values
+[Logical Operators]
+AND:? AND B:Logical AND
+&&: ? && B:Logical AND
+NOT:NOT ? :Negates value
+!:! ? :Negates value
+OR:? OR B :Logical OR
+||:? || B :Logical OR
+XOR: ? XOR B :Logical XOR
+[Assignment Operators]
+:= : @var1 := expr : Assign a value
+= : @var1 = expr : Assign a value
+[Flow Control Functions]
+CASE_VALUE	:CASE value WHEN compare_value THEN result [WHEN compare_value THEN result ...] [ELSE result] END:Case operator
+CASE	:CASE WHEN condition THEN result [WHEN condition THEN result ...] [ELSE result] END:Case operator
+IF()	:IF(expr1,expr2,expr3):If/else construct
+IFNULL():IFNULL(expr1,expr2):	Null if/else construct
+NULLIF():NULLIF(expr1,expr2):	Return NULL if expr1 = expr2
+[Arithmetic Operators]
+%:? % ?:Modulo operator
+MOD:? MOD ?:Modulo operator
+*:? * ? : Multiplication operator
++:? + ?: Addition operator
+-:? - ? :Minus operator
+-: - ? : Change the sign of the argument
+/:? / ? : Division operator
+DIV:? DIV ? :	Integer division
+[String Comparison Functions and Operators]
+LIKE	: ? LIKE pat [ESCAPE 'escape_char']:Simple pattern matching
+NOT LIKE	:? NOT LIKE pat [ESCAPE 'escape_char']:Negation of simple pattern matching
+STRCMP()	:STRCMP(expr1,expr2):Compare two strings
+
+
+
+
+&:? & expr:Bitwise AND
+>>:? >> N:Right shift
+<<:? << N:Right shift
+
+
+
+->:column->path:Return value from JSON column after evaluating path; equivalent to JSON_EXTRACT().
+->> : column->>path : Return value from JSON column after evaluating path and unquoting the result; equivalent to JSON_UNQUOTE(JSON_EXTRACT()).
+
+
+^:? ^ expr :Bitwise XOR
+ABS:ABS(?) :Return the absolute value
+ACOS:ACOS(?) :Return the arc cosine
+ADDDATE:ADDDATE(?,days) :Add time values (intervals) to a date value
+ADDTIME:ADDTIME(expr1,expr2): Add time
+AES_DECRYPT()
+
+SIN:SIN(?)
+
+
+[BitOperators]
+!:!?
+
+
+|:? | expr
+~:? ~ expr
+<<:? << N
+
+[]
+json_overlaps:
+get_dd_column_privileges:
+truncate:
+case:
+get_dd_index_sub_part_length:
+get_dd_create_options:
+[AggregateFunctions]
+count(distinct):COUNT(DISTINCT ?)
+group_concat:GROUP_CONCAT(?)
+COUNT:COUNT(?)
+stddev_samp:STDDEV_SAMP(?)
+MAX:MAX([DISTINCT] ?)
+STDDEV:STDDEV(?)
+std:STD(?)
+SUM:SUM([DISTINCT] ?)
+MIN:MIN([DISTINCT] ?)
+bit_and:bit_and(?)
+AVG:AVG(?)
+var_pop:VAR_POP(?)
+grouping:GROUPING(? ...)
+stddev_pop:STDDEV_POP(?)
+json_arrayagg:JSON_ARRAYAGG(?)
+bit_or:bit_or(?)
+var_samp:VAR_SAMP(?)
+json_objectagg:JSON_OBJECTAGG(key, value)
+variance:VARIANCE(?)
+bit_xor:bit_xor(?)
+[FlowControlFunctions]
+IFNULL:IFNULL(v1,v2)
+if:if(boolean testCondition, T valueTrue, T valueFalseOrNull)
+[NULLRelatedFunctions]
+nullif:nullif( a, b )
+[WindowFunction]
+rank:RANK() over(partition by ?  order by ? desc)
+lag:LAG(? [, N[, default]]) over(partition by ?  order by ? desc)
+first_value:first_value(?) over(partition by ?  order by ? desc)
+ntile:NTILE(N) over_clause
+row_number:row_number() over(partition by ?  order by ? desc)
+percent_rank:percent_rank() over(partition by ?  order by ? desc)
+last_value:last_value(?) over(partition by ?  order by ? desc)
+dense_rank:dense_rank() over(partition by ?  order by ? desc)
+cume_dist:cume_dist() over(partition by ?  order by ? desc)
+lead:LEAD(? [, N[, default]]) over(partition by ?  order by ? desc)
+nth_value:NTH_VALUE(?, N) over_clause
+[ComparisonOperators]
+least:least(x1, x2, ...)
+SOUNDS LIKE:expr1 SOUNDS LIKE expr2
+
+strcmp:STRCMP(expr1,expr2)
+[RegularExpressions]
+regexp_substr:REGEXP_SUBSTR(?, pat[, pos[, occurrence[, match_type]]])
+REGEXP:? REGEXP pat
+regexp_replace:REGEXP_REPLACE(?, pat, repl[, pos[, occurrence[, match_type]]])
+REGEXP_INSTR:REGEXP_INSTR(?, pat[, pos[, occurrence[, return_option[, match_type]]]])
+NOT REGEXP:? NOT REGEXP pat
+regexp_like:REGEXP_LIKE(expr, pat[, match_type])
+[StringFunction]
+character_length:CHARACTER_LENGTH(?)
+quote:QUOTE(?)
+trim:TRIM(?),
+concat:CONCAT(str1,str2,...)
+LEFT:LEFT(?,len)
+RIGHT:RIGHT(?,2)
+lpad:LPAD(?,len,padstr)
+ltrim:LTRIM(?)
+elt:ELT(N,str1,str2,str3,...)
+length:LENGTH(?)
+make_set:MAKE_SET(bits,str1,str2,...)
+bin:BIN(?)
+from_base64:from_base64(?)
+lower:LOWER(?)
+export_set:EXPORT_SET(bits,on,off[,separator[,number_of_bits]])
+substr:SUBSTR(?,pos[,len])
+field:FIELD(str,str1,str2,str3,...)
+concat_ws:CONCAT_WS(separator,str1,str2,...)
+soundex:SOUNDEX(?)
+POSITION:position(substring in str)
+locate:LOCATE(substr,str[,pos])
+substring:SUBSTRING(?,pos[,len])
+repeat:REPEAT(?,count)
+rtrim:RTRIM(?)
+upper:UPPER(?)
+CHAR_LENGTH:CHAR_LENGTH(?)
+mid:MID(?,pos,len)
+weight_string:WEIGHT_STRING(? [AS {CHAR|BINARY}(N)] [flags])
+rpad:RPAD(?,len,padstr)
+ascii:ASCII(?)
+find_in_set:FIND_IN_SET(str,strlist)
+octet_length:OCTET_LENGTH(?)
+instr:INSTR(str,substr)
+reverse:REVERSE(?)
+CHAR:CHAR(N,... [USING charset_name])
+replace:REPLACE(str,from_str,to_str)
+space:SPACE(N)
+substring_index:SUBSTRING_INDEX(?,delim,count)
+FORMAT:FORMAT( value, format)
+ucase:UCASE(?)
+lcase:LCASE(?)
+INSERT:INSERT(?,POS,SIZE,replaceExpr)
+BIT_LENGTH:BIT_LENGTH(?)
+load_file:LOAD_FILE(file_name)
+[ConditionalOperators]
+member of:? MEMBER OF(json_array)
+[BinaryOperator]
+~:~()
+[BitFunctions]
+BIT_COUNT:BIT_COUNT(?)
+[XMLFunctions]
+updatexml:UpdateXML(xml_target, xpath_expr, new_xml)
+extractvalue:ExtractValue(xml_frag, xpath_expr)
+[RelationalOperator]
+isnull:? IS NULL
+IS:? IS
+IS NOT NULL:? IS NOT NULL
+RLIKE:? RLIKE pat
+NOT LIKE:? NOT LIKE pat
+IS NOT:? IS NOT
+LIKE:? LIKE pat
+[ConcatenationOperator]
+||:? || ?
+[PerformanceSchemaFunctions]
+format_bytes:FORMAT_BYTES(count)
+ps_current_thread_id:ps_current_thread_id()
+ps_thread_id:PS_THREAD_ID(connection_id)
+format_pico_time:FORMAT_PICO_TIME(time_val)
+[MathematicalFunction]
+rand:RAND(seed)
+abs:ABS(?)
+acos:ABS(?)
+
+
+sqrt:SQRT(?)
+ATAN2:ATAN2(?, ?)
+ceil:CEIL(?)
+log2:LOG2(?)
+ln:LN(?)
+cos:COS(?)
+sign:SIGN(?)
+COT:COT(?)
+
+floor:FLOOR(?)
+pi:PI()
+exp:EXP(?)
+log10:LOG10(?)
+pow:POW(?,n)
+crc32:CRC32(?)
+MOD:MOD(N,M)
+degrees:DEGREES(?)
+conv:CONV(?,from_base,to_base)
+log:LOG(?)
+POWER:POWER(?,n)
+atan:ASIN(?)
+tan:TAN(?)
+FORMAT:FORMAT( ?, D)
+RADIANS:RADIANS(?)
+ceiling:CEILING(?)
+round:ROUND(?)
+[MiscellaneousFunctions]
+mbrtouches:MBRTouches(g1, g2)
+st_srid:st_srid(?)
+is_ipv4_compat:is_ipv4_compat(?)
+normalize_statement:normalize_statement(?)
+uuid_short:uuid_short()
+mbrcovers:MBRCovers(g1, g2)
+read_firewall_users:read_firewall_users(user, mode)
+st_union:ST_Union(g1, g2)
+sleep:SLEEP(duration)
+st_pointatdistance:st_pointatdistance()
+st_mpointfromtext:st_mpointfromtext()
+st_collect:st_collect()
+inet6_aton:inet6_aton()
+st_isclosed:st_isclosed()
+mbrcoveredby:mbrcoveredby()
+st_numgeometries:st_numgeometries()
+~:~()
+st_geomcollfromwkb:st_geomcollfromwkb()
+st_asbinary:st_asbinary()
+st_pointfromgeohash:st_pointfromgeohash()
+master_pos_wait:MASTER_POS_WAIT(log_name,log_pos[,timeout][,channel])
+st_endpoint:st_endpoint()
+st_symdifference:st_symdifference()
+multipoint:multipoint()
+st_envelope:st_envelope()
+st_touches:st_touches()
+mbrcontains:mbrcontains()
+mbrwithin:mbrwithin()
+st_isvalid:st_isvalid()
+st_longfromgeohash:st_longfromgeohash()
+st_difference:st_difference()
+current_role:current_role()
+st_issimple:st_issimple()
+bin_to_uuid:BIN_TO_UUID(?, swap_flag)
+set_firewall_mode:set_firewall_mode(user, mode)
+multipolygon:multipolygon()
+st_linefromtext:st_linefromtext()
+not between ... and ...:? NOT BETWEEN min AND max
+charset:charset()
+st_makeenvelope:st_makeenvelope()
+st_transform:st_transform()
+st_buffer_strategy:st_buffer_strategy()
+st_intersection:st_intersection()
+st_area:st_area()
+polygon:polygon()
+read_firewall_whitelist:read_firewall_whitelist(user, rule)
+st_validate:st_validate()
+st_linefromwkb:st_linefromwkb()
+row_count:row_count()
+uuid_to_bin:UUID_TO_BIN(?, swap_flag)
+mbrdisjoint:mbrdisjoint()
+st_interiorringn:st_interiorringn()
+st_contains:st_contains()
+is_uuid:is_uuid(?)
+st_astext:st_astext()
+is_ipv4_mapped:is_ipv4_mapped(?)
+st_overlaps:st_overlaps()
+mbrequals:mbrequals()
+st_asgeojson:st_asgeojson()
+st_hausdorffdistance:st_hausdorffdistance()
+st_numpoints:st_numpoints()
+mbroverlaps:mbroverlaps()
+st_polyfromtext:st_polyfromtext()
+st_pointfromwkb:st_pointfromwkb()
+st_geomfromtext:st_geomfromtext()
+st_mpointfromwkb:st_mpointfromwkb()
+st_mpolyfromtext:st_mpolyfromtext()
+st_x:st_x()
+st_y:st_y()
+st_geometrytype:st_geometrytype()
+st_polyfromwkb:st_polyfromwkb()
+st_distance_sphere:st_distance_sphere()
+default:DEFAULT(?)
+name_const:NAME_CONST(name,value)
+st_swapxy:st_swapxy()
+st_startpoint:st_startpoint()
+st_isempty:st_isempty()
+linestring:linestring()
+st_lineinterpolatepoints:st_lineinterpolatepoints()
+st_distance:st_distance()
+st_longitude:st_longitude()
+coercibility:coercibility()
+source_pos_wait:SOURCE_POS_WAIT(log_name,log_pos[,timeout][,channel])
+st_geomfromgeojson:st_geomfromgeojson()
+st_length:st_length()
+st_disjoint:st_disjoint()
+st_frechetdistance:st_frechetdistance()
+st_exteriorring:st_exteriorring()
+st_pointfromtext:st_pointfromtext()
+ord:ORD(?)
+st_convexhull:st_convexhull()
+any_value:any_value(?)
+st_latitude:st_latitude()
+inet_aton:inet_aton(?)
+multilinestring:multilinestring()
+benchmark:benchmark()
+geometrycollection:geometrycollection()
+st_centroid:st_centroid()
+st_lineinterpolatepoint:st_lineinterpolatepoint()
+st_within:st_within()
+geomcollection:geomcollection()
+inet6_ntoa:INET6_NTOA(?)
+mbrintersects:mbrintersects()
+st_dimension:st_dimension()
+st_crosses:st_crosses()
+st_geomcollfromtext:st_geomcollfromtext()
+st_mlinefromtext:st_mlinefromtext()
+st_mpolyfromwkb:st_mpolyfromwkb()
+st_geometryn:st_geometryn()
+st_simplify:st_simplify()
+st_geomfromwkb:st_geomfromwkb()
+uuid:uuid()
+collation:collation()
+st_numinteriorring:st_numinteriorring()
+st_equals:st_equals()
+st_latfromgeohash:st_latfromgeohash()
+found_rows:found_rows()
+mysql_firewall_flush_status:mysql_firewall_flush_status()
+values:values(?)
+is_ipv6:is_ipv6(?)
+is_ipv4:is_ipv4(?)
+point:point()
+st_buffer:st_buffer()
+st_geohash:st_geohash()
+st_pointn:st_pointn()
+match:match()
+inet_ntoa:inet_ntoa(?)
+st_mlinefromwkb:st_mlinefromwkb()
+[CompressionFunctions]
+uncompressed_length:uncompressed_length()
+compress:compress(?)
+uncompress:uncompress(?)
+[LogicalOperator]
+
+not in:? NOT IN (value,...|subquery)
+[CollectionFunction]
+st_intersects:st_intersects(A, B)
+[EncodingAndDecodingFunctions]
+encode:ENCODE(?)
+decode:DECODE(?)
+[ConditionalFunction]
+isnull:ISNOTNULL(?)
+[ArithmeticOperator]
+%:? % ?
+
+
+[ENCRYPT_DECRYPT]
+asymmetric_verify:asymmetric_verify(algorithm, ?, sig_str, pub_key_str, digest_type)
+create_asymmetric_pub_key:create_asymmetric_pub_key(algorithm, priv_key_str)
+OLD_PASSWORD:OLD_PASSWORD(?)
+sha:SHA(?)
+aes_decrypt:AES_DECRYPT(?,key_str[,init_vector][,kdf_name][,salt][,info | iterations])
+sha1:SHA1(?)
+sha2:SHA2(?)
+md5:MD5(?)
+asymmetric_sign:asymmetric_sign(algorithm, ?, priv_key_str, digest_type)
+asymmetric_derive:asymmetric_derive(pub_key_str, priv_key_str)
+validate_password_strength:validate_password_strength()
+aes_encrypt:AES_ENCRYPT(?,key_str[,init_vector][,kdf_name][,salt][,info | iterations])
+PASSWORD:PASSWORD(?)
+ENCRYPT:ENCRYPT(?)
+asymmetric_decrypt:asymmetric_decrypt(algorithm, ?, priv_key_str)
+create_digest:create_digest(digest_type, ?)
+DES_ENCRYPT:DES_ENCRYPT(?)
+statement_digest_text:STATEMENT_DIGEST_TEXT(statement)
+create_asymmetric_priv_key:create_asymmetric_priv_key(algorithm, {key_len|dh_secret})
+create_dh_parameters:create_dh_parameters(key_len)
+random_bytes:RANDOM_BYTES(len)
+statement_digest:STATEMENT_DIGEST(statement)
+asymmetric_encrypt:asymmetric_encrypt(algorithm, ?, pub_key_str)
+DES_DECRYPT:DES_DECRYPT(?)
+[ConversionFunctions]
+to_base64:to_base64(?)
+CONVERT:CONVERT(?,type)
+oct:OCT(?)
+BINARY:BINARY ?
+AS BINARY:? AS BINARY
+cast:CAST(? AS type)
+USING BINARY:? USING BINARY
+hex:HEX(?)
+unhex:UNHEX(?)
+CHAR:CHAR(?)
+DATE:DATE(?)
+[JSONFunctions]
+json_value:JSON_VALUE(json_doc, path)
+json_schema_valid:JSON_SCHEMA_VALID(schema,document)
+json_unquote:JSON_UNQUOTE(?)
+json_pretty:json_pretty(?)
+json_schema_validation_report:JSON_SCHEMA_VALIDATION_REPORT(schema,document)
+json_merge:JSON_MERGE(?, ...)
+json_array_insert:JSON_ARRAY_INSERT(?, path, val[, path, val] ...)
+json_length:JSON_LENGTH(?[, path])
+json_keys:JSON_KEYS(?[, path])
+json_storage_free:json_storage_free(?)
+json_array:JSON_ARRAY([val, ...])
+json_depth:json_depth(?)
+json_remove:JSON_REMOVE(?, path ...)
+json_extract:JSON_EXTRACT(?, path[, path] ...)
+json_valid:JSON_VALID(?)
+json_merge_patch:JSON_MERGE_PATCH(?, ...)
+json_set:JSON_SET(?, path, val[, path, val] ...)
+json_contains:JSON_CONTAINS(?, candidate[, path])
+json_table:JSON_TABLE(?, path COLUMNS (column_list) [AS] alias)
+json_object:JSON_OBJECT([key, val[, key, val] ...])
+json_replace:JSON_REPLACE(?, path, val[, path, val] ...)
+json_insert:JSON_INSERT(?, path, val[, path, val] ...)
+json_quote:json_quote(?)
+json_type:JSON_TYPE(?)
+json_storage_size:json_storage_size(?)
+json_search:JSON_SEARCH(?, one_or_all, search_str[, escape_char[, path] ...])
+json_contains_path:JSON_CONTAINS_PATH(?, one_or_all, path[, path] ...)
+json_objectagg:JSON_OVERLAPS(json_doc1, json_doc2)
+json_array_append:JSON_ARRAY_APPEND(?, path, val[, path, val] ...)
+json_merge_preserve:JSON_MERGE_PRESERVE(json_doc, ...)
+[LockFunctions]
+RELEASE_LOCK:RELEASE_LOCK(?)
+IS_USED_LOCK:IS_USED_LOCK(?)
+get_lock:GET_LOCK(?,timeout)
+release_all_locks:RELEASE_ALL_LOCKS()
+is_free_lock:IS_FREE_LOCK(?)
+[GlobalTransactionIdentifiers]
+gtid_subset:GTID_SUBSET(set1,set2)
+gtid_subtract:GTID_SUBTRACT(set1,set2)
+wait_until_sql_thread_after_gtids:WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS(gtid_set[, timeout][,channel])
+wait_for_executed_gtid_set:WAIT_FOR_EXECUTED_GTID_SET(gtid_set[, timeout])
+[DatetimeFunctions]
+year:YEAR(?)
+utc_time:utc_time()
+to_seconds:to_seconds(?)
+
+TIMEDIFF:TIMEDIFF(?,?)
+date_format:DATE_FORMAT(?,format)
+quarter:QUARTER(?)
+LOCALTIME:LOCALTIME()
+month:MONTH(?)
+TO_DAYS:TO_DAYS(?)
+date_sub:DATE_SUB(date,INTERVAL expr unit)
+STR_TO_DATE:STR_TO_DATE(?,format)
+MAKEDATE:MAKEDATE(year, day-of-year)
+LOCALTIMESTAMP:LOCALTIMESTAMP()
+timestampadd:TIMESTAMPADD(unit,interval,?)
+TIME_FORMAT:TIME_FORMAT(?,format)
+current_date:CURRENT_DATE()
+SUBDATE:SUBDATE(?,n)
+convert_tz:CONVERT_TZ(?,from_tz,to_tz)
+get_format:GET_FORMAT(?, {'EUR'|'USA'|'JIS'|'ISO'|'INTERNAL'})
+utc_timestamp:UTC_TIMESTAMP()
+
+PERIOD_DIFF:PERIOD_DIFF(period, number)
+second:SECOND(?)
+SUBTIME:SUBTIME(expr1,expr2)
+SEC_TO_TIME:SEC_TO_TIME(?)
+hour:HOUR(?)
+current_timestamp:CURRENT_TIMESTAMP()
+minute:MINUTE(?)
+YEARWEEK:YEARWEEK(?)
+utc_date:UTC_DATE()
+WEEKDAY:WEEKDAY(?)
+curtime:CURTIME()
+dayofyear:DAYOFYEAR(?)
+MICROSECOND:MICROSECOND(?)
+datediff:DATEDIFF(expr1,expr2)
+TIME_TO_SEC:TIME_TO_SEC(?)
+current_time:CURRENT_TIME()
+TIMESTAMP:TIMESTAMP(?)
+date_add:DATE_ADD(date,INTERVAL expr unit)
+DAYNAME:DAYNAME(?)
+extract:EXTRACT(unit FROM ?)
+from_unixtime:FROM_UNIXTIME(?[,format])
+curdate:CURDATE()
+now:NOW()
+TIME:TIME(?)
+from_days:from_days(N)
+unix_timestamp:UNIX_TIMESTAMP([date])
+last_day:LAST_DAY(?)
+date:DATE(?)
+SYSDATE:SYSDATE()
+MONTHNAME:MONTHNAME(?)
+day:DAY(?)
+MAKETIME:MAKETIME(hour, minute, second)
+WEEK:WEEK(?)
+PERIOD_ADD:PERIOD_ADD(period, number)
+dayofmonth:DAYOFMONTH(?)
+TIMESTAMPDIFF:TIMESTAMPDIFF(unit,?,?)
+ROUND:ROUND(?[,fmt])
+DAYOFWEEK:DAYOFWEEK(?)
+weekofyear:WEEKOFYEAR(?)
+[InformationFunctions]
+LAST_INSERT_ID:LAST_INSERT_ID()
+VERSION:VERSION('parameter')
+SCHEMA:SCHEMA()
+SESSION_USER:SESSION_USER ()
+CHARSET:CHARSET(?)
+CURRENT_USER:CURRENT_USER()
+ROW_COUNT:ROW_COUNT()
+icu_version:ICU_VERSION()
+roles_graphml:ROLES_GRAPHML()
+COERCIBILITY:COERCIBILITY(?)
+BENCHMARK:BENCHMARK(count,?)
+SYSTEM_USER:SYSTEM_USER()
+CONNECTION_ID:CONNECTION_ID()
+COLLATION:COLLATION(?)
+FOUND_ROWS:FOUND_ROWS ()
+DATABASE:DATABASE()
+USER:USER()
