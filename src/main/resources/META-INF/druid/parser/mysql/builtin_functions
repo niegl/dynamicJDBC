@@ -46,6 +46,37 @@ MOD:? MOD ?:Modulo operator
 -: - ? : Change the sign of the argument
 /:? / ? : Division operator
 DIV:? DIV ? :	Integer division
+[Mathematical Functions]
+ABS():ABS(?) :Return the absolute value
+ACOS():ACOS(?) :Return the arc cosine
+ASIN():ASIN(?): Return the arc sine
+ATAN():ATAN(?): Return the arc tangent
+ATAN2():ATAN2(?, ?): Return the arc tangent of the two arguments
+CEIL():CEIL(?):Return the smallest integer value not less than the argument
+CEILING():CEILING(?):Return the smallest integer value not less than the argument
+CONV():CONV(?,from_base,to_base):Convert numbers between different number bases
+COS():COS(?):Return the cosine
+COT():COT(?):Return the cotangent
+CRC32():CRC32(?):Compute a cyclic redundancy check value
+DEGREES():DEGREES(?):Convert radians to degrees
+EXP():EXP(?):Raise to the power of
+FLOOR():FLOOR(?):Return the largest integer value not greater than the argument
+LN():LN(?):Return the natural logarithm of the argument
+LOG():LOG(?):Return the natural logarithm of the first argument
+LOG10():LOG10(?):Return the base-10 logarithm of the argument
+LOG2():LOG2(?):Return the base-2 logarithm of the argument
+MOD():MOD(N,M):Return the remainder
+PI():PI():Return the value of pi
+POW():POW(?,n)         :Return the argument raised to the specified power
+POWER():POWER(?,n)     :Return the argument raised to the specified power
+RADIANS():RADIANS(?)   :Return argument converted to radians
+RAND():RAND(seed)      :Return a random floating-point value
+ROUND():ROUND(?)       :Round the argument
+SIGN():SIGN(?)         :Return the sign of the argument
+SIN():SIN(?)           :Return the sine of the argument
+SQRT():SQRT(?)         :Return the square root of the argument
+TAN():TAN(?)           :Return the tangent of the argument
+TRUNCATE:TRUNCATE(X,D) :Truncate to specified number of decimal places
 [String Comparison Functions and Operators]
 LIKE	: ? LIKE pat [ESCAPE 'escape_char']:Simple pattern matching
 NOT LIKE	:? NOT LIKE pat [ESCAPE 'escape_char']:Negation of simple pattern matching
@@ -53,7 +84,7 @@ STRCMP()	:STRCMP(expr1,expr2):Compare two strings
 
 
 
-
+FORMAT:FORMAT( ?, D)
 &:? & expr:Bitwise AND
 >>:? >> N:Right shift
 <<:? << N:Right shift
@@ -65,14 +96,10 @@ STRCMP()	:STRCMP(expr1,expr2):Compare two strings
 
 
 ^:? ^ expr :Bitwise XOR
-ABS:ABS(?) :Return the absolute value
-ACOS:ACOS(?) :Return the arc cosine
+
 ADDDATE:ADDDATE(?,days) :Add time values (intervals) to a date value
 ADDTIME:ADDTIME(expr1,expr2): Add time
 AES_DECRYPT()
-
-SIN:SIN(?)
-
 
 [BitOperators]
 !:!?
@@ -85,7 +112,6 @@ SIN:SIN(?)
 []
 json_overlaps:
 get_dd_column_privileges:
-truncate:
 case:
 get_dd_index_sub_part_length:
 get_dd_create_options:
@@ -208,38 +234,7 @@ format_bytes:FORMAT_BYTES(count)
 ps_current_thread_id:ps_current_thread_id()
 ps_thread_id:PS_THREAD_ID(connection_id)
 format_pico_time:FORMAT_PICO_TIME(time_val)
-[MathematicalFunction]
-rand:RAND(seed)
-abs:ABS(?)
-acos:ABS(?)
 
-
-sqrt:SQRT(?)
-ATAN2:ATAN2(?, ?)
-ceil:CEIL(?)
-log2:LOG2(?)
-ln:LN(?)
-cos:COS(?)
-sign:SIGN(?)
-COT:COT(?)
-
-floor:FLOOR(?)
-pi:PI()
-exp:EXP(?)
-log10:LOG10(?)
-pow:POW(?,n)
-crc32:CRC32(?)
-MOD:MOD(N,M)
-degrees:DEGREES(?)
-conv:CONV(?,from_base,to_base)
-log:LOG(?)
-POWER:POWER(?,n)
-atan:ASIN(?)
-tan:TAN(?)
-FORMAT:FORMAT( ?, D)
-RADIANS:RADIANS(?)
-ceiling:CEILING(?)
-round:ROUND(?)
 [MiscellaneousFunctions]
 mbrtouches:MBRTouches(g1, g2)
 st_srid:st_srid(?)
