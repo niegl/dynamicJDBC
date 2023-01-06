@@ -77,11 +77,83 @@ SIN():SIN(?)           :Return the sine of the argument
 SQRT():SQRT(?)         :Return the square root of the argument
 TAN():TAN(?)           :Return the tangent of the argument
 TRUNCATE:TRUNCATE(X,D) :Truncate to specified number of decimal places
+[Date and Time Functions]
+ADDDATE()			:ADDDATE(?,days) :Add time values (intervals) to a date value
+ADDDATE()			:ADDDATE(?,INTERVAL expr unit) :Add time values (intervals) to a date value
+ADDTIME()			:ADDTIME(expr1,expr2) :Add time
+CONVERT_TZ()		:CONVERT_TZ(?,from_tz,to_tz) :Convert from one time zone to another
+CURDATE()			:CURDATE() :Return the current date
+CURRENT_DATE()		:CURRENT_DATE() :Synonyms for CURDATE()
+CURRENT_DATE		:CURRENT_DATE :Synonyms for CURDATE()
+CURRENT_TIME()		:CURRENT_TIME(([fsp])) :Synonyms for CURTIME()
+CURRENT_TIME		:CURRENT_TIME :Synonyms for CURTIME()
+CURRENT_TIMESTAMP()	:CURRENT_TIMESTAMP(([fsp])) :Synonyms for NOW()
+CURRENT_TIMESTAMP	:CURRENT_TIMESTAMP :Synonyms for NOW()
+CURTIME()			:CURTIME([fsp]) :Return the current time
+DATE()				:DATE(?) :Extract the date part of a date or datetime expression
+DATE_ADD()			:DATE_ADD(?,INTERVAL expr unit) :Add time values (intervals) to a date value
+DATE_FORMAT()		:DATE_FORMAT(?,format) :Format date as specified
+DATE_SUB()			:DATE_SUB(date,INTERVAL expr unit) :Subtract a time value (interval) from a date
+DATEDIFF()			:DATEDIFF(expr1,expr2) :Subtract two dates
+DAY()				:DAY(?) :Synonym for DAYOFMONTH()
+DAYNAME()			:DAYNAME(?) :Return the name of the weekday
+DAYOFMONTH()		:DAYOFMONTH(?) :Return the day of the month (0-31)
+DAYOFWEEK()			:DAYOFWEEK(?) :Return the weekday index of the argument
+DAYOFYEAR()			:DAYOFYEAR(?) :Return the day of the year (1-366)
+EXTRACT()			:EXTRACT(unit FROM ?) :Extract part of a date
+FROM_DAYS()			:FROM_DAYS(?) :Convert a day number to a date
+FROM_UNIXTIME()		:FROM_UNIXTIME(?[,format]) :Format Unix timestamp as a date
+GET_FORMAT()		:GET_FORMAT({DATE|TIME|DATETIME}, {'EUR'|'USA'|'JIS'|'ISO'|'INTERNAL'}) :Return a date format string
+HOUR()				:HOUR(?) :Extract the hour
+LAST_DAY			:LAST_DAY(?) :Return the last day of the month for the argument
+LOCALTIME()			:LOCALTIME([fsp]) :Synonym for NOW()
+LOCALTIME			:LOCALTIME :Synonym for NOW()
+LOCALTIMESTAMP		:LOCALTIMESTAMP :Synonym for NOW()
+LOCALTIMESTAMP()	:LOCALTIMESTAMP([fsp]) :Synonym for NOW()
+MAKEDATE()			:MAKEDATE(year,dayofyear) :Create a date from the year and day of year
+MAKETIME()			:MAKETIME(hour,minute,second) :Create time from hour, minute, second
+MICROSECOND()		:MICROSECOND(?) :Return the microseconds from argument
+MINUTE()			:MINUTE(?) :Return the minute from the argument
+MONTH()				:MONTH(?) :Return the month from the date passed
+MONTHNAME()			:MONTHNAME(?) :Return the name of the month
+NOW()				:NOW([fsp]) :Return the current date and time
+PERIOD_ADD()		:PERIOD_ADD(P,N) :Add a period to a year-month
+PERIOD_DIFF()		:PERIOD_DIFF(P1,P2) :Return the number of months between periods
+QUARTER()			:QUARTER(?) :Return the quarter from a date argument
+SEC_TO_TIME()		:SEC_TO_TIME(?) :Converts seconds to 'hh:mm:ss' format
+SECOND()			:SECOND(?) :Return the second (0-59)
+STR_TO_DATE()		:STR_TO_DATE(?,format) :Convert a string to a date
+SUBDATE()			:SUBDATE(?,INTERVAL expr unit), SUBDATE(expr,days) :Synonym for DATE_SUB() when invoked with three arguments
+SUBDATE()			:SUBDATE(?,days) :Synonym for DATE_SUB() when invoked with three arguments
+SUBTIME()			:SUBTIME(expr1,expr2) :Subtract times
+SYSDATE()			:SYSDATE([fsp]) :Return the time at which the function executes
+TIME()				:TIME(?) :Extract the time portion of the expression passed
+TIME_FORMAT()		:TIME_FORMAT(?,format) :Format as time
+TIME_TO_SEC()		:TIME_TO_SEC(?) :Return the argument converted to seconds
+TIMEDIFF()			:TIMEDIFF(expr1,expr2) :Subtract time
+TIMESTAMP()			:TIMESTAMP(expr) :With a single argument, this function returns the date or datetime expression; with two arguments, the sum of the arguments
+TIMESTAMP()			:TIMESTAMP(expr1,expr2) :With a single argument, this function returns the date or datetime expression; with two arguments, the sum of the arguments
+TIMESTAMPADD()		:TIMESTAMPADD(unit,interval,?) :Add an interval to a datetime expression
+TIMESTAMPDIFF()		:TIMESTAMPDIFF(unit,datetime_expr1,datetime_expr2) :Subtract an interval from a datetime expression
+TO_DAYS()			:TO_DAYS(?) :Return the date argument converted to days
+TO_SECONDS()		:TO_SECONDS(?) :Return the date or datetime argument converted to seconds since Year 0
+UNIX_TIMESTAMP()	:UNIX_TIMESTAMP([date]) :Return a Unix timestamp
+UTC_DATE			:UTC_DATE :Return the current UTC date
+UTC_DATE()			:UTC_DATE() :Return the current UTC date
+UTC_TIME()			:UTC_TIME([fsp]) :Return the current UTC time
+UTC_TIME			:UTC_TIME    :Return the current UTC time
+UTC_TIMESTAMP()		:UTC_TIMESTAMP([fsp]) :Return the current UTC date and time
+UTC_TIMESTAMP		:UTC_TIMESTAMP :Return the current UTC date and time
+WEEK()				:WEEK(?[,mode]) :Return the week number
+WEEKDAY()			:WEEKDAY(?) :Return the weekday index
+WEEKOFYEAR()		:WEEKOFYEAR(?) :Return the calendar week of the date (1-53)
+YEAR()				:YEAR(?) :Return the year
+YEARWEEK()			:YEARWEEK(?) :Return the year and week
+YEARWEEK()			:YEARWEEK(?,mode) :Return the year and week
 [String Comparison Functions and Operators]
 LIKE	: ? LIKE pat [ESCAPE 'escape_char']:Simple pattern matching
 NOT LIKE	:? NOT LIKE pat [ESCAPE 'escape_char']:Negation of simple pattern matching
 STRCMP()	:STRCMP(expr1,expr2):Compare two strings
-
 
 
 FORMAT:FORMAT( ?, D)
@@ -97,7 +169,7 @@ FORMAT:FORMAT( ?, D)
 
 ^:? ^ expr :Bitwise XOR
 
-ADDDATE:ADDDATE(?,days) :Add time values (intervals) to a date value
+
 ADDTIME:ADDTIME(expr1,expr2): Add time
 AES_DECRYPT()
 
