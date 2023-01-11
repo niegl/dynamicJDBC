@@ -272,463 +272,117 @@ SESSION_USER()	:SESSION_USER()     :Synonym for USER()
 SYSTEM_USER()	:SYSTEM_USER()      :Synonym for USER()
 USER()	        :USER()	            :The user name and host name provided by the client
 VERSION()	    :VERSION()          :Return a string that indicates the MySQL server version
-
-
-
-FORMAT:FORMAT( ?, D)
-&:? & expr:Bitwise AND
->>:? >> N:Right shift
-<<:? << N:Right shift
-
-
-
-->:column->path:Return value from JSON column after evaluating path; equivalent to JSON_EXTRACT().
-->> : column->>path : Return value from JSON column after evaluating path and unquoting the result; equivalent to JSON_UNQUOTE(JSON_EXTRACT()).
-
-
-^:? ^ expr :Bitwise XOR
-
-
-ADDTIME:ADDTIME(expr1,expr2): Add time
-AES_DECRYPT()
-
-[BitOperators]
-!:!?
-
-
-|:? | expr
-~:? ~ expr
-<<:? << N
-
-[]
-json_overlaps:
-get_dd_column_privileges:
-case:
-get_dd_index_sub_part_length:
-get_dd_create_options:
+[Functions That Search JSON Values]
+->						:column->path	:Return value from JSON column after evaluating path; equivalent to JSON_EXTRACT().
+->>						:column->>path	:Return value from JSON column after evaluating path and unquoting the result; equivalent to JSON_UNQUOTE(JSON_EXTRACT()).
+JSON_CONTAINS()			:JSON_CONTAINS(target, candidate[, path])	:Whether JSON document contains specific object at path
+JSON_CONTAINS_PATH()	:JSON_CONTAINS_PATH(json_doc, one_or_all, path[, path] ...)	:Whether JSON document contains any data at path
+JSON_EXTRACT()			:JSON_EXTRACT(json_doc, path[, path] ...)	:Return data from JSON document
+JSON_KEYS()				:JSON_KEYS(json_doc[, path])	:Array of keys from JSON document
+JSON_OVERLAPS()			:JSON_OVERLAPS(json_doc1, json_doc2)	:Compares two JSON documents, returns TRUE (1) if these have any key-value pairs or array elements in common, otherwise FALSE (0)
+JSON_SEARCH()			:JSON_SEARCH(json_doc, one_or_all, search_str[, escape_char[, path] ...])	:Path to value within JSON document
+JSON_VALUE()			:JSON_VALUE(json_doc, path)	:Extract value from JSON document at location pointed to by path provided; return this value as VARCHAR(512) or specified type
+MEMBER OF()				:value MEMBER OF(json_array)	:Returns true (1) if first operand matches any element of JSON array passed as second operand, otherwise returns false (0)
+[Functions That Create JSON Values]
+JSON_ARRAY()			:JSON_ARRAY([val[, val] ...])	:Create JSON array
+JSON_OBJECT()			:JSON_OBJECT([key, val[, key, val] ...])	:Create JSON object
+JSON_QUOTE()			:JSON_QUOTE(?)	:Quote JSON document
+[Functions That Modify JSON Values]
+JSON_ARRAY_APPEND()		:JSON_ARRAY_APPEND(json_doc, path, val[, path, val] ...)	:Append data to JSON document
+JSON_ARRAY_INSERT()		:JSON_ARRAY_INSERT(json_doc, path, val[, path, val] ...)	:Insert into JSON array
+JSON_MERGE()			:JSON_MERGE(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, preserving duplicate keys. Deprecated synonym for JSON_MERGE_PRESERVE()
+JSON_INSERT()			:JSON_INSERT(json_doc, path, val[, path, val] ...)	:Insert data into JSON document
+JSON_MERGE_PATCH()		:JSON_MERGE_PATCH(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, replacing values of duplicate keys
+JSON_MERGE_PRESERVE()	:JSON_MERGE_PRESERVE(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, preserving duplicate keys
+JSON_REMOVE()			:JSON_REMOVE(json_doc, path[, path] ...)	:Remove data from JSON document
+JSON_REPLACE()			:JSON_REPLACE(json_doc, path, val[, path, val] ...)	:Replace values in JSON document
+JSON_SET()				:JSON_SET(json_doc, path, val[, path, val] ...)	:Insert data into JSON document
+JSON_UNQUOTE()			:JSON_UNQUOTE(?)	:Unquote JSON value
+[Functions That Return JSON Value Attributes]
+JSON_DEPTH()			:JSON_DEPTH(?)	:Maximum depth of JSON document
+JSON_LENGTH()			:JSON_LENGTH(?[, path])	:Number of elements in JSON document
+JSON_TYPE()				:JSON_TYPE(?)	:Type of JSON value
+JSON_VALID()			:JSON_VALID(?)	:Whether JSON value is valid
+[JSON Table Functions]
+JSON_TABLE()			:JSON_TABLE(expr, path COLUMNS (column_list) [AS] alias)	:Return data from a JSON expression as a relational table
+[JSON Schema Validation Functions]
+JSON_SCHEMA_VALID()		:JSON_SCHEMA_VALID(schema,document)	:Validate JSON document against JSON schema; returns TRUE/1 if document validates against schema, or FALSE/0 if it does not
+JSON_SCHEMA_VALIDATION_REPORT()	:JSON_SCHEMA_VALIDATION_REPORT(schema,document)	:Validate JSON document against JSON schema; returns report in JSON format on outcome on validation including success or failure and reasons for failure
+[JSON Utility Functions]
+JSON_PRETTY()			:JSON_PRETTY(?)	:Print a JSON document in human-readable format
+JSON_STORAGE_FREE()		:JSON_STORAGE_FREE(?)	:Freed space within binary representation of JSON column value following partial update
+JSON_STORAGE_SIZE()		:JSON_STORAGE_SIZE(json_val)	:Space used for storage of binary representation of a JSON document
+[Functions Used with Global Transaction Identifiers (GTIDs)]
+GTID_SUBSET()	                :GTID_SUBSET(set1,set2):Return true if all GTIDs in subset are also in set; otherwise false.
+GTID_SUBTRACT()	                :GTID_SUBTRACT(set1,set2):Return all GTIDs in set that are not in subset.
+WAIT_FOR_EXECUTED_GTID_SET()	:WAIT_FOR_EXECUTED_GTID_SET(?[, timeout]):Wait until the given GTIDs have executed on the replica.
+WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS()	:WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS(?[, timeout][,channel]):Use WAIT_FOR_EXECUTED_GTID_SET().
 [AggregateFunctions]
-count(distinct):COUNT(DISTINCT ?)
-group_concat:GROUP_CONCAT(?)
-COUNT:COUNT(?)
-stddev_samp:STDDEV_SAMP(?)
-MAX:MAX([DISTINCT] ?)
-STDDEV:STDDEV(?)
-std:STD(?)
-SUM:SUM([DISTINCT] ?)
-MIN:MIN([DISTINCT] ?)
-bit_and:bit_and(?)
-AVG:AVG(?)
-var_pop:VAR_POP(?)
-grouping:GROUPING(? ...)
-stddev_pop:STDDEV_POP(?)
-json_arrayagg:JSON_ARRAYAGG(?)
-bit_or:bit_or(?)
-var_samp:VAR_SAMP(?)
-json_objectagg:JSON_OBJECTAGG(key, value)
-variance:VARIANCE(?)
-bit_xor:bit_xor(?)
-[FlowControlFunctions]
-IFNULL:IFNULL(v1,v2)
-if:if(boolean testCondition, T valueTrue, T valueFalseOrNull)
-[NULLRelatedFunctions]
-nullif:nullif( a, b )
-[WindowFunction]
-rank:RANK() over(partition by ?  order by ? desc)
-lag:LAG(? [, N[, default]]) over(partition by ?  order by ? desc)
-first_value:first_value(?) over(partition by ?  order by ? desc)
-ntile:NTILE(N) over_clause
-row_number:row_number() over(partition by ?  order by ? desc)
-percent_rank:percent_rank() over(partition by ?  order by ? desc)
-last_value:last_value(?) over(partition by ?  order by ? desc)
-dense_rank:dense_rank() over(partition by ?  order by ? desc)
-cume_dist:cume_dist() over(partition by ?  order by ? desc)
-lead:LEAD(? [, N[, default]]) over(partition by ?  order by ? desc)
-nth_value:NTH_VALUE(?, N) over_clause
-[ComparisonOperators]
-least:least(x1, x2, ...)
-SOUNDS LIKE:expr1 SOUNDS LIKE expr2
-
-strcmp:STRCMP(expr1,expr2)
-[RegularExpressions]
-regexp_substr:REGEXP_SUBSTR(?, pat[, pos[, occurrence[, match_type]]])
-REGEXP:? REGEXP pat
-regexp_replace:REGEXP_REPLACE(?, pat, repl[, pos[, occurrence[, match_type]]])
-REGEXP_INSTR:REGEXP_INSTR(?, pat[, pos[, occurrence[, return_option[, match_type]]]])
-NOT REGEXP:? NOT REGEXP pat
-regexp_like:REGEXP_LIKE(expr, pat[, match_type])
-[StringFunction]
-character_length:CHARACTER_LENGTH(?)
-quote:QUOTE(?)
-trim:TRIM(?),
-concat:CONCAT(str1,str2,...)
-LEFT:LEFT(?,len)
-RIGHT:RIGHT(?,2)
-lpad:LPAD(?,len,padstr)
-ltrim:LTRIM(?)
-elt:ELT(N,str1,str2,str3,...)
-length:LENGTH(?)
-make_set:MAKE_SET(bits,str1,str2,...)
-bin:BIN(?)
-from_base64:from_base64(?)
-lower:LOWER(?)
-export_set:EXPORT_SET(bits,on,off[,separator[,number_of_bits]])
-substr:SUBSTR(?,pos[,len])
-field:FIELD(str,str1,str2,str3,...)
-concat_ws:CONCAT_WS(separator,str1,str2,...)
-soundex:SOUNDEX(?)
-POSITION:position(substring in str)
-locate:LOCATE(substr,str[,pos])
-substring:SUBSTRING(?,pos[,len])
-repeat:REPEAT(?,count)
-rtrim:RTRIM(?)
-upper:UPPER(?)
-CHAR_LENGTH:CHAR_LENGTH(?)
-mid:MID(?,pos,len)
-weight_string:WEIGHT_STRING(? [AS {CHAR|BINARY}(N)] [flags])
-rpad:RPAD(?,len,padstr)
-ascii:ASCII(?)
-find_in_set:FIND_IN_SET(str,strlist)
-octet_length:OCTET_LENGTH(?)
-instr:INSTR(str,substr)
-reverse:REVERSE(?)
-CHAR:CHAR(N,... [USING charset_name])
-replace:REPLACE(str,from_str,to_str)
-space:SPACE(N)
-substring_index:SUBSTRING_INDEX(?,delim,count)
-FORMAT:FORMAT( value, format)
-ucase:UCASE(?)
-lcase:LCASE(?)
-INSERT:INSERT(?,POS,SIZE,replaceExpr)
-BIT_LENGTH:BIT_LENGTH(?)
-load_file:LOAD_FILE(file_name)
-[ConditionalOperators]
-member of:? MEMBER OF(json_array)
-[BinaryOperator]
-~:~()
-[BitFunctions]
-BIT_COUNT:BIT_COUNT(?)
-[XMLFunctions]
-updatexml:UpdateXML(xml_target, xpath_expr, new_xml)
-extractvalue:ExtractValue(xml_frag, xpath_expr)
-[RelationalOperator]
-isnull:? IS NULL
-IS:? IS
-IS NOT NULL:? IS NOT NULL
-RLIKE:? RLIKE pat
-NOT LIKE:? NOT LIKE pat
-IS NOT:? IS NOT
-LIKE:? LIKE pat
-[ConcatenationOperator]
-||:? || ?
-[PerformanceSchemaFunctions]
-format_bytes:FORMAT_BYTES(count)
-ps_current_thread_id:ps_current_thread_id()
-ps_thread_id:PS_THREAD_ID(connection_id)
-format_pico_time:FORMAT_PICO_TIME(time_val)
-
-[MiscellaneousFunctions]
-mbrtouches:MBRTouches(g1, g2)
-st_srid:st_srid(?)
-is_ipv4_compat:is_ipv4_compat(?)
-normalize_statement:normalize_statement(?)
-uuid_short:uuid_short()
-mbrcovers:MBRCovers(g1, g2)
-read_firewall_users:read_firewall_users(user, mode)
-st_union:ST_Union(g1, g2)
-sleep:SLEEP(duration)
-st_pointatdistance:st_pointatdistance()
-st_mpointfromtext:st_mpointfromtext()
-st_collect:st_collect()
-inet6_aton:inet6_aton()
-st_isclosed:st_isclosed()
-mbrcoveredby:mbrcoveredby()
-st_numgeometries:st_numgeometries()
-~:~()
-st_geomcollfromwkb:st_geomcollfromwkb()
-st_asbinary:st_asbinary()
-st_pointfromgeohash:st_pointfromgeohash()
-master_pos_wait:MASTER_POS_WAIT(log_name,log_pos[,timeout][,channel])
-st_endpoint:st_endpoint()
-st_symdifference:st_symdifference()
-multipoint:multipoint()
-st_envelope:st_envelope()
-st_touches:st_touches()
-mbrcontains:mbrcontains()
-mbrwithin:mbrwithin()
-st_isvalid:st_isvalid()
-st_longfromgeohash:st_longfromgeohash()
-st_difference:st_difference()
-current_role:current_role()
-st_issimple:st_issimple()
-bin_to_uuid:BIN_TO_UUID(?, swap_flag)
-set_firewall_mode:set_firewall_mode(user, mode)
-multipolygon:multipolygon()
-st_linefromtext:st_linefromtext()
-not between ... and ...:? NOT BETWEEN min AND max
-charset:charset()
-st_makeenvelope:st_makeenvelope()
-st_transform:st_transform()
-st_buffer_strategy:st_buffer_strategy()
-st_intersection:st_intersection()
-st_area:st_area()
-polygon:polygon()
-read_firewall_whitelist:read_firewall_whitelist(user, rule)
-st_validate:st_validate()
-st_linefromwkb:st_linefromwkb()
-row_count:row_count()
-uuid_to_bin:UUID_TO_BIN(?, swap_flag)
-mbrdisjoint:mbrdisjoint()
-st_interiorringn:st_interiorringn()
-st_contains:st_contains()
-is_uuid:is_uuid(?)
-st_astext:st_astext()
-is_ipv4_mapped:is_ipv4_mapped(?)
-st_overlaps:st_overlaps()
-mbrequals:mbrequals()
-st_asgeojson:st_asgeojson()
-st_hausdorffdistance:st_hausdorffdistance()
-st_numpoints:st_numpoints()
-mbroverlaps:mbroverlaps()
-st_polyfromtext:st_polyfromtext()
-st_pointfromwkb:st_pointfromwkb()
-st_geomfromtext:st_geomfromtext()
-st_mpointfromwkb:st_mpointfromwkb()
-st_mpolyfromtext:st_mpolyfromtext()
-st_x:st_x()
-st_y:st_y()
-st_geometrytype:st_geometrytype()
-st_polyfromwkb:st_polyfromwkb()
-st_distance_sphere:st_distance_sphere()
-default:DEFAULT(?)
-name_const:NAME_CONST(name,value)
-st_swapxy:st_swapxy()
-st_startpoint:st_startpoint()
-st_isempty:st_isempty()
-linestring:linestring()
-st_lineinterpolatepoints:st_lineinterpolatepoints()
-st_distance:st_distance()
-st_longitude:st_longitude()
-coercibility:coercibility()
-source_pos_wait:SOURCE_POS_WAIT(log_name,log_pos[,timeout][,channel])
-st_geomfromgeojson:st_geomfromgeojson()
-st_length:st_length()
-st_disjoint:st_disjoint()
-st_frechetdistance:st_frechetdistance()
-st_exteriorring:st_exteriorring()
-st_pointfromtext:st_pointfromtext()
-ord:ORD(?)
-st_convexhull:st_convexhull()
-any_value:any_value(?)
-st_latitude:st_latitude()
-inet_aton:inet_aton(?)
-multilinestring:multilinestring()
-benchmark:benchmark()
-geometrycollection:geometrycollection()
-st_centroid:st_centroid()
-st_lineinterpolatepoint:st_lineinterpolatepoint()
-st_within:st_within()
-geomcollection:geomcollection()
-inet6_ntoa:INET6_NTOA(?)
-mbrintersects:mbrintersects()
-st_dimension:st_dimension()
-st_crosses:st_crosses()
-st_geomcollfromtext:st_geomcollfromtext()
-st_mlinefromtext:st_mlinefromtext()
-st_mpolyfromwkb:st_mpolyfromwkb()
-st_geometryn:st_geometryn()
-st_simplify:st_simplify()
-st_geomfromwkb:st_geomfromwkb()
-uuid:uuid()
-collation:collation()
-st_numinteriorring:st_numinteriorring()
-st_equals:st_equals()
-st_latfromgeohash:st_latfromgeohash()
-found_rows:found_rows()
-mysql_firewall_flush_status:mysql_firewall_flush_status()
-values:values(?)
-is_ipv6:is_ipv6(?)
-is_ipv4:is_ipv4(?)
-point:point()
-st_buffer:st_buffer()
-st_geohash:st_geohash()
-st_pointn:st_pointn()
-match:match()
-inet_ntoa:inet_ntoa(?)
-st_mlinefromwkb:st_mlinefromwkb()
-[CompressionFunctions]
-uncompressed_length:uncompressed_length()
-compress:compress(?)
-uncompress:uncompress(?)
-[LogicalOperator]
-
-not in:? NOT IN (value,...|subquery)
-[CollectionFunction]
-st_intersects:st_intersects(A, B)
-[EncodingAndDecodingFunctions]
-encode:ENCODE(?)
-decode:DECODE(?)
-[ConditionalFunction]
-isnull:ISNOTNULL(?)
-[ArithmeticOperator]
-%:? % ?
-
-
-[ENCRYPT_DECRYPT]
-
-
-asymmetric_verify:asymmetric_verify(algorithm, ?, sig_str, pub_key_str, digest_type)
-create_asymmetric_pub_key:create_asymmetric_pub_key(algorithm, priv_key_str)
-OLD_PASSWORD:OLD_PASSWORD(?)
-sha:SHA(?)
-sha1:SHA1(?)
-sha2:SHA2(?)
-md5:MD5(?)
-asymmetric_sign:asymmetric_sign(algorithm, ?, priv_key_str, digest_type)
-asymmetric_derive:asymmetric_derive(pub_key_str, priv_key_str)
-validate_password_strength:validate_password_strength()
-PASSWORD:PASSWORD(?)
-ENCRYPT:ENCRYPT(?)
-asymmetric_decrypt:asymmetric_decrypt(algorithm, ?, priv_key_str)
-create_digest:create_digest(digest_type, ?)
-DES_ENCRYPT:DES_ENCRYPT(?)
-statement_digest_text:STATEMENT_DIGEST_TEXT(statement)
-create_asymmetric_priv_key:create_asymmetric_priv_key(algorithm, {key_len|dh_secret})
-create_dh_parameters:create_dh_parameters(key_len)
-random_bytes:RANDOM_BYTES(len)
-statement_digest:STATEMENT_DIGEST(statement)
-asymmetric_encrypt:asymmetric_encrypt(algorithm, ?, pub_key_str)
-DES_DECRYPT:DES_DECRYPT(?)
-[ConversionFunctions]
-to_base64:to_base64(?)
-CONVERT:CONVERT(?,type)
-oct:OCT(?)
-BINARY:BINARY ?
-AS BINARY:? AS BINARY
-cast:CAST(? AS type)
-USING BINARY:? USING BINARY
-hex:HEX(?)
-unhex:UNHEX(?)
-CHAR:CHAR(?)
-DATE:DATE(?)
-[JSONFunctions]
-json_value:JSON_VALUE(json_doc, path)
-json_schema_valid:JSON_SCHEMA_VALID(schema,document)
-json_unquote:JSON_UNQUOTE(?)
-json_pretty:json_pretty(?)
-json_schema_validation_report:JSON_SCHEMA_VALIDATION_REPORT(schema,document)
-json_merge:JSON_MERGE(?, ...)
-json_array_insert:JSON_ARRAY_INSERT(?, path, val[, path, val] ...)
-json_length:JSON_LENGTH(?[, path])
-json_keys:JSON_KEYS(?[, path])
-json_storage_free:json_storage_free(?)
-json_array:JSON_ARRAY([val, ...])
-json_depth:json_depth(?)
-json_remove:JSON_REMOVE(?, path ...)
-json_extract:JSON_EXTRACT(?, path[, path] ...)
-json_valid:JSON_VALID(?)
-json_merge_patch:JSON_MERGE_PATCH(?, ...)
-json_set:JSON_SET(?, path, val[, path, val] ...)
-json_contains:JSON_CONTAINS(?, candidate[, path])
-json_table:JSON_TABLE(?, path COLUMNS (column_list) [AS] alias)
-json_object:JSON_OBJECT([key, val[, key, val] ...])
-json_replace:JSON_REPLACE(?, path, val[, path, val] ...)
-json_insert:JSON_INSERT(?, path, val[, path, val] ...)
-json_quote:json_quote(?)
-json_type:JSON_TYPE(?)
-json_storage_size:json_storage_size(?)
-json_search:JSON_SEARCH(?, one_or_all, search_str[, escape_char[, path] ...])
-json_contains_path:JSON_CONTAINS_PATH(?, one_or_all, path[, path] ...)
-json_objectagg:JSON_OVERLAPS(json_doc1, json_doc2)
-json_array_append:JSON_ARRAY_APPEND(?, path, val[, path, val] ...)
-json_merge_preserve:JSON_MERGE_PRESERVE(json_doc, ...)
-[LockFunctions]
-RELEASE_LOCK:RELEASE_LOCK(?)
-IS_USED_LOCK:IS_USED_LOCK(?)
-get_lock:GET_LOCK(?,timeout)
-release_all_locks:RELEASE_ALL_LOCKS()
-is_free_lock:IS_FREE_LOCK(?)
-[GlobalTransactionIdentifiers]
-gtid_subset:GTID_SUBSET(set1,set2)
-gtid_subtract:GTID_SUBTRACT(set1,set2)
-wait_until_sql_thread_after_gtids:WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS(gtid_set[, timeout][,channel])
-wait_for_executed_gtid_set:WAIT_FOR_EXECUTED_GTID_SET(gtid_set[, timeout])
-[DatetimeFunctions]
-year:YEAR(?)
-utc_time:utc_time()
-to_seconds:to_seconds(?)
-
-TIMEDIFF:TIMEDIFF(?,?)
-date_format:DATE_FORMAT(?,format)
-quarter:QUARTER(?)
-LOCALTIME:LOCALTIME()
-month:MONTH(?)
-TO_DAYS:TO_DAYS(?)
-date_sub:DATE_SUB(date,INTERVAL expr unit)
-STR_TO_DATE:STR_TO_DATE(?,format)
-MAKEDATE:MAKEDATE(year, day-of-year)
-LOCALTIMESTAMP:LOCALTIMESTAMP()
-timestampadd:TIMESTAMPADD(unit,interval,?)
-TIME_FORMAT:TIME_FORMAT(?,format)
-current_date:CURRENT_DATE()
-SUBDATE:SUBDATE(?,n)
-convert_tz:CONVERT_TZ(?,from_tz,to_tz)
-get_format:GET_FORMAT(?, {'EUR'|'USA'|'JIS'|'ISO'|'INTERNAL'})
-utc_timestamp:UTC_TIMESTAMP()
-
-PERIOD_DIFF:PERIOD_DIFF(period, number)
-second:SECOND(?)
-SUBTIME:SUBTIME(expr1,expr2)
-SEC_TO_TIME:SEC_TO_TIME(?)
-hour:HOUR(?)
-current_timestamp:CURRENT_TIMESTAMP()
-minute:MINUTE(?)
-YEARWEEK:YEARWEEK(?)
-utc_date:UTC_DATE()
-WEEKDAY:WEEKDAY(?)
-curtime:CURTIME()
-dayofyear:DAYOFYEAR(?)
-MICROSECOND:MICROSECOND(?)
-datediff:DATEDIFF(expr1,expr2)
-TIME_TO_SEC:TIME_TO_SEC(?)
-current_time:CURRENT_TIME()
-TIMESTAMP:TIMESTAMP(?)
-date_add:DATE_ADD(date,INTERVAL expr unit)
-DAYNAME:DAYNAME(?)
-extract:EXTRACT(unit FROM ?)
-from_unixtime:FROM_UNIXTIME(?[,format])
-curdate:CURDATE()
-now:NOW()
-TIME:TIME(?)
-from_days:from_days(N)
-unix_timestamp:UNIX_TIMESTAMP([date])
-last_day:LAST_DAY(?)
-date:DATE(?)
-SYSDATE:SYSDATE()
-MONTHNAME:MONTHNAME(?)
-day:DAY(?)
-MAKETIME:MAKETIME(hour, minute, second)
-WEEK:WEEK(?)
-PERIOD_ADD:PERIOD_ADD(period, number)
-dayofmonth:DAYOFMONTH(?)
-TIMESTAMPDIFF:TIMESTAMPDIFF(unit,?,?)
-ROUND:ROUND(?[,fmt])
-DAYOFWEEK:DAYOFWEEK(?)
-weekofyear:WEEKOFYEAR(?)
-[InformationFunctions]
-LAST_INSERT_ID:LAST_INSERT_ID()
-VERSION:VERSION('parameter')
-SCHEMA:SCHEMA()
-SESSION_USER:SESSION_USER ()
-CHARSET:CHARSET(?)
-CURRENT_USER:CURRENT_USER()
-ROW_COUNT:ROW_COUNT()
-icu_version:ICU_VERSION()
-roles_graphml:ROLES_GRAPHML()
-COERCIBILITY:COERCIBILITY(?)
-BENCHMARK:BENCHMARK(count,?)
-SYSTEM_USER:SYSTEM_USER()
-CONNECTION_ID:CONNECTION_ID()
-COLLATION:COLLATION(?)
-FOUND_ROWS:FOUND_ROWS ()
-DATABASE:DATABASE()
-USER:USER()
+AVG()				:AVG([DISTINCT] ?)	:Return the average value of the argument
+AVG_DISTINCT()		:AVG(DISTINCT ?)	:Return the average value of the argument
+BIT_AND()			:BIT_AND(?)	:Return bitwise AND
+BIT_OR()			:BIT_OR(?)	:Return bitwise OR
+BIT_XOR()			:BIT_XOR(?)	:Return bitwise XOR
+COUNT()				:COUNT(?)	:Return a count of the number of rows returned
+COUNT(DISTINCT)		:COUNT(DISTINCT ?,[?...])	:Return the count of a number of different values
+GROUP_CONCAT()		:GROUP_CONCAT(?)	:Return a concatenated string
+JSON_ARRAYAGG()		:JSON_ARRAYAGG(?)	:Return result set as a single JSON array
+JSON_OBJECTAGG()	:JSON_OBJECTAGG(key, value)	:Return result set as a single JSON object
+MAX()				:MAX(?)	:Return the maximum value
+MAX(DISTINCT)		:MAX(DISTINCT ?)	:Return the maximum value
+MIN()				:MIN(?)	:Return the minimum value
+MIN(DISTINCT)		:MIN(DISTINCT ?)	:Return the minimum value
+STD()				:STD(?)	:Return the population standard deviation
+STDDEV()			:STDDEV(?)	:Return the population standard deviation
+STDDEV_POP()		:STDDEV_POP(?)	:Return the population standard deviation
+STDDEV_SAMP()		:STDDEV_SAMP(?)	:Return the sample standard deviation
+SUM()				:SUM(?)	:Return the sum
+SUM(DISTINCT)		:SUM(DISTINCT ?)	:Return the sum
+VAR_POP()			:VAR_POP(?)	:Return the population standard variance
+VAR_SAMP()			:VAR_SAMP(?)	:Return the sample variance
+VARIANCE()			:VARIANCE(?)	:Return the population standard variance
+[GROUP BY Modifiers]
+GROUP BY                :GROUP BY(?,[?...])	: represent summary operations
+GROUP BY(WITH ROLLUP)   :GROUP BY(?,[?...]) WITH ROLLUP	: The GROUP BY clause permits a WITH ROLLUP modifier that causes summary output to include extra rows that represent higher-level (that is, super-aggregate) summary operations.
+[Window Function Descriptions]
+CUME_DIST()		:CUME_DIST() over_clause	:Cumulative distribution value
+DENSE_RANK()	:DENSE_RANK() over_clause	:Rank of current row within its partition, without gaps
+FIRST_VALUE()	:FIRST_VALUE(?) [null_treatment] over_clause	:Value of argument from first row of window frame
+LAG()			:LAG(? [, N[, default]]) [null_treatment] over_clause	:Value of argument from row lagging current row within partition
+LAST_VALUE()	:LAST_VALUE(?) [null_treatment] over_clause	:Value of argument from last row of window frame
+LEAD()			:LEAD(? [, N[, default]]) [null_treatment] over_clause	:Value of argument from row leading current row within partition
+NTH_VALUE()		:NTH_VALUE(?, N) [from_first_last] [null_treatment] over_clause	:Value of argument from N-th row of window frame
+NTILE()			:NTILE(N) over_clause	:Bucket number of current row within its partition.
+PERCENT_RANK()	:PERCENT_RANK() over_clause	:Percentage rank value
+RANK()			:RANK() over_clause	:Rank of current row within its partition, with gaps
+ROW_NUMBER()	:ROW_NUMBER() over_clause	:Number of current row within its partition
+[Performance Schema Functions]
+FORMAT_BYTES()				:FORMAT_BYTES(?)	:Convert byte count to value with units
+FORMAT_PICO_TIME()			:FORMAT_PICO_TIME(?)	:Convert time in picoseconds to value with units
+PS_CURRENT_THREAD_ID()		:PS_CURRENT_THREAD_ID()	:Performance Schema thread ID for current thread
+PS_THREAD_ID()				:PS_THREAD_ID(?)	:Performance Schema thread ID for given thread
+[Miscellaneous Functions]
+ANY_VALUE()			:ANY_VALUE(?)	:Suppress ONLY_FULL_GROUP_BY value rejection
+BIN_TO_UUID()		:BIN_TO_UUID(binary_uuid)	:Convert binary UUID to string
+BIN_TO_UUID(swap_flag)		:BIN_TO_UUID(binary_uuid, swap_flag)	:Convert binary UUID to string
+DEFAULT()			:DEFAULT(?)	:Return the default value for a table column
+FORMAT()			:FORMAT(X,D)	:Formats the number X to a format like '#,###,###.##', rounded to D decimal places, and returns the result as a string
+GROUPING()			:GROUPING(? [, ?] ...)	:Distinguish super-aggregate ROLLUP rows from regular rows
+INET_ATON()			:INET_ATON(?)	:Return the numeric value of an IP address
+INET_NTOA()			:INET_NTOA(?)	:Return the IP address from a numeric value
+INET6_ATON()		:INET6_ATON(?)	:Return the numeric value of an IPv6 address
+INET6_NTOA()		:INET6_NTOA(?)	:Return the IPv6 address from a numeric value
+IS_IPV4()			:IS_IPV4(?)	:Whether argument is an IPv4 address
+IS_IPV4_COMPAT()	:IS_IPV4_COMPAT(?)	:Whether argument is an IPv4-compatible address
+IS_IPV4_MAPPED()	:IS_IPV4_MAPPED(?)	:Whether argument is an IPv4-mapped address
+IS_IPV6()			:IS_IPV6(?)	:Whether argument is an IPv6 address
+IS_UUID()			:IS_UUID(?)	:Whether argument is a valid UUID
+MASTER_POS_WAIT()	:MASTER_POS_WAIT(log_name,log_pos[,timeout][,channel])	:Block until the replica has read and applied all updates up to the specified position
+NAME_CONST()		:NAME_CONST(name,value)	:Cause the column to have the given name
+SLEEP()				:SLEEP(?)	:Sleep for a number of seconds
+SOURCE_POS_WAIT()	:SOURCE_POS_WAIT(log_name,log_pos[,timeout][,channel])	:Block until the replica has read and applied all updates up to the specified position
+UUID()				:UUID()	:Return a Universal Unique Identifier (UUID)
+UUID_SHORT()		:UUID_SHORT()	:Return an integer-valued universal identifier
+UUID_TO_BIN()		:UUID_TO_BIN(?)	:Convert string UUID to binary
+UUID_TO_BIN(swap_flag)		:UUID_TO_BIN(?, swap_flag)	:Convert string UUID to binary
+VALUES()			:VALUES(?)	:Define the values to be used during an INSERT
