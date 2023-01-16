@@ -19,6 +19,15 @@ import java.util.regex.Pattern;
 public class MavenDownload {
 
     /**
+     * 用于取消长时间任务
+     */
+    public static void stopDownload() {
+        MavenDownload.bStopDownload = true;
+    }
+
+    private static volatile boolean bStopDownload = false;
+
+    /**
      * 从网络下载指定驱动jar文件
      * @param url 网络地址
      * @param scope 网络地址范围，完整URL为：url/scope/groupId/artifactId/version/***.jar
@@ -53,7 +62,8 @@ public class MavenDownload {
                                            String groupId, String artifactId, String version) {
         ArrayList<String> locations = new ArrayList<>();
         try {
-            downloadRecursive(url, scope, repository,groupId,artifactId,version, locations);
+            bStopDownload = false;
+            downloadRecursive(url, scope, repository, new Dependency(groupId, artifactId, version), locations);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -61,9 +71,12 @@ public class MavenDownload {
     }
 
     private static void downloadRecursive(String url, String scope, String repository,
-                                          String groupId, String artifactId, String version, List<String> locations) throws IOException {
+                                          Dependency pom, List<String> locations) throws IOException {
+        if (bStopDownload) {
+            return;
+        }
 
-        String jar = download(url, scope, repository, groupId, artifactId, version);
+        String jar = download(url, scope, repository, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
         if (jar == null) {
             return;
         }
@@ -76,14 +89,26 @@ public class MavenDownload {
 
         String absolutePath = jarFile.getAbsolutePath();
         String pomNext = absolutePath.replace(".jar",".pom");
-        Collection<Dependency> dependencies = PomParser.getDependencies(pomNext);
+        Collection<Dependency> dependencies = PomParser.getDependencies(pomNext, pom);
+        Collection<Dependency.Exclusion> exclusions = pom.getExclusions();
         for (Dependency dependency : dependencies) {
             String groupId1 = dependency.getGroupId();
             String artifactId1 = dependency.getArtifactId();
             String version1 = dependency.getVersion();
             String scope1 = dependency.getScope();
 
-            if (scope1 != null && scope1.equals("test")) {
+            boolean bSkip = false;
+            for (Dependency.Exclusion exclusion: exclusions) {
+                if (exclusion.getGroupId().equals(groupId1) && exclusion.getArtifactId().equals(artifactId1)) {
+                    bSkip = true;
+                    break;
+                }
+            }
+            if (bSkip) {
+                continue;
+            }
+
+            if (scope1 != null && (scope1.equals("test")||scope1.equals("provided")||scope1.equals("system"))) {
                 continue;
             }
             if (dependency.isOptional()) {
@@ -92,15 +117,18 @@ public class MavenDownload {
 
             // 如果版本为空，那么默认下载最新的版本
             if (version1 == null || version1.isEmpty()) {
-                List<String> versions = getVersions(url, scope, groupId, artifactId);
+                List<String> versions = getVersions(url, scope, groupId1, artifactId1);
                 if (versions.isEmpty()) {
-                    log.warn(groupId + ":" + artifactId + " version is empty, skip download");
+                    log.warn(groupId1 + ":" + artifactId1 + " version is empty, skip download");
                     continue;
                 }
                 version1 = versions.get(versions.size()-1);
+                if (!version1.isEmpty()) {
+                    dependency.setVersion(version1);
+                }
             }
 
-            downloadRecursive(url, scope, repository, groupId1, artifactId1, version1, locations);
+            downloadRecursive(url, scope, repository, dependency, locations);
         }
 
     }

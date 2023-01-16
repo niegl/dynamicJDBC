@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import static flowdesigner.db.operators.SQLFunctionCatalog.*;
 
+@Deprecated
 public enum SQLOperator {
 
     //region 关系运算

@@ -14,6 +14,7 @@ import java.util.HashSet;
 
 import static flowdesigner.db.DbUtils.*;
 
+@Deprecated
 public class SQLOperatorUtils {
 
     /**
@@ -35,16 +36,16 @@ public class SQLOperatorUtils {
     public static String getFunctionsJson(Connection connection, DbType dbType) {
         ArrayList<FunctionInfo> functionInfos = new ArrayList<>();
 
-        Collection<String> functions = getFunctions(connection, dbType);
-        for (String function: functions) {
-            ArrayList<SQLOperator> operators = SQLOperator.of(dbType, function);
-            if (operators.isEmpty()) {
-                continue;
-            }
-            operators.forEach(sqlOperator -> {
-                functionInfos.add(new FunctionInfo(sqlOperator.name, sqlOperator.catalog.toString(), sqlOperator.usage));
-            });
-        }
+//        Collection<String> functions = getFunctions(connection, dbType);
+//        for (String function: functions) {
+//            ArrayList<SQLOperator> operators = SQLOperator.of(dbType, function);
+//            if (operators.isEmpty()) {
+//                continue;
+//            }
+//            operators.forEach(sqlOperator -> {
+//                functionInfos.add(new FunctionInfo(sqlOperator.name, sqlOperator.catalog.toString(), sqlOperator.usage));
+//            });
+//        }
 
         return JSON.toJSONString(functionInfos);
     }
@@ -52,17 +53,17 @@ public class SQLOperatorUtils {
     public static ArrayList<FunctionInfo> getFunctionInfo(Connection connection, DbType dbType) {
         ArrayList<FunctionInfo> functionInfos = new ArrayList<>();
 
-        Collection<String> functions = getFunctions(connection, dbType);
-        for (String function: functions) {
-            ArrayList<SQLOperator> operators = SQLOperator.of(dbType, function);
-            if (operators.isEmpty()) {
-                functionInfos.add(new FunctionInfo(function, "", ""));
-                continue;
-            }
-            operators.forEach(sqlOperator -> {
-                functionInfos.add(new FunctionInfo(sqlOperator.name, sqlOperator.catalog.toString(), sqlOperator.usage));
-            });
-        }
+//        Collection<String> functions = getFunctions(connection, dbType);
+//        for (String function: functions) {
+//            ArrayList<SQLOperator> operators = SQLOperator.of(dbType, function);
+//            if (operators.isEmpty()) {
+//                functionInfos.add(new FunctionInfo(function, "", ""));
+//                continue;
+//            }
+//            operators.forEach(sqlOperator -> {
+//                functionInfos.add(new FunctionInfo(sqlOperator.name, sqlOperator.catalog.toString(), sqlOperator.usage));
+//            });
+//        }
 
         return functionInfos;
     }

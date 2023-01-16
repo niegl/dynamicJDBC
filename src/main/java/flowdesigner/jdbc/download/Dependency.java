@@ -1,6 +1,11 @@
 package flowdesigner.jdbc.download;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class Dependency {
@@ -9,6 +14,19 @@ public class Dependency {
     private String version;
     private String scope;
     private boolean optional = false;
+    private List<Exclusion> exclusions = new ArrayList<>();
+
+    /**
+     * dependence中的exclusion项
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static
+    class Exclusion {
+        private String groupId ;
+        private String artifactId;
+    }
 
     public Dependency() {
     }
@@ -70,4 +88,10 @@ public class Dependency {
         return artifactId + "-" + version;
     }
 
+    public void addExclusion( String groupId ,String artifactId) {
+        exclusions.add(new Exclusion(groupId,artifactId));
+    }
+    public void addExclusion( Exclusion exclusion) {
+        exclusions.add(exclusion);
+    }
 }

@@ -10,7 +10,7 @@ class PomParserTest {
 
     @Test
     void getDependencies() {
-        Collection<Dependency> dependencies = PomParser.getDependencies("C:\\code\\git\\dynamicJDBC\\pom.xml");
+        Collection<Dependency> dependencies = PomParser.getDependencies("C:\\code\\git\\dynamicJDBC\\pom.xml", null);
     System.out.println(dependencies);
     }
 }

@@ -408,22 +408,6 @@ class CommandManagerTest {
     }
 
     @Test
-    void getSupportFunctions() throws SQLException {
-//        Collection<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(connection, DbType.hive);
-//        System.out.println(supportFunctions);
-
-        Connection mySQL = getMySQL();
-        Collection<String> supportFunctions2 = DbUtils.getFunctions(mySQL, DbType.mysql);
-        System.out.println(supportFunctions2);
-//        supportFunctions2.removeIf( f -> supportFunctions.contains(f.toUpperCase()) || supportFunctions.contains(f.toLowerCase()));
-//        System.out.println(supportFunctions2);
-    }
-    @Test
-    void getSupportFunctions3() throws SQLException {
-        Collection<String> supportFunctions = DbUtils.getFunctions(null, DbType.oracle);
-        System.out.println(supportFunctions);
-    }
-    @Test
     void getSupportFunctionUsage() throws SQLException {
         String usage = DbUtils.getFunctionDescription(connection,"acos");
     }

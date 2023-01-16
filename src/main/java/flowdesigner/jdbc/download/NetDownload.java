@@ -13,6 +13,7 @@ import java.nio.file.LinkOption;
 
 @Slf4j
 public class NetDownload {
+    private static final int connectTimeout = 10*1000;
 
     /**
      * 通用网络文件下载功能
@@ -49,6 +50,8 @@ public class NetDownload {
 
         try {
             URLConnection connection = url.openConnection();
+            connection.setConnectTimeout(connectTimeout);
+            connection.setReadTimeout(connectTimeout);
             inputStream = connection.getInputStream();
             outputStream = new FileOutputStream(toFile);
             byte[] buffer = new byte[1024];
@@ -57,7 +60,10 @@ public class NetDownload {
             while ((byteRead = inputStream.read(buffer)) != -1) {
                 outputStream.write(buffer,0, byteRead);
             }
-        } catch (IOException e) {
+        } catch (SocketTimeoutException e) {
+            log.error(e.getMessage());
+            throw e;
+        }   catch (IOException e) {
             log.error(e.getMessage());
             throw e;
         } finally {

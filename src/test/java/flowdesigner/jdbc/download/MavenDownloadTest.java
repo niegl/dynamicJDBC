@@ -27,7 +27,7 @@ class MavenDownloadTest {
     @Test
     void downloadRecursive() throws IOException, ParserConfigurationException, SAXException {
         Collection<String> strings = MavenDownload.downloadRecursive("https://repo1.maven.org/maven2/", "", "C:/test/",
-                "mysql", "mysql-connector-java", "8.0.30");
+                "org.apache.hive", "hive-jdbc", "1.2.1");
         System.out.println(strings);
     }
 

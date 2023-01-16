@@ -22,6 +22,9 @@ public class PomParser {
     private static final String version = "version";
     private static final String optional = "optional";
     private static final String scope = "scope";
+    private static final String exclusions = "exclusions";
+    private static final String exclusion = "exclusion";
+    private static final String projectVersion = "${project.version}";
 
     public static Dependency getArtifact(Document document) {
 
@@ -47,7 +50,7 @@ public class PomParser {
 
     }
 
-    public static List<Dependency> getDependencies(@NotNull String document) {
+    public static List<Dependency> getDependencies(@NotNull String document, Dependency pom) {
         ArrayList<Dependency> dependencies = new ArrayList<>();
 
         File file = new File(document);
@@ -58,7 +61,7 @@ public class PomParser {
         Document document1 = null;
         try {
             document1 = XmlParser.getDocument(document);
-            return getDependencies(document1);
+            return getDependencies(document1, pom);
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }
@@ -67,7 +70,7 @@ public class PomParser {
 
     }
 
-    public static List<Dependency> getDependencies(Document document) {
+    public static List<Dependency> getDependencies(Document document, Dependency pom) {
         // 用于保存解析后的Dependency对象
         List<Dependency> dependencyList = new ArrayList<>();
         if (document == null) {
@@ -118,12 +121,21 @@ public class PomParser {
                     case artifactId -> dependency.setArtifactId(content);
                     case version -> {
                         if (content.startsWith("$")) {
-                            content = properties.getOrDefault(content, "");
+                            content = properties.getOrDefault(content, content);
+                        }
+                        if (content.equalsIgnoreCase(projectVersion)) {
+                            content = pom.getVersion();
                         }
                         dependency.setVersion(content);
                     }
                     case scope -> dependency.setScope(content);
                     case optional -> dependency.setOptional(Boolean.parseBoolean(content));
+                    case exclusions -> {
+                        ArrayList<Dependency.Exclusion> exclusions = getExclusions(childNode);
+                        if (!exclusions.isEmpty()) {
+                            exclusions.forEach(dependency::addExclusion);
+                        }
+                    }
                 }
             }
 
@@ -135,6 +147,48 @@ public class PomParser {
 
         return dependencyList;
 
+    }
+
+    private static ArrayList<Dependency.Exclusion> getExclusions(Node exclusionsNode) {
+        ArrayList<Dependency.Exclusion>  exclusions= new ArrayList<>();
+
+        if (exclusionsNode == null) {
+            return exclusions;
+        }
+
+        NodeList exclusionNodes = exclusionsNode.getChildNodes();
+
+        // 遍历具有book标签的所有Node
+        for (int i = 1; i < exclusionNodes.getLength(); i+=2) {
+            // 获取第i个dependency结点
+            Node node = exclusionNodes.item(i);
+
+            // 获取dependency结点的子节点,包含了text类型的换行
+            NodeList childNodes1 = node.getChildNodes();
+            Dependency.Exclusion exclusion = new Dependency.Exclusion();
+            // 这里由于偶数行是text类型无用节点，所以只取1,3,5,7节点
+            for (int j = 1; j < childNodes1.getLength(); j += 2) {
+                Node childNode = childNodes1.item(j);
+                String nodeName = childNode.getNodeName();
+                if (nodeName.equals("#comment")) {
+                    continue;
+                }
+
+                String content = childNode.getFirstChild().getTextContent();
+
+                switch (nodeName) {
+                    case groupId -> exclusion.setGroupId(content);
+                    case artifactId -> exclusion.setArtifactId(content);
+                }
+            }
+
+            // 将解析好的book加入返回列表
+            if (exclusion.getGroupId() != null) {
+                exclusions.add(exclusion);
+            }
+        }
+
+        return exclusions;
     }
 
     public static HashMap<String, String> getProperties(Document document) {

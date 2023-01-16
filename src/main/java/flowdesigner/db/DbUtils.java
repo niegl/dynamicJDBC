@@ -5,19 +5,15 @@ import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.SQLDescribeStatement;
 import com.alibaba.druid.sql.parser.Lexer;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
-import com.alibaba.druid.util.Utils;
 import com.alibaba.fastjson2.JSON;
-import flowdesigner.jdbc.command.CommandKey;
-import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.impl.DBExecuteImpl;
 import flowdesigner.util.DbTypeKit;
+import flowdesigner.util.Utils;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -63,7 +59,7 @@ public class DbUtils {
      * set hive.enforce.bucketing=true;
      */
     public static List<VariableInfo> getContextConfiguration(DbType dbType) {
-        Set<String> variants = new HashSet<>();
+        List<String> variants = new ArrayList<>();
 
         if (dbType.equals(DbType.oracle)) {
             //Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_functions", functions);
@@ -376,11 +372,10 @@ public class DbUtils {
 
     /**
      * 获取当前数据库支持的函数列表。为了尽量保证函数完整，返回的函数为两部分组成：配置函数+获取函数（如果获取不到就默认）
-     * @param connection 当前数据库连接
      * @return 函数列表
      */
-    public static Set<String> getFunctions(Connection connection, DbType dbType) {
-        Set<String> functions = new HashSet<>();
+    public static ArrayList<FunctionInfo> getFunctions( DbType dbType) {
+        List<String> functions = new ArrayList<>();
 
         // 实际数据库中可能获取的不全，需要配置补充
         if (dbType.equals(DbType.oracle)) {
@@ -413,43 +408,33 @@ public class DbUtils {
             Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_functions", functions);
         }
 
-        functions.addAll(Arrays.asList("+", "-", "*", "/"));
+        ArrayList<FunctionInfo> functionInfos = new ArrayList<>();
 
-//        functions.addAll(Arrays.asList("AVG", "COUNT", "MAX", "MIN", "SUM"));
-//        functions.addAll(Arrays.asList("ABS",
-//                "ACOS",
-//                "ASIN",
-//                "ATAN",
-//                "ATAN2",
-//                "BIT_COUNT",
-//                "CEIL",
-//                "CEILING",
-//                "CONV",
-//                "COS",
-//                "COT",
-//                "CRC32",
-//                "DEGREES",
-//                "EXP",
-//                "FLOOR",
-//                "LN",
-//                "LOG",
-//                "LOG10",
-//                "LOG2",
-//                "MOD",
-//                "NEG",
-//                "PI",
-//                "POW",
-//                "POWER",
-//                "RADIANS",
-//                "RAND",
-//                "ROUND",
-//                "SIGN",
-//                "SIN",
-//                "SQRT",
-//                "TAN",
-//                "TRUNCATE"));
+        String catalog = "";
+        for (String function: functions) {
+            if (function.startsWith("[") && function.endsWith("]")) {
+                catalog = function.substring(1, function.lastIndexOf("]"));
+                continue;
+            }
 
-        return functions;
+            String separator = ":";
+            if (function.contentEquals(":=")) {
+                separator = ":=";
+            }
+
+            String[] split = function.split(separator);
+            if (split.length < 2) {
+                continue;
+            }
+
+            String name = split[0].trim();
+            String signature = split[1].trim();
+            String description = split.length == 3? split[2].trim():"" ;
+
+            functionInfos.add(new FunctionInfo(name, catalog, signature));
+        }
+
+        return functionInfos;
     }
 
 
@@ -495,7 +480,7 @@ public class DbUtils {
      * @return 数据类型列表
      */
     public static Set<String> getDbTypes(DbType dbType) {
-        Set<String> types = new HashSet<>();
+        HashSet<String> types = new HashSet<String>();
 
         if (dbType.equals(DbType.oracle)) {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_datatypes", types);
@@ -546,7 +531,7 @@ public class DbUtils {
         } else if (dbType.equals(DbType.sqlite)) {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlite/builtin_datatypes", types);
         } else if (dbType.equals(DbType.teradata)) {
-            Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
+            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
         }
 
         return types;
@@ -569,6 +554,22 @@ public class DbUtils {
         public VariableInfo(String name, String defaultValue) {
             this.name = name;
             this.defaultValue = defaultValue;
+        }
+    }
+
+    /**
+     * 用于向客户端输出JSON格式
+     */
+    @Data
+    public static class FunctionInfo {
+        String name;
+        String type;
+        String signature;
+
+        public FunctionInfo(String name, String type, String signature) {
+            this.name = name;
+            this.type = type;
+            this.signature = signature;
         }
     }
 
