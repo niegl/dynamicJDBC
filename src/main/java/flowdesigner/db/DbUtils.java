@@ -374,7 +374,7 @@ public class DbUtils {
      * 获取当前数据库支持的函数列表。为了尽量保证函数完整，返回的函数为两部分组成：配置函数+获取函数（如果获取不到就默认）
      * @return 函数列表
      */
-    public static ArrayList<FunctionInfo> getFunctions( DbType dbType) {
+    public static Set<FunctionInfo> getFunctions( DbType dbType) {
         List<String> functions = new ArrayList<>();
 
         // 实际数据库中可能获取的不全，需要配置补充
@@ -408,7 +408,18 @@ public class DbUtils {
             Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_functions", functions);
         }
 
-        ArrayList<FunctionInfo> functionInfos = new ArrayList<>();
+        /**
+         * 有些数据库没有配置相应的函数时，加载基本的+-*\/
+         */
+        if (functions.isEmpty()) {
+            functions.addAll(Arrays.asList("*:? * ? : Multiplication operator",
+                    "+:? + ?: Addition operator",
+                    "-:? - ? :Minus operator",
+                    "-: - ? : Change the sign of the argument",
+                    "/:? / ? : Division operator"));
+        }
+
+        Set<FunctionInfo> functionInfos = new HashSet<>();
 
         String catalog = "";
         for (String function: functions) {
