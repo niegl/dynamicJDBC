@@ -1,278 +1,250 @@
-UNION
-UNION ALL
-INTERSECT
-MINUS
-+
--
-*
-/
-||
-MULTISET EXCEPT
-MULTISET INTERSECT
-MULTISET UNION
-ABS
-ACOS
-ASIN
-ATAN
-ATAN2
-BITAND
-CEIL
-COS
-COSH
-EXP
-FLOOR
-LN
-LOG
-MOD
-NANVL
-POWER
-REMAINDER
-ROUND (number)
-SIGN
-SIN
-SINH
-SQRT
-TAN
-TANH
-TRUNC (number)
-WIDTH_BUCKET
-CHR
-CONCAT
-INITCAP
-LOWER
-LPAD
-LTRIM
-NCHR
-NLS_INITCAP
-NLS_LOWER
-NLS_UPPER
-NLSSORT
-REGEXP_REPLACE
-REGEXP_SUBSTR
-REPLACE
-RPAD
-RTRIM
-SOUNDEX
-SUBSTR
-TRANSLATE
-TRANSLATE ... USING
-TRIM
-UPPER
-ASCII
-INSTR
-LENGTH
-REGEXP_COUNT
-REGEXP_INSTR
-NLS_CHARSET_DECL_LEN
-NLS_CHARSET_ID
-NLS_CHARSET_NAME
-ADD_MONTHS
-CURRENT_DATE
-CURRENT_TIMESTAMP
-DBTIMEZONE
-EXTRACT (datetime)
-FROM_TZ
-LAST_DAY
-LOCALTIMESTAMP
-MONTHS_BETWEEN
-NEW_TIME
-NEXT_DAY
-NUMTODSINTERVAL
-NUMTOYMINTERVAL
-ORA_DST_AFFECTED
-ORA_DST_CONVERT
-ORA_DST_ERROR
-ROUND (date)
-SESSIONTIMEZONE
-SYS_EXTRACT_UTC
-SYSDATE
-SYSTIMESTAMP
-TO_CHAR (datetime)
-TO_DSINTERVAL
-TO_TIMESTAMP
-TO_TIMESTAMP_TZ
-TO_YMINTERVAL
-TRUNC (date)
-TZ_OFFSET
-GREATEST
-LEAST
-ASCIISTR
-BIN_TO_NUM
-CAST
-CHARTOROWID
-COMPOSE
-CONVERT
-DECOMPOSE
-HEXTORAW
-NUMTODSINTERVAL
-NUMTOYMINTERVAL
-RAWTOHEX
-RAWTONHEX
-ROWIDTOCHAR
-ROWIDTONCHAR
-SCN_TO_TIMESTAMP
-TIMESTAMP_TO_SCN
-TO_BINARY_DOUBLE
-TO_BINARY_FLOAT
-TO_BLOB
-TO_CHAR (character)
-TO_CHAR (datetime)
-TO_CHAR (number)
-TO_CLOB
-TO_DATE
-TO_DSINTERVAL
-TO_LOB
-TO_MULTI_BYTE
-TO_NCHAR (character)
-TO_NCHAR (datetime)
-TO_NCHAR (number)
-TO_NCLOB
-TO_NUMBER
-TO_SINGLE_BYTE
-TO_TIMESTAMP
-TO_TIMESTAMP_TZ
-TO_YMINTERVAL
-TREAT
-UNISTR
-BFILENAME
-EMPTY_BLOB
-EMPTY_CLOB
-CARDINALITY
-COLLECT
-POWERMULTISET
-POWERMULTISET_BY_CARDINALITY
-SET
-SYS_CONNECT_BY_PATH
-CLUSTER_DETAILS
-CLUSTER_DISTANCE
-CLUSTER_ID
-CLUSTER_PROBABILITY
-CLUSTER_SET
-FEATURE_DETAILS
-FEATURE_ID
-FEATURE_SET
-FEATURE_VALUE
-PREDICTION
-PREDICTION_BOUNDS
-PREDICTION_COST
-PREDICTION_DETAILS
-PREDICTION_PROBABILITY
-PREDICTION_SET
-APPENDCHILDXML
-DELETEXML
-DEPTH
-EXISTSNODE
-EXTRACT (XML)
-EXTRACTVALUE
-INSERTCHILDXML
-INSERTCHILDXMLAFTER
-INSERTCHILDXMLBEFORE
-INSERTXMLAFTER
-INSERTXMLBEFORE
-PATH
-SYS_DBURIGEN
-SYS_XMLAGG
-SYS_XMLGEN
-UPDATEXML
-XMLAGG
-XMLCAST
-XMLCDATA
-XMLCOLATTVAL
-XMLCOMMENT
-XMLCONCAT
-XMLDIFF
-XMLELEMENT
-XMLEXISTS
-XMLFOREST
-XMLISVALID
-XMLPARSE
-XMLPATCH
-XMLPI
-XMLQUERY
-XMLROOT
-XMLSEQUENCE
-XMLSERIALIZE
-XMLTABLE
-XMLTRANSFORM
-JSON_QUERY
-JSON_TABLE
-JSON_VALUE
-DECODE
-DUMP
-ORA_HASH
-STANDARD_HASH
-VSIZE
-COALESCE
-LNNVL
-NANVL
-NULLIF
-NVL
-NVL2
-CON_DBID_TO_ID
-CON_GUID_TO_ID
-CON_NAME_TO_ID
-CON_UID_TO_ID
-ORA_INVOKING_USER
-ORA_INVOKING_USERID
-SYS_CONTEXT
-SYS_GUID
-SYS_TYPEID
-UID
-USER
-USERENV
-APPROX_COUNT_DISTINCT
-AVG
-COLLECT
-CORR
-CORR_*
-COUNT
-COVAR_POP
-COVAR_SAMP
-CUME_DIST
-DENSE_RANK
-FIRST
-GROUP_ID
-GROUPING
-GROUPING_ID
-LAST
-LISTAGG
-MAX
-MEDIAN
-MIN
-PERCENT_RANK
-PERCENTILE_CONT
-PERCENTILE_DISC
-RANK
-REGR_ (Linear Regression) Functions
-STATS_BINOMIAL_TEST
-STATS_CROSSTAB
-STATS_F_TEST
-STATS_KS_TEST
-STATS_MODE
-STATS_MW_TEST
-STATS_ONE_WAY_ANOVA
-STATS_T_TEST_*
-STATS_WSR_TEST
-STDDEV
-STDDEV_POP
-STDDEV_SAMP
-SUM
-SYS_OP_ZONE_ID
-SYS_XMLAGG
-VAR_POP
-VAR_SAMP
-VARIANCE
-XMLAGG
-DEREF
-MAKE_REF
-REF
-REFTOHEX
-VALUE
-CV
-ITERATION_NUMBER
-PRESENTNNV
-PRESENTV
-PREVIOUS
-CUBE_TABLE
-DATAOBJ_TO_MAT_PARTITION
-DATAOBJ_TO_PARTITION
+[Arithmetic Operators]
+-sign   : - ?   : Change the sign of the argument
++sign   : + ?   : Change the sign of the argument
++       :? + ?  : Addition operator
+-       :? - ?  : Minus operator
+*       :? * ?  : Multiplication operator
+/       :? / ?  : Division operator
+[COLLATE Operator]
+COLLATE collation_name  :COLLATE collation_name :Determines the collation for an expression
+[Concatenation Operator]
+||  :A || B :Concatenates character strings and CLOB data.
+[Set Operators]
+UNION       :UNION       :All distinct rows selected by either query
+UNION ALL   :UNION ALL   :All rows selected by either query, including all duplicates
+INTERSECT   :INTERSECT   :All distinct rows selected by both queries
+MINUS       :MINUS       :All distinct rows selected by the first query but not the second
+[Multiset Operators]
+MULTISET EXCEPT ALL             :MULTISET EXCEPT ALL nested_table2           :MULTISET EXCEPT takes as arguments two nested tables and returns a nested table whose elements are in the first nested table but not in the second nested table. The two input nested tables must be of the same type, and the returned nested table is of the same type as well.
+MULTISET EXCEPT DISTINCT        :MULTISET EXCEPT DISTINCT nested_table2      :MULTISET EXCEPT takes as arguments two nested tables and returns a nested table whose elements are in the first nested table but not in the second nested table. The two input nested tables must be of the same type, and the returned nested table is of the same type as well.
+MULTISET INTERSECT ALL          :MULTISET INTERSECT ALL nested_table2        :MULTISET INTERSECT takes as arguments two nested tables and returns a nested table whose values are common in the two input nested tables. The two input nested tables must be of the same type, and the returned nested table is of the same type as well.
+MULTISET INTERSECT DISTINCT     :MULTISET INTERSECT DISTINCT nested_table2   :MULTISET INTERSECT takes as arguments two nested tables and returns a nested table whose values are common in the two input nested tables. The two input nested tables must be of the same type, and the returned nested table is of the same type as well.
+MULTISET UNION ALL              :MULTISET UNION ALL nested_table2            :MULTISET UNION takes as arguments two nested tables and returns a nested table whose values are those of the two input nested tables. The two input nested tables must be of the same type, and the returned nested table is of the same type as well.
+MULTISET UNION DISTINCT         :MULTISET UNION DISTINCT nested_table2       :MULTISET UNION takes as arguments two nested tables and returns a nested table whose values are those of the two input nested tables. The two input nested tables must be of the same type, and the returned nested table is of the same type as well.
+[Comparison Conditions]
+=       :A = B		:TRUE if expression A is equal to expression B otherwise FALSE.
+<>      :A <> B		:NULL if A or B is NULL, TRUE if expression A is NOT equal to expression B, otherwise FALSE.
+!=      :A != B		:Synonym for the <> operator.
+^=      :A ^= B		:Synonym for the <> operator.
+<       :A < B		:NULL if A or B is NULL, TRUE if expression A is less than expression B, otherwise FALSE.
+<=      :A <= B		:NULL if A or B is NULL, TRUE if expression A is less than or equal to expression B, otherwise FALSE.
+>       :A > B		:NULL if A or B is NULL, TRUE if expression A is greater than expression B, otherwise FALSE.
+>=      :A >= B		:NULL if A or B is NULL, TRUE if expression A is greater than or equal to expression B, otherwise FALSE.
+op ANY  :A op ANY (B)   :"op" must be one of =, !=, >, <, <=, or >=.  op ANY compares a value on the left side either to each value in a list, or to each value returned by a query, whichever is specified on the right side, using the condition op. If any of these comparisons returns TRUE, op ANY returns TRUE.If all of these comparisons return FALSE, or the subquery on the right side returns no rows, op ANY returns FALSE. Otherwise, the return value is UNKNOWN.
+op SOME :A op SOME (B)  :"op" must be one of =, !=, >, <, <=, or >=.  op ANY compares a value on the left side either to each value in a list, or to each value returned by a query, whichever is specified on the right side, using the condition op. If any of these comparisons returns TRUE, op ANY returns TRUE.If all of these comparisons return FALSE, or the subquery on the right side returns no rows, op ANY returns FALSE. Otherwise, the return value is UNKNOWN.
+op ALL  :A op ALL (B)   :"op" must be one of =, !=, >, <, <=, or >=.  op ALL compares a value on the left side either to each value in a list, or to each value returned by a subquery, whichever is specified on the right side, using the condition op.If any of these comparisons returns FALSE, op ANY returns FALSE.If all of these comparisons return TRUE, or the subquery on the right side returns no rows, op ALL returns TRUE . Otherwise, the return value is UNKNOWN.
+[Floating-Point Conditions]
+IS NAN              :? IS NAN               :Returns TRUE if expr is the special value NaN when NOT is not specified. Returns TRUE if expr is not the special value NaN when NOT is specified.
+IS NOT NAN          :? IS NOT NAN           :Returns TRUE if expr is the special value NaN when NOT is not specified. Returns TRUE if expr is not the special value NaN when NOT is specified.
+IS INFINITE         :? IS INFINITE          :Returns TRUE if expr is the special value +INF or -INF when NOT is not specified. Returns TRUE if expr is neither +INF nor -INF when NOT is specified.
+IS NOT INFINITE     :? IS NOT INFINITE      :Returns TRUE if expr is the special value +INF or -INF when NOT is not specified. Returns TRUE if expr is neither +INF nor -INF when NOT is specified.
+[Logical Conditions]
+AND	    :A AND B	:TRUE if both A and B are TRUE, otherwise FALSE. NULL if A or B is NULL.
+OR 	    :A OR B		:TRUE if either A or B or both are TRUE, FALSE OR NULL is NULL, otherwise FALSE.
+NOT A	:NOT ?		:TRUE if A is FALSE or NULL if A is NULL. Otherwise FALSE.
+[Model Conditions]
+IS ANY Condition        :[dimension_column IS] ANY  :The IS ANY condition can be used only in the model_clause of a SELECT statement. Use this condition to qualify all values of a dimension column, including NULL.
+IS PRESENT Condition    :cell_reference IS PRESENT  :The IS PRESENT condition can be used only in the model_clause of a SELECT statement. Use this condition to test whether the cell referenced is present prior to the execution of the model_clause.
+[Multiset Conditions]
+IS A SET Condition      :nested_table IS A SET          :Use IS A SET conditions to test whether a specified nested table is composed of unique elements. The condition returns UNKNOWN if the nested table is NULL. Otherwise, it returns TRUE if the nested table is a set, even if it is a nested table of length zero, and FALSE otherwise.
+IS NOT A SET Condition  :nested_table IS NOT A SET Condition    :Use IS A SET conditions to test whether a specified nested table is composed of unique elements. The condition returns UNKNOWN if the nested table is NULL. Otherwise, it returns TRUE if the nested table is a set, even if it is a nested table of length zero, and FALSE otherwise.
+IS EMPTY Condition      :nested_table IS EMPTY          :Use the IS [NOT] EMPTY conditions to test whether a specified nested table is empty. A nested table that consists of a single value, a NULL, is not considered an empty nested table.
+IS NOT EMPTY Condition  :nested_table IS NOT EMPTY      :Use the IS [NOT] EMPTY conditions to test whether a specified nested table is empty. A nested table that consists of a single value, a NULL, is not considered an empty nested table.
+MEMBER Condition        :expr MEMBER OF nested_table    :A member_condition is a membership condition that tests whether an element is a member of a nested table. The return value is TRUE if expr is equal to a member of the specified nested table or varray. The return value is NULL if expr is null or if the nested table is empty.
+NOT MEMBER Condition    :expr NOT MEMBER OF nested_table    :A member_condition is a membership condition that tests whether an element is a member of a nested table. The return value is TRUE if expr is equal to a member of the specified nested table or varray. The return value is NULL if expr is null or if the nested table is empty.
+SUBMULTISET Condition   :nested_table1 SUBMULTISET OF nested_table2 :The SUBMULTISET condition tests whether a specified nested table is a submultiset of another specified nested table.
+NOT SUBMULTISET Condition   :nested_table1 NOT SUBMULTISET OF nested_table2 :The SUBMULTISET condition tests whether a specified nested table is a submultiset of another specified nested table.
+[Pattern-matching Conditions]
+x LIKE y        :x LIKE y [ESCAPE 'z']      :TRUE if x does [not] match the pattern y. Within y, the character % matches any string of zero or more characters except null. The character _ matches any single character. Any character can follow ESCAPE except percent (%) and underbar (_). A wildcard character is treated as a literal if preceded by the escape character.
+x NOT LIKE y    :x NOT LIKE y [ESCAPE 'z']  :TRUE if x does [not] match the pattern y. Within y, the character % matches any string of zero or more characters except null. The character _ matches any single character. Any character can follow ESCAPE except percent (%) and underbar (_). A wildcard character is treated as a literal if preceded by the escape character.
+x LIKEC y       :x LIKEC y [ESCAPE 'z']      :TRUE if x does [not] match the pattern y. Within y, the character % matches any string of zero or more characters except null. The character _ matches any single character. Any character can follow ESCAPE except percent (%) and underbar (_). A wildcard character is treated as a literal if preceded by the escape character.
+x NOT LIKEC y   :x NOT LIKEC y [ESCAPE 'z']  :TRUE if x does [not] match the pattern y. Within y, the character % matches any string of zero or more characters except null. The character _ matches any single character. Any character can follow ESCAPE except percent (%) and underbar (_). A wildcard character is treated as a literal if preceded by the escape character.
+x LIKE2 y       :x LIKE2 y [ESCAPE 'z']      :TRUE if x does [not] match the pattern y. Within y, the character % matches any string of zero or more characters except null. The character _ matches any single character. Any character can follow ESCAPE except percent (%) and underbar (_). A wildcard character is treated as a literal if preceded by the escape character.
+x NOT LIKE2 y   :x NOT LIKE2 y [ESCAPE 'z']  :TRUE if x does [not] match the pattern y. Within y, the character % matches any string of zero or more characters except null. The character _ matches any single character. Any character can follow ESCAPE except percent (%) and underbar (_). A wildcard character is treated as a literal if preceded by the escape character.
+x LIKE4 y       :x LIKE4 y [ESCAPE 'z']      :TRUE if x does [not] match the pattern y. Within y, the character % matches any string of zero or more characters except null. The character _ matches any single character. Any character can follow ESCAPE except percent (%) and underbar (_). A wildcard character is treated as a literal if preceded by the escape character.
+x NOT LIKE4 y   :x NOT LIKE4 y [ESCAPE 'z']  :TRUE if x does [not] match the pattern y. Within y, the character % matches any string of zero or more characters except null. The character _ matches any single character. Any character can follow ESCAPE except percent (%) and underbar (_). A wildcard character is treated as a literal if preceded by the escape character.
+REGEXP_LIKE ()  :REGEXP_LIKE (source_char, pattern)   :REGEXP_LIKE is similar to the LIKE condition, except REGEXP_LIKE performs regular expression matching instead of the simple pattern matching performed by LIKE. This condition evaluates strings using characters as defined by the input character set.
+REGEXP_LIKE (match_param)   :REGEXP_LIKE (source_char, pattern, match_param)    :REGEXP_LIKE is similar to the LIKE condition, except REGEXP_LIKE performs regular expression matching instead of the simple pattern matching performed by LIKE. This condition evaluates strings using characters as defined by the input character set.
+[Null Conditions]
+IS NULL         :expr IS NULL       :A NULL condition tests for nulls. This is the only condition that you should use to test for nulls.
+IS NOT NULL     :expr IS NOT NULL   :A NULL condition tests for nulls. This is the only condition that you should use to test for nulls.
+[XML Conditions]
+EQUALS_PATH() :EQUALS_PATH(?,path_string) :The EQUALS_PATH condition determines whether a resource in the Oracle XML database can be found in the database at a specified path.
+EQUALS_PATH(correlation_integer)    :EQUALS_PATH(?,path_string,correlation_integer) :The EQUALS_PATH condition determines whether a resource in the Oracle XML database can be found in the database at a specified path.
+UNDER_PATH()        :UNDER_PATH(?,path_string) :The UNDER_PATH condition determines whether resources specified in a column can be found under a particular path specified by path_string in the Oracle XML database repository. The path information is computed by the RESOURCE_VIEW view, which you query to use this condition.
+UNDER_PATH(levels)  :UNDER_PATH(?,levels,path_string) :The UNDER_PATH condition determines whether resources specified in a column can be found under a particular path specified by path_string in the Oracle XML database repository. The path information is computed by the RESOURCE_VIEW view, which you query to use this condition.
+UNDER_PATH(correlation_integer)         :UNDER_PATH(?,path_string,correlation_integer) :The UNDER_PATH condition determines whether resources specified in a column can be found under a particular path specified by path_string in the Oracle XML database repository. The path information is computed by the RESOURCE_VIEW view, which you query to use this condition.
+UNDER_PATH(levels,correlation_integer)  :UNDER_PATH(?,levels,path_string,correlation_integer) :The UNDER_PATH condition determines whether resources specified in a column can be found under a particular path specified by path_string in the Oracle XML database repository. The path information is computed by the RESOURCE_VIEW view, which you query to use this condition.
+[SQL For JSON Conditions]
+IS JSON     :? IS JSON [FORMAT JSON] [STRICT|LAX] [ALLOW|DISALLOW SCALARS] [WITH|WITHOUT UNIQUE KEYS]:Use this SQL/JSON condition to test whether an expression is syntactically correct, or well-formed, JSON data.
+IS NOT JSON :? IS NOT JSON [FORMAT JSON] [STRICT|LAX] [ALLOW|DISALLOW SCALARS] [WITH|WITHOUT UNIQUE KEYS] :Use this SQL/JSON condition to test whether an expression is syntactically correct, or well-formed, JSON data.
+JSON_EQUAL  :JSON_EQUAL(expr1, expr2)   :The Oracle SQL condition JSON_EQUAL compares two JSON values and returns true if they are equal. It returns false if the two values are not equal. The input values must be valid JSON data.
+JSON_EXISTS :JSON_EXISTS(expr[ FORMAT JSON],JSON_basic_path_expression [JSON_passing_clause] [JSON_exists_on_error_clause] [SON_exists_on_empty_clause])    :Use the SQL/JSON condition JSON_EXISTS to test whether a specified JSON value exists in JSON data. This condition returns TRUE if the JSON value exists and FALSE if the JSON value does not exist.
+JSON_basic_path_expression:JSON_TEXTCONTAINS(?, JSON_basic_path_expression, string) :Use the SQL/JSON condition JSON_TEXTCONTAINS to test whether a specified character string exists in JSON property values. You can use this condition to filter JSON data on a specific word or number.
+[BETWEEN Condition]
+BETWEEN x AND y: BETWEEN x AND y:A BETWEEN condition determines whether the value of one expression is in an interval defined by two other expressions.
+NOT BETWEEN x AND y:NOT BETWEEN x AND y:A BETWEEN condition determines whether the value of one expression is in an interval defined by two other expressions.
+[EXISTS Condition]
+EXISTS :EXISTS (subquery) :An EXISTS condition tests for existence of rows in a subquery.
+[IN Condition]
+IN: expr IN(expression_list|subquery)       :An in_condition is a membership condition. It tests a value for membership in a list of values or subquery
+NOT IN : expr IN(expression_list|subquery)  :An in_condition is a membership condition. It tests a value for membership in a list of values or subquery
+(expr,...) IN: expr IN(expression_list|subquery)       :An in_condition is a membership condition. It tests a value for membership in a list of values or subquery
+(expr,...) NOT IN : expr IN(expression_list,...|subquery)  :An in_condition is a membership condition. It tests a value for membership in a list of values or subquery
+[IS OF type Condition]
+IS OF type Condition    :expr IS OF TYPE (type)    :Use the IS OF type condition to test object instances based on their specific type information.
+IS NOT OF type Condition    :expr IS NOT OF TYPE (type)    :Use the IS OF type condition to test object instances based on their specific type information.
+{Single-Row Functions}
+[Numeric Functions]
+ABS()   :ABS(?)
+ACOS()  :ACOS(?)
+ASIN()  :ASIN(?)
+ATAN()  :ATAN(?)
+ATAN2() :ATAN2(n1, n2)
+BITAND():BITAND(expr1, expr2)
+CEIL()  :CEIL(?)
+COS()   :COS(?)
+COSH()  :COSH(?)
+EXP()   :EXP(?)
+FLOOR() :FLOOR(?)
+LN()    :LN(?)
+LOG()   :LOG(n2, n1)
+MOD()   :MOD(n2, n1)
+NANVL() :NANVL(n2, n1)
+POWER() :POWER(n2, n1)
+REMAINDER() :REMAINDER(n2, n1)
+ROUND (number)    :ROUND(n, integer)
+SIGN()  :SIGN(?)
+SIN()   :SIN(?)
+SINH()  :SINH(?)
+SQRT()  :SQRT(?)
+TAN()   :TAN(?)
+TANH()  :TANH(?)
+TRUNC (number)      :TRUNC(n1[, n2])
+WIDTH_BUCKET()      :WIDTH_BUCKET(expr ,min_value ,max_value ,num_buckets ) :WIDTH_BUCKET lets you construct equiwidth histograms, in which the histogram range is divided into intervals that have identical size. (Compare this function with NTILE, which creates equiheight histograms.) Ideally each bucket is a closed-open interval of the real number line.
+[Character Functions Returning Character Values]
+CHR()               :CHR(? USING NCHAR_CS)                  :CHR
+CONCAT()            :CONCAT(char1 ,char2)               :CONCAT
+INITCAP()           :INITCAP(?)              :INITCAP
+LOWER()             :LOWER(?)                :LOWER
+LPAD()              :LPAD(expr1,n[,expr2])                 :LPAD
+LTRIM()             :LTRIM(char[,set])                :LTRIM
+NCHR()              :NCHR(?)                 :NCHR
+NLS_INITCAP()       :NLS_INITCAP(char[,'nlsparam'])          :NLS_INITCAP
+NLS_LOWER()         :NLS_LOWER(char[,'nlsparam'])            :NLS_LOWER
+NLS_UPPER()         :NLS_UPPER(char[,'nlsparam'])            :NLS_UPPER
+NLSSORT()           :NLSSORT(char[,'nlsparam'])              :NLSSORT
+REGEXP_REPLACE()    :REGEXP_REPLACE(source_char,pattern[,replace_string[,position[,occurrence[,match_param]]]])       :REGEXP_REPLACE
+REGEXP_SUBSTR()     :REGEXP_SUBSTR(source_char,pattern[,replace_string[,position[,occurrence[,match_param [subexpr]]]]])        :REGEXP_SUBSTR
+REPLACE()           :REPLACE(char,search_string [,replacement_string])              :REPLACE
+RPAD()              :RPAD(expr1,n[,expr2])                 :RPAD
+RTRIM()             :RTRIM(char[,set])                :RTRIM
+SOUNDEX()           :SOUNDEX(char)              :SOUNDEX
+SUBSTR()            :SUBSTR(char, position[,substring_length])               :SUBSTR
+SUBSTRB()           :SUBSTRB(char, position[,substring_length])               :SUBSTR
+SUBSTRC()           :SUBSTRC(char, position[,substring_length])               :SUBSTR
+SUBSTR2()           :SUBSTR2(char, position[,substring_length])               :SUBSTR
+SUBSTR4()           :SUBSTR4(char, position[,substring_length])               :SUBSTR
+TRANSLATE()         :TRANSLATE(expr, from_string ,to_string)            :TRANSLATE
+TRANSLATE ... USING :TRANSLATE(char USING CHAR_CS|NCHAR_CS):TRANSLATE ... USING
+TRIM()                  :TRIM(?)                 :TRIM
+TRIM(LEADING)           :TRIM(LEADING [trim_character] FROM trim_source)            :TRIM()
+TRIM(TRAILING)          :TRIM(TRAILING [trim_character] FROM trim_source)          :TRIM(LEADING)
+TRIM(BOTH )             :TRIM(BOTH [trim_character] FROM trim_source)                 :TRIM(TRAILING)
+TRIM(trim_character)    :TRIM(trim_character FROM trim_source)               :TRIM(BOTH )
+UPPER()             :UPPER(?)                :UPPER
+[Character Functions Returning Number Values]
+ASCII()         :ASCII(?)           :ASCII
+INSTR()         :INSTR(string ,substring[,position [,occurrence]] )           :INSTR
+LENGTH()        :LENGTH(?)          :LENGTH
+REGEXP_COUNT()  :REGEXP_COUNT(source_char,pattern[,position[,match_param]])    :REGEXP_COUNT
+REGEXP_INSTR()  :REGEXP_INSTR(source_char,pattern[,position[,occurrence[,return_opt[,match_param[,subexpr]]]]])    :REGEXP_INSTR
+[Character Set Functions]
+NLS_CHARSET_DECL_LEN()  :NLS_CHARSET_DECL_LEN(byte_count ,char_set_id )   :NLS_CHARSET_DECL_LEN returns the declaration length (in number of characters) of an NCHAR column. The byte_count argument is the width of the column. The char_set_id argument is the character set ID of the column.
+NLS_CHARSET_ID()        :NLS_CHARSET_ID(?)          :NLS_CHARSET_ID returns the character set ID number corresponding to character set name string. The string argument is a run-time VARCHAR2 value. The string value 'CHAR_CS' returns the database character set ID number of the server. The string value 'NCHAR_CS' returns the national character set ID number of the server.
+NLS_CHARSET_NAME()      :NLS_CHARSET_NAME(?)        :NLS_CHARSET_NAME returns the name of the character set corresponding to ID number number. The character set name is returned as a VARCHAR2 value in the database character set. If number is not recognized as a valid character set ID, then this function returns null.
+[Collation Functions]
+COLLATION()             :COLLATION  (?)                 :COLLATION returns the name of the derived collation for expr. This function returns named collations and pseudo-collations. If the derived collation is a Unicode Collation Algorithm (UCA) collation, then the function returns the long form of its name. This function is evaluated during compilation of the SQL statement that contains it. If the derived collation is undefined due to a collation conflict while evaluating expr, then the function returns null.
+NLS_COLLATION_ID()      :NLS_COLLATION_ID(?)            :NLS_COLLATION_ID takes as its argument a collation name and returns the corresponding collation ID number. Collation IDs are used in the data dictionary tables and in Oracle Call Interface (OCI). Collation names are used in SQL statements and data dictionary views
+NLS_COLLATION_NAME()    :NLS_COLLATION_NAME(?[,flag])   :NLS_COLLATION_NAME takes as its argument a collation ID number and returns the corresponding collation name. Collation IDs are used in the data dictionary tables and in Oracle Call Interface (OCI). Collation names are used in SQL statements and data dictionary views
+[Datetime Functions]
+ADD_MONTHS()            :ADD_MONTHS(day,integer)        :ADD_MONTHS returns the date date plus integer months. A month is defined by the session parameter NLS_CALENDAR. The date argument can be a datetime value or any value that can be implicitly converted to DATE. The integer argument can be an integer or any value that can be implicitly converted to an integer. The return type is always DATE, regardless of the data type of date. If date is the last day of the month or if the resulting month has fewer days than the day component of date, then the result is the last day of the resulting month. Otherwise, the result has the same day component as date.
+CURRENT_DATE            :CURRENT_DATE       :CURRENT_DATE returns the current date in the session time zone, in a value in the Gregorian calendar of data type DATE.
+CURRENT_TIMESTAMP       :CURRENT_TIMESTAMP  :CURRENT_TIMESTAMP returns the current date and time in the session time zone, in a value of data type TIMESTAMP WITH TIME ZONE. The time zone offset reflects the current local time of the SQL session. If you omit precision, then the default is 6. The difference between this function and LOCALTIMESTAMP is that CURRENT_TIMESTAMP returns a TIMESTAMP WITH TIME ZONE value while LOCALTIMESTAMP returns a TIMESTAMP value.
+CURRENT_TIMESTAMP(precision)     :CURRENT_TIMESTAMP(precision)  :CURRENT_TIMESTAMP returns the current date and time in the session time zone, in a value of data type TIMESTAMP WITH TIME ZONE. The time zone offset reflects the current local time of the SQL session. If you omit precision, then the default is 6. The difference between this function and LOCALTIMESTAMP is that CURRENT_TIMESTAMP returns a TIMESTAMP WITH TIME ZONE value while LOCALTIMESTAMP returns a TIMESTAMP value.
+DBTIMEZONE              :DBTIMEZONE :DBTIMEZONE returns the value of the database time zone. The return type is a time zone offset (a character type in the format '[+|-]TZH:TZM') or a time zone region name, depending on how the user specified the database time zone value in the most recent CREATE DATABASE or ALTER DATABASE statement.
+EXTRACT (datetime)      :EXTRACT (YEAR|MONTH|DAY|HOUR|MINUTE|SECOND|TIMEZONE_HOUR|TIMEZONE_MINUTE|TIMEZONE_ABBR|TIMEZONE_REGION  FROM ?) :EXTRACT extracts and returns the value of a specified datetime field from a datetime or interval expression.
+FROM_TZ()               :FROM_TZ(timestamp_value, time_zone_value )    :FROM_TZ converts a timestamp value and a time zone to a TIMESTAMP WITH TIME ZONE value.
+LAST_DAY()              :LAST_DAY(?)    :LAST_DAY returns the date of the last day of the month that contains date.
+LOCALTIMESTAMP()        :LOCALTIMESTAMP :LOCALTIMESTAMP returns the current date and time in the session time zone in a value of data type TIMESTAMP.
+LOCALTIMESTAMP(timestamp_precision)     :LOCALTIMESTAMP(timestamp_precision) :LOCALTIMESTAMP returns the current date and time in the session time zone in a value of data type TIMESTAMP.
+MONTHS_BETWEEN()        :MONTHS_BETWEEN(date1, date2) :MONTHS_BETWEEN returns number of months between dates date1 and date2.
+NEW_TIME()              :NEW_TIME(date,timezone1,timezone2 )   :NEW_TIME returns the date and time in time zone timezone2 when date and time in time zone timezone1 are date. Before using this function, you must set the NLS_DATE_FORMAT parameter to display 24-hour time. The return type is always DATE, regardless of the data type of date.
+NEXT_DAY()              :NEXT_DAY(date,char)   :NEXT_DAY returns the date of the first weekday named by char that is later than the date date. The return type is always DATE, regardless of the data type of date.
+NUMTODSINTERVAL()       :NUMTODSINTERVAL(n,'DAY'|'HOUR'|'MINUTE'|'SECOND')    :NUMTODSINTERVAL converts n to an INTERVAL DAY TO SECOND literal. The argument n can be any NUMBER value or an expression that can be implicitly converted to a NUMBER value. The argument interval_unit can be of CHAR, VARCHAR2, NCHAR, or NVARCHAR2 data type.
+NUMTOYMINTERVAL()       :NUMTOYMINTERVAL(n,'YEAR'|'MONTH')    :NUMTOYMINTERVAL converts number n to an INTERVAL YEAR TO MONTH literal.
+ORA_DST_AFFECTED()      :ORA_DST_AFFECTED(datetime_expr)   :ORA_DST_AFFECTED is useful when you are changing the time zone data file for your database.
+ORA_DST_CONVERT()       :ORA_DST_CONVERT(datetime_expr[,integer[,integer]])    :ORA_DST_CONVERT is useful when you are changing the time zone data file for your database. The function lets you specify error handling for a specified datetime expression.
+ORA_DST_ERROR()         :ORA_DST_ERROR(datetime_expr)  :ORA_DST_ERROR is useful when you are changing the time zone data file for your database.
+ROUND (date)            :ROUND (date[,fmt])   :ROUND returns date rounded to the unit specified by the format model fmt.
+SESSIONTIMEZONE         :SESSIONTIMEZONE    :SESSIONTIMEZONE returns the time zone of the current session.
+SYS_EXTRACT_UTC()       :SYS_EXTRACT_UTC(datetime_value_with_time_zone)    :SYS_EXTRACT_UTC extracts the UTC (Coordinated Universal Time—formerly Greenwich Mean Time) from a datetime value with time zone offset or time zone region name.
+SYSDATE()               :SYSDATE    :SYSDATE returns the current date and time set for the operating system on which the database server resides.
+SYSTIMESTAMP            :SYSTIMESTAMP   :SYSTIMESTAMP returns the system date, including fractional seconds and time zone, of the system on which the database resides. The return type is TIMESTAMP WITH TIME ZONE.
+TO_CHAR (datetime)()    :TO_CHAR (?[,fmt[,'nlsparam']]) :TO_CHAR (datetime) converts a datetime or interval value of DATE, TIMESTAMP, TIMESTAMP WITH TIME ZONE, TIMESTAMP WITH LOCAL TIME ZONE, INTERVAL DAY TO SECOND, or INTERVAL YEAR TO MONTH data type to a value of VARCHAR2 data type in the format specified by the date format fmt.
+TO_DSINTERVAL()         :TO_DSINTERVAL('sql_format'|'ds_iso_format')  :TO_DSINTERVAL converts its argument to a value of INTERVAL DAY TO SECOND data type.
+TO_DSINTERVAL(DEFAULT return_value ON CONVERSION ERROR)         :TO_DSINTERVAL('sql_format'|'ds_iso_format',DEFAULT return_value ON CONVERSION ERROR)  :TO_DSINTERVAL converts its argument to a value of INTERVAL DAY TO SECOND data type.
+TO_TIMESTAMP()          :TO_TIMESTAMP(?[,fmt[,'nlsparam']])   :TO_TIMESTAMP converts char to a value of TIMESTAMP data type.
+TO_TIMESTAMP(DEFAULT return_value ON CONVERSION ERROR)          :TO_TIMESTAMP(? DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']] )   :TO_TIMESTAMP converts char to a value of TIMESTAMP data type.
+TO_TIMESTAMP_TZ()       :TO_TIMESTAMP_TZ(?[,fmt[,'nlsparam']])    :TO_TIMESTAMP_TZ converts char to a value of TIMESTAMP WITH TIME ZONE data type.
+TO_TIMESTAMP_TZ(DEFAULT return_value ON CONVERSION ERROR)       :TO_TIMESTAMP_TZ(? DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']])    :TO_TIMESTAMP_TZ converts char to a value of TIMESTAMP WITH TIME ZONE data type.
+TO_YMINTERVAL()         :TO_YMINTERVAL  :TO_YMINTERVAL converts its argument to a value of INTERVAL MONTH TO YEAR data type.
+TRUNC (date)            :TRUNC (date[,fmt])   :The TRUNC (date) function returns date with the time portion of the day truncated to the unit specified by the format model fmt.
+TZ_OFFSET()             :TZ_OFFSET('time_zone_name'|'[+|-]hh:mi'|SESSIONTIMEZONE|DBTIMEZONE)  :TZ_OFFSET returns the time zone offset corresponding to the argument based on the date the statement is executed.
+[General Comparison Functions]
+GREATEST()  :GREATEST(expr,...)     :GREATEST returns the greatest of a list of one or more expressions.
+LEAST()     :LEAST(expr,...)        :LEAST returns the least of a list of one or more expressions.
+[Conversion Functions]
+ASCIISTR()      :ASCIISTR(?)   :ASCIISTR takes as its argument a string, or an expression that resolves to a string, in any character set and returns an ASCII version of the string in the database character set.
+BIN_TO_NUM()    :BIN_TO_NUM(expr,...) :BIN_TO_NUM converts a bit vector to its equivalent number. Each argument to this function represents a bit in the bit vector.
+CAST()          :CAST(expr|MULTISET(subquery) AS type_name)   :CAST lets you convert built-in data types or collection-typed values of one type into another built-in data type or collection type.You can cast an unnamed operand (such as a date or the result set of a subquery) or a named collection (such as a varray or a nested table) into a type-compatible data type or named collection. The type_name must be the name of a built-in data type or collection type and the operand must be a built-in data type or must evaluate to a collection value.
+CAST(DEFAULT return_value ON CONVERSION ERROR)          :CAST(expr|MULTISET(subquery) AS type_name DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']])   :CAST lets you convert built-in data types or collection-typed values of one type into another built-in data type or collection type.You can cast an unnamed operand (such as a date or the result set of a subquery) or a named collection (such as a varray or a nested table) into a type-compatible data type or named collection. The type_name must be the name of a built-in data type or collection type and the operand must be a built-in data type or must evaluate to a collection value.
+CHARTOROWID()   :CHARTOROWID(?)    :CHARTOROWID converts a value from CHAR, VARCHAR2, NCHAR, or NVARCHAR2 data type to ROWID data type.
+COMPOSE()   :COMPOSE(?)    :COMPOSE takes as its argument a character value char and returns the result of applying the Unicode canonical composition, as described in the Unicode Standard definition D117, to it.
+CONVERT()   :CONVERT(?,dest_char_set ,source_char_set)    :CONVERT converts a character string from one character set to another.
+DECOMPOSE() :DECOMPOSE(string[,CANONICAL|COMPATIBILITY])  :DECOMPOSE takes as its first argument a character value string and returns the result of applying one of the Unicode decompositions to it.
+HEXTORAW()  :HEXTORAW   :
+NUMTODSINTERVAL()   :NUMTODSINTERVAL    :
+NUMTOYMINTERVAL()   :NUMTOYMINTERVAL    :
+RAWTOHEX()  :RAWTOHEX   :
+RAWTONHEX() :RAWTONHEX  :
+ROWIDTOCHAR()   :ROWIDTOCHAR    :
+ROWIDTONCHAR()  :ROWIDTONCHAR   :
+SCN_TO_TIMESTAMP()  :SCN_TO_TIMESTAMP   :
+TIMESTAMP_TO_SCN()  :TIMESTAMP_TO_SCN   :
+TO_BINARY_DOUBLE()  :TO_BINARY_DOUBLE   :
+TO_BINARY_FLOAT()   :TO_BINARY_FLOAT    :
+TO_BLOB (bfile)()   :TO_BLOB (bfile)    :
+TO_BLOB (raw)() :TO_BLOB (raw)  :
+TO_CHAR (bfile|blob)()  :TO_CHAR (bfile|blob)   :
+TO_CHAR (character)()   :TO_CHAR (character)    :
+TO_CHAR (datetime)()    :TO_CHAR (datetime) :
+TO_CHAR (number)()  :TO_CHAR (number)   :
+TO_CLOB (bfile|blob)()  :TO_CLOB (bfile|blob)   :
+TO_CLOB (character)()   :TO_CLOB (character)    :
+TO_DATE()   :TO_DATE    :
+TO_DSINTERVAL() :TO_DSINTERVAL  :
+TO_LOB()    :TO_LOB :
+TO_MULTI_BYTE() :TO_MULTI_BYTE  :
+TO_NCHAR (character)()  :TO_NCHAR (character)   :
+TO_NCHAR (datetime)()   :TO_NCHAR (datetime)    :
+TO_NCHAR (number)() :TO_NCHAR (number)  :
+TO_NCLOB()  :TO_NCLOB   :
+TO_NUMBER() :TO_NUMBER  :
+TO_SINGLE_BYTE()    :TO_SINGLE_BYTE :
+TO_TIMESTAMP()  :TO_TIMESTAMP   :
+TO_TIMESTAMP_TZ()   :TO_TIMESTAMP_TZ    :
+TO_YMINTERVAL() :TO_YMINTERVAL  :
+TREAT() :TREAT  :
+UNISTR()    :UNISTR :
+VALIDATE_CONVERSION()   :VALIDATE_CONVERSION    :

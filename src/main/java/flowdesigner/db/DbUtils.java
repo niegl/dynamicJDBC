@@ -62,7 +62,7 @@ public class DbUtils {
         List<String> variants = new ArrayList<>();
 
         if (dbType.equals(DbType.oracle)) {
-            //Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_functions", functions);
+            //Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_variables", variants);
         } else if (dbType.equals(DbType.mysql)) {
             Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_variables", variants);
         } else if (dbType.equals(DbType.hive)) {
@@ -129,6 +129,7 @@ public class DbUtils {
             case sqlserver -> {
             }
             case oracle -> {
+                grammar = " ?:= ?;";
             }
             case mysql -> {
                 grammar = "SET @?= ?;";
