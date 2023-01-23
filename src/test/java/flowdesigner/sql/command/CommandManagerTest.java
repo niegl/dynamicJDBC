@@ -1,12 +1,14 @@
 package flowdesigner.sql.command;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson2.JSON;
 import flowdesigner.db.DbUtils;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
+import flowdesigner.jdbc.command.impl.DBExecuteImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFunctionsImpl;
 import flowdesigner.jdbc.command.model.TableEntity;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -32,16 +35,17 @@ class CommandManagerTest {
     Connection connection = null;
     @BeforeEach
     void setUp() {
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
-//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
-        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
-//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-//        properties.setProperty("url","jdbc:mysql://localhost:3306");
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+        properties.setProperty("url","jdbc:mysql://localhost:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
+        properties.setProperty("connectTimeout","3000");
         dynamicDriver.set_propertyInfo(properties);
 
         try {
@@ -52,6 +56,12 @@ class CommandManagerTest {
             e.printStackTrace();
         }
         assertNotNull(connection);
+
+        DataSource dataSource = dynamicDriver.getDataSource();
+        if (dataSource instanceof DruidDataSource druidDataSource) {
+            String properties1 = druidDataSource.getProperties();
+            System.out.println(properties1);
+        }
     }
 
     Connection getMySQL() {
@@ -134,34 +144,28 @@ class CommandManagerTest {
     @Test
     void testExecuteUpdate() throws SQLException {
         long start = Instant.now().toEpochMilli();
-        ExecResult cc = CommandManager.exeCommand(getMySQL(), CommandKey.CMD_DBExecuteUpdateCommandImpl,new HashMap<String,String>(){{
-//            put("schemaPattern","test");
-            put("SQL","ALTER TABLE test_db11.test_db111 ADD PRIMARY KEY(id);");
-            put("SQL","ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
-//            put("SQL","ALTER TABLE test.tb_emp6 ADD CONSTRAINT fk_emp_dept1 FOREIGN KEY(deptId) REFERENCES tb_dept1(id);");
-        }});
+        DBExecuteImpl dbExecute = new DBExecuteImpl();
+        var exec = dbExecute.exec(connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
+
         long end = Instant.now().toEpochMilli();
-        String s = JSON.toJSONString(cc);
+        String s = JSON.toJSONString(exec);
         System.out.println(s);
         System.out.println(end - start);
     }
     @Test
     void testExecuteSelect() throws SQLException, InterruptedException {
         long start = Instant.now().toEpochMilli();
-        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl,new HashMap<String,String>(){{
-            put("SQL","SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm\n" +
-                    "FROM std_pcode.t99_cala_stat_index_mapping");
-        }});
-        long end = Instant.now().toEpochMilli();
-        String s = JSON.toJSONString(cc);
+        DBExecuteImpl dbExecute = new DBExecuteImpl();
+        var exec = dbExecute.exec(connection, "SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm FROM std_pcode.t99_cala_stat_index_mapping");
+
+        String s = JSON.toJSONString(exec);
         System.out.println(s);
-        System.out.println(end - start);
-        Thread.sleep(2000);
-        ExecResult rr = CommandManager.exeCommand(connection, CommandKey.CMD_DBExecuteCommandImpl,new HashMap<String,String>(){{
-            put("SQL","set txdata=11111;");
-        }});
-        String r = JSON.toJSONString(rr);
-        System.out.println(r);
+
+        var exec1 =dbExecute.queryNext(200);
+        String s1 = JSON.toJSONString(exec1);
+        System.out.println(s1);
+
+        dbExecute.release();
     }
 
     @Test
@@ -174,6 +178,33 @@ class CommandManagerTest {
             String DESCRIPTION = clientInfoProperties.getString("DESCRIPTION");
 
             System.out.println(NAME.concat(",") + DEFAULT_VALUE + "," + DESCRIPTION);
+        }
+//        ResultSet attributes = metaData.getAttributes();
+//        while (clientInfoProperties.next()) {
+//            String NAME = clientInfoProperties.getString("NAME");
+//            String DEFAULT_VALUE = clientInfoProperties.getString("DEFAULT_VALUE");
+//            String DESCRIPTION = clientInfoProperties.getString("DESCRIPTION");
+//
+//            System.out.println(NAME.concat(",") + DEFAULT_VALUE + "," + DESCRIPTION);
+//        }
+    }
+
+    @Test
+    void getAttributes() throws SQLException {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet clientInfoProperties = metaData.getAttributes(null,null,null,null);
+        while (clientInfoProperties.next()) {
+            String NAME = clientInfoProperties.getString("ATTR_NAME");
+            String DEFAULT_VALUE = clientInfoProperties.getString("TYPE_NAME");
+            String DESCRIPTION = clientInfoProperties.getString("ATTR_TYPE_NAME");
+
+            System.out.println(NAME.concat(",") + DEFAULT_VALUE + "," + DESCRIPTION);
+        }
+
+        Properties clientInfo = connection.getClientInfo();
+        for (var info : clientInfo.entrySet()) {
+            System.out.println(info.getKey());
+            System.out.println(info.getValue());
         }
 //        ResultSet attributes = metaData.getAttributes();
 //        while (clientInfoProperties.next()) {
@@ -376,22 +407,6 @@ class CommandManagerTest {
         }
     }
 
-    @Test
-    void getSupportFunctions() throws SQLException {
-//        Collection<String> supportFunctions = SQLOperatorUtils.getSupportFunctions(connection, DbType.hive);
-//        System.out.println(supportFunctions);
-
-        Connection mySQL = getMySQL();
-        Collection<String> supportFunctions2 = DbUtils.getFunctions(mySQL, DbType.mysql);
-        System.out.println(supportFunctions2);
-//        supportFunctions2.removeIf( f -> supportFunctions.contains(f.toUpperCase()) || supportFunctions.contains(f.toLowerCase()));
-//        System.out.println(supportFunctions2);
-    }
-    @Test
-    void getSupportFunctions3() throws SQLException {
-        Collection<String> supportFunctions = DbUtils.getFunctions(null, DbType.oracle);
-        System.out.println(supportFunctions);
-    }
     @Test
     void getSupportFunctionUsage() throws SQLException {
         String usage = DbUtils.getFunctionDescription(connection,"acos");

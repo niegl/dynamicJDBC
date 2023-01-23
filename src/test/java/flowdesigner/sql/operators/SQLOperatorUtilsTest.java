@@ -6,6 +6,10 @@ import flowdesigner.db.operators.SQLOperatorUtils;
 import flowdesigner.sql.SQLUtils;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import static flowdesigner.db.operators.SQLFunctionCatalog.ArithmeticOperator;
 import static flowdesigner.db.operators.SQLFunctionCatalog.DatetimeFunctions;
 
@@ -41,6 +45,31 @@ class SQLOperatorUtilsTest {
     @Test
     void getSupportFunctionsJson() {
         System.out.println(SQLOperatorUtils.getFunctionsJson(null, DbType.mysql));
+    }
+
+    /**
+     * 将函数进行格式转换.抽取函数名、签名、类型.
+     */
+    @Test
+    void getSupportFunctionsJson1() {
+        HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
+        var functionInfo = SQLOperatorUtils.getFunctionInfo(null, DbType.mysql);
+        for (var func1 : functionInfo) {
+            String type = func1.getType();
+            String name = func1.getName();
+            String signature = func1.getSignature();
+
+            ArrayList<String> orDefault = hashMap.getOrDefault(type, new ArrayList<>());
+            orDefault.add(name + ":" + signature);
+
+            hashMap.putIfAbsent(type, orDefault);
+        }
+
+        for (Map.Entry<String, ArrayList<String>> entry : hashMap.entrySet() ) {
+            System.out.println("[" + entry.getKey() + "]");
+            entry.getValue().forEach(System.out::println );
+        }
+
     }
 
     @Test

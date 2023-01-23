@@ -1,5 +1,6 @@
 package flowdesigner.jdbc.command;
 
+import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.fastjson2.JSON;
 import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.jdbc.command.impl.*;
@@ -25,12 +26,9 @@ public class CommandManager {
         put(CMD_DBReverseGetAllTablesList, DBReverseGetTablesImpl.class);       //逆向解析，获取数据表清单
         put(CMD_DBReverseGetTableDDL, DBReverseGetTablesDDLImpl.class);          //逆向解析，获取指定数据表DDL
         put(CMD_ParseDDLToTableImpl, DBParseDDLImpl.class);                     //逆向解析，获取指定数据表DDL
-        put(CMD_DBExecuteCommandImpl, DBExecuteImpl.class);                             //正向执行，获取SQL语句执行结果
         put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);    //正向执行，获取SQL语句执行结果
         put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);        //正向执行，获取SQL语句执行结果
         put(CMD_DBReverseGetFunctionsImpl, DBReverseGetFunctionsImpl.class);            //正向执行，获取SQL语句执行结果
-        //        put(CMD_DBExecuteUpdateCommandImpl, DBExecuteUpdateImpl.class);
-
     }};
 
     /**
@@ -84,6 +82,8 @@ public class CommandManager {
 
         } catch (InstantiationException | IllegalAccessException | SQLException e) {
             ret.setBody("执行命令异常!\n" + e.getMessage());
+        } catch (ParserException e) {
+            ret.setBody("parse exception:\n" + e.getMessage());
         } catch (Exception e) {
             ret.setBody("执行命令异常!\n" + e.getMessage());
         }

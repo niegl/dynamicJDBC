@@ -43,6 +43,10 @@ public interface SQLSelectBuilder extends SQLBuilder {
 
     SQLSelectBuilder whereOr(String expr);
 
+    SQLSelectBuilder addWithSubqueryClause(String alias, String select);
+
+    SQLSelectBuilder addWithSubqueryClause(String alias, SQLSelect select);
+
     SQLSelectBuilder limit(int rowCount);
 
     SQLSelectBuilder limit(int rowCount, int offset);

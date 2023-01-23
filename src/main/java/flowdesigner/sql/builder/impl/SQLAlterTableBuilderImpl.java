@@ -2,8 +2,11 @@ package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.*;
@@ -13,6 +16,7 @@ import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.sql.builder.SQLAlterTableBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -114,9 +118,60 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
     }
 
     /**
+     * ALTER TABLE table_name DROP PARTITION (partCol = 'value1')
+     * @param targetValues
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder dropPartition(Map<String, String> targetValues) {
+        if (!(dbType == DbType.postgresql || dbType == DbType.hive ||
+                dbType == DbType.odps || dbType == DbType.edb || dbType == DbType.antspark)) {
+            throw new UnsupportedOperationException("dropPartition not support dbType: " + dbType);
+        }
+
+        SQLAlterTableDropPartition dropPartition = new SQLAlterTableDropPartition();
+
+        ArrayList<SQLExpr> exprs = new ArrayList<>();
+        for (Map.Entry<String,String> entry : targetValues.entrySet()) {
+            SQLBinaryOpExpr expr = this.exprBuilder.exprSQLBinaryOpExpr(entry.getKey(), entry.getValue(), SQLBinaryOperator.Equality);
+            exprs.add(expr);
+        }
+
+        this.exprBuilder.exprList(dropPartition.getPartitions(), dropPartition, exprs);
+
+        SQLAlterTableStatement statement = getSQLStatement();
+        statement.addItem(dropPartition);
+
+        return this;
+    }
+
+    @Override
+    public SQLAlterTableBuilder addPartition(Map<String, String> targetValues, boolean ifNotExists, String location) {
+
+        if (!(dbType == DbType.postgresql || dbType == DbType.hive ||
+                dbType == DbType.odps || dbType == DbType.edb || dbType == DbType.antspark)) {
+            throw new UnsupportedOperationException("addPartition not support dbType: " + dbType);
+        }
+
+        SQLAlterTableAddPartition addPartition = new SQLAlterTableAddPartition();
+        addPartition.setIfNotExists(ifNotExists);
+
+        this.buildAssignItems(addPartition.getPartitions(), addPartition, false, targetValues);
+
+        if (location != null) {
+            SQLExpr exprLocation = SQLUtils.toSQLExpr(location, dbType);
+            addPartition.setLocation(exprLocation);
+        }
+
+        SQLAlterTableStatement statement = getSQLStatement();
+        statement.addItem(addPartition);
+
+        return this;
+    }
+
+    /**
      * 删除列 操作
      * @param columnName 删除列名
-     * @param columnType 删除列类型（hive库需要）
      * @return
      */
     @Override
@@ -273,37 +328,83 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         }
     }
 
+//    /**
+//     * 删除主键
+//     * @return
+//     */
+//    @Override
+//    public SQLAlterTableBuilder dropPrimaryKey(String name) {
+//
+//        SQLAlterTableStatement statement = getSQLStatement();
+//
+//        SQLAlterTableDropPrimaryKey item = new SQLAlterTableDropPrimaryKey();
+//        statement.addItem(item);
+//
+//        return this;
+//    }
+
+    /**
+     * ALTER TABLE table_name DROP CONSTRAINT constraint_name;
+     *
+     * @param name 外键约束名
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder dropForeignKey(String name) {
+        return dropConstraint(name);
+    }
+
     /**
      * 删除主键
+     *
      * @return
      */
     @Override
-    public SQLAlterTableBuilder dropPrimaryKey() {
-
-        SQLAlterTableStatement statement = getSQLStatement();
-
-        SQLAlterTableDropPrimaryKey item = new SQLAlterTableDropPrimaryKey();
-        statement.addItem(item);
-
-        return this;
+    public SQLAlterTableBuilder dropPrimaryKey(String name) {
+        return dropConstraint(name);
     }
 
     /**
-     * ALTER TABLE <表名> DROP FOREIGN KEY <外键约束名>;
-     * @param Name 外键约束名
+     * 删除唯一键
+     *
      * @return
      */
     @Override
-    public SQLAlterTableBuilder dropForeignKey(String Name) {
+    public SQLAlterTableBuilder dropUniqueKey(String name) {
+        return dropConstraint(name);
+    }
+
+    /**
+     * 删除约束
+     * @return
+     */
+    protected SQLAlterTableBuilder dropConstraint(String constraintName) {
 
         SQLAlterTableStatement statement = getSQLStatement();
-
-        SQLAlterTableDropForeignKey item = new SQLAlterTableDropForeignKey();
-        item.setIndexName(new SQLIdentifierExpr(Name));
-        statement.addItem(item);
+        if (statement != null) {
+            SQLName expr = (SQLName) SQLUtils.toSQLExpr(constraintName, dbType);
+            super.buildAlterDropConstraint(statement, expr, null);
+        }
 
         return this;
     }
+
+//    /**
+//     * ALTER TABLE <表名> DROP FOREIGN KEY <外键约束名>;
+//     * @param Name 外键约束名
+//     * @return
+//     */
+//    @Override
+//    public SQLAlterTableBuilder dropForeignKey(String Name) {
+//
+//        SQLAlterTableStatement statement = getSQLStatement();
+//
+//        SQLAlterTableDropForeignKey item = new SQLAlterTableDropForeignKey();
+//        item.setIndexName(new SQLIdentifierExpr(Name));
+//        statement.addItem(item);
+//
+//        return this;
+//    }
 
     /**
      * 删除索引/[mysql] 删除唯一约束unique

@@ -1,10 +1,27 @@
-AVG
-CORR
-CORRELATION
-COUNT
-COVAR
-COVARIANCE
-MAX
+[AggregateFunctions]
+ARRAY_AGG:ARRAY_AGG( element-expression [ORDER BY sort-key [ASC|DESC],...])
+ARRAY_AGG:ARRAY_AGG( index-expression , element-expression )
+AVG:AVG( expression )
+AVG:AVG( ALL expression )
+AVG:AVG( DISTINCT expression )
+CORR:CORR(expression1, expression2 )
+CORRELATION:CORRELATION(expression1, expression2 )
+COUNT:COUNT( expression )
+COUNT:COUNT( ALL expression )
+COUNT:COUNT( DISTINCT expression )
+COUNT_BIG:COUNT_BIG( * )
+COUNT_BIG:COUNT_BIG( ALL expression )
+COUNT_BIG:COUNT_BIG( DISTINCT expression )
+COVARIANCE(expression1,expression2)
+COVAR:COVAR(expression1,expression2)
+COVAR_POP:COVAR_POP(expression1,expression2)
+COVARIANCE_SAMP:COVARIANCE_SAMP(expression1,expression2)
+CUME_DIST:CUME_DIST(expression[,...]) WITHIN GROUP (order-by-clause)
+GROUPING:GROUPING(expression)
+LISTAGG:LISTAGG([ALL|DISTINCT] string-expression [,separator]) [ WITHIN GROUP (ORDER BY sort-key [ASC|DESC] [,...]) ]
+MAX:MAX( expression )
+MAX:MAX( ALL expression )
+MAX:MAX( DISTINCT expression )
 MIN
 STDDEV
 SUM

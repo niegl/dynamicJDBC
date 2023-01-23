@@ -14,6 +14,10 @@ public interface SQLAlterTableBuilder extends SQLBuilder {
 
     SQLAlterTableBuilder addColumn(String columnName, String columnType);
 
+    SQLAlterTableBuilder dropPartition(Map<String, String> targetValues);
+
+    SQLAlterTableBuilder addPartition(Map<String, String> targetValues, boolean ifNotExists, String location);
+
     SQLAlterTableBuilder dropColumn(String columnName);
 
     SQLAlterTableBuilder replaceColumn(Map<String, String> columns);
@@ -27,9 +31,11 @@ public interface SQLAlterTableBuilder extends SQLBuilder {
 
     SQLAlterTableBuilder addUniqueIndex(String columnName, boolean hasConstraint, String constraintSymbol);
 
-    SQLAlterTableBuilder dropPrimaryKey();
+    SQLAlterTableBuilder dropPrimaryKey(String name);
 
     SQLAlterTableBuilder dropForeignKey(String Name);
+
+    SQLAlterTableBuilder dropUniqueKey(String name);
 
     SQLAlterTableBuilder dropIndex(String indexName);
 

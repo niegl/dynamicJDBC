@@ -66,10 +66,27 @@ class SQLAlterTableBuilderImplTest {
         System.out.println(alterTableBuilder);
     }
 
-    @Test
-    void dropDropForeignKey() {
-        alterTableBuilder.dropForeignKey("primary");
-        System.out.println(alterTableBuilder);
+    @ParameterizedTest
+    @MethodSource()
+    void dropDropForeignKey(DbType dbType, String expected) throws SQLSyntaxErrorException {
+
+        alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
+        alterTableBuilder.setName("table_name");
+        alterTableBuilder.dropForeignKey("constraint_name");
+
+        SQLStatement statement = SQLTest.parser(alterTableBuilder.toString(), dbType);
+    }
+
+    static Stream<Arguments> dropDropForeignKey() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                default -> "ALTER TABLE table_name DROP CONSTRAINT constraint_name;";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
     }
 
     @Test
@@ -88,8 +105,63 @@ class SQLAlterTableBuilderImplTest {
         System.out.println(alterTableBuilder);
     }
 
+    @ParameterizedTest
+    @MethodSource()
+    void dropPartition(DbType dbType, String expected) throws SQLSyntaxErrorException {
 
+        alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
+        alterTableBuilder.setName("table_name");
+        alterTableBuilder.dropPartition(new HashMap<String,String>(){{
+            put("partCol","'value1'");
+        }});
 
+        SQLStatement statement = SQLTest.parser(alterTableBuilder.toString(), dbType);
+//        Assertions.assertEquals(expected, alterTableBuilder.toString());
+    }
+    static Stream<Arguments> dropPartition() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                default -> "ALTER TABLE table_name DROP PARTITION (partCol = 'value1')";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
+    }
+
+    @ParameterizedTest
+    @MethodSource()
+    void addPartition(DbType dbType, String expected) throws SQLSyntaxErrorException {
+
+        alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
+        alterTableBuilder.setName("table_name");
+        alterTableBuilder.addPartition(new HashMap<String,String>(){{
+            put("partCol","'value1'");
+        }}, false, "'loc1'");
+
+        SQLStatement statement = SQLTest.parser(alterTableBuilder.toString(), dbType);
+//        Assertions.assertEquals(expected, alterTableBuilder.toString());
+    }
+    static Stream<Arguments> addPartition() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                case hive -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMNS (line_id int)";
+                case odps -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMNS (line_id INT)";
+                case oracle, oceanbase_oracle, h2 -> "ALTER TABLE db_name\n" +
+                        "\tADD (line_id int)";
+                case db2,mysql,mariadb,postgresql,ads,presto,clickhouse, oscar, tidb -> "ALTER TABLE db_name\n" +
+                        "\tADD COLUMN line_id int";
+                default -> "ALTER TABLE table_name ADD PARTITION (partCol = 'value1') location 'loc1';";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
+    }
 
     @ParameterizedTest
     @MethodSource()

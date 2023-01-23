@@ -1,5 +1,6 @@
 package flowdesigner.db.operators;
 
+@Deprecated
 public enum SQLFunctionCatalog {
     //Built-in Operators
     BuiltIn,

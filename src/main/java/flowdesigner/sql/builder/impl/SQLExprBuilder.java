@@ -1,10 +1,14 @@
 package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLOrderingSpecification;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.ast.statement.SQLForeignKeyConstraint;
 import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl;
 import com.alibaba.druid.sql.ast.statement.SQLSelectOrderByItem;
@@ -12,8 +16,15 @@ import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
+
+import static com.alibaba.druid.sql.SQLUtils.toSQLExpr;
 
 /**
+ * 此类对应解析过程中的 SQLExprParser。主要功能为expr的生成，包括但不限于 exprSQLBinaryOpExpr<p>
+ *
  * SQLExprBuilder用来生成每个数据库特有的exper.<p>
  * 当不同的createBuilder，如SQLCreateTableBuilder、SQLCreateDatabaseBuilder...使用SQLExpr时就不用多次生成。
  */
@@ -91,6 +102,54 @@ public class SQLExprBuilder {
             name.setParent(parent);
             exprCol.add(name);
         }
+    }
+
+    /**
+     * 生成 target=value 形式的 SQLAssignItem，包括但不限于 分区赋值、表属性赋值（未实现）等。
+     * @param variant
+     * @param parent
+     * @param target
+     * @param value
+     * @return
+     */
+    public SQLAssignItem buildAssignItem(boolean variant, SQLObject parent,
+                                         SQLExpr target,SQLExpr value) {
+        SQLAssignItem item = new SQLAssignItem();
+        item.setTarget(target);
+        item.setValue(value);
+
+        return item;
+    }
+
+    /**
+     * expr生成的主入口。由于expr类型复杂，所以是上层接口生成以后作为 exprList参数传递过来
+     * @param exprCol
+     * @param parent
+     * @param exprList
+     */
+    public final void exprList(Collection<SQLExpr> exprCol, SQLObject parent,
+                               Collection<SQLExpr> exprList) {
+        for (var expr : exprList) {
+            if (expr != null) {
+                ((SQLExpr)expr).setParent(parent);
+                exprCol.add((SQLExpr) expr);
+            }
+        }
+
+    }
+
+    /**
+     * SQLBinaryOpExpr的生成
+     * @param left
+     * @param right
+     * @param binaryOperator
+     * @return
+     */
+    public final SQLBinaryOpExpr exprSQLBinaryOpExpr(String left, String right, SQLBinaryOperator binaryOperator) {
+            SQLExpr exprLeft = toSQLExpr(left, dbType);
+            SQLExpr exprRight = toSQLExpr(right, dbType);
+
+            return new SQLBinaryOpExpr(exprLeft, binaryOperator, exprRight);
     }
 
 }

@@ -5,51 +5,51 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.util.JdbcUtils;
-import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
+import flowdesigner.sql.ast.statement.SQLStatementType;
 import flowdesigner.util.DbTypeKit;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.sql.*;
+import java.util.*;
+
+import static com.alibaba.druid.util.JdbcUtils.close;
 
 
 /**
  * 设计为执行SQL命令的通用类。<p>
- * 支持脚本运行、脚本状态查询（当前运行步骤）、取消脚本运行、单statement运行.
+ * 支持单/多statement运行, 如果为多statement语句仅返回最后一条statement的结果
  */
 @Slf4j
-public class DBExecuteImpl implements Command<ExecResult<DBExecuteImpl.RunningStatus>> {
+public class DBExecuteImpl {
+
+    private PreparedStatement stmt;
+    private ResultSet rs;
+
     /**
      * SQL=脚本
      * @param conn
-     * @param params 传递SQL脚本.
      * @return
      * either (1) the row count for SQL Data Manipulation Language (DML) statements <p>
      * or (2) 0 for SQL statements that return nothing <p>
      * or (3) row data for SQL select statements
      * @throws SQLException
      */
-    public ExecResult<RunningStatus> exec(Connection conn, Map<String, String> params) throws SQLException {
-        ExecResult<RunningStatus> ret = new ExecResult<>();
+    public RunningStatus<Object> exec(@NotNull Connection conn, @NotNull String scripts) {
+        RunningStatus<Object> runningStatus = new RunningStatus<>();
 
-        String scripts = params.getOrDefault("SQL",null);
-        if (scripts == null) {
-            throw new IllegalArgumentException("parameter [SQL] not specified");
+        try {
+            runningStatus = execute(conn, scripts);
+            runningStatus.setStatus(ExecResult.SUCCESS);
+        } catch (SQLException | IllegalArgumentException e) {
+            runningStatus.setStatus(ExecResult.FAILED);
+            runningStatus.setResult(e.getMessage());
         }
 
-        RunningStatus runningStatus = execute(conn, scripts);
-
-        ret.setStatus(ExecResult.SUCCESS);
-        ret.setBody(runningStatus);
-
-        return ret;
+        return runningStatus;
     }
 
     /**
@@ -59,25 +59,37 @@ public class DBExecuteImpl implements Command<ExecResult<DBExecuteImpl.RunningSt
      * @throws SQLException 异常
      * @return
      */
-    private RunningStatus execute(@NotNull Connection conn, @NotNull String scripts) throws SQLException {
-        RunningStatus runningStatus = null;
+    private RunningStatus<Object> execute(Connection conn, String scripts) throws SQLException {
+        RunningStatus<Object> runningStatus = new RunningStatus<>();
 
         DbType dbType = DbTypeKit.getDbType(conn);
         if (dbType == null) {
             throw new IllegalArgumentException("dbType is not supported");
         }
 
+        int i = 0;
         List<SQLStatement> statements = SQLUtils.parseStatements(scripts, dbType);
         for (SQLStatement stm: statements) {
-            String sql = stm.toString();
-            runningStatus = new RunningStatus(sql);
+            runningStatus.setStep(++i);
+            runningStatus.setStatementType(SQLStatementType.getType(stm));
 
+            if (stmt != null) {
+                close(stmt);
+            }
+            if (rs != null) {
+                close(rs);
+            }
+
+            stm.setAfterSemi(false);
+            String sql = stm.toString();
+            stmt = conn.prepareStatement(sql);
             if (stm instanceof SQLSelectStatement) {
-                List<Map<String, Object>> query = JdbcUtils.executeQuery(conn, sql, Collections.emptyList());
+                rs = stmt.executeQuery();
+                List<Map<String, Object>> query = queryNext(200);
                 runningStatus.setResult(query);
             } else {
                 int affected = JdbcUtils.executeUpdate(conn, sql, Collections.emptyList());
-                runningStatus.setAffected(affected);
+                runningStatus.setResult(affected);
             }
         }
 
@@ -86,26 +98,78 @@ public class DBExecuteImpl implements Command<ExecResult<DBExecuteImpl.RunningSt
     }
 
     /**
+     * 获取剩余查询结果
+     * @param num 获取行数
+     * @return
+     */
+    public List<Map<String, Object>> queryNext(int num) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+
+        try {
+            ResultSetMetaData rsMeta = rs.getMetaData();
+
+            int count = 0;
+            while(rs.next()) {
+                Map<String, Object> row = new LinkedHashMap<>();
+
+                int i = 0;
+                for(int size = rsMeta.getColumnCount(); i < size; ++i) {
+                    String columName = rsMeta.getColumnLabel(i + 1);
+                    Object value = rs.getObject(i + 1);
+                    row.put(columName, value);
+                }
+
+                rows.add(row);
+
+                if (++count >= num) {
+                    break;
+                }
+            }
+        } catch (SQLException e){
+            close(rs);
+            close((Statement)stmt);
+            log.error(e.getMessage());
+        }
+
+        return rows;
+    }
+
+    public void release() {
+        close(rs);
+        close((Statement)stmt);
+    }
+
+    /**
      * 保存scripts的运行状态
      */
-    static class RunningStatus {
+    public static class RunningStatus<T> {
         /**
          * 当前运行步骤（SQL语句）
          */
-        @Getter private final String step;
         @Setter
         @Getter
-        private int affected = -1;
+        private int step;
         /**
-         * 如果是select，保存查询结果
+         * 标识当前执行的SQL语句的类型
          */
         @Setter
         @Getter
-        private List<Map<String, Object>> result;
-
-        RunningStatus(String step) {
-            this.step = step;
-        }
+        private SQLStatementType statementType;
+        /**
+         * 运行结果：成功还是失败
+         */
+        @Setter
+        @Getter
+        private String status;
+        /**
+         * 运行结果数据内容：
+         *   <li>  如果是select，保存查询结果;
+         *   <li>  如果是更新等其他操作，显示影响行数
+         *   <li>  如果失败，保存失败原因
+         */
+        @Setter
+        @Getter
+        private T result;
     }
 
 }
