@@ -202,49 +202,116 @@ TO_YMINTERVAL()         :TO_YMINTERVAL  :TO_YMINTERVAL converts its argument to 
 TRUNC (date)            :TRUNC (date[,fmt])   :The TRUNC (date) function returns date with the time portion of the day truncated to the unit specified by the format model fmt.
 TZ_OFFSET()             :TZ_OFFSET('time_zone_name'|'[+|-]hh:mi'|SESSIONTIMEZONE|DBTIMEZONE)  :TZ_OFFSET returns the time zone offset corresponding to the argument based on the date the statement is executed.
 [General Comparison Functions]
-GREATEST()  :GREATEST(expr,...)     :GREATEST returns the greatest of a list of one or more expressions.
-LEAST()     :LEAST(expr,...)        :LEAST returns the least of a list of one or more expressions.
+GREATEST()              :GREATEST(expr,...)     :GREATEST returns the greatest of a list of one or more expressions.
+LEAST()                 :LEAST(expr,...)        :LEAST returns the least of a list of one or more expressions.
 [Conversion Functions]
-ASCIISTR()      :ASCIISTR(?)   :ASCIISTR takes as its argument a string, or an expression that resolves to a string, in any character set and returns an ASCII version of the string in the database character set.
-BIN_TO_NUM()    :BIN_TO_NUM(expr,...) :BIN_TO_NUM converts a bit vector to its equivalent number. Each argument to this function represents a bit in the bit vector.
-CAST()          :CAST(expr|MULTISET(subquery) AS type_name)   :CAST lets you convert built-in data types or collection-typed values of one type into another built-in data type or collection type.You can cast an unnamed operand (such as a date or the result set of a subquery) or a named collection (such as a varray or a nested table) into a type-compatible data type or named collection. The type_name must be the name of a built-in data type or collection type and the operand must be a built-in data type or must evaluate to a collection value.
+ASCIISTR()              :ASCIISTR(?)   :ASCIISTR takes as its argument a string, or an expression that resolves to a string, in any character set and returns an ASCII version of the string in the database character set.
+BIN_TO_NUM()            :BIN_TO_NUM(expr,...) :BIN_TO_NUM converts a bit vector to its equivalent number. Each argument to this function represents a bit in the bit vector.
+CAST()                  :CAST(expr|MULTISET(subquery) AS type_name)   :CAST lets you convert built-in data types or collection-typed values of one type into another built-in data type or collection type.You can cast an unnamed operand (such as a date or the result set of a subquery) or a named collection (such as a varray or a nested table) into a type-compatible data type or named collection. The type_name must be the name of a built-in data type or collection type and the operand must be a built-in data type or must evaluate to a collection value.
 CAST(DEFAULT return_value ON CONVERSION ERROR)          :CAST(expr|MULTISET(subquery) AS type_name DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']])   :CAST lets you convert built-in data types or collection-typed values of one type into another built-in data type or collection type.You can cast an unnamed operand (such as a date or the result set of a subquery) or a named collection (such as a varray or a nested table) into a type-compatible data type or named collection. The type_name must be the name of a built-in data type or collection type and the operand must be a built-in data type or must evaluate to a collection value.
-CHARTOROWID()   :CHARTOROWID(?)    :CHARTOROWID converts a value from CHAR, VARCHAR2, NCHAR, or NVARCHAR2 data type to ROWID data type.
-COMPOSE()   :COMPOSE(?)    :COMPOSE takes as its argument a character value char and returns the result of applying the Unicode canonical composition, as described in the Unicode Standard definition D117, to it.
-CONVERT()   :CONVERT(?,dest_char_set ,source_char_set)    :CONVERT converts a character string from one character set to another.
-DECOMPOSE() :DECOMPOSE(string[,CANONICAL|COMPATIBILITY])  :DECOMPOSE takes as its first argument a character value string and returns the result of applying one of the Unicode decompositions to it.
-HEXTORAW()  :HEXTORAW   :
-NUMTODSINTERVAL()   :NUMTODSINTERVAL    :
-NUMTOYMINTERVAL()   :NUMTOYMINTERVAL    :
-RAWTOHEX()  :RAWTOHEX   :
-RAWTONHEX() :RAWTONHEX  :
-ROWIDTOCHAR()   :ROWIDTOCHAR    :
-ROWIDTONCHAR()  :ROWIDTONCHAR   :
-SCN_TO_TIMESTAMP()  :SCN_TO_TIMESTAMP   :
-TIMESTAMP_TO_SCN()  :TIMESTAMP_TO_SCN   :
-TO_BINARY_DOUBLE()  :TO_BINARY_DOUBLE   :
-TO_BINARY_FLOAT()   :TO_BINARY_FLOAT    :
-TO_BLOB (bfile)()   :TO_BLOB (bfile)    :
-TO_BLOB (raw)() :TO_BLOB (raw)  :
-TO_CHAR (bfile|blob)()  :TO_CHAR (bfile|blob)   :
-TO_CHAR (character)()   :TO_CHAR (character)    :
-TO_CHAR (datetime)()    :TO_CHAR (datetime) :
-TO_CHAR (number)()  :TO_CHAR (number)   :
-TO_CLOB (bfile|blob)()  :TO_CLOB (bfile|blob)   :
-TO_CLOB (character)()   :TO_CLOB (character)    :
-TO_DATE()   :TO_DATE    :
-TO_DSINTERVAL() :TO_DSINTERVAL  :
-TO_LOB()    :TO_LOB :
-TO_MULTI_BYTE() :TO_MULTI_BYTE  :
-TO_NCHAR (character)()  :TO_NCHAR (character)   :
-TO_NCHAR (datetime)()   :TO_NCHAR (datetime)    :
-TO_NCHAR (number)() :TO_NCHAR (number)  :
-TO_NCLOB()  :TO_NCLOB   :
-TO_NUMBER() :TO_NUMBER  :
-TO_SINGLE_BYTE()    :TO_SINGLE_BYTE :
-TO_TIMESTAMP()  :TO_TIMESTAMP   :
-TO_TIMESTAMP_TZ()   :TO_TIMESTAMP_TZ    :
-TO_YMINTERVAL() :TO_YMINTERVAL  :
-TREAT() :TREAT  :
-UNISTR()    :UNISTR :
-VALIDATE_CONVERSION()   :VALIDATE_CONVERSION    :
+CHARTOROWID()           :CHARTOROWID(?)    :CHARTOROWID converts a value from CHAR, VARCHAR2, NCHAR, or NVARCHAR2 data type to ROWID data type.
+COMPOSE()               :COMPOSE(?)    :COMPOSE takes as its argument a character value char and returns the result of applying the Unicode canonical composition, as described in the Unicode Standard definition D117, to it.
+CONVERT()               :CONVERT(?,dest_char_set ,source_char_set)    :CONVERT converts a character string from one character set to another.
+DECOMPOSE()             :DECOMPOSE(string[,CANONICAL|COMPATIBILITY])  :DECOMPOSE takes as its first argument a character value string and returns the result of applying one of the Unicode decompositions to it.
+HEXTORAW()              :HEXTORAW(?)   :HEXTORAW converts char containing hexadecimal digits in the CHAR, VARCHAR2, NCHAR, or NVARCHAR2 data type to a raw value.
+NUMTODSINTERVAL()       :NUMTODSINTERVAL(?,'DAY'|'HOUR'|'MINUTE'|'SECOND')    :NUMTODSINTERVAL converts n to an INTERVAL DAY TO SECOND literal. The argument n can be any NUMBER value or an expression that can be implicitly converted to a NUMBER value.
+NUMTOYMINTERVAL()       :NUMTOYMINTERVAL(?,'YEAR'|'MONTH')    :NUMTOYMINTERVAL converts number n to an INTERVAL YEAR TO MONTH literal.
+RAWTOHEX()              :RAWTOHEX(?)   :RAWTOHEX converts raw to a character value containing its hexadecimal representation.
+RAWTONHEX()             :RAWTONHEX(?)  :RAWTONHEX converts raw to a character value containing its hexadecimal representation.
+ROWIDTOCHAR()           :ROWIDTOCHAR(?)    :ROWIDTOCHAR converts a rowid value to VARCHAR2 data type. The result of this conversion is always 18 characters long.
+ROWIDTONCHAR()          :ROWIDTONCHAR(?)   :ROWIDTONCHAR converts a rowid value to NVARCHAR2 data type. The result of this conversion is always in the national character set and is 18 characters long.
+SCN_TO_TIMESTAMP()      :SCN_TO_TIMESTAMP(?)   :SCN_TO_TIMESTAMP takes as an argument a number that evaluates to a system change number (SCN), and returns the approximate timestamp associated with that SCN. The returned value is of TIMESTAMP data type.
+TIMESTAMP_TO_SCN()      :TIMESTAMP_TO_SCN(?)   :TIMESTAMP_TO_SCN takes as an argument a timestamp value and returns the approximate system change number (SCN) associated with that timestamp. The returned value is of data type NUMBER. This function is useful any time you want to know the SCN associated with a particular timestamp.
+TO_BINARY_DOUBLE()      :TO_BINARY_DOUBLE(?)   :TO_BINARY_DOUBLE converts expr to a double-precision floating-point number.
+TO_BINARY_DOUBLE(DEFAULT return_value ON CONVERSION ERROR)  :TO_BINARY_DOUBLE(? DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']])   :TO_BINARY_DOUBLE converts expr to a double-precision floating-point number.
+TO_BINARY_FLOAT()       :TO_BINARY_FLOAT(?)    :TO_BINARY_FLOAT converts expr to a single-precision floating-point number.
+TO_BINARY_FLOAT(DEFAULT return_value ON CONVERSION ERROR)  :TO_BINARY_FLOAT(? DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']])   :TO_BINARY_FLOAT converts expr to a double-precision floating-point number.
+TO_BLOB (bfile)         :TO_BLOB (?[,mime_type])    :TO_BLOB (bfile) converts a BFILE value to a BLOB value.
+TO_BLOB (raw)           :TO_BLOB (?)  :TO_BLOB (raw) converts LONG RAW and RAW values to BLOB values.
+TO_CHAR (bfile|blob)    :TO_CHAR (?[,csid])   :TO_CHAR (bfile|blob) converts BFILE or BLOB data to the database character set.
+TO_CHAR (character)     :TO_CHAR (?)    :TO_CHAR (character) converts NCHAR, NVARCHAR2, CLOB, or NCLOB data to the database character set. The value returned is always VARCHAR2.
+TO_CHAR (datetime)      :TO_CHAR (? [,fmt[,'nlsparam']) :TO_CHAR (datetime) converts a datetime or interval value of DATE, TIMESTAMP, TIMESTAMP WITH TIME ZONE, TIMESTAMP WITH LOCAL TIME ZONE, INTERVAL DAY TO SECOND, or INTERVAL YEAR TO MONTH data type to a value of VARCHAR2 data type in the format specified by the date format fmt.
+TO_CHAR (number)        :TO_CHAR (?[,fmt[,'nlsparam'])   :TO_CHAR (number) converts n to a value of VARCHAR2 data type, using the optional number format fmt. The value n can be of type NUMBER, BINARY_FLOAT, or BINARY_DOUBLE. If you omit fmt, then n is converted to a VARCHAR2 value exactly long enough to hold its significant digits.
+TO_CLOB (bfile|blob)    :TO_CLOB (?[,csid][,'mime_type'])   :TO_CLOB (bfile|blob) converts BFILE or BLOB data to the database character set and returns the data as a CLOB value.
+TO_CLOB (character)     :TO_CLOB (?)    :TO_CLOB (character) converts NCLOB values in a LOB column or other character strings to CLOB values.
+TO_DATE()               :TO_DATE(? [DEFAULT return_value ON CONVERSION ERROR][,fmt[,'nlsparam']])    :TO_DATE converts char to a value of DATE data type.
+TO_DSINTERVAL()         :TO_DSINTERVAL('sql_format|ds_iso_format' [DEFAULT return_value ON CONVERSION ERROR])  :TO_DSINTERVAL converts its argument to a value of INTERVAL DAY TO SECOND data type.
+TO_LOB()                :TO_LOB(?) :TO_LOB converts LONG or LONG RAW values in the column long_column to LOB values.
+TO_MULTI_BYTE()         :TO_MULTI_BYTE(?)  :TO_MULTI_BYTE returns char with all of its single-byte characters converted to their corresponding multibyte characters.
+TO_NCHAR (character)    :TO_NCHAR (?)   :TO_NCHAR (character) converts a character string, CHAR, VARCHAR2, CLOB, or NCLOB value to the national character set.
+TO_NCHAR (datetime)     :TO_NCHAR (? [,fmt[,'nlsparam']])    :TO_NCHAR (datetime) converts a datetime or interval value of DATE, TIMESTAMP, TIMESTAMP WITH TIME ZONE, TIMESTAMP WITH LOCAL TIME ZONE, INTERVAL MONTH TO YEAR, or INTERVAL DAY TO SECOND data type from the database character set to the national character set.
+TO_NCHAR (number)       :TO_NCHAR (? [,fmt[,'nlsparam']])  :TO_NCHAR (number) converts n to a string in the national character set.
+TO_NCLOB()              :TO_NCLOB(?)   :TO_NCLOB converts CLOB values in a LOB column or other character strings to NCLOB values.
+TO_NUMBER()             :TO_NUMBER(? DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']])  :TO_NUMBER converts expr to a value of NUMBER data type.
+TO_SINGLE_BYTE()        :TO_SINGLE_BYTE(?) :TO_SINGLE_BYTE returns char with all of its multibyte characters converted to their corresponding single-byte characters.
+TO_TIMESTAMP()          :TO_TIMESTAMP(? DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']])   :TO_TIMESTAMP converts char to a value of TIMESTAMP data type.
+TO_TIMESTAMP_TZ()       :TO_TIMESTAMP_TZ(? DEFAULT return_value ON CONVERSION ERROR[,fmt[,'nlsparam']])    :TO_TIMESTAMP_TZ converts char to a value of TIMESTAMP WITH TIME ZONE data type.
+TO_YMINTERVAL()         :TO_YMINTERVAL('[+|-] years-months|ym_iso_format' [DEFAULT return_value ON CONVERSION ERROR])  :TO_YMINTERVAL converts its argument to a value of INTERVAL MONTH TO YEAR data type.
+TREAT()                 :TREAT(? AS [REF][ schema.]type|JSON)  :You can use the TREAT function to change the declared type of an expression.
+UNISTR()                :UNISTR(?) :UNISTR takes as its argument a text literal or an expression that resolves to character data and returns it in the national character set.
+VALIDATE_CONVERSION()   :VALIDATE_CONVERSION(? AS type_name[,fmt[,'nlsparam']])    :VALIDATE_CONVERSION determines whether expr can be converted to the specified data type. If expr can be successfully converted, then this function returns 1; otherwise, this function returns 0. If expr evaluates to null, then this function returns 1. If an error occurs while evaluating expr, then this function returns the error.
+[Large Object Functions]
+BFILENAME()     :BFILENAME('directory','filename')    :BFILENAME returns a BFILE locator that is associated with a physical LOB binary file on the server file system.
+EMPTY_BLOB()    :EMPTY_BLOB()   :EMPTY_BLOB and EMPTY_CLOB return an empty LOB locator that can be used to initialize a LOB variable or, in an INSERT or UPDATE statement, to initialize a LOB column or attribute to EMPTY.
+EMPTY_CLOB()    :EMPTY_CLOB()   :EMPTY_BLOB and EMPTY_CLOB return an empty LOB locator that can be used to initialize a LOB variable or, in an INSERT or UPDATE statement, to initialize a LOB column or attribute to EMPTY.
+[Collection Functions]
+CARDINALITY()                   :CARDINALITY(nested_table)                      :CARDINALITY returns the number of elements in a nested table. The return type is NUMBER. If the nested table is empty, or is a null collection, then CARDINALITY returns NULL.
+COLLECT()                       :COLLECT([DISTINCT|UNIQUE] ? ORDER BY expr)     :COLLECT is an aggregate function that takes as its argument a column of any type and creates a nested table of the input type out of the rows selected. To get accurate results from this function you must use it within a CAST function.
+POWERMULTISET()                 :POWERMULTISET(?)                               :POWERMULTISET takes as input a nested table and returns a nested table of nested tables containing all nonempty subsets (called submultisets) of the input nested table.
+POWERMULTISET_BY_CARDINALITY()  :POWERMULTISET_BY_CARDINALITY(?, cardinality)   :POWERMULTISET_BY_CARDINALITY takes as input a nested table and a cardinality and returns a nested table of nested tables containing all nonempty subsets (called submultisets) of the nested table of the specified cardinality.
+SET()                           :SET(nested_table)                              :SET converts a nested table into a set by eliminating duplicates. The function returns a nested table whose elements are distinct from one another. The returned nested table is of the same type as the input nested table.
+[Hierarchical Functions]
+SYS_CONNECT_BY_PATH()           :SYS_CONNECT_BY_PATH(?,char)                    :SYS_CONNECT_BY_PATH is valid only in hierarchical queries. It returns the path of a column value from root to node, with column values separated by char for each row returned by CONNECT BY condition.
+[XML Functions]
+DEPTH()           :DEPTH(?)                 : DEPTH is an ancillary function used only with the UNDER_PATH and EQUALS_PATH conditions. It returns the number of levels in the path specified by the UNDER_PATH condition with the same correlation variable.
+EXISTSNODE()      :EXISTSNODE(XMLType_instance,Xpath_string[,namespace_string])             :EXISTSNODE determines whether traversal of an XML document using a specified path results in any nodes.
+EXTRACT (XML)     :EXTRACT(XMLType_instance,Xpath_string[,namespace_string])          :EXTRACT (XML) is similar to the EXISTSNODE function. It applies a VARCHAR2 XPath string and returns an XMLType instance containing an XML fragment. You can specify an absolute XPath_string with an initial slash or a relative XPath_string by omitting the initial slash. If you omit the initial slash, then the context of the relative path defaults to the root node. The optional namespace_string is required if the XML you are handling uses a namespace prefix. This argument must resolve to a VARCHAR2 value that specifies a default mapping or namespace mapping for prefixes, which Oracle Database uses when evaluating the XPath expression(s).
+EXTRACTVALUE()    :EXTRACTVALUE(XMLType_instance,Xpath_string[,namespace_string])           :The EXTRACTVALUE function takes as arguments an XMLType instance and an XPath expression and returns a scalar value of the resultant node.
+PATH()            :PATH(?)                   :PATH is an ancillary function used only with the UNDER_PATH and EQUALS_PATH conditions. It returns the relative path that leads to the resource specified in the parent condition.
+SYS_DBURIGEN()    :SYS_DBURIGEN({column|attribute [rowid]},...[,'text()'])           :SYS_DBURIGen takes as its argument one or more columns or attributes, and optionally a rowid, and generates a URL of data type DBURIType to a particular column or row object.
+SYS_XMLAGG()      :SYS_XMLAGG(expr[,fmt])             :SYS_XMLAgg aggregates all of the XML documents or fragments represented by expr and produces a single XML document. It adds a new enclosing element with a default name ROWSET. If you want to format the XML document differently, then specify fmt, which is an instance of the XMLFormat object.
+SYS_XMLGEN()      :SYS_XMLGEN(expr[,fmt])             :SYS_XMLGen takes an expression that evaluates to a particular row and column of the database, and returns an instance of type XMLType containing an XML document.
+XMLAGG()          :XMLAGG(XMLType_instance [order_by_clause])                 :XMLAgg is an aggregate function. It takes a collection of XML fragments and returns an aggregated XML document. Any arguments that return null are dropped from the result.
+XMLCAST()         :XMLCAST(value_expression AS datatype)                :XMLCast casts value_expression to the scalar SQL data type specified by datatype. The value_expression argument is a SQL expression that is evaluated. The datatype argument can be of data type NUMBER, VARCHAR2, CHAR, CLOB, BLOB, REF XMLTYPE, and any of the datetime data types.
+XMLCDATA()        :XMLCDATA(?)               :XMLCData generates a CDATA section by evaluating value_expr.
+XMLCOLATTVAL()    :XMLCOLATTVAL(value_expr [AS c_alias|EVALNAME value_expr],...)           :XMLColAttVal creates an XML fragment and then expands the resulting XML so that each XML fragment has the name column with the attribute name.
+XMLCOMMENT()      :XMLCOMMENT(?)             :XMLComment generates an XML comment using an evaluated result of value_expr.
+XMLCONCAT()       :XMLCONCAT(XMLType_instance,...)              :XMLConcat takes as input a series of XMLType instances, concatenates the series of elements for each row, and returns the concatenated series. XMLConcat is the inverse of XMLSequence.
+XMLDIFF()         :XMLDIFF(XMLType_instance,XMLType_document[,integer,string])                :The XMLDiff function is the SQL interface for the XmlDiff C API. This function compares two XML documents and captures the differences in XML conforming to an Xdiff schema. The diff document is returned as an XMLType document.
+XMLELEMENT()      :XMLELEMENT([ENTITYESCAPING|NONENTITYESCAPING] {[NAME] identifier|EVALNAME value_expr}[,XML_attributes_clause][,value_expr [AS c_alias]...]  )             :XMLElement takes an element name for identifier or evaluates an element name for EVALNAME value_expr, an optional collection of attributes for the element, and arguments that make up the content of the element. It returns an instance of type XMLType. XMLElement is similar to SYS_XMLGen except that XMLElement can include attributes in the XML returned, but it does not accept formatting using the XMLFormat object.
+XMLEXISTS()       :XMLEXISTS(XQuery_string [XML_passing_clause])              :XMLExists checks whether a given XQuery expression returns a nonempty XQuery sequence. If so, the function returns TRUE; otherwise, it returns FALSE. The argument XQuery_string is a literal string, but it can contain XQuery variables that you bind using the XML_passing_clause.
+XMLFOREST()       :XMLFOREST(value_expr [AS c_alias|EVALNAME value_expr],...)              :XMLForest converts each of its argument parameters to XML, and then returns an XML fragment that is the concatenation of these converted arguments.
+XMLISVALID()      :XMLISVALID(XMLType_instance,XMLSchema_URL[,element])             :XMLISVALID checks whether the input XMLType_instance conforms to the relevant XML schema. It does not change the validation status recorded for XMLType_instance.
+XMLPARSE()        :XMLPARSE(DOCUMENT|CONTENT value_expr[ WELLFORMED])               :XMLParse parses and generates an XML instance from the evaluated result of value_expr. The value_expr must resolve to a string. If value_expr resolves to null, then the function returns null.
+XMLPATCH()        :XMLPATCH(XMLType_instance,XMLType_document)               :The XMLPatch function is the SQL interface for the XmlPatch C API. This function patches an XML document with the changes specified. A patched XMLType document is returned.
+XMLPI()           :XMLPI({[NAME] identifier|EVALNAME value_expr}[,value_expr])                  :XMLPI generates an XML processing instruction using identifier and optionally the evaluated result of value_expr. A processing instruction is commonly used to provide to an application information that is associated with all or part of an XML document. The application uses the processing instruction to determine how best to process the XML document.
+XMLQUERY()        :XMLQUERY([XML_passing_clause ]RETURNING CONTENT[ NULL ON EMPTY])               :XMLQUERY lets you query XML data in SQL statements. It takes an XQuery expression as a string literal, an optional context item, and other bind variables and returns the result of evaluating the XQuery expression using these input values.
+XMLSERIALIZE()    :XMLSERIALIZE(DOCUMENT|CONTENT value_expr[ AS datatype])           :XMLSerialize creates a string or LOB containing the contents of value_expr.
+XMLTABLE()        :XMLTABLE([XMLnamespaces_clause,]XQuery_string XMLTABLE_options)               :XMLTable maps the result of an XQuery evaluation into relational rows and columns. You can query the result returned by the function as a virtual relational table using SQL.
+XMLTRANSFORM()    :XMLTRANSFORM(XMLType_instance,XMLType_instance|string)           :XMLTransform takes as arguments an XMLType instance and an XSL style sheet, which is itself a form of XMLType instance. It applies the style sheet to the instance and returns an XMLType.
+[JSON Functions]
+JSON_QUERY()    :JSON_QUERY(expr[ FORMAT JSON],JSON_basic_path_expression[ JSON_query_returning_clause][ JSON_query_wrapper_clause][ JSON_query_on_error_clause][ JSON_query_on_empty_clause][ JSON_query_on_mismatch_clause])       :JSON_QUERY selects and returns one or more values from JSON data and returns those values. You can use JSON_QUERY to retrieve fragments of a JSON document.
+JSON_TABLE()    :JSON_TABLE(expr[ FORMAT JSON][,JSON_basic_path_expression][ JSON_table_on_error_clause] JSON_columns_clause)       :The SQL/JSON function JSON_TABLE creates a relational view of JSON data. It maps the result of a JSON data evaluation into relational rows and columns. You can query the result returned by the function as a virtual relational table using SQL. The main purpose of JSON_TABLE is to create a row of relational data for each object inside a JSON array and output JSON values from within that object as individual SQL column values.
+JSON_VALUE()    :JSON_VALUE(expr[ FORMAT JSON][,JSON_basic_path_expression][ JSON_value_returning_clause][ JSON_value_on_error_clause][ JSON_value_on_empty_clause][ JSON_value_on_mismatch_clause])       :The SQL/JSON function JSON_VALUE finds a specified scalar JSON value in JSON data and returns it as a SQL value.
+JSON_ARRAY()            :JSON_ARRAY(JSON_ARRAY(JSON_ARRAY_content)|JSON[JSON_ARRAY_content])               :The SQL/JSON function JSON_ARRAY takes as its input a sequence of SQL scalar expressions or one collection type instance, VARRAY or NESTED TABLE.
+JSON_ARRAYAGG()         :JSON_ARRAYAGG(expr[ FORMAT JSON][ order_by_clause][ JSON_on_null_clause][ JSON_returning_clause][ STRICT])            :The SQL/JSON function JSON_ARRAYAGG is an aggregate function. It takes as its input a column of SQL expressions, converts each expression to a JSON value, and returns a single JSON array that contains those JSON values.
+JSON_OBJECT()           :JSON_OBJECT(JSON_OBJECT(JSON_OBJECT_content)|JSON{JSON_OBJECT_content})              :The SQL/JSON function JSON_OBJECT takes as its input either a sequence of key-value pairs or one object type instance. A collection type cannot be passed to JSON_OBJECT.
+JSON_OBJECTAGG()        :JSON_OBJECTAGG([KEY ]key_expr VALUE value_expr[ JSON_on_null_clause][ JSON_returning_clause][ STRICT][ WITH UNIQUE KEYS])           :The SQL/JSON function JSON_OBJECTAGG is an aggregate function. It takes as its input a property key-value pair. Typically, the property key, the property value, or both are columns of SQL expressions. This function constructs an object member for each key-value pair and returns a single JSON object that contains those object members.
+JSON Type Constructor() :JSON(?)    :You can use the JSON data type constructor JSON to parse textual JSON input ( a scalar, object, or array), and return it as an instance of type JSON.
+JSON_SCALAR()           :JSON_SCALAR(expr[ SQL|JSON][ NULL ON NULL])              :JSON_SCALAR accepts a SQL scalar value as input and returns a corresponding JSON scalar value as a JSON type instance. In particular, the value can be of an Oracle-specific JSON-language type, such as a date, which is not part of the JSON standard.
+JSON_SERIALIZE()        :JSON_SERIALIZE(expr[ JSON_returning_clause][ PRETTY][ ASCII][ TRUNCATE][ {NULL|ERROR|EMPTY ARRAY|OBJECT} ON ERROR])           :json_serialize takes JSON data of any SQL data type (JSON, VARCHAR2, CLOB, or BLOB) as input and returns a textual representation of it. You typically use it to transform the result of a query.
+JSON_TRANSFORM()        :JSON_TRANSFORM(input_expr,operation...) JSON_TRANSFORM_returning_clause JSON_passing_clause          :You can use the JSON_TRANSFORM function to change input JSON data (or pieces of JSON data), by specifying one or more modifying operations that perform changes to the JSON data. You will get the modified JSON as output.
+JSON_DATAGUIDE()        :JSON_DATAGUIDE(expr[,format[,flag]])       :The aggregate function JSON_DATAGUIDE computes the data guide of a set of JSON data. The data guide is returned as a CLOB which can be in either flat or hierarchical format depending on the passing format parameter.
+[Encoding and Decoding Functions]
+DECODE()          :DECODE(expr,{search,result}...[,default])          :DECODE compares expr to each search value one by one. If expr is equal to a search, then Oracle Database returns the corresponding result. If no match is found, then Oracle returns default. If default is omitted, then Oracle returns null.
+DUMP()            :DUMP(expr[,return_fmt [,start_position [,length]]])            :DUMP returns a VARCHAR2 value containing the data type code, length in bytes, and internal representation of expr. The returned result is always in the database character set.
+ORA_HASH()        :ORA_HASH(expr[,max_bucket[,seed_value]])        :ORA_HASH is a function that computes a hash value for a given expression. This function is useful for operations such as analyzing a subset of data and generating a random sample.
+STANDARD_HASH()   :STANDARD_HASH(expr[,'method'])   :STANDARD_HASH computes a hash value for a given expression using one of several hash algorithms that are defined and standardized by the National Institute of Standards and Technology. This function is useful for performing authentication and maintaining data integrity in security applications such as digital signatures, checksums, and fingerprinting.
+VSIZE()           :VSIZE(?)           :VSIZE returns the number of bytes in the internal representation of expr. If expr is null, then this function returns null.
+[NULL-Related Functions]
+COALESCE()        :COALESCE()       :
+LNNVL()           :LNNVL()          :
+NANVL()           :NANVL()          :
+NULLIF()          :NULLIF()         :
+NVL()             :NVL()            :
+NVL2()            :NVL2()           :
