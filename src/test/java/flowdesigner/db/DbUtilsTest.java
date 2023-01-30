@@ -13,8 +13,13 @@ class DbUtilsTest {
 
     @Test
     void getFunctions() {
-        Set<DbUtils.FunctionInfo> supportFunctions2 = DbUtils.getFunctions(DbType.mysql);
+        Set<DbUtils.FunctionInfo> supportFunctions2 = DbUtils.getFunctions(DbType.hive);
         System.out.println(supportFunctions2);
     }
 
+    @Test
+    void getDbKeywordsAsString() {
+        String dbKeywordsAsString = DbUtils.getDbKeywordsAsString(DbType.mysql);
+        System.out.println(dbKeywordsAsString);
+    }
 }
