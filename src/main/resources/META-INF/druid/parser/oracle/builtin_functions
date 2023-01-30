@@ -309,9 +309,75 @@ ORA_HASH()        :ORA_HASH(expr[,max_bucket[,seed_value]])        :ORA_HASH is 
 STANDARD_HASH()   :STANDARD_HASH(expr[,'method'])   :STANDARD_HASH computes a hash value for a given expression using one of several hash algorithms that are defined and standardized by the National Institute of Standards and Technology. This function is useful for performing authentication and maintaining data integrity in security applications such as digital signatures, checksums, and fingerprinting.
 VSIZE()           :VSIZE(?)           :VSIZE returns the number of bytes in the internal representation of expr. If expr is null, then this function returns null.
 [NULL-Related Functions]
-COALESCE()        :COALESCE()       :
-LNNVL()           :LNNVL()          :
-NANVL()           :NANVL()          :
-NULLIF()          :NULLIF()         :
-NVL()             :NVL()            :
-NVL2()            :NVL2()           :
+COALESCE()        :COALESCE(expr...)       :COALESCE returns the first non-null expr in the expression list. You must specify at least two expressions. If all occurrences of expr evaluate to null, then the function returns null.
+LNNVL()           :LNNVL(condition)          :LNNVL provides a concise way to evaluate a condition when one or both operands of the condition may be null. The function can be used in the WHERE clause of a query, or as the WHEN condition in a searched CASE expression. It takes as an argument a condition and returns TRUE if the condition is FALSE or UNKNOWN and FALSE if the condition is TRUE. LNNVL can be used anywhere a scalar expression can appear, even in contexts where the IS [NOT] NULL, AND, or OR conditions are not valid but would otherwise be required to account for potential nulls.
+NANVL()           :NANVL(n2,n1)          :The NANVL function is useful only for floating-point numbers of type BINARY_FLOAT or BINARY_DOUBLE. It instructs Oracle Database to return an alternative value n1 if the input value n2 is NaN (not a number). If n2 is not NaN, then Oracle returns n2.
+NULLIF()          :NULLIF(expr1,expr2)         :NULLIF compares expr1 and expr2. If they are equal, then the function returns null. If they are not equal, then the function returns expr1. You cannot specify the literal NULL for expr1.
+NVL()             :NVL(expr1,expr2)            :NVL lets you replace null (returned as a blank) with a string in the results of a query. If expr1 is null, then NVL returns expr2. If expr1 is not null, then NVL returns expr1.
+NVL2()            :NVL2(expr1,expr2,expr3)           :NVL2 lets you determine the value returned by a query based on whether a specified expression is null or not null. If expr1 is not null, then NVL2 returns expr2. If expr1 is null, then NVL2 returns expr3.
+[Aggregate Functions]
+ANY_VALUE()                     :ANY_VALUE()                     :
+APPROX_COUNT()                  :APPROX_COUNT()                  :
+APPROX_COUNT_DISTINCT()         :APPROX_COUNT_DISTINCT()         :
+APPROX_COUNT_DISTINCT_AGG()     :APPROX_COUNT_DISTINCT_AGG()     :
+APPROX_COUNT_DISTINCT_DETAIL()  :APPROX_COUNT_DISTINCT_DETAIL()  :
+APPROX_MEDIAN()                 :APPROX_MEDIAN()                 :
+APPROX_PERCENTILE()             :APPROX_PERCENTILE()             :
+APPROX_PERCENTILE_AGG()         :APPROX_PERCENTILE_AGG()         :
+APPROX_PERCENTILE_DETAIL()      :APPROX_PERCENTILE_DETAIL()      :
+APPROX_RANK()                   :APPROX_RANK()                   :
+APPROX_SUM()                    :APPROX_SUM()                    :
+AVG()                           :AVG()                           :
+BIT_AND_AGG()                   :BIT_AND_AGG()                   :
+BIT_OR_AGG()                    :BIT_OR_AGG()                    :
+BIT_XOR_AGG()                   :BIT_XOR_AGG()                   :
+CHECKSUM()                      :CHECKSUM()                      :
+COLLECT()                       :COLLECT()                       :
+CORR()                          :CORR()                          :
+CORR_*()                        :CORR_*()                        :
+COUNT()                         :COUNT()                         :
+COVAR_POP()                     :COVAR_POP()                     :
+COVAR_SAMP()                    :COVAR_SAMP()                    :
+CUME_DIST()                     :CUME_DIST()                     :
+DENSE_RANK()                    :DENSE_RANK()                    :
+FIRST()                         :FIRST()                         :
+GROUP_ID()                      :GROUP_ID()                      :
+GROUPING()                      :GROUPING()                      :
+GROUPING_ID()                   :GROUPING_ID()                   :
+JSON_ARRAYAGG()                 :JSON_ARRAYAGG()                 :
+JSON_OBJECTAGG()                :JSON_OBJECTAGG()                :
+KURTOSIS_POP()                  :KURTOSIS_POP()                  :
+KURTOSIS_SAMP()                 :KURTOSIS_SAMP()                 :
+LAST()                          :LAST()                          :
+LISTAGG()                       :LISTAGG()                       :
+MAX()                           :MAX()                           :
+MEDIAN()                        :MEDIAN()                        :
+MIN()                           :MIN()                           :
+PERCENT_RANK()                  :PERCENT_RANK()                  :
+PERCENTILE_CONT()               :PERCENTILE_CONT()               :
+PERCENTILE_DISC()               :PERCENTILE_DISC()               :
+RANK()                          :RANK()                          :
+REGR_ (Linear Regression) Functions() :                          REGR_ (Linear Regression) Functions()
+SKEWNESS_POP()                  :SKEWNESS_POP()                  :
+SKEWNESS_SAMP()                 :SKEWNESS_SAMP()                 :
+STATS_BINOMIAL_TEST()           :STATS_BINOMIAL_TEST()           :
+STATS_CROSSTAB()                :STATS_CROSSTAB()                :
+STATS_F_TEST()                  :STATS_F_TEST()                  :
+STATS_KS_TEST()                 :STATS_KS_TEST()                 :
+STATS_MODE()                    :STATS_MODE()                    :
+STATS_MW_TEST()                 :STATS_MW_TEST()                 :
+STATS_ONE_WAY_ANOVA()           :STATS_ONE_WAY_ANOVA()           :
+STATS_T_TEST_*()                :STATS_T_TEST_*()                :
+STATS_WSR_TEST()                :STATS_WSR_TEST()                :
+STDDEV()                        :STDDEV()                        :
+STDDEV_POP()                    :STDDEV_POP()                    :
+STDDEV_SAMP()                   :STDDEV_SAMP()                   :
+SUM()                           :SUM()                           :
+SYS_OP_ZONE_ID()                :SYS_OP_ZONE_ID()                :
+SYS_XMLAGG()                    :SYS_XMLAGG()                    :
+TO_APPROX_COUNT_DISTINCT()      :TO_APPROX_COUNT_DISTINCT()      :
+TO_APPROX_PERCENTILE()          :TO_APPROX_PERCENTILE()          :
+VAR_POP()                       :VAR_POP()                       :
+VAR_SAMP()                      :VAR_SAMP()                      :
+VARIANCE()                      :VARIANCE()                      :
+XMLAGG()                        :XMLAGG()                        :
