@@ -422,10 +422,15 @@ public class DbUtils {
 
         Set<FunctionInfo> functionInfos = new HashSet<>();
 
+        String subCatalog = "";
         String catalog = "";
         for (String function: functions) {
             if (function.startsWith("[") && function.endsWith("]")) {
                 catalog = function.substring(1, function.lastIndexOf("]"));
+                subCatalog = catalog;
+                continue;
+            } else if (function.startsWith("[-->") && function.endsWith("]")) {
+                subCatalog = catalog + function.substring(1, function.lastIndexOf("]"));
                 continue;
             }
 
@@ -443,7 +448,7 @@ public class DbUtils {
             String signature = split[1].trim();
             String description = split.length == 3? split[2].trim():"" ;
 
-            functionInfos.add(new FunctionInfo(name, catalog, signature));
+            functionInfos.add(new FunctionInfo(name, subCatalog, signature));
         }
 
         return functionInfos;

@@ -315,7 +315,7 @@ NANVL()           :NANVL(n2,n1)          :The NANVL function is useful only for 
 NULLIF()          :NULLIF(expr1,expr2)         :NULLIF compares expr1 and expr2. If they are equal, then the function returns null. If they are not equal, then the function returns expr1. You cannot specify the literal NULL for expr1.
 NVL()             :NVL(expr1,expr2)            :NVL lets you replace null (returned as a blank) with a string in the results of a query. If expr1 is null, then NVL returns expr2. If expr1 is not null, then NVL returns expr1.
 NVL2()            :NVL2(expr1,expr2,expr3)           :NVL2 lets you determine the value returned by a query based on whether a specified expression is null or not null. If expr1 is not null, then NVL2 returns expr2. If expr1 is null, then NVL2 returns expr3.
-[Aggregate Functions]
+[AggregateFunctions]
 ANY_VALUE()                     :ANY_VALUE(?)                    :ANY_VALUE returns a single non-deterministic value of expr. You can use it as an aggregate function.
 ANY_VALUE(DISTINCT)             :ANY_VALUE(DISTINCT ?)           :ANY_VALUE returns a single non-deterministic value of expr. You can use it as an aggregate function.
 ANY_VALUE(ALL)                  :ANY_VALUE(ALL ?)                :ANY_VALUE returns a single non-deterministic value of expr. You can use it as an aggregate function.
