@@ -13,7 +13,7 @@ class DbUtilsTest {
 
     @Test
     void getFunctions() {
-        Set<DbUtils.FunctionInfo> supportFunctions2 = DbUtils.getFunctions(DbType.hive);
+        Set<DbUtils.FunctionInfo> supportFunctions2 = DbUtils.getFunctions(DbType.postgresql);
         System.out.println(supportFunctions2);
     }
 

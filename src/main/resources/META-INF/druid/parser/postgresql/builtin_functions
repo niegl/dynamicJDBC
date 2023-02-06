@@ -4,3 +4,12 @@ OR 	    :A OR B		:TRUE if either A or B or both are TRUE, FALSE OR NULL is NULL,
 NOT A	:NOT ?		:TRUE if A is FALSE or NULL if A is NULL. Otherwise FALSE.
 [Comparison Functions and Operators]
 [-->Comparison Operators]
+datatype < datatype → boolean	:datatype < datatype    :Less than
+datatype > datatype → boolean	:datatype > datatype    :Greater than
+datatype <= datatype → boolean	:datatype <= datatype   :Less than or equal to
+datatype >= datatype → boolean	:datatype >= datatype   :Greater than or equal to
+datatype = datatype → boolean	:datatype = datatype    :Equal
+datatype <> datatype → boolean	:datatype <> datatype   :Not equal
+datatype != datatype → boolean	:datatype != datatype   :Not equal
+[Comparison Predicates]
+datatype BETWEEN datatype AND datatype → boolean    :datatype BETWEEN datatype AND datatype :Between (inclusive of the range endpoints).

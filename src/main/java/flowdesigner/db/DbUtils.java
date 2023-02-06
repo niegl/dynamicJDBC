@@ -425,12 +425,12 @@ public class DbUtils {
         String subCatalog = "";
         String catalog = "";
         for (String function: functions) {
-            if (function.startsWith("[") && function.endsWith("]")) {
+            if (function.startsWith("[-->") && function.endsWith("]")) {
+                subCatalog = catalog + function.substring(1, function.lastIndexOf("]"));
+                continue;
+            } else if (function.startsWith("[") && function.endsWith("]")) {
                 catalog = function.substring(1, function.lastIndexOf("]"));
                 subCatalog = catalog;
-                continue;
-            } else if (function.startsWith("[-->") && function.endsWith("]")) {
-                subCatalog = catalog + function.substring(1, function.lastIndexOf("]"));
                 continue;
             }
 
