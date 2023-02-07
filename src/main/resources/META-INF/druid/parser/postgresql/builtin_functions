@@ -11,5 +11,179 @@ datatype >= datatype → boolean	:datatype >= datatype   :Greater than or equal 
 datatype = datatype → boolean	:datatype = datatype    :Equal
 datatype <> datatype → boolean	:datatype <> datatype   :Not equal
 datatype != datatype → boolean	:datatype != datatype   :Not equal
-[Comparison Predicates]
-datatype BETWEEN datatype AND datatype → boolean    :datatype BETWEEN datatype AND datatype :Between (inclusive of the range endpoints).
+[-->Comparison Predicates]
+datatype BETWEEN datatype AND datatype → boolean        :datatype BETWEEN datatype AND datatype :Between (inclusive of the range endpoints).
+datatype NOT BETWEEN datatype AND datatype → boolean    :datatype NOT BETWEEN datatype AND datatype :Not between (the negation of BETWEEN).
+datatype BETWEEN SYMMETRIC datatype AND datatype → boolean  :datatype BETWEEN SYMMETRIC datatype AND datatype    :Between, after sorting the two endpoint values.
+datatype NOT BETWEEN SYMMETRIC datatype AND datatype → boolean  :datatype NOT BETWEEN SYMMETRIC datatype AND datatype   :Not between, after sorting the two endpoint values.
+datatype IS DISTINCT FROM datatype → boolean    :datatype IS DISTINCT FROM datatype   :Not equal, treating null as a comparable value.
+datatype IS NOT DISTINCT FROM datatype → boolean    :datatype IS NOT DISTINCT FROM datatype   :Equal, treating null as a comparable value.
+datatype IS NULL → boolean  :? IS NULL   :Test whether value is null.
+datatype IS NOT NULL → boolean  :? IS NOT NULL   :Test whether value is not null.
+datatype ISNULL → boolean   :? ISNULL    :Test whether value is null (nonstandard syntax).
+datatype NOTNULL → boolean  :? NOTNULL   :Test whether value is not null (nonstandard syntax).
+boolean IS TRUE → boolean   :? IS TRUE  :Test whether boolean expression yields true.
+boolean IS NOT TRUE → boolean   :? IS NOT TRUE  :Test whether boolean expression yields false or unknown.
+boolean IS FALSE → boolean  :? IS FALSE   :Test whether boolean expression yields false.
+boolean IS NOT FALSE → boolean  :? IS NOT FALSE   :Test whether boolean expression yields true or unknown.
+boolean IS UNKNOWN → boolean    :? IS UNKNOWN     :Test whether boolean expression yields unknown.
+boolean IS NOT UNKNOWN → boolean    :? IS NOT UNKNOWN :Test whether boolean expression yields true or false.
+[-->Comparison Functions]
+num_nonnulls ( VARIADIC "any" ) → integer   :num_nonnulls ( VARIADIC "any" )    :Returns the number of non-null arguments.
+num_nulls ( VARIADIC "any" ) → integer      :num_nulls ( VARIADIC "any" )       :Returns the number of null arguments.
+[Mathematical Functions and Operators]
+[-->Mathematical Operators]
+numeric_type + numeric_type → numeric_type  :numeric_type + numeric_type   :Addition
++ numeric_type → numeric_type   :+ ? :Unary plus (no operation)
+numeric_type - numeric_type → numeric_type  :numeric_type - numeric_type   :Subtraction
+- numeric_type → numeric_type   :- ?   :Negation
+numeric_type * numeric_type → numeric_type  :numeric_type * numeric_type   :Multiplication
+numeric_type / numeric_type → numeric_type  :numeric_type / numeric_type   :Division (for integral types, division truncates the result towards zero)
+numeric_type % numeric_type → numeric_type  :numeric_type % numeric_type    :Modulo (remainder); available for smallint, integer, bigint, and numeric
+numeric ^ numeric → numeric     :numeric ^ numeric       :double precision ^ double precision → double precision
+|/ double precision → double precision      :|/ ?    :Square root
+||/ double precision → double precision     :||/ ?       :
+@ numeric_type → numeric_type   : @ ?  :Absolute value
+integral_type & integral_type → integral_type   :integral_type & integral_type   :Bitwise AND
+integral_type | integral_type → integral_type   :integral_type | integral_type      :Bitwise OR
+integral_type # integral_type → integral_type   :integral_type # integral_type      :Bitwise exclusive OR
+~ integral_type → integral_type     :~ ?   :Bitwise NOT
+integral_type << integer → integral_type    :integral_type << integer   :Bitwise shift left
+integral_type >> integer → integral_type    :integral_type >> integer   :Bitwise shift right
+[-->Mathematical Functions]
+abs ( numeric_type ) → numeric_type					    :abs ( ? )	                                    :Absolute value
+cbrt ( double precision ) → double precision		    :cbrt ( ? )	                                    :Cube root
+ceil ( numeric ) → numeric							    :ceil ( ? )			                            :Nearest integer greater than or equal to argument
+ceil ( double precision ) → double precision		    :ceil ( ? )	                                    :Nearest integer greater than or equal to argument
+ceiling ( numeric ) → numeric						    :ceiling ( numeric )	                        :Nearest integer greater than or equal to argument (same as ceil)
+ceiling ( double precision ) → double precision		    :ceiling ( ? )	                                :Nearest integer greater than or equal to argument (same as ceil)
+degrees ( double precision ) → double precision		    :degrees ( ? )	                                :Converts radians to degrees
+div ( y numeric, x numeric ) → numeric				    :div ( y numeric, x numeric )	                :Integer quotient of y/x (truncates towards zero)
+exp ( numeric ) → numeric							    :exp ( ? )	                                    :Exponential (e raised to the given power)
+exp ( double precision ) → double precision			    :exp ( ? )	                                    :Exponential (e raised to the given power)
+factorial ( bigint ) → numeric						    :factorial ( ? )	                            :Factorial
+floor ( numeric ) → numeric							    :floor ( ? )	                                :Nearest integer less than or equal to argument
+floor ( double precision ) → double precision		    :floor ( ? )	                                :Nearest integer less than or equal to argument
+gcd ( numeric_type, numeric_type ) → numeric_type	    :gcd ( numeric_type, numeric_type )	            :Greatest common divisor (the largest positive number that divides both inputs with no remainder); returns 0 if both inputs are zero; available for integer, bigint, and numeric
+lcm ( numeric_type, numeric_type ) → numeric_type	    :lcm ( numeric_type, numeric_type )	            :Least common multiple (the smallest strictly positive number that is an integral multiple of both inputs); returns 0 if either input is zero; available for integer, bigint, and numeric
+ln ( numeric ) → numeric							    :ln ( ? )	                                    :Natural logarithm
+ln ( double precision ) → double precision			    :ln ( ? )	                                    :Natural logarithm
+log ( numeric ) → numeric							    :log ( ? )	                                    :Base 10 logarithm
+log ( double precision ) → double precision			    :log ( ? )	                                    :Base 10 logarithm
+log10 ( numeric ) → numeric							    :log10 ( ? )	                                :Base 10 logarithm (same as log)
+log10 ( double precision ) → double precision		    :log10 ( ? )	                                :Base 10 logarithm (same as log)
+log ( b numeric, x numeric ) → numeric				    :log ( b numeric, x numeric )	                :Logarithm of x to base b
+min_scale ( numeric ) → integer						    :min_scale ( ? )	                            :Minimum scale (number of fractional decimal digits) needed to represent the supplied value precisely
+mod ( y numeric_type, x numeric_type ) → numeric_type	:mod ( y numeric_type, x numeric_type )	        :Remainder of y/x; available for smallint, integer, bigint, and numeric
+pi ( ) → double precision							    :pi ( )	                                        :Approximate value of π
+power ( a numeric, b numeric ) → numeric		        :power ( a numeric, b numeric )	                :a raised to the power of b
+power ( a double precision, b double precision ) → double precision		            :power ( a double precision, b double precision )	    :a raised to the power of b
+radians ( double precision ) → double precision		    :radians ( ? )	                                :Converts degrees to radians
+round ( numeric ) → numeric							    :round ( ? )	                                :Rounds to nearest integer. For numeric, ties are broken by rounding away from zero. For double precision, the tie-breaking behavior is platform dependent, but “round to nearest even” is the most common rule.
+round ( double precision ) → double precision		    :round ( ? )	                                :Rounds to nearest integer. For numeric, ties are broken by rounding away from zero. For double precision, the tie-breaking behavior is platform dependent, but “round to nearest even” is the most common rule.
+round ( v numeric, s integer ) → numeric			    :round ( v numeric, s integer )	                :Rounds v to s decimal places. Ties are broken by rounding away from zero.
+scale ( numeric ) → integer							    :scale ( ? )	                                :Scale of the argument (the number of decimal digits in the fractional part)
+sign ( numeric ) → numeric							    :sign ( ? )	                                    :Sign of the argument (-1, 0, or +1)
+sign ( double precision ) → double precision		    :sign ( ? )	                                    :Sign of the argument (-1, 0, or +1)
+sqrt ( numeric ) → numeric							    :sqrt ( ? )	                                    :Square root
+sqrt ( double precision ) → double precision		    :sqrt ( ? )	                                    :Square root
+trim_scale ( numeric ) → numeric					    :trim_scale( ? )	                            :Reduces the value's scale (number of fractional decimal digits) by removing trailing zeroes
+trunc ( numeric ) → numeric							    :trunc( ? )	                                    :Truncates to integer (towards zero)
+trunc ( double precision ) → double precision		    :trunc( ? )	                                    :Truncates to integer (towards zero)
+trunc ( v numeric, s integer ) → numeric			    :trunc ( v numeric, s integer )	                :Truncates v to s decimal places
+width_bucket ( operand numeric, low numeric, high numeric, count integer ) → integer							:width_bucket ( operand numeric, low numeric, high numeric, count integer )	:Returns the number of the bucket in which operand falls in a histogram having count equal-width buckets spanning the range low to high. Returns 0 or count+1 for an input outside that range.
+width_bucket ( operand double precision, low double precision, high double precision, count integer ) → integer	:width_bucket ( operand double precision, low double precision, high double precision, count integer )	:Returns the number of the bucket in which operand falls in a histogram having count equal-width buckets spanning the range low to high. Returns 0 or count+1 for an input outside that range.
+width_bucket ( operand anycompatible, thresholds anycompatiblearray ) → integer									:width_bucket ( operand anycompatible, thresholds anycompatiblearray )	:Returns the number of the bucket in which operand falls given an array listing the lower bounds of the buckets. Returns 0 for an input less than the first lower bound. operand and the array elements can be of any type having standard comparison operators. The thresholds array must be sorted, smallest first, or unexpected results will be obtained.
+[-->Random Functions]
+random ( ) → double precision			:random ( )	:Returns a random value in the range 0.0 <= x < 1.0
+setseed ( double precision ) → void		:setseed ( ? )	:Sets the seed for subsequent random() calls; argument must be between -1.0 and 1.0, inclusive
+[-->Trigonometric Functions]
+acos ( double precision ) → double precision							:acos ( ? )		:Inverse cosine, result in radians
+acosd ( double precision ) → double precision							:acosd( ? )		:Inverse cosine, result in degrees
+asin ( double precision ) → double precision							:asin( ? )		:Inverse sine, result in radians
+asind ( double precision ) → double precision							:asind( ? )		:Inverse sine, result in degrees
+atan ( double precision ) → double precision							:atan ( ? )		:Inverse tangent, result in radians
+atand ( double precision ) → double precision							:atand( ? )		:Inverse tangent, result in degrees
+atan2 ( y double precision, x double precision ) → double precision		:atan2( ? )		:Inverse tangent of y/x, result in radians
+atan2d ( y double precision, x double precision ) → double precision	:atan2d( ? )	:Inverse tangent of y/x, result in degrees
+cos ( double precision ) → double precision								:cos ( ? )		:Cosine, argument in radians
+cosd ( double precision ) → double precision							:cosd( ? )		:Cosine, argument in degrees
+cot ( double precision ) → double precision								:cot ( ? )		:Cotangent, argument in radians
+cotd ( double precision ) → double precision							:cotd( ? )		:Cotangent, argument in degrees
+sin ( double precision ) → double precision								:sin ( ? )		:Sine, argument in radians
+sind ( double precision ) → double precision							:sind( ? )		:Sine, argument in degrees
+tan ( double precision ) → double precision								:tan ( ? )		:Tangent, argument in radians
+tand ( double precision ) → double precision							:tand( ? )		:Tangent, argument in degrees
+[-->Hyperbolic Functions]
+sinh ( double precision ) → double precision		:sinh ( ? )  	:Hyperbolic sine
+cosh ( double precision ) → double precision		:cosh ( ? ) 	:Hyperbolic cosine
+tanh ( double precision ) → double precision		:tanh ( ? ) 	:Hyperbolic tangent
+asinh ( double precision ) → double precision		:asinh ( ? )	:Inverse hyperbolic sine
+acosh ( double precision ) → double precision		:acosh ( ? )	:Inverse hyperbolic cosine
+atanh ( double precision ) → double precision		:atanh ( ? )	:Inverse hyperbolic tangent
+[String Functions and Operators]
+[-->SQL String Functions and Operators]
+text || text → text																					:text || text	                                                                                :Concatenates the two strings.
+text || anynonarray → text																			:text || anynonarray	                                                                        :Converts the non-string input to text, then concatenates the two strings. (The non-string input cannot be of an array type, because that would create ambiguity with the array || operators. If you want to concatenate an array's text equivalent, cast it to text explicitly.)
+anynonarray || text → text																			:anynonarray || text	                                                                        :Converts the non-string input to text, then concatenates the two strings. (The non-string input cannot be of an array type, because that would create ambiguity with the array || operators. If you want to concatenate an array's text equivalent, cast it to text explicitly.)
+text IS [NOT] [form] NORMALIZED → boolean															:? IS [NOT] [NFC|NFD|NFKC|NFKD] NORMALIZED	                                                    :Checks whether the string is in the specified Unicode normalization form. The optional form key word specifies the form: NFC (the default), NFD, NFKC, or NFKD. This expression can only be used when the server encoding is UTF8. Note that checking for normalization using this expression is often faster than normalizing possibly already normalized strings.
+bit_length ( text ) → integer																		:bit_length ( ? )	                                                                            :Returns number of bits in the string (8 times the octet_length).
+char_length ( text ) → integer																		:char_length ( ? )	                                                                            :Returns number of characters in the string.
+character_length ( text ) → integer																	:character_length ( ? )	                                                                        :Returns number of characters in the string.
+lower ( text ) → text																				:lower ( ? )	                                                                                :Converts the string to all lower case, according to the rules of the database's locale.
+normalize ( text [, form ] ) → text																	:normalize ( ? [, NFC|NFD|NFKC|NFKD ] )	                                                        :Converts the string to the specified Unicode normalization form. The optional form key word specifies the form: NFC (the default), NFD, NFKC, or NFKD. This function can only be used when the server encoding is UTF8.
+octet_length ( text ) → integer																		:octet_length ( ? )	                                                                            :Returns number of bytes in the string.
+octet_length ( character ) → integer																:octet_length ( ? )	                                                                            :Returns number of bytes in the string. Since this version of the function accepts type character directly, it will not strip trailing spaces.
+overlay ( string text PLACING newsubstring text FROM start integer [ FOR count integer ] ) → text	:overlay ( string text PLACING newsubstring text FROM start integer [ FOR count integer ] )	    :Replaces the substring of string that starts at the start'th character and extends for count characters with newsubstring. If count is omitted, it defaults to the length of newsubstring.
+position ( substring text IN string text ) → integer												:position ( substring text IN string text )	                                                    :Returns first starting index of the specified substring within string, or zero if it's not present.
+substring ( string text [ FROM start integer ] [ FOR count integer ] ) → text						:substring ( string text [ FROM start integer ] [ FOR count integer ] )	                        :Extracts the substring of string starting at the start'th character if that is specified, and stopping after count characters if that is specified. Provide at least one of start and count.
+substring ( string text FROM pattern text ) → text													:substring ( string text FROM pattern text )	                                                :Extracts the first substring matching POSIX regular expression; see Section 9.7.3.
+substring ( string text SIMILAR pattern text ESCAPE escape text ) → text							:substring ( string text SIMILAR pattern text ESCAPE escape text )	                            :Extracts the first substring matching SQL regular expression; see Section 9.7.2. The first form has been specified since SQL:2003; the second form was only in SQL:1999 and should be considered obsolete.
+substring ( string text FROM pattern text FOR escape text ) → text									:substring ( string text FROM pattern text FOR escape text )	                                :Extracts the first substring matching SQL regular expression; see Section 9.7.2. The first form has been specified since SQL:2003; the second form was only in SQL:1999 and should be considered obsolete.
+trim ( [ LEADING | TRAILING | BOTH ] [ characters text ] FROM string text ) → text					:trim ( [ LEADING | TRAILING | BOTH ] [ characters text ] FROM string text )	                :Removes the longest string containing only characters in characters (a space by default) from the start, end, or both ends (BOTH is the default) of string.
+trim ( [ LEADING | TRAILING | BOTH ] [ FROM ] string text [, characters text ] ) → text				:trim ( [ LEADING | TRAILING | BOTH ] [ FROM ] string text [, characters text ] )	            :This is a non-standard syntax for trim().
+upper ( text ) → text																				:upper ( ? )	                                                                                :Converts the string to all upper case, according to the rules of the database's locale.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
