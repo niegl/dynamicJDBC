@@ -1,7 +1,7 @@
 package flowdesigner.util;
 
 import com.alibaba.druid.util.JdbcUtils;
-import commonUtility.file.FileKit;
+import flowdesigner.util.raw.kit.FileKit;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.EmptyFileFilter;
