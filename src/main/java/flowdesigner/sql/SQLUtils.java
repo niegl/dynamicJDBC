@@ -26,6 +26,7 @@ import flowdesigner.sql.dialect.presto.visitor.PrestoOutputVisitorV2;
 import flowdesigner.sql.visitor.SQLASTOutputVisitorV2;
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.SQLSyntaxErrorException;
 import java.util.Collection;
 import java.util.List;
 
@@ -229,5 +230,16 @@ public class SQLUtils {
         public final boolean isEnabled(VisitorFeature feature) {
             return VisitorFeature.isEnabled(this.features, feature);
         }
+    }
+
+    public static String checkSyntax(String sql, DbType dbType) {
+        String result = "SUCCESS";
+        try {
+            List<SQLStatement> list = com.alibaba.druid.sql.SQLUtils.parseStatements(sql, dbType);
+        } catch (com.alibaba.druid.sql.parser.ParserException exception) {
+            result = exception.getMessage();
+        }
+
+        return result;
     }
 }

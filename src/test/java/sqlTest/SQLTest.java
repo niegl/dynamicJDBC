@@ -1682,7 +1682,11 @@ public class SQLTest {
         String sql = "--插入开始时间用来计算跑批时间\nCREATE TABLE tbl_name(name VARCHAR(20));";
         parser(sql, "mysql");
     }
-
+    @org.junit.jupiter.api.Test
+    void test1() throws SQLSyntaxErrorException {
+        String sql = "select name,age  test_tab1 where SELECT select;select name,age from test_tab1 where SELECT select;";
+        parser(sql, "hive");
+    }
     public static SQLStatement parser(String sql, DbType dbType) throws SQLSyntaxErrorException {
         return parser(sql,dbType.toString());
     }
