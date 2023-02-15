@@ -132,12 +132,199 @@ VARGRAPHIC(Decimal to vargraphic|Floating-point to vargraphic|Decimal floating-p
 VARGRAPHIC(Character to vargraphic|Graphic to vargraphic) 	                                            :VARGRAPHIC(?[,integer])                     :
 VARGRAPHIC(Datetime to vargraphic) 	                                                                    :VARGRAPHIC(?[,ISO|USA|EUR|JIS|LOCAL])       :
 [Datetime scalar functions]
-
-
-
-
-
-
+ADD_DAYS 	            :ADD_DAYS(expression,numeric-expression) 	            :Returns a datetime value that represents the first argument plus a specified number of days.
+ADD_HOURS 	            :ADD_HOURS(expression,numeric-expression) 	            :Returns a timestamp value that represents the first argument plus a specified number of hours.
+ADD_MINUTES             :ADD_MINUTES(expression,numeric-expression)             :Returns a timestamp value that represents the first argument plus a specified number of minutes.
+ADD_MONTHS 	            :ADD_MONTHS(expression,numeric-expression) 	            :Returns a datetime value that represents expression plus a specified number of months.
+ADD_SECONDS             :ADD_SECONDS(expression,numeric-expression)             :Returns a timestamp value that represents the first argument plus a specified number of seconds and fractional seconds.
+ADD_YEARS 	            :ADD_YEARS(expression,numeric-expression) 	            :Returns a datetime value that represents the first argument plus a specified number of years.
+DATE_PART 	            :DATE_PART(format-string,datetime-expression) 	        :Returns portion of a datetime based on its argument.
+DATE_TRUNC 	            :DATE_TRUNC(format-string,datetime-expression) 	        :Returns a timestamp expression rounded to the specified unit.
+DAY 	                :DAY(?) 	                                            :Returns the day part of a value.
+DAYNAME 	            :DAYNAME(?[,locale-name]) 	                            :Returns a character string containing the name of the day (for example, Friday) for the day portion of expression, based on locale-name or the value of the special register CURRENT LOCALE LC_TIME.
+DAYOFMONTH 	            :DAYOFMONTH(?) 	                                        :Returns an integer between 1 and 31 that represents the day of the month.
+DAYOFWEEK 	            :DAYOFWEEK(?[,start-of-week])  	                        :Returns the day of the week in the first argument as an integer value. The integer value is in the range 1-7, where 1 represents the first day of the week, as specified in the second argument.
+DAYOFWEEK_ISO 	        :DAYOFWEEK_ISO(?) 	                                    :Returns the day of the week from a value, where 1 is Monday and 7 is Sunday.
+DAYOFYEAR 	            :DAYOFYEAR(?) 	                                        :Returns the day of the year from a value.
+DAYS 	                :DAYS(?) 	                                            :Returns an integer representation of a date.
+DAYS_BETWEEN 	        :DAYS_BETWEEN(expression1,expression2) 	                :Returns the number of full days between the specified arguments.
+DAYS_TO_END_OF_MONTH 	:DAYS_TO_END_OF_MONTH(?)                                :Returns the number of days to the end of the month.
+EXTRACT(Extract date values) 	  :EXTRACT(EPOCH| MILLENNIUM| MILLENNIUMS| CENTURY| CENTURIES| DECADE| DECADES| YEAR| YEARS| QUARTER| MONTH| WEEK| DAY| DAYS| DOW| DOY,date-expression|timestamp-expression|date-duration|timestamp-duration) 	            :Returns a portion of a date or timestamp based on the arguments.
+EXTRACT(Extract time values) 	  :EXTRACT(HOUR|HOURS|MINUTE|MINUTES|SECONDS|MILLISECOND|MILLISECONDS|MICROSECOND|MICROSECONDS,time-expression|timestamp-expression|time-duration|timestamp-duration) 	            :Returns a portion of a date or timestamp based on the arguments.
+FIRST_DAY 	            :FIRST_DAY(?) 	                                        :Returns a date or timestamp that represents the first day of the month of the argument.
+FROM_UTC_TIMESTAMP 	    :FROM_UTC_TIMESTAMP(?,timezone-expression) 	            :Returns a TIMESTAMP that is converted from Coordinated Universal Time to the timezone that is specified by the timezone string.
+HOUR 	                :HOUR(?) 	                                            :Returns the hour part of a value.
+HOURS_BETWEEN 	        :HOURS_BETWEEN(expression1,expression2) 	            :Returns the number of full hours between the specified arguments.
+JULIAN_DAY 	            :JULIAN_DAY(?) 	                                        :Returns an integer value representing the number of days from January 1, 4712 B.C. to the date specified in the argument.
+LAST_DAY 	            :LAST_DAY(?) 	                                        :Returns a datetime value that represents the last day of the month of the argument.
+MICROSECOND 	        :MICROSECOND(?) 	                                    :Returns the microsecond part of a value.
+MIDNIGHT_SECONDS 	    :MIDNIGHT_SECONDS(?) 	                                :Returns an integer value representing the number of seconds between midnight and a specified time value.
+MINUTE 	                :MINUTE(?) 	                                            :Returns the minute part of a value.
+MINUTES_BETWEEN 	    :MINUTES_BETWEEN(expression1,expression2) 	            :Returns the number of full minutes between the specified arguments.
+MONTH 	                :MONTH(?) 	                                            :Returns the month part of a value.
+MONTHNAME 	            :MONTHNAME(?[,locale-name]) 	                        :Returns a character string containing the name of the month (for example, January) for the month portion of expression, based on locale-name or the value of the special register CURRENT LOCALE LC_TIME.
+MONTHS_BETWEEN 	        :MONTHS_BETWEEN(expression1,expression2) 	            :Returns an estimate of the number of months between expression1 and expression2.
+NEXT_DAY 	            :NEXT_DAY (?,MONDAY|TUESDAY|WEDNESDAY|THURSDAY|FRIDAY|SATURDAY|SUNDAY,locale-name)	            :Returns a datetime value that represents the first weekday, named by string-expression, that is later than the date in expression.
+NEXT_MONTH 	            :NEXT_MONTH(?) 	                                        :Returns the first day of the next month after the specified date.
+NEXT_QUARTER 	        :NEXT_QUARTER(?) 	                                    :Returns the first day of the next quarter after the specified date.
+NEXT_WEEK 	            :NEXT_WEEK(?) 	                                        :Returns the first day of the next week after the specified date.
+NEXT_YEAR 	            :NEXT_YEAR(?) 	                                        :Returns the first day of the next year after the specified date.
+NOW 	                :NOW([Valid values are 0 to 12]) 	                    :Returns a timestamp based on when the SQL statement is executed at the current server.
+QUARTER 	            :QUARTER(?) 	                                        :Returns an integer that represents the quarter of the year in which a date resides.
+ROUND(numeric) 	        :ROUND(?[,0|numeric-expression2]) 	                            :Returns a datetime value, rounded to the unit specified by format-string.
+ROUND(datetime) 	    :ROUND(?[,'DD'|{format-string[ locale-name]}]) 	                :Returns a datetime value, rounded to the unit specified by format-string.
+ROUND_TIMESTAMP 	    :ROUND_TIMESTAMP(?[,'DD'|{format-string[ locale-name]}]) 	    :Returns a timestamp that is the expression rounded to the unit specified by the format-string.
+SECOND 	                :SECOND(?[,integer-constant]) 	                                :Returns the seconds part of a value.
+SECONDS_BETWEEN 	    :SECONDS_BETWEEN(expression1,expression2) 	                    :Returns the number of full seconds between the specified arguments.
+THIS_MONTH 	            :THIS_MONTH(?) 	                                                :Returns the first day of the month in the specified date.
+THIS_QUARTER 	        :THIS_QUARTER(?) 	                                            :Returns the first day of the quarter in the specified date.
+THIS_WEEK 	            :THIS_WEEK(?) 	                                                :Returns the first day of the week in the specified date.
+THIS_YEAR 	            :THIS_YEAR(?) 	                                                :Returns the first day of the year in the specified date.
+TIMESTAMP_FORMAT 	    :TIMESTAMP_FORMAT(?[,format-string[{[6|precision-constant][,locale-name]}|{,locale-name 6|precision-constant}]]) 	    :Returns a timestamp from a character string (argument1) that has been interpreted using a format template (argument2).
+TIMESTAMP_ISO 	        :TIMESTAMP_ISO(?) 	                                            :Returns a timestamp value based on a date, time, or timestamp argument. If the argument is a date, it inserts zero for all the time elements. If the argument is a time, it inserts the value of CURRENT DATE for the date elements, and zero for the fractional time element.
+TIMESTAMPDIFF 	        :TIMESTAMPDIFF(1|2|4|8|16|32|64|128|256,string-expression) 	    :Returns an estimated number of intervals of type argument1, based on the difference between two timestamps. The second argument is the result of subtracting two timestamp types and converting the result to CHAR.
+TIMEZONE 	            :TIMEZONE(datetime-expression,from-timezone,to-timezone) 	    :Converts a date and time in one timezone into a timestamp in another timezone.
+TO_CHAR(Character to varchar) 	                                        :TO_CHAR(?) 	                                        :Returns a CHARACTER representation of a timestamp.
+TO_CHAR(Timestamp to varchar|Decimal floating-point to varchar) 	    :TO_CHAR(?[,format-string[,locale-name]]) 	            :Returns a CHARACTER representation of a timestamp.
+TO_DATE 	                                    :TO_DATE((?[,format-string[{[6|precision-constant][,locale-name]}|{,locale-name 6|precision-constant}]])) 	            :Returns a timestamp from a character string.
+TO_NCHAR(Character to varchar) 	                :TO_NCHAR(?) 	                            :Returns a national character representation of an input expression that has been formatted using a character template.
+TO_NCHAR(Timestamp to varchar) 	                :TO_NCHAR(?[,format-string[,locale-name]]) 	:Returns a national character representation of an input expression that has been formatted using a character template.
+TO_NCHAR(Decimal floating-point to varchar) 	:TO_NCHAR(?[,format-string]) 	            :Returns a national character representation of an input expression that has been formatted using a character template.
+TO_TIMESTAMP 	        :TO_TIMESTAMP((?[,format-string[{[6|precision-constant][,locale-name]}|{,locale-name 6|precision-constant}]])) 	        :Returns a timestamp that is based on the interpretation of the input string using the specified format.
+TO_UTC_TIMESTAMP 	    :TO_UTC_TIMESTAMP(?,timezone-expression) 	                    :Returns a TIMESTAMP that is converted from Coordinated Universal Time to the timezone specified by the timezone string.
+TRUNCATE(numeric) 	    :TRUNCATE(?[,0|numeric-expression2]) 	                        :Returns a datetime value, truncated to the unit specified by format-string.
+TRUNCATE(datetime) 	    :TRUNCATE(?[,'DD'|{format-string[ locale-name]}]) 	            :Returns a datetime value, truncated to the unit specified by format-string.
+TRUNC(numeric) 	        :TRUNC(?[,0|numeric-expression2]) 	                            :Returns a datetime value, truncated to the unit specified by format-string.
+TRUNC(datetime) 	    :TRUNC(?[,'DD'|{format-string[ locale-name]}]) 	                :Returns a datetime value, truncated to the unit specified by format-string.
+TRUNC_TIMESTAMP 	    :TRUNC_TIMESTAMP(?[,'DD'|{format-string[ locale-name]}]) 	    :Returns a timestamp that is the expression truncated to the unit specified by the format-string.
+VARCHAR_FORMAT(Character string to VARCHAR) 	                            :VARCHAR_FORMAT(?) 	                                :Returns a CHARACTER representation of a timestamp (argument1), formatted according to a template (argument2).
+VARCHAR_FORMAT(DATE or TIMESTAMP to VARCHAR|Signed numeric to VARCHAR) 	    :VARCHAR_FORMAT(?[,format-string[,locale-name]]) 	:Returns a CHARACTER representation of a timestamp (argument1), formatted according to a template (argument2).
+WEEK 	                :WEEK(?) 	                                                    :Returns the week of the year from a value, where the week starts with Sunday.
+WEEK_ISO 	            :WEEK_ISO(?)  	                                                :Returns the week of the year from a value, where the week starts with Monday.
+WEEKS_BETWEEN 	        :WEEKS_BETWEEN(expression1,expression2)  	                    :Returns the number of full weeks between the specified arguments.
+YEAR 	                :YEAR(?)  	                                                    :Returns the year part of a value.
+YEARS_BETWEEN 	        :YEARS_BETWEEN(expression1,expression2)  	                    :Returns the number of full years between the specified arguments.
+YMD_BETWEEN 	        :YMD_BETWEEN(expression1,expression2)  	                        :Returns a numeric value that specifies the number of full years, full months, and full days between two datetime values.
+[JSON scalar functions]
+BSON_TO_JSON 	        :BSON_TO_JSON(?)       :Converts a string that contains data that is formatted as BSON to a character string that contains data that is formatted as JSON.
+JSON_ARRAY 	            :JSON_ARRAY([{JSON_expression[ FORMAT JSON|BSON]}...|{fullselect[ FORMAT JSON|BSON]}][ ABSENT ON NULL|NULL ON NULL][RETURNING CLOB(2G) FORMAT JSON|{RETURNING data-type[ FORMAT JSON[ ENCODING UTF8]]}]) 	    :Generates a JSON array by explicitly listing the array elements by using an expression or by using a query.
+JSON_OBJECT             :JSON_OBJECT([[KEY ]key-expression VALUE JSON-expression[ FORMAT JSON|BSON]][ ABSENT ON NULL|NULL ON NULL][ WITHOUT UNIQUE KEYS|WITH UNIQUE KEYS][ RETURNING CLOB(2G) FORMAT JSON|{RETURNING data-type[ FORMAT JSON[ ENCODING UTF8]|FORMAT BSON]}])        :Generates a JSON object by using the specified key:value pairs. If no key:value pairs are provided, an empty object is returned.
+JSON_QUERY 	            :JSON_QUERY(JSON_expression[ FORMAT JSON|BSON],sql-json-path-expression[ AS path-name][ RETURNING CLOB(2G) FORMAT JSON|{RETURNING data-type[ FORMAT JSON[ ENCODING UTF8]|FORMAT BSON]}][ WITHOUT[ ARRAY] WRAPPER|WITH[ UNCONDITIONAL|CONDITIONAL][ ARRAY] WRAPPER][ KEEP QUOTES[ ON SCALAR STRING]|OMIT QUOTES[ ON SCALAR STRING]]) 	    :Returns an SQL/JSON value from the specified JSON text by using an SQL/JSON path expression.
+JSON_TO_BSON 	        :JSON_TO_BSON(?)       :Converts a string that contains data that is formatted for JSON to a binary string that contains data that is formatted as BSON.
+JSON_VALUE 	            :JSON_VALUE(JSON_expression[ FORMAT JSON|BSON],sql-json-path-expression[ AS path-name][ RETURNING CLOB(2G)|RETURNING data-type][ NULL ON EMPTY|{ERROR|DEFAULT default-expression} ON EMPTY][NULL ON ERROR|{ERROR|DEFAULT default-expression ON ERROR} }]) 	    :Returns an SQL scalar value from JSON text, by using an SQL/JSON path expression.
+[Miscellaneous scalar functions]
+BITAND	            :BITAND(expression1,expression2)	                :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value in a data type based on the data type of the input arguments.
+BITANDNOT	        :BITANDNOT(expression1,expression2)	                :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value in a data type based on the data type of the input arguments.
+BITOR	            :BITOR(expression1,expression2)	                    :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value in a data type based on the data type of the input arguments.
+BITXOR	            :BITXOR(expression1,expression2)	                :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value in a data type based on the data type of the input arguments.
+BITNOT              :BITNOT(expression1,expression2)                    :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value in a data type based on the data type of the input arguments.
+COALESCE 	        :COALESCE(expression1,expression2...) 	            :Returns the first argument that is not null.
+CURSOR_ROWCOUNT 	:CURSOR_ROWCOUNT(?) 	                            :Returns the cumulative count of all rows fetched by the specified cursor since the cursor was opened.
+DECODE 	            :DECODE(expression1{,expression2,result-expression}...[,else-expression]) 	            :Compares each specified expression2 to expression1. If expression1 is equal to expression2, or both expression1 and expression2 are null, the value of the following result-expresssion is returned. If no expression2 matches expression1, the value of else-expression is returned; otherwise a null value is returned.
+DEREF 	            :DEREF(?) 	                            :Returns an instance of the target type of the reference type argument.
+EVENT_MON_STATE 	:EVENT_MON_STATE(?) 	                :Returns the operational state of particular event monitor.
+GREATEST 	        :GREATEST(expression1,expression2...)   :Returns the maximum value in a set of values.
+HEX 	            :HEX(?) 	                            :Returns a hexadecimal representation of a value.
+ISFALSE	            :ISFALSE(?)	                            :Each of these functions returns a Boolean value (TRUE or FALSE) depending on the truth value of its input expression.
+ISTRUE	            :ISTRUE(?)	                            :Each of these functions returns a Boolean value (TRUE or FALSE) depending on the truth value of its input expression.
+ISNOTFALSE	        :ISNOTFALSE(?)	                        :Each of these functions returns a Boolean value (TRUE or FALSE) depending on the truth value of its input expression.
+ISNOTTRUE	        :ISNOTTRUE(?)	                        :Each of these functions returns a Boolean value (TRUE or FALSE) depending on the truth value of its input expression.
+IDENTITY_VAL_LOCAL 	:IDENTITY_VAL_LOCAL()                   :Returns the most recently assigned value for an identity column.
+INT2AND             :INT2AND(expression1,expression2)       :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT4AND             :INT4AND(expression1,expression2)       :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT8AND             :INT8AND(expression1,expression2)       :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT2OR              :INT2OR(expression1,expression2)        :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT4OR              :INT4OR(expression1,expression2)        :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT8OR              :INT8OR(expression1,expression2)        :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT2XOR             :INT2XOR(expression1,expression2)       :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT4XOR             :INT4XOR(expression1,expression2)       :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT8XOR             :INT8XOR(expression1,expression2)       :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT2NOT             :INT2NOT(?)                             :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT4NOT             :INT4NOT(?)                             :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+INT8NOT             :INT8NOT(?)                             :These bitwise functions operate on the "two's complement" representation of the integer value of the input arguments and return the result as a corresponding base 10 integer value.
+LEAST 	            :LEAST(expression1,expression2...) 	                        :Returns the minimum value in a set of values.
+LENGTH 	            :LENGTH(expression1[,CODEUNITS16|CODEUNITS32|OCTETS]) 	    :Returns the length of a value.
+MAX 	            :MAX(expression1,expression2...) 	                        :Returns the maximum value in a set of values.
+MIN 	            :MIN(expression1,expression2...) 	                        :Returns the minimum value in a set of values.
+NULLIF 	            :NULLIF(expression1,expression2) 	                        :Returns a null value if the arguments are equal; otherwise, it returns the value of the first argument.
+NVL 	            :NVL(expression1,expression2...) 	                        :Returns the first argument that is not null.
+RAISE_ERROR 	    :RAISE_ERROR(sqlstate,diagnostic-string) 	                :Raises an error in the SQLCA. The sqlstate that is to be returned is indicated by argument1. The second argument contains any text that is to be returned.
+RAWTOHEX 	        :RAWTOHEX(?) 	                                            :Returns a hexadecimal representation of a value as a character string.
+REC2XML 	        :REC2XML(decimal-constant,format-string,row-tag-string,column-name...) 	            :Returns a string formatted with XML tags, containing column names and column data.
+RID     	        :RID([table-designator])	                                :The RID_BIT scalar function returns the row identifier (RID) of a row in a character string format. The RID scalar function returns the RID of a row in large integer format. The RID function is not supported in partitioned database environments. The RID_BIT function is preferred over the RID function.
+RID_BIT 	        :RID_BIT([table-designator])	                            :The RID_BIT scalar function returns the row identifier (RID) of a row in a character string format. The RID scalar function returns the RID of a row in large integer format. The RID function is not supported in partitioned database environments. The RID_BIT function is preferred over the RID function.
+TABLE_NAME 	        :TABLE_NAME(object-name[,object-schema]) 	                :Returns an unqualified name of a table or view based on the object name specified in argument1, and the optional schema name specified in argument2. The returned value is used to resolve aliases.
+TABLE_SCHEMA 	    :TABLE_SCHEMA(object-name[,object-schema]) 	                :Returns the schema name portion of a two-part table or view name (given by the object name in argument1 and the optional schema name in argument2). The returned value is used to resolve aliases.
+TO_HEX 	            :TO_HEX(?) 	                                                :Converts a numeric expression into the hexadecimal representation.
+TYPE_ID 	        :TYPE_ID(?)  	                                            :Returns the internal data type identifier of the dynamic data type of the argument. The result of this function is not portable across databases.
+TYPE_NAME 	        :TYPE_NAME(?)  	                                            :Returns the unqualified name of the dynamic data type of the argument.
+TYPE_SCHEMA 	    :TYPE_SCHEMA(?)  	                                        :Returns the schema name of the dynamic data type of the argument.
+VALUE 	            :VALUE(expression1,expression2...) 	                        :Returns the first argument that is not null.
+[Numeric scalar functions]
+ABS  	                :ABS(?)  	                                            :Returns the absolute value of a number.
+ABSVAL 	                :ABSVAL(?)  	                                        :Returns the absolute value of a number.
+ACOS 	                :ACOS(?)  	                                            :Returns the arc cosine of a number, in radians.
+ASIN 	                :ASIN(?)  	                                            :Returns the arc sine of a number, in radians.
+ATAN 	                :ATAN(?)  	                                            :Returns the arc tangent of a number, in radians.
+ATANH 	                :ATANH(?)  	                                            :Returns the hyperbolic arc tangent of a number, in radians.
+ATAN2 	                :ATAN2(expression1,expression2)  	                    :Returns the arc tangent of x and y coordinates as an angle expressed in radians.
+CEILING 	            :CEILING(?) 	                                        :Returns the smallest integer value that is greater than or equal to a number.
+CEIL 	                :CEIL(?) 	                                            :Returns the smallest integer value that is greater than or equal to a number.
+COMPARE_DECFLOAT 	    :COMPARE_DECFLOAT(expression1,expression2) 	            :Returns a SMALLINT value that indicates whether the two arguments are equal or unordered, or whether one argument is greater than the other.
+COS 	                :COS(?) 	                                            :Returns the cosine of a number.
+COSH 	                :COSH(?) 	                                            :Returns the hyperbolic cosine of a number.
+COT 	                :COT(?) 	                                            :Returns the cotangent of the argument, where the argument is an angle expressed in radians.
+DECFLOAT_FORMAT 	    :DECFLOAT_FORMAT(?[,format-string])  	                :Returns a DECFLOAT(34) from a character string.
+DEGREES 	            :DEGREES(?) 	                                        :Returns the number of degrees of an angle.
+DIGITS 	                :DIGITS(?) 	                                            :Returns a character-string representation of the absolute value of a number.
+EXP 	                :EXP(?) 	                                            :Returns a value that is the base of the natural logarithm (e) raised to a power specified by the argument.
+FLOOR 	                :FLOOR(?) 	                                            :Returns the largest integer value that is less than or equal to a number.
+LN 	                    :LN(?) 	                                                :Returns the natural logarithm of a number.
+LOG10 	                :LOG10(?) 	                                            :Returns the common logarithm (base 10) of a number.
+MOD 	                :MOD(expression1,expression2)  	                        :Returns the remainder of the first argument divided by the second argument.
+MOD (SYSFUN schema) 	:MOD (expression,expression)                            :Returns the remainder of the first argument divided by the second argument.
+MULTIPLY_ALT 	        :MULTIPLY_ALT(numeric_expression1,numeric_expression2)  :Returns the product of two arguments as a decimal value. This function is useful when the sum of the argument precisions is greater than 31.
+NORMALIZE_DECFLOAT 	    :NORMALIZE_DECFLOAT(?) 	                                :Returns a decimal floating-point value that is the result of the argument set to its simplest form.
+POW 	                :POW(expression1,expression2) 	                        :Returns the result of raising the first argument to the power of the second argument.
+POWER 	                :POWER(expression1,expression2) 	                    :Returns the result of raising the first argument to the power of the second argument.
+QUANTIZE 	            :QUANTIZE(numeric-expression,exp-expression) 	        :Returns a decimal floating-point number that is equal in value and sign to the first argument, and whose exponent is equal to the exponent of the second argument.
+RADIANS 	            :RADIANS(?) 	                                        :Returns the number of radians for an argument that is expressed in degrees.
+RANDOM 	                :RANDOM([expression]) 	                                :Returns a floating point value between 0 and 1.
+RAND (SYSFUN schema) 	:RAND([expression])                                     :Returns a random number.
+RAND (SYSIBM schema) 	:RAND([expression])                                     :Returns a floating point value between 0 and 1.
+ROUND(numeric) 	        :ROUND(numeric-expression1[,0|numeric-expression2]) 	            :Returns a numeric value that has been rounded to the specified number of decimal places.
+ROUND(datetime) 	    :ROUND(datetime-expression[,'DD'|format-string[ locale-name]]) 	    :Returns a numeric value that has been rounded to the specified number of decimal places.
+SIGN 	                :SIGN(?) 	                                                        :Returns the sign of a number.
+SIN 	                :SIN(?) 	                                                        :Returns the sine of a number.
+SINH 	                :SINH(?) 	                                                        :Returns the hyperbolic sine of a number.
+SQRT 	                :SQRT(?) 	                                                        :Returns the square root of a number.
+TAN 	                :TAN(?) 	                                                        :Returns the tangent of a number.
+TANH 	                :TANH(?) 	                                                        :Returns the hyperbolic tangent of a number.
+TO_NUMBER 	            :TO_NUMBER(?[,format-string]) 	                                    :Returns a DECFLOAT(34) from a character string.
+TOTALORDER 	            :TOTALORDER(decfloat-expression1,decfloat-expression2) 	            :Returns a SMALLINT value of -1, 0, or 1 that indicates the comparison order of two arguments.
+TRUNCATE(numeric)       :TRUNCATE(numeric-expression1[,0|numeric-expression2]) 	            :Returns a number value that has been truncated at a specified number of decimal places.
+TRUNCATE(datetime)      :TRUNCATE(datetime-expression[,'DD'|format-string[ locale-name]])   :Returns a number value that has been truncated at a specified number of decimal places.
+TRUNC(numeric)          :TRUNC(numeric-expression1[,0|numeric-expression2]) 	            :Returns a number value that has been truncated at a specified number of decimal places.
+TRUNC(datetime)         :TRUNC(datetime-expression[,'DD'|format-string[ locale-name]])      :Returns a number value that has been truncated at a specified number of decimal places.
+VARCHAR_FORMAT(Character string to VARCHAR) 	                            :VARCHAR_FORMAT(?) 	                                :Returns a CHARACTER representation of a timestamp (argument1), formatted according to a template (argument2).
+VARCHAR_FORMAT(DATE or TIMESTAMP to VARCHAR|Signed numeric to VARCHAR) 	    :VARCHAR_FORMAT(?[,format-string[,locale-name]])    :Returns a CHARACTER representation of a timestamp (argument1), formatted according to a template (argument2).
+WIDTH_BUCKET 	                                                            :WIDTH_BUCKET(expression,bound1,bound2,num-buckets) :Creates equal-width histograms.
+[Partitioning scalar functions]
+DATAPARTITIONNUM 	    :DATAPARTITIONNUM(?)               :Returns the sequence number (SYSDATAPARTITIONS.SEQNO) of the data partition in which the row resides. The argument is any column name within the table.
+DBPARTITIONNUM 	        :DBPARTITIONNUM(?) 	            :Returns the database partition number of the row. The argument is any column name within the table.
+HASH 	                :HASH(string-expression[,0|1|2|3]) 	                        :Returns the 128-bit, 160-bit, 256-bit or 512-bit hash of the input data.
+HASH4 	                :HASH4(string-expression[,0|1|2|3]) 	                        :Returns the 32-bit hash of the input data.
+HASH8 	                :HASH8(string-expression[,0|1|2|3]) 	                        :Returns the 64-bit hash of the input data.
+HASHEDVALUE 	        :HASHEDVALUE(?) 	                :Returns the distribution map index (0 to 32767) of the row. The argument is a column name within a table.
+[Regular expression scalar functions]
+REGEXP_COUNT 	        :REGEXP_COUNT(string text, pattern text [, start integer][, flags ][,CODEUNITS32|{CODEUNITS16|OCTETS}] ) 	                                :Returns a count of the number of times that a regular expression pattern is matched in a string.
+REGEXP_EXTRACT 	        :REGEXP_EXTRACT(source-string,pattern-expression[,start[,occurrence[,flags[,group]]]][,CODEUNITS32|{CODEUNITS16|OCTETS}]) 	                :Returns one occurrence of a substring of a string that matches the regular expression pattern.
+REGEXP_INSTR 	        :REGEXP_INSTR(source-string,pattern-expression[,start[,occurrence[,flags[,group]]]][,CODEUNITS32|{CODEUNITS16|OCTETS}]) 	                :Returns the starting or ending position of the matched substring, depending on the value of the return_option argument.
+REGEXP_LIKE 	        :REGEXP_LIKE(source-string,pattern-expression[,start][,flags][,CODEUNITS32|{CODEUNITS16|OCTETS}]) 	                                        :Returns a boolean value indicating if the regular expression pattern is found in a string. The function can be used only where a predicate is supported.
+REGEXP_MATCH_COUNT 	    :REGEXP_MATCH_COUNT(source-string,pattern-expression[,start][,flags][,CODEUNITS32|{CODEUNITS16|OCTETS}])                                    :Returns a count of the number of times that a regular expression pattern is matched in a string.
+REGEXP_REPLACE 	        :REGEXP_REPLACE(source-string,pattern-expression[,replacement-string[,start[,occurrence[,flags]]]][,CODEUNITS32|{CODEUNITS16|OCTETS}])      :Returns a modified version of the source string where occurrences of the regular expression pattern found in the source string are replaced with the specified replacement string.
+REGEXP_SUBSTR 	        :REGEXP_SUBSTR(source-string,pattern-expression[,start[,occurrence[,flags[,group]]]][,CODEUNITS32|{CODEUNITS16|OCTETS}]) 	                :Returns one occurrence of a substring of a string that matches the regular expression pattern.
+[Security scalar functions]
 
 
 
