@@ -14,6 +14,7 @@ import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
 import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 import com.alibaba.druid.util.JdbcConstants;
 import org.junit.jupiter.api.Test;
 
@@ -1617,6 +1618,7 @@ public class SQLTest {
         SQLStatement statement = parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
+
     @Test
     void testExportParamized() {
         String sql = "select name,age from test_tab1 where name='name' and age = 11 and id in  ('A','B')";
@@ -1684,7 +1686,7 @@ public class SQLTest {
     }
     @org.junit.jupiter.api.Test
     void test1() throws SQLSyntaxErrorException {
-        String sql = "select name,age  test_tab1 where SELECT select;select name,age from test_tab1 where SELECT select;";
+        String sql = "select name,age from (select name,age from test_tab1 join std_pcode.t20_index_code) A join B";
         parser(sql, "hive");
     }
     public static SQLStatement parser(String sql, DbType dbType) throws SQLSyntaxErrorException {
@@ -1698,6 +1700,17 @@ public class SQLTest {
 ////            visitor.setDesensitize(true);
 //            visitor.setParameterizedQuesUnMergeInList(true);
 //            statement.accept(visitor);
+
+            SchemaStatVisitor visitor = new SchemaStatVisitor();
+            statement.accept(visitor);
+
+            SQLSelectStatement statement1 = (SQLSelectStatement) statement;
+            SQLSelectQueryBlock queryBlock = statement1.getSelect().getQueryBlock();
+            SQLTableSource from = queryBlock.getFrom();
+
+            System.out.println(visitor.getTables());
+            System.out.println(visitor.getOriginalTables());
+
             System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
         });
         if (list.size() > 1) {

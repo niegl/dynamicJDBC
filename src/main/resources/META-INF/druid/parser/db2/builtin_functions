@@ -325,31 +325,95 @@ REGEXP_MATCH_COUNT 	    :REGEXP_MATCH_COUNT(source-string,pattern-expression[,st
 REGEXP_REPLACE 	        :REGEXP_REPLACE(source-string,pattern-expression[,replacement-string[,start[,occurrence[,flags]]]][,CODEUNITS32|{CODEUNITS16|OCTETS}])      :Returns a modified version of the source string where occurrences of the regular expression pattern found in the source string are replaced with the specified replacement string.
 REGEXP_SUBSTR 	        :REGEXP_SUBSTR(source-string,pattern-expression[,start[,occurrence[,flags[,group]]]][,CODEUNITS32|{CODEUNITS16|OCTETS}]) 	                :Returns one occurrence of a substring of a string that matches the regular expression pattern.
 [Security scalar functions]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+SECLABEL 	                            :SECLABEL(security-policy-name, security-label-string) 	                               :Returns an unnamed security label.
+SECLABEL_BY_NAME 	                    :SECLABEL_BY_NAME(security-policy-name, security-label-string)  	                       :Returns a specific security label.
+SECLABEL_TO_CHAR 	                    :SECLABEL_TO_CHAR(security-policy-name, security-label)  	                       :Accepts a security label and returns a string that contains all elements in the security label.
+VERIFY_GROUP_FOR_USER 	                :VERIFY_GROUP_FOR_USER(SESSION_USER,group-name-expression...) 	                   :Returns a value that indicates whether any of the groups associated with authorization-id-expression are in the group names specified by the list of group-name-expression arguments.
+VERIFY_ROLE_FOR_USER 	                :VERIFY_ROLE_FOR_USER(SESSION_USER,role-name-expression...) 	                   :Returns a value that indicates whether any of the roles associated with authorization-id-expression are in, or contain any of, the role names specified by the list of role-name-expression arguments.
+VERIFY_TRUSTED_CONTEXT_ROLE_FOR_USER 	:VERIFY_TRUSTED_CONTEXT_ROLE_FOR_USER(SESSION_USER,role-name-expression...)       :Returns a value that indicates whether authorization-id-expression has acquired a role under a trusted connection associated with some trusted context and that role is in, or contained in any of, the role names specified by the list of role-name-expression arguments.
+[String scalar functions]
+ASCII 	                        :ASCII(?) 	                                                                            :Returns the ASCII code value of the leftmost character of the argument as an integer.
+BTRIM 	                        :BTRIM(source-string[,trim-string]) 	                                                :Removes characters from the beginning and end of a string expression.
+CHARACTER_LENGTH 	            :CHARACTER_LENGTH(?) 	                                                                :Returns the length of an expression in the specified string-unit.
+CHARACTER_LENGTH(string unit)   :CHARACTER_LENGTH(?[ USING CODEUNITS16|CODEUNITS32|OCTETS|{,CODEUNITS16|CODEUNITS32|OCTETS}]) 	                :Returns the length of an expression in the specified string-unit.
+CHR 	                        :CHR(?) 	                                                                            :Returns the character that has the ASCII code value specified by the argument.
+COLLATION_KEY 	                :COLLATION_KEY(string-expression,collation-name[,length]) 	                            :Returns a VARBINARY string representing the collation key of the specified string-expression in the specified collation-name.
+COLLATION_KEY_BIT 	            :COLLATION_KEY_BIT(string-expression,collation-name[,length]) 	                        :Returns a VARCHAR FOR BIT DATA string representing the collation key of the specified string-expression in the specified collation-name.
+CONCAT 	                        :CONCAT(expression1,expression2)  	                                                    :Returns a string that is the concatenation of two strings.
+DECRYPT_BIN	                    :DECRYPT_BIN(?[,password-string-expression])                                            :Returns a value that is the result of decrypting encrypted data using a password string.
+DECRYPT_CHAR	                :DECRYPT_CHAR(?[,password-string-expression])                                           :Returns a value that is the result of decrypting encrypted data using a password string.
+DIFFERENCE 	                    :DIFFERENCE(expression1,expression2) 	                                                :Returns the difference between the sounds of the words in two argument strings, as determined by the SOUNDEX function. A value of 4 means the strings sound the same.
+ENCRYPT 	                    :ENCRYPT(data-string-expression[,password-string-expression[,hint-string-expression]])  :Returns a value that is the result of encrypting a data string expression.
+GENERATE_UNIQUE 	            :GENERATE_UNIQUE() 	                                                                    :Returns a bit data character string that is unique compared to any other execution of the same function.
+GETHINT 	                    :GETHINT(?) 	                                                                        :Returns the password hint if one is found.
+INITCAP 	                    :INITCAP(?) 	                                                                        :Returns a string with the first character of each word converted to uppercase and the rest to lowercase.
+INSERT 	                        :INSERT(source-string,start,length,insert-string[,CODEUNITS16|CODEUNITS32|OCTETS]) 	    :Returns a string, where argument3 bytes have been deleted from argument1 (beginning at argument2), and argument4 has been inserted into argument1 (beginning at argument2).
+INSTR 	                        :INSTR(source-string,search-string[,start[,instance]][,CODEUNITS16|CODEUNITS32|OCTETS]) :Returns the starting position of a string within another string.
+INSTRB 	                        :INSTRB(source-string,search-string[,start[,instance]]) 	                            :Returns the starting position, in bytes, of a string within another string.
+LCASE 	                        :LCASE(?) 	                                                                            :Returns a string in which all the SBCS characters have been converted to lowercase characters.
+LCASE (locale sensitive) 	    :LCASE (?,locale-name[,code-units][,CODEUNITS16|CODEUNITS32|OCTETS]) 	                :Returns a string in which all characters have been converted to lowercase characters using the rules from the Unicode standard associated with the specified locale.
+LCASE (SYSFUN schema) 	        :LCASE (?) 	                                                                            :Returns a string in which all the SBCS characters have been converted to lowercase characters.
+LOWER (locale sensitive) 	    :LOWER (?,locale-name[,code-units][,CODEUNITS16|CODEUNITS32|OCTETS]) 	                :Returns a string in which all characters have been converted to lowercase characters using the rules from the Unicode standard associated with the specified locale.
+LEFT 	                        :LEFT(string-expression,length[,CODEUNITS16|CODEUNITS32|OCTETS])	                    :Returns the leftmost characters from a string.
+LOCATE 	                        :LOCATE(search-string,source-string[,start][,CODEUNITS16|CODEUNITS32|OCTETS])  	        :Returns the starting position of one string within another string.
+LOCATE_IN_STRING 	            :LOCATE_IN_STRING(source-string,search-string[,start[,instance]][,CODEUNITS16|CODEUNITS32|OCTETS]) 	        :Returns the starting position of the first occurrence of one string within another string.
+LOWER 	                        :LOWER(?)  	                                                                            :Returns a string in which all the characters have been converted to lowercase characters.
+LPAD 	                        :LPAD(string-expression,integer[ , pad]) 	                                            :Returns a string that is padded on the left with the specified character, or with blanks.
+LTRIM 	                        :LTRIM(?[,trim-expression]) 	                                                        :Removes blanks from the beginning of a string expression.
+LTRIM (SYSFUN schema) 	        :LTRIM (?) 	                                                                            :Removes blanks from the beginning of a string expression.
+OCTET_LENGTH 	                :OCTET_LENGTH (?)  	                                                                    :Returns the length of an expression in octets (bytes).
+OVERLAY 	                    :OVERLAY(source-string[ {PLACING insert-string FROM start[ FOR length][ USING CODEUNITS16|CODEUNITS32|OCTETS]}|{,insert-string ,start[ ,length][ ,CODEUNITS16|CODEUNITS32|OCTETS]}]) 	                        :Returns a string in which, beginning at start in the specified source-string, length of the specified code units have been deleted and insert-string has been inserted.
+POSITION 	                    :POSITION({search-string IN source-string[ USING CODEUNITS16|CODEUNITS32|OCTETS]}|{search-string,source-string[,CODEUNITS16|CODEUNITS32|OCTETS]}) 	                        :Returns the starting position of argument2 within argument1.
+POSSTR 	                        :POSSTR(source-string,search-string) 	                                                :Returns the starting position of one string within another string.
+QUOTE_IDENT 	                :QUOTE_IDENT(?) 	                                                                    :Returns a string that can be used as an identifier in an SQL statement.
+QUOTE_LITERAL 	                :QUOTE_LITERAL(?) 	                                                                    :Returns a string that can be used as a string constant in an SQL statement.
+REPEAT 	                        :REPEAT(expression1,expression2) 	                                                    :Returns a character string composed of the first argument repeated the number of times specified by the second argument.
+REPLACE 	                    :REPLACE(source-string,search-string[,''|replace-string]) 	                            :Replaces all occurrences of argument2 in argument1 with argument3.
+REPLACE (SYSFUN schema) 	    :REPLACE (expression1,expression2,expression3) 	                                        :Replaces all occurrences of expres sion2 in expression1 with e xpression3.
+RIGHT 	                        :RIGHT(?,length[,CODEUNITS16|CODEUNITS32|OCTETS]) 	                                    :Returns the rightmost characters from a string.
+RPAD 	                        :RPAD(string-expression,integer[ , pad]) 	                                            :Returns a string that is padded on the right with the specified character, string, or with blanks.
+RTRIM 	                        :RTRIM(?[,trim-expression]) 	                                                        :Removes blanks from the end of a string expression.
+SOUNDEX 	                    :SOUNDEX(?) 	                                                                        :Returns a 4-character code representing the sound of the words in the argument. This result can be compared with the sound of other strings.
+SPACE 	                        :SPACE(?) 	                                                                            :Returns a character string that consists of a specified number of blanks.
+STRIP 	                        :STRIP(?[,BOTH|LEADING|TRAILING][,strip-character]) 	                                :Removes blanks or another specified character from the end, the beginning, or both ends of a string expression.
+STRLEFT 	                    :STRLEFT(?,length[,CODEUNITS16|CODEUNITS32|OCTETS]) 	                                :Returns the leftmost string of string-expression of length length, expressed in the specified string unit.
+STRPOS 	                        :STRPOS(source-string,search-string) 	                                                :Returns the starting position of one string within another string.
+STRRIGHT 	                    :STRRIGHT(?,length[,CODEUNITS16|CODEUNITS32|OCTETS]) 	                                :Returns the rightmost string of string-expression of length length, expressed in the specified string unit.
+SUBSTR 	                        :SUBSTR(string,start[,length]) 	                                                        :Returns a substring of a string.
+SUBSTRB 	                    :SUBSTRB(string,start[,length]) 	                                                    :Returns a substring of a string.
+SUBSTRING 	                    :SUBSTRING({? FROM start[ FOR length][ USING CODEUNITS16|CODEUNITS32|OCTETS]}|{? ,start[ ,length][ ,CODEUNITS16|CODEUNITS32|OCTETS]}) 	                        :Returns a substring of a string.
+TO_SINGLE_BYTE                  :TO_SINGLE_BYTE(?)                                                                      :Returns a string in which multi-byte characters are converted to the equivalent single-byte character where an equivalent character exists.
+TRANSLATE(character string expression) 	    :TRANSLATE(char-string-exp[,to-string-exp,from-string-exp[,''|pad-char-exp]]) 	                        :Returns a string in which one or more characters in a string are converted to other characters.
+TRANSLATE(graphic string expression) 	    :TRANSLATE(graphic-string-exp,to-string-exp,from-string-exp[,''|pad-char-exp]) 	                        :Returns a string in which one or more characters in a string are converted to other characters.
+TRIM 	                        :TRIM([BOTH|LEADING|TRAILING[,strip-character] FROM ]?) 	                            :Removes blanks or another specified character from the end, the beginning, or both ends of a string expression.
+UCASE 	                        :UCASE(?) 	                                                                            :The UCASE function is identical to the TRANSLATE function except that only the first argument (char-string-exp) is specified.
+UCASE (locale sensitive) 	    :UCASE (?,locale-name[,code-units][,CODEUNITS16|CODEUNITS32|OCTETS]) 	                :Returns a string in which all characters have been converted to uppercase characters using the rules from the Unicode standard associated with the specified locale.
+UPPER 	                        :UPPER(?) 	                                                                            :Returns a string in which all the characters have been converted to uppercase characters.
+UPPER (locale sensitive) 	    :UPPER (?,locale-name[,code-units][,CODEUNITS16|CODEUNITS32|OCTETS]) 	                :Returns a string in which all characters have been converted to uppercase characters using the rules from the Unicode standard associated with the specified locale.
+[Table functions]
+BASE_TABLE 	        :BASE_TABLE(objectschema,objectname)       :Returns both the object name and schema name of the object found after any alias chains have been resolved.
+JSON_TABLE 	        :JSON_TABLE(JSON-expression[ FORMAT JSON|FORMAT BSON],'strict $' COLUMNS[ json-table-regular-column-definition|json-table-formatted-column-definition,... ]ERROR ON ERROR)       :Returns a result table from the evaluation of SQL/JSON path expressions. Each item in the result sequence of the row SQL/JSON path expression represents one or more rows in the result table.
+UNNEST 	            :UNNEST(array-expression,...) 	        :Returns a result table that includes a row for each element of the specified array.
+TABLE 	            :TABLE(array-expression,...) 	        :Returns a result table that includes a row for each element of the specified array.
+XMLTABLE 	        :XMLTABLE([xmlnamespaces-declaration,]row-xquery-expression-constant[ PASSING[ BY REF] row-xquery-argument...][COLUMNS[ xml-table-regular-column-definition|xml-table-ordinality-column-definition...]]) 	    :Returns a table from the evaluation of XQuery expressions, possibly using specified input arguments as XQuery variables. Each sequence item in the result sequence of the row XQuery expression represents a row of the result table.
+[XML functions]
+PARAMETER 	        :PARAMETER(integer-constant) 	               :Represents a position in an SQL statement where the value is provided dynamically by XQuery as part of the invocation of the db2-fn:sqlquery function.
+XMLAGG 	            :XMLAGG(xml-expression [ORDER BY {sort-key [ASC|DESC]}...]) 	                   :Returns an XML sequence containing an item for each non-null value in a set of XML values.
+XMLATTRIBUTES 	    :XMLATTRIBUTES(attribute-value-expression[ AS attribute-name]...) 	           :Constructs XML attributes from the arguments.
+XMLCOMMENT 	        :XMLCOMMENT(string-expression) 	               :Returns an XML value with a single XQuery comment node with the input argument as the content.
+XMLCONCAT 	        :XMLCONCAT(XML-expression,XML-expression...) 	               :Returns a sequence containing the concatenation of a variable number of XML input arguments.
+XMLDOCUMENT 	    :XMLDOCUMENT(XML-expression) 	           :Returns an XML value with a single XQuery document node with zero or more children nodes.
+XMLELEMENT 	        :XMLELEMENT(NAME element-name[,xmlnamespaces-declaration][,xmlattributes-function][,element-content-expression...][ OPTION {EMPTY ON NULL|NULL ON NULL}|{XMLBINARY [USING ]BASE64|XMLBINARY [USING ]HEX}]) 	               :Returns an XML value that is an XML element node.
+XMLFOREST 	        :XMLFOREST([xmlnamespaces-declaration,][element-content-expression[ AS element-name]...][ OPTION {EMPTY ON NULL|NULL ON NULL}|{XMLBINARY [USING ]BASE64|XMLBINARY [USING ]HEX}]) 	               :Returns an XML value that is a sequence of XML element nodes.
+XMLGROUP    	    :XMLGROUP(expression[ AS qname-identifier]...[ ORDER BY {sort-key [ASC|DESC]}...][ OPTION {ROW 'row'|ROW row-name}|{ROOT "rowset"|ROOT root-name}|AS ATTRIBUTES...])    	           :Returns an XML value with a single XQuery document node containing one top-level element node.
+XMLNAMESPACES       :XMLNAMESPACES(namespace-uri AS namespace-prefix|DEFAULT namespace-uri|NO DEFAULT)             :Constructs namespace declarations from the arguments.
+XMLPARSE 	        :XMLPARSE(DOCUMENT string-expression STRIP WHITESPACE|PRESERVE WHITESPACE) 	               :Parses the argument as an XML document and returns an XML value.
+XMLPI 	            :XMLPI(NAME pi-name[,string-expression]) 	                   :Returns an XML value with a single XQuery processing instruction node.
+XMLQUERY 	        :XMLQUERY(xquery-expression-constant[ PASSING[ BY REF] xquery-argument,...][RETURNING SEQUENCE[ BY REF]][ EMPTY ON EMPTY]) 	               :Returns an XML value from the evaluation of an XQuery expression possibly using specified input arguments as XQuery variables.
+XMLROW 	            :XMLROW(expression[ AS qname-identifier],...[ OPTION {ROW "row"|ROW row-name}|AS ATTRIBUTES...]) 	                   :Returns an XML value with a single XQuery document node containing one top-level element node.
+XMLSERIALIZE 	    :XMLSERIALIZE([CONTENT ]XML-expression AS data-type VERSION '1.0'|EXCLUDING XMLDECLARATION|INCLUDING XMLDECLARATION...) 	           :Returns a serialized XML value of the specified data type generated from the argument.
+XMLTABLE    	    :XMLTABLE([xmlnamespaces-declaration,]row-xquery-expression-constant[ PASSING[ BY REF] row-xquery-argument,...][ COLUMNS xml-table-regular-column-definition|xml-table-ordinality-column-definition,...])    	           :Returns a table from the evaluation of XQuery expressions, possibly using specified input arguments as XQuery variables. Each sequence item in the result sequence of the row XQuery expression represents a row of the result table.
+XMLTEXT 	        :XMLTEXT(string-expression) 	               :Returns an XML value with a single XQuery text node having the input argument as the content.
+XMLVALIDATE 	    :XMLVALIDATE([DOCUMENT ]xml-expression[ XML-validate-according-to-clause]) 	           :Returns a copy of the input XML value augmented with information obtained from XML schema validation, including default values.
+XMLXSROBJECTID 	    :XMLXSROBJECTID(xml-value-expression) 	           :Returns the XSR object identifier of the XML schema used to validate the XML document that is specified in the argument
+XSLTRANSFORM 	    :XSLTRANSFORM(xml-document USING xsl-stylesheet[ WITH xsl-parameters[ AS data-type]]) 	           :Converts XML data into other formats, including the conversion of XML documents that conform to one XML schema into documents that conform to another schema.
