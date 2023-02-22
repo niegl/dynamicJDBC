@@ -481,3 +481,86 @@ ST_PointFromText                     :ST_PointFromText(wkt[,srid])              
 ST_PolyFromText                      :ST_PolyFromText(wkt[,srid])                   :Constructs a POLYGON value.
 ST_PolygonFromText                   :ST_PolygonFromText(wkt[,srid])                :Synonym for ST_PolyFromText.
 [JSON Functions]
+JSON_ARRAY                 :JSON_ARRAY([value[, value2] ...]) :Returns a JSON array containing the listed values.
+JSON_ARRAYAGG              :JSON_ARRAYAGG(column_or_expression) :Returns a JSON array containing an element for each value in a given set of JSON or SQL values.
+JSON_ARRAY_APPEND          :JSON_ARRAY_APPEND(json_doc, path, value[, path, value] ...) :Appends values to the end of the given arrays within a JSON document.
+JSON_ARRAY_INSERT          :JSON_ARRAY_INSERT(json_doc, path, value[, path, value] ...) :Inserts a value into a JSON document.
+JSON_COMPACT               :JSON_COMPACT(json_doc) :Removes all unnecessary spaces so the json document is as short as possible.
+JSON_CONTAINS              :JSON_CONTAINS(json_doc, val[, path]) :Whether a value is found in a given JSON document or at a specified path within the document.
+JSON_CONTAINS_PATH         :JSON_CONTAINS_PATH(json_doc, return_arg, path[, path] ...) :Indicates whether the given JSON document contains data at the specified path or paths.
+JSON_DEPTH                 :JSON_DEPTH(json_doc) :Maximum depth of a JSON document.
+JSON_DETAILED              :JSON_DETAILED(json_doc[, tab_size]) :Represents JSON in the most understandable way emphasizing nested structures.
+JSON_EQUALS                :JSON_EQUALS(json1, json2) :Checks if there is equality between two json objects.
+JSON_EXISTS                :JSON_EXISTS(json_doc,JSON_value) :Determines whether a specified JSON value exists in the given data.
+JSON_EXTRACT               :JSON_EXTRACT(json_doc, path[, path] ...) :Extracts data from a JSON document.
+JSON_INSERT                :JSON_INSERT(json_doc, path, val[, path, val] ...) :Inserts data into a JSON document.
+JSON_KEYS                  :JSON_KEYS(json_doc[, path]) :Returns keys from top-level value of a JSON object or top-level keys from the path.
+JSON_LENGTH                :JSON_LENGTH(json_doc[, path]) :Returns the length of a JSON document, or the length of a value within the document.
+JSON_LOOSE                 :JSON_LOOSE(json_doc) :Adds spaces to a JSON document to make it look more readable.
+JSON_MERGE                 :JSON_MERGE(json_doc, json_doc[, json_doc] ...) :Merges the given JSON documents.
+JSON_MERGE_PATCH           :JSON_MERGE_PATCH(json_doc, json_doc[, json_doc] ...) :RFC 7396-compliant merge of the given JSON documents.
+JSON_MERGE_PRESERVE        :JSON_MERGE_PRESERVE(json_doc, json_doc[, json_doc] ...) :Synonym for JSON_MERGE.
+JSON_NORMALIZE             :JSON_NORMALIZE(json) :Recursively sorts keys and removes spaces, allowing comparison of json documents for equality.
+JSON_OBJECT                :JSON_OBJECT([key, value[, key, value] ...]) :Returns a JSON object containing the given key/value pairs.
+JSON_OBJECTAGG             :JSON_OBJECTAGG(key, value) :Returns a JSON object containing key-value pairs.
+JSON_OVERLAPS              :JSON_OVERLAPS(json_doc1, json_doc2) :Returns true if two json documents have at least one key-value pair or array element in common.
+JSON_QUERY                 :JSON_QUERY(json_doc, path) :Given a JSON document, returns an object or array specified by the path.
+JSON_QUOTE                 :JSON_QUOTE(json_value) :Quotes a string as a JSON value.
+JSON_REMOVE                :JSON_REMOVE(json_doc, path[, path] ...) :Removes data from a JSON document.
+JSON_REPLACE               :JSON_REPLACE(json_doc, path, val[, path, val] ...) :Replaces existing values in a JSON document.
+JSON_SEARCH                :JSON_SEARCH(json_doc, return_arg, search_str[, escape_char[, path] ...]) :Returns the path to the given string within a JSON document.
+JSON_SET                   :JSON_SET(json_doc, path, val[, path, val] ...) :Updates or inserts data into a JSON document.
+JSON_TABLE                 :JSON_TABLE(json_doc, context_path COLUMNS (column_list)) [AS] alias :Given data from a JSON document, returns a representation of it as a relational table.
+JSON_TYPE                  :JSON_TYPE(json_val) :Returns the type of a JSON value.
+JSON_UNQUOTE               :JSON_UNQUOTE(val) :Unquotes a JSON value, returning a string.
+JSON_VALID                 :JSON_VALID(value) :Whether a value is a valid JSON document or not.
+JSON_VALUE                 :JSON_VALUE(json_doc, path) :Given a JSON document, returns the specified scalar.
+[SEQUENCE Functions]
+LASTVAL                                 :PREVIOUS VALUE FOR sequence_name :Synonym for PREVIOUS VALUE for sequence_name.
+NEXT VALUE for sequence_name            :NEXT VALUE FOR sequence :Generate next value for a SEQUENCE. Same as NEXTVAL().
+NEXTVAL                                 :NEXTVAL(sequence_name) :Synonym for NEXT VALUE for sequence_name.
+PREVIOUS VALUE FOR sequence_name        :PREVIOUS VALUE FOR sequence_name :Get last value generated from a SEQUENCE. Same as LASTVAL().
+SETVAL                                  :SETVAL(sequence_name, next_value, [is_used, [round]]) :Set the next value to be returned from a SEQUENCE.
+[Spider Functions]
+SPIDER_BG_DIRECT_SQL                :SPIDER_BG_DIRECT_SQL('sql', 'tmp_table_list', 'parameters') :Background SQL execution
+SPIDER_COPY_TABLES                  :SPIDER_COPY_TABLES(spider_table_name, source_link_id, destination_link_id_list [,parameters]) :Copy table data
+SPIDER_DIRECT_SQL                   :SPIDER_DIRECT_SQL('sql', 'tmp_table_list', 'parameters') :Execute SQL on the remote server
+SPIDER_FLUSH_TABLE_MON_CACHE        :SPIDER_FLUSH_TABLE_MON_CACHE() :Refreshing Spider monitoring server information
+[Window Functions]
+AVG                                            :AVG([DISTINCT] ?) :Returns the average value.
+BIT_AND                                        :BIT_AND(?) [over_clause] :Bitwise AND.
+BIT_OR                                         :BIT_OR(?) [over_clause] :Bitwise OR.
+BIT_XOR                                        :BIT_XOR(?) [over_clause] :Bitwise XOR.
+COUNT                                          :COUNT(?) :Returns count of non-null values.
+CUME_DIST                                      :CUME_DIST() OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ]) :Window function that returns the cumulative distribution of a given row.
+DENSE_RANK                                     :DENSE_RANK() OVER ([ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Rank of a given row with identical values receiving the same result, no skipping.
+FIRST_VALUE                                    :FIRST_VALUE(?) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Returns the first result from an ordered set.
+JSON_ARRAYAGG                                  :JSON_ARRAYAGG(column_or_expression) :Returns a JSON array containing an element for each value in a given set of JSON or SQL values.
+JSON_OBJECTAGG                                 :JSON_OBJECTAGG(key, value) :Returns a JSON object containing key-value pairs.
+LAG                                            :LAG (expr[, offset]) OVER ( [ PARTITION BY partition_expression ] < ORDER BY order_list >) :Accesses data from a previous row in the same result set without the need for a self-join.
+LAST_VALUE                                     :LAST_VALUE(expr,[expr,...]) :Returns the last value in a list or set of values.
+LAST_VALUE(OVER)                                :LAST_VALUE(?) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ]) :Returns the last value in a list or set of values.
+LEAD                                           :LEAD (?[, offset]) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Accesses data from a following row in the same result set without the need for a self-join.
+MAX                                            :MAX([DISTINCT] ?) :Returns the maximum value.
+MEDIAN                                         :MEDIAN(?) OVER ( [ PARTITION BY partition_expression ] ) :Window function that returns the median value of a range of values.
+MIN                                            :MIN([DISTINCT] ?) :Returns the minimum value.
+NTH_VALUE                                      :NTH_VALUE (?[, num_row]) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Returns the value evaluated at the specified row number of the window frame.
+NTILE                                          :NTILE (?) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ]) :Returns an integer indicating which group a given row falls into.
+PERCENT_RANK                                   :PERCENT_RANK() OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Window function that returns the relative percent rank of a given row.
+PERCENTILE_CONT                                :PERCENTILE_CONT(given fraction) :Continuous percentile.
+PERCENTILE_DISC                                :PERCENTILE_DISC(specified fraction) :Discrete percentile.
+RANK                                           :RANK() OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Rank of a given row with identical values receiving the same result.
+ROW_NUMBER                                     :ROW_NUMBER() OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Row number of a given row with identical values receiving a different result.
+STD                                            :STD(?) :Population standard deviation.
+STDDEV                                         :STDDEV(?) :Population standard deviation.
+STDDEV_POP                                     :STDDEV_POP(?) :Returns the population standard deviation.
+STDDEV_SAMP                                    :STDDEV_SAMP(?) :Standard deviation.
+SUM                                            :SUM([DISTINCT]?) :Sum total.
+VAR_POP                                        :VAR_POP(?) :Population standard variance.
+VAR_SAMP                                       :VAR_SAMP(?) :Returns the sample variance.
+VARIANCE                                       :VARIANCE(?) :under: » MariaDB Server Documentation » Using MariaDB Server » SQL Statements & Structure » SQL Statements » Built-in Functions » Aggregate FunctionsPopulation standard variance.
+ColumnStore Window Functions                   :function_name ([expression [, expression ... ]]) OVER ( window_definition ) :Summary of window function use with the ColumnStore engine
+Window Frames                                  :{ROWS | RANGE} {frame_border | BETWEEN frame_border AND frame_border} :Some window functions operate on window frames.
+
+
+

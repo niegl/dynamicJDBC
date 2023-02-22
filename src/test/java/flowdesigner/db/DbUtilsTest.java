@@ -69,64 +69,82 @@ class DbUtilsTest {
     @Test
     void marianDBFunctionsPreProcessor() {
         String content =
-                "WKT Definition\n" +
-                "Well-Known Text for exchanging geometry data in ASCII form.\n" +
-                "AsText\n" +
-                "Synonym for ST_AsText.\n" +
-                "AsWKT\n" +
-                "Synonym for ST_AsText.\n" +
-                "GeomCollFromText\n" +
-                "Synonym for ST_GeomCollFromText.\n" +
-                "GeometryCollectionFromText\n" +
-                "Synonym for ST_GeomCollFromText.\n" +
-                "GeometryFromText\n" +
-                "Synonym for ST_GeomFromText.\n" +
-                "GeomFromText\n" +
-                "Synonym for ST_GeomFromText.\n" +
-                "LineFromText\n" +
-                "Synonym for ST_LineFromText.\n" +
-                "LineStringFromText\n" +
-                "Synonym for ST_LineFromText.\n" +
-                "MLineFromText\n" +
-                "Constructs MULTILINESTRING using its WKT representation and SRID.\n" +
-                "MPointFromText\n" +
-                "Constructs a MULTIPOINT value using its WKT and SRID.\n" +
-                "MPolyFromText\n" +
-                "Constructs a MULTIPOLYGON value.\n" +
-                "MultiLineStringFromText\n" +
-                "Synonym for MLineFromText.\n" +
-                "MultiPointFromText\n" +
-                "Synonym for MPointFromText.\n" +
-                "MultiPolygonFromText\n" +
-                "Synonym for MPolyFromText.\n" +
-                "PointFromText\n" +
-                "Synonym for ST_PointFromText.\n" +
-                "PolyFromText\n" +
-                "Synonym for ST_PolyFromText.\n" +
-                "PolygonFromText\n" +
-                "Synonym for ST_PolyFromText.\n" +
-                "ST_AsText\n" +
-                "Converts a value to its WKT-Definition.\n" +
-                "ST_ASWKT\n" +
-                "Synonym for ST_ASTEXT().\n" +
-                "ST_GeomCollFromText\n" +
-                "Constructs a GEOMETRYCOLLECTION value.\n" +
-                "ST_GeometryCollectionFromText\n" +
-                "Synonym for ST_GeomCollFromText.\n" +
-                "ST_GeometryFromText\n" +
-                "Synonym for ST_GeomFromText.\n" +
-                "ST_GeomFromText\n" +
-                "Constructs a geometry value using its WKT and SRID.\n" +
-                "ST_LineFromText\n" +
-                "Creates a linestring value.\n" +
-                "ST_LineStringFromText\n" +
-                "Synonym for ST_LineFromText.\n" +
-                "ST_PointFromText\n" +
-                "Constructs a POINT value.\n" +
-                "ST_PolyFromText\n" +
-                "Constructs a POLYGON value.\n" +
-                "ST_PolygonFromText\n" +
-                "Synonym for ST_PolyFromText.";
+                "AVG\n" +
+                "Returns the average value.\n" +
+                "BIT_AND\n" +
+                "Bitwise AND.\n" +
+                "BIT_OR\n" +
+                "Bitwise OR.\n" +
+                "BIT_XOR\n" +
+                "Bitwise XOR.\n" +
+                "COUNT\n" +
+                "Returns count of non-null values.\n" +
+                "CUME_DIST\n" +
+                "Window function that returns the cumulative distribution of a given row.\n" +
+                "DENSE_RANK\n" +
+                "Rank of a given row with identical values receiving the same result, no skipping.\n" +
+
+                "FIRST_VALUE\n" +
+                "Returns the first result from an ordered set.\n" +
+
+                "JSON_ARRAYAGG\n" +
+                "Returns a JSON array containing an element for each value in a given set of JSON or SQL values.\n" +
+                "JSON_OBJECTAGG\n" +
+                "Returns a JSON object containing key-value pairs.\n" +
+
+                "LAG\n" +
+                "Accesses data from a previous row in the same result set without the need for a self-join.\n" +
+                "LAST_VALUE\n" +
+                "Returns the last value in a list or set of values.\n" +
+
+                "LEAD\n" +
+                "Accesses data from a following row in the same result set without the need for a self-join.\n" +
+                "MAX\n" +
+                "Returns the maximum value.\n" +
+                "MEDIAN\n" +
+                "Window function that returns the median value of a range of values.\n" +
+                "MIN\n" +
+                "Returns the minimum value.\n" +
+                "NTH_VALUE\n" +
+                "Returns the value evaluated at the specified row number of the window frame.\n" +
+                "NTILE\n" +
+                "Returns an integer indicating which group a given row falls into.\n" +
+                "PERCENT_RANK\n" +
+                "Window function that returns the relative percent rank of a given row.\n" +
+                "PERCENTILE_CONT\n" +
+                "Continuous percentile.\n" +
+                "PERCENTILE_DISC\n" +
+                "Discrete percentile.\n" +
+
+                "RANK\n" +
+                "Rank of a given row with identical values receiving the same result.\n" +
+                "ROW_NUMBER\n" +
+                "Row number of a given row with identical values receiving a different result.\n" +
+                "STD\n" +
+                "Population standard deviation.\n" +
+                "STDDEV\n" +
+                "Population standard deviation.\n" +
+                "STDDEV_POP\n" +
+                "Returns the population standard deviation.\n" +
+
+                "STDDEV_SAMP\n" +
+                "Standard deviation.\n" +
+                "SUM\n" +
+                "Sum total.\n" +
+                "VAR_POP\n" +
+                "Population standard variance.\n" +
+                "VAR_SAMP\n" +
+                "Returns the sample variance.\n" +
+                "VARIANCE\n" +
+                "under: » MariaDB Server Documentation » Using MariaDB Server » SQL Statements & Structure » SQL Statements » Built-in Functions » Aggregate FunctionsPopulation standard variance.\n" +
+
+                "Aggregate Functions as Window Functions\n" +
+                "It is possible to use aggregate functions as window functions.\n" +
+                "ColumnStore Window Functions\n" +
+                "Summary of window function use with the ColumnStore engine\n" +
+
+                "Window Frames\n" +
+                "Some window functions operate on window frames.";
         int GROUP_COUNT = 2;
         StringBuilder stringBuffer = new StringBuilder();
 
