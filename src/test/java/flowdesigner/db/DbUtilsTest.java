@@ -68,11 +68,22 @@ class DbUtilsTest {
 
     @Test
     void marianDBFunctionsPreProcessor() {
-        String content =
-                "AVG\n" +
-                "Returns the average value.\n" +
-                "BIT_AND\n" +
-                "Bitwise AND.\n";
+        String content ="SYSCS_DIAG.CONTAINED_ROLES diagnostic table function\n" +
+                "The SYSCS_DIAG.CONTAINED_ROLES diagnostic table function returns all the roles contained within the specified role.\n" +
+                "SYSCS_DIAG.ERROR_LOG_READER diagnostic table function\n" +
+                "The SYSCS_DIAG.ERROR_LOG_READER diagnostic table function contains all the useful SQL statements that are in the derby.log file or a log file that you specify.\n" +
+                "SYSCS_DIAG.ERROR_MESSAGES diagnostic table\n" +
+                "The SYSCS_DIAG.ERROR_MESSAGES diagnostic table shows all of the SQLStates, locale-sensitive error messages, and exception severities for a Derby database.\n" +
+                "SYSCS_DIAG.LOCK_TABLE diagnostic table\n" +
+                "The SYSCS_DIAG.LOCK_TABLE diagnostic table shows all of the locks that are currently held in the Derby database.\n" +
+                "SYSCS_DIAG.SPACE_TABLE diagnostic table function\n" +
+                "The SYSCS_DIAG.SPACE_TABLE diagnostic table function shows the space usage of a particular table and its indexes.\n" +
+                "SYSCS_DIAG.STATEMENT_CACHE diagnostic table\n" +
+                "The SYSCS_DIAG.STATEMENT_CACHE diagnostic table shows the contents of the SQL statement cache.\n" +
+                "SYSCS_DIAG.STATEMENT_DURATION diagnostic table function\n" +
+                "You can use the SYSCS_DIAG.STATEMENT_DURATION diagnostic table function to analyze the execution duration of the useful SQL statements in the derby.log file or a log file that you specify.\n" +
+                "SYSCS_DIAG.TRANSACTION_TABLE diagnostic table\n" +
+                "The SYSCS_DIAG.TRANSACTION_TABLE diagnostic table shows all of the transactions that are currently in the database.";
         int GROUP_COUNT = 2;
         StringBuilder stringBuffer = new StringBuilder();
 
