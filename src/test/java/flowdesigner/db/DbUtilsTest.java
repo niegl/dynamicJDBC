@@ -1832,6 +1832,52 @@ class DbUtilsTest {
         }
     }
 
+    @Test
+    void DMDBFunctionsPostProcessor() {
+        String content ="DECODE(exp, search1, result1, … searchn, resultn [,default])\t查表译码\n" +
+                "ISDATE(exp)\t判断表达式是否为有效的日期\n" +
+                "ISNUMERIC(exp)\t判断表达式是否为有效的数值\n" +
+                "DM_HASH (exp)\t根据给定表达式生成 HASH 值\n" +
+                "LNNVL(condition)\t根据表达式计算结果返回布尔值\n" +
+                "LENGTHB(value)\t返回 value 的字节数\n" +
+                "FIELD(value, e1, e2, e3, e4...en)\t返回 value 在列表 e1, e2, e3, e4...en 中的位置序号，不在输入列表时则返回 0\n" +
+                "ORA_HASH(exp [,max_bucket [,seed_value]])\t为表达式 exp 生成 HASH 桶值\n";
+        int GROUP_COUNT = 3;
+        StringBuilder stringBuffer = new StringBuilder();
+
+        ArrayList<String> newLines = new ArrayList<>();
+        String[] lines = content.split("\n");
+
+        // 计算对其函数名需要宽度
+        int NameLength = 0;
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            String[] split = line.split("\\(");
+
+            String functionName = split[0];
+            int length = functionName.length();
+            if (length > NameLength) {
+                NameLength = length;
+            }
+
+            newLines.add(functionName);
+            newLines.add(line);
+        }
+
+        NameLength += 8;    //2个TAB长度
+
+        for (int i = 0; i < newLines.size(); i+=2) {
+            String name = newLines.get(i);
+            String line2 = newLines.get(i+1);
+
+            int spaceNeeded = NameLength - name.length() ;
+            spaceNeeded = Math.max(spaceNeeded, 0);
+            String signature = name + " ".repeat(spaceNeeded) + ":" + line2;
+
+            System.out.println(signature);
+        }
+    }
+
     public static boolean isNumeric(String str){
         Pattern pattern = Pattern.compile("[0-9]*");
         return pattern.matcher(str).matches();
