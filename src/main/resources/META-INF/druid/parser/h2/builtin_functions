@@ -1,173 +1,197 @@
-ABS
-ACOS
-ASIN
-ATAN
-COS
-COSH
-COT
-SIN
-SINH
-TAN
-TANH
-ATAN2
-BITAND
-BITOR
-BITXOR
-BITNOT
-BITNAND
-BITNOR
-BITXNOR
-BITGET
-BITCOUNT
-LSHIFT
-RSHIFT
-ULSHIFT
-URSHIFT
-ROTATELEFT
-ROTATERIGHT
-MOD
-CEIL
-DEGREES
-EXP
-FLOOR
-LN
-LOG
-LOG10
-ORA_HASH
-RADIANS
-SQRT
-PI
-POWER
-RAND
-RANDOM_UUID
-ROUND
-SECURE_RAND
-SIGN
-ENCRYPT
-DECRYPT
-HASH
-TRUNC
-COMPRESS
-EXPAND
-ZERO
-ASCII
-BIT_LENGTH
-CHAR_LENGTH
-OCTET_LENGTH
-CHAR
-CONCAT
-CONCAT_WS
-DIFFERENCE
-HEXTORAW
-RAWTOHEX
-INSERT Function
-LOWER
-UPPER
-LEFT
-RIGHT
-LOCATE
-LPAD
-RPAD
-LTRIM
-RTRIM
-TRIM
-REGEXP_REPLACE
-REGEXP_LIKE
-REGEXP_SUBSTR
-REPEAT
-REPLACE
-SOUNDEX
-SPACE
-STRINGDECODE
-STRINGENCODE
-STRINGTOUTF8
-SUBSTRING
-UTF8TOSTRING
-QUOTE_IDENT
-XMLATTR
-XMLNODE
-XMLCOMMENT
-XMLCDATA
-XMLSTARTDOC
-XMLTEXT
-TO_CHAR
-TRANSLATE
-CURRENT_DATE
-CURRENT_TIME
-CURRENT_TIMESTAMP
-LOCALTIME
-LOCALTIMESTAMP
-DATEADD
-DATEDIFF
-DATE_TRUNC
-DAYNAME
-DAY_OF_MONTH
-DAY_OF_WEEK
-ISO_DAY_OF_WEEK
-DAY_OF_YEAR
-EXTRACT
-FORMATDATETIME
-HOUR
-MINUTE
-MONTH
-MONTHNAME
-PARSEDATETIME
-QUARTER
-SECOND
-WEEK
-ISO_WEEK
-YEAR
-ISO_YEAR
-ABORT_SESSION
-ARRAY_GET
-CARDINALITY
-ARRAY_CONTAINS
-ARRAY_CAT
-ARRAY_APPEND
-ARRAY_MAX_CARDINALITY
-TRIM_ARRAY
-ARRAY_SLICE
-AUTOCOMMIT
-CANCEL_SESSION
-CASEWHEN Function
-COALESCE
-CONVERT
-CURRVAL
-CSVWRITE
-CURRENT_SCHEMA
-CURRENT_CATALOG
-DATABASE_PATH
-DATA_TYPE_SQL
-DB_OBJECT_ID
-DB_OBJECT_SQL
-DECODE
-DISK_SPACE_USED
-SIGNAL
-ESTIMATED_ENVELOPE
-FILE_READ
-FILE_WRITE
-GREATEST
-LEAST
-LOCK_MODE
-LOCK_TIMEOUT
-MEMORY_FREE
-MEMORY_USED
-NEXTVAL
-NULLIF
-NVL2
-READONLY
-ROWNUM
-SESSION_ID
-SET
-TRANSACTION_ID
-TRUNCATE_VALUE
-CURRENT_PATH
-CURRENT_ROLE
-CURRENT_USER
-H2VERSION
-JSON_OBJECT
-JSON_ARRAY
-CSVREAD
-LINK_SCHEMA
-TABLE
-UNNEST
+[Numeric Functions]
+ABS                 :ABS( { numeric | interval } ) :Returns the absolute value of a specified value. The returned value is of the same data type as the parameter.
+ACOS                :ACOS(numeric) :Calculate the arc cosine. See also Java Math.acos. This method returns a double.
+ASIN                :ASIN(numeric) :Calculate the arc sine. See also Java Math.asin. This method returns a double.
+ATAN                :ATAN(numeric) :Calculate the arc tangent. See also Java Math.atan. This method returns a double.
+COS                 :COS(numeric) :Calculate the trigonometric cosine. See also Java Math.cos. This method returns a double.
+COSH                :COSH(numeric) :Calculate the hyperbolic cosine. See also Java Math.cosh. This method returns a double.
+COT                 :COT(numeric) :Calculate the trigonometric cotangent (1/TAN(ANGLE)). See also Java Math.* functions. This method returns a double.
+SIN                 :SIN(numeric) :Calculate the trigonometric sine. See also Java Math.sin. This method returns a double.
+SINH                :SINH(numeric) :Calculate the hyperbolic sine. See also Java Math.sinh. This method returns a double.
+TAN                 :TAN(numeric) :Calculate the trigonometric tangent. See also Java Math.tan. This method returns a double.
+TANH                :TANH(numeric) :Calculate the hyperbolic tangent. See also Java Math.tanh. This method returns a double.
+ATAN2               :ATAN2(numeric, numeric) :Calculate the angle when converting the rectangular coordinates to polar coordinates. See also Java Math.atan2. This method returns a double.
+BITAND              :BITAND(expression, expression) :The bitwise AND operation. Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+BITOR               :BITOR(expression, expression) :The bitwise OR operation. Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+BITXOR              :BITXOR(expression, expression) :Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+BITNOT              :BITNOT(expression) :The bitwise NOT operation. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+BITNAND             :BITNAND(expression, expression) :The bitwise NAND operation equivalent to BITNOT(BITAND(expression, expression)). Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+BITNOR              :BITNOR(expression, expression) :The bitwise NOR operation equivalent to BITNOT(BITOR(expression, expression)). Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+BITXNOR             :BITXNOR(expression, expression) :The bitwise XNOR operation equivalent to BITNOT(BITXOR(expression, expression)). Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+BITGET              :BITGET(expression, long) :Returns true if and only if the first argument has a bit set in the position specified by the second parameter. The first argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This method returns a boolean. The second argument is zero-indexed; the least significant bit has position 0.
+BITCOUNT            :BITCOUNT(expression) :Returns count of set bits in the specified value. Value should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This method returns a long.
+LSHIFT              :LSHIFT(expression, long) :The bitwise signed left shift operation. Shifts the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+RSHIFT              :RSHIFT(expression, long) :The bitwise signed right shift operation. Shifts the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+ULSHIFT             :ULSHIFT(expression, long) :The bitwise unsigned left shift operation. Shifts the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+URSHIFT             :URSHIFT(expression, long) :The bitwise unsigned right shift operation. Shifts the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+ROTATELEFT          :ROTATELEFT(expression, long) :The bitwise left rotation operation. Rotates the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+ROTATERIGHT         :ROTATERIGHT(expression, long) :The bitwise right rotation operation. Rotates the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
+MOD                 :MOD(dividendNumeric, divisorNumeric) :The modulus expression.
+CEIL                :CEIL (numeric) :Returns the smallest integer value that is greater than or equal to the argument. This method returns value of the same type as argument, but with scale set to 0 and adjusted precision, if applicable.
+CEILING             :CEILING (numeric) :Returns the smallest integer value that is greater than or equal to the argument. This method returns value of the same type as argument, but with scale set to 0 and adjusted precision, if applicable.
+DEGREES             :DEGREES(numeric) :See also Java Math.toDegrees. This method returns a double.
+EXP                 :EXP(numeric) :See also Java Math.exp. This method returns a double.
+FLOOR               :FLOOR(numeric) :Returns the largest integer value that is less than or equal to the argument. This method returns value of the same type as argument, but with scale set to 0 and adjusted precision, if applicable.
+LN                  :LN(numeric) :Calculates the natural (base e) logarithm as a double value. Argument must be a positive numeric value.
+LOG                 :LOG({baseNumeric, numeric | {numeric}}) :Calculates the logarithm with specified base as a double value. Argument and base must be positive numeric values. Base cannot be equal to 1.
+LOG10               :LOG10(numeric) :Calculates the base 10 logarithm as a double value. Argument must be a positive numeric value.
+ORA_HASH            :ORA_HASH(expression [, bucketLong [, seedLong]]) :Computes a hash value. Optional bucket argument determines the maximum returned value. This argument should be between 0 and 4294967295, default is 4294967295. Optional seed argument is combined with the given expression to return the different values for the same expression. This argument should be between 0 and 4294967295, default is 0. This method returns a long value between 0 and the specified or default bucket value inclusive.
+RADIANS             :RADIANS(numeric) :See also Java Math.toRadians. This method returns a double.
+SQRT                :SQRT(numeric)  :See also Java Math.sqrt. This method returns a double.
+PI                  :PI()           :See also Java Math.PI. This method returns a double.
+POWER               :POWER(numeric, numeric)        :See also Java Math.pow. This method returns a double.
+RAND                :RAND ( [ int ] )               :Calling the function without parameter returns the next a pseudo random number. Calling it with an parameter seeds the session's random number generator. This method returns a double between 0 (including) and 1 (excluding).
+RANDOM              :RANDOM ( [ int ] )             :Calling the function without parameter returns the next a pseudo random number. Calling it with an parameter seeds the session's random number generator. This method returns a double between 0 (including) and 1 (excluding).
+RANDOM_UUID         :RANDOM_UUID ()                 :Returns a new UUID with 122 pseudo random bits.
+UUID                :UUID ()                        :Returns a new UUID with 122 pseudo random bits.
+ROUND               :ROUND(numeric [, digitsInt])   :Rounds to a number of fractional digits. This method returns value of the same type as argument, but with adjusted precision and scale, if applicable.
+SECURE_RAND         :SECURE_RAND(int)               :Generates a number of cryptographically secure random numbers. This method returns bytes.
+SIGN                :SIGN( { numeric | interval } ) :Returns -1 if the value is smaller than 0, 0 if zero or NaN, and otherwise 1.
+ENCRYPT             :ENCRYPT(algorithmString, keyBytes, dataBytes)                  :Encrypts data using a key. The supported algorithm is AES. The block size is 16 bytes. This method returns bytes.
+DECRYPT             :DECRYPT(algorithmString, keyBytes, dataBytes)                  :Decrypts data using a key. The supported algorithm is AES. The block size is 16 bytes. This method returns bytes.
+HASH                :HASH(algorithmString, expression [, iterationInt])             :Calculate the hash value using an algorithm, and repeat this process for a number of iterations.
+TRUNC               :TRUNC ( { {numeric [, digitsInt] }| { timestamp | timestampWithTimeZone | date | timestampString } } )     :When a numeric argument is specified, truncates it to a number of digits (to the next value closer to 0) and returns value of the same type as argument, but with adjusted precision and scale, if applicable.
+TRUNCATE            :TRUNCATE ( { {numeric [, digitsInt] }| { timestamp | timestampWithTimeZone | date | timestampString } } )  :When a numeric argument is specified, truncates it to a number of digits (to the next value closer to 0) and returns value of the same type as argument, but with adjusted precision and scale, if applicable.
+COMPRESS            :COMPRESS(dataBytes [, algorithmString])    :Compresses the data using the specified compression algorithm. Supported algorithms are: LZF (faster but lower compression; default), and DEFLATE (higher compression). Compression does not always reduce size. Very small objects and objects with little redundancy may get larger. This method returns bytes.
+EXPAND              :EXPAND(bytes)                              :Expands data that was compressed using the COMPRESS function. This method returns bytes.
+ZERO                :ZERO()                                     :Returns the value 0. This function can be used even if numeric literals are disabled.
+[String Functions]
+ASCII                  :ASCII(string) :Returns the ASCII value of the first character in the string. This method returns an int.
+BIT_LENGTH             :BIT_LENGTH(bytes) :Returns the number of bits in a binary string. This method returns a long.
+CHAR_LENGTH            :CHAR_LENGTH ( string ) :Returns the number of characters in a character string. This method returns a long.
+CHARACTER_LENGTH        :CHARACTER_LENGTH ( string ) :Returns the number of characters in a character string. This method returns a long.
+LENGTH                  :LENGTH ( string ) :Returns the number of characters in a character string. This method returns a long.
+OCTET_LENGTH            :OCTET_LENGTH(bytes) :Returns the number of bytes in a binary string. This method returns a long.
+CHAR                    :CHAR ( int ) :Returns the character that represents the ASCII value. This method returns a string.
+CHR                     :CHR ( int ) :Returns the character that represents the ASCII value. This method returns a string.
+CONCAT                 :CONCAT(string, string [,...]) :Combines strings. Unlike with the operator ||, NULL parameters are ignored, and do not cause the result to become NULL. If all parameters are NULL the result is an empty string. This method returns a string.
+CONCAT_WS              :CONCAT_WS(separatorString, string, string [,...]) :Combines strings with separator. If separator is NULL it is treated like an empty string. Other NULL parameters are ignored. Remaining non-NULL parameters, if any, are concatenated with the specified separator. If there are no remaining parameters the result is an empty string. This method returns a string.
+DIFFERENCE             :DIFFERENCE(string, string) :Returns the difference between the sounds of two strings. The difference is calculated as a number of matched characters in the same positions in SOUNDEX representations of arguments. This method returns an int between 0 and 4 inclusive, or null if any of its parameters is null. Note that value of 0 means that strings are not similar to each other. Value of 4 means that strings are fully similar to each other (have the same SOUNDEX representation).
+HEXTORAW               :HEXTORAW(string) :Converts a hex representation of a string to a string. 4 hex characters per string character are used.
+RAWTOHEX               :RAWTOHEX({string|bytes}) :Converts a string or bytes to the hex representation. 4 hex characters per string character are used. This method returns a string.
+INSERT Function        :INSERT(originalString, startInt, lengthInt, addString) :Inserts a additional string into the original string at a specified start position. The length specifies the number of characters that are removed at the start position in the original string. This method returns a string.
+LOWER                  :LOWER ( string ) :Converts a string to lowercase.
+LCASE                  :LCASE ( string ) :Converts a string to lowercase.
+UPPER                  :UPPER ( string ) :Converts a string to uppercase.
+UCASE                  :UCASE  ( string ) :Converts a string to uppercase.
+LEFT                   :LEFT(string, int) :Returns the leftmost number of characters.
+RIGHT                  :RIGHT(string, int) :Returns the rightmost number of characters.
+LOCATE                  :LOCATE(searchString, string [, startInt]) } :Returns the location of a search string in a string. If a start position is used, the characters before it are ignored. If position is negative, the rightmost location is returned. 0 is returned if the search string is not found. Please note this function is case sensitive, even if the parameters are not.
+INSTR                   :INSTR(string, searchString, [, startInt]) :Returns the location of a search string in a string. If a start position is used, the characters before it are ignored. If position is negative, the rightmost location is returned. 0 is returned if the search string is not found. Please note this function is case sensitive, even if the parameters are not.
+POSITION                :POSITION(searchString, string) :Returns the location of a search string in a string. If a start position is used, the characters before it are ignored. If position is negative, the rightmost location is returned. 0 is returned if the search string is not found. Please note this function is case sensitive, even if the parameters are not.
+LPAD                   :LPAD(string, int[, paddingString]) :Left pad the string to the specified length. If the length is shorter than the string, it will be truncated at the end. If the padding string is not set, spaces will be used.
+RPAD                   :RPAD(string, int[, paddingString]) :Right pad the string to the specified length. If the length is shorter than the string, it will be truncated. If the padding string is not set, spaces will be used.
+LTRIM                  :LTRIM(string [, characterToTrimString]) :Removes all leading spaces or other specified characters from a string.
+RTRIM                  :RTRIM(string [, characterToTrimString]) :Removes all trailing spaces or other specified characters from a string.
+TRIM                   :TRIM ( [ [ LEADING | TRAILING | BOTH ] [ string ] FROM ] string ) :Removes all leading spaces, trailing spaces, or spaces at both ends, from a string. Other characters can be removed as well.
+REGEXP_REPLACE         :REGEXP_REPLACE(inputString, regexString, replacementString [, flagsString]) :Replaces each substring that matches a regular expression. For details, see the Java String.replaceAll() method. If any parameter is null (except optional flagsString parameter), the result is null.
+REGEXP_LIKE            :REGEXP_LIKE(inputString, regexString [, flagsString]) :Matches string to a regular expression. For details, see the Java Matcher.find() method. If any parameter is null (except optional flagsString parameter), the result is null.
+REGEXP_SUBSTR          :REGEXP_SUBSTR(inputString, regexString [, positionInt, occurrenceInt, flagsString, groupInt]) :Matches string to a regular expression and returns the matched substring. For details, see the java.util.regex.Pattern and related functionality.
+REPEAT                 :REPEAT(string, int) :Returns a string repeated some number of times.
+REPLACE                :REPLACE(string, searchString [, replacementString]) :Replaces all occurrences of a search string in a text with another string. If no replacement is specified, the search string is removed from the original string. If any parameter is null, the result is null.
+SOUNDEX                :SOUNDEX(string) :Returns a four character code representing the sound of a string. This method returns a string, or null if parameter is null. See https://en.wikipedia.org/wiki/Soundex for more information.
+SPACE                  :SPACE(int) :Returns a string consisting of a number of spaces.
+STRINGDECODE           :STRINGDECODE(string) :Converts a encoded string using the Java string literal encoding format. Special characters are \b, \t, \n, \f, \r, \", \\, \<octal>, \u<unicode>. This method returns a string.
+STRINGENCODE           :STRINGENCODE(string) :Encodes special characters in a string using the Java string literal encoding format. Special characters are \b, \t, \n, \f, \r, \", \\, \<octal>, \u<unicode>. This method returns a string.
+STRINGTOUTF8           :STRINGTOUTF8(string) :Encodes a string to a byte array using the UTF8 encoding format. This method returns bytes.
+SUBSTRING              :SUBSTRING ( {string|bytes} FROM startInt [ FOR lengthInt ] )| { { SUBSTRING | SUBSTR } ( {string|bytes}, startInt [, lengthInt ] ) } :Returns a substring of a string starting at a position. If the start index is negative, then the start index is relative to the end of the string. The length is optional.
+UTF8TOSTRING           :UTF8TOSTRING(bytes) :Decodes a byte array in the UTF8 format to a string.
+QUOTE_IDENT            :QUOTE_IDENT(string) :Quotes the specified identifier. Identifier is surrounded by double quotes. If identifier contains double quotes they are repeated twice.
+XMLATTR                :XMLATTR(nameString, valueString) :Creates an XML attribute element of the form name=value. The value is encoded as XML text. This method returns a string.
+XMLNODE                :XMLNODE(elementString [, attributesString [, contentString [, indentBoolean]]]) :Create an XML node element. An empty or null attribute string means no attributes are set. An empty or null content string means the node is empty. The content is indented by default if it contains a newline. This method returns a string.
+XMLCOMMENT             :XMLCOMMENT(commentString) :Creates an XML comment. Two dashes (--) are converted to - -. This method returns a string.
+XMLCDATA               :XMLCDATA(valueString) :Creates an XML CDATA element. If the value contains ]]>, an XML text element is created instead. This method returns a string.
+XMLSTARTDOC            :XMLSTARTDOC() :Returns the XML declaration. The result is always <?xml version=1.0?>.
+XMLTEXT                :XMLTEXT(valueString [, escapeNewlineBoolean]) :Creates an XML text element. If enabled, newline and linefeed is converted to an XML entity (&#). This method returns a string.
+TO_CHAR                :TO_CHAR(value [, formatString[, nlsParamString]]) :Oracle-compatible TO_CHAR function that can format a timestamp, a number, or text.
+TRANSLATE              :TRANSLATE(value, searchString, replacementString) :Oracle-compatible TRANSLATE function that replaces a sequence of characters in a string with another set of characters.
+[Time and Date Functions]
+CURRENT_DATE             :CURRENT_DATE :Returns the current date.
+CURRENT_TIME             :CURRENT_TIME [ (int) ] :Returns the current time with time zone. If fractional seconds precision is specified it should be from 0 to 9, 0 is default. The specified value can be used only to limit precision of a result. The actual maximum available precision depends on operating system and JVM and can be 3 (milliseconds) or higher. Higher precision is not available before Java 9.
+CURRENT_TIMESTAMP        :CURRENT_TIMESTAMP [ (int) ] :Returns the current timestamp with time zone. Time zone offset is set to a current time zone offset. If fractional seconds precision is specified it should be from 0 to 9, 6 is default. The specified value can be used only to limit precision of a result. The actual maximum available precision depends on operating system and JVM and can be 3 (milliseconds) or higher. Higher precision is not available before Java 9.
+LOCALTIME                :LOCALTIME [ (int) ] :Returns the current time without time zone. If fractional seconds precision is specified it should be from 0 to 9, 0 is default. The specified value can be used only to limit precision of a result. The actual maximum available precision depends on operating system and JVM and can be 3 (milliseconds) or higher. Higher precision is not available before Java 9.
+LOCALTIMESTAMP           :LOCALTIMESTAMP [ (int) ] :Returns the current timestamp without time zone. If fractional seconds precision is specified it should be from 0 to 9, 6 is default. The specified value can be used only to limit precision of a result. The actual maximum available precision depends on operating system and JVM and can be 3 (milliseconds) or higher. Higher precision is not available before Java 9.
+DATEADD                     :DATEADD (datetimeField, addIntLong, dateAndTime) :Adds units to a date-time value. The datetimeField indicates the unit. Use negative values to subtract units. addIntLong may be a long value when manipulating milliseconds, microseconds, or nanoseconds otherwise its range is restricted to int. This method returns a value with the same type as specified value if unit is compatible with this value. If specified field is a HOUR, MINUTE, SECOND, MILLISECOND, etc and value is a DATE value DATEADD returns combined TIMESTAMP. Fields DAY, MONTH, YEAR, WEEK, etc are not allowed for TIME values. Fields TIMEZONE_HOUR, TIMEZONE_MINUTE, and TIMEZONE_SECOND are only allowed for TIMESTAMP WITH TIME ZONE values.
+TIMESTAMPADD                :TIMESTAMPADD (datetimeField, addIntLong, dateAndTime) :Adds units to a date-time value. The datetimeField indicates the unit. Use negative values to subtract units. addIntLong may be a long value when manipulating milliseconds, microseconds, or nanoseconds otherwise its range is restricted to int. This method returns a value with the same type as specified value if unit is compatible with this value. If specified field is a HOUR, MINUTE, SECOND, MILLISECOND, etc and value is a DATE value DATEADD returns combined TIMESTAMP. Fields DAY, MONTH, YEAR, WEEK, etc are not allowed for TIME values. Fields TIMEZONE_HOUR, TIMEZONE_MINUTE, and TIMEZONE_SECOND are only allowed for TIMESTAMP WITH TIME ZONE values.
+DATEDIFF                    :DATEDIFF (datetimeField, aDateAndTime, bDateAndTime) :Returns the number of crossed unit boundaries between two date/time values. This method returns a long. The datetimeField indicates the unit. Only TIMEZONE_HOUR, TIMEZONE_MINUTE, and TIMEZONE_SECOND fields use the time zone offset component. With all other fields if date/time values have time zone offset component it is ignored.
+TIMESTAMPDIFF               :TIMESTAMPDIFF (datetimeField, aDateAndTime, bDateAndTime) :Returns the number of crossed unit boundaries between two date/time values. This method returns a long. The datetimeField indicates the unit. Only TIMEZONE_HOUR, TIMEZONE_MINUTE, and TIMEZONE_SECOND fields use the time zone offset component. With all other fields if date/time values have time zone offset component it is ignored.
+DATE_TRUNC               :DATE_TRUNC (datetimeField, dateAndTime) :Truncates the specified date-time value to the specified field.
+DAYNAME                  :DAYNAME(dateAndTime) :Returns the name of the day (in English).
+DAY_OF_MONTH             :DAY_OF_MONTH({dateAndTime|interval}) :Returns the day of the month (1-31).
+DAY_OF_WEEK              :DAY_OF_WEEK(dateAndTime) :Returns the day of the week (1-7), locale-specific.
+ISO_DAY_OF_WEEK          :ISO_DAY_OF_WEEK(dateAndTime) :Returns the ISO day of the week (1 means Monday).
+DAY_OF_YEAR              :DAY_OF_YEAR({dateAndTime|interval}) :Returns the day of the year (1-366).
+EXTRACT                  :EXTRACT ( datetimeField FROM { dateAndTime | interval }) :Returns a value of the specific time unit from a date/time value. This method returns a numeric value with EPOCH field and an int for all other fields.
+FORMATDATETIME           :FORMATDATETIME ( dateAndTime, formatString[ , localeString [ , timeZoneString ] ] ) :Formats a date, time or timestamp as a string. The most important format characters are: y year, M month, d day, H hour, m minute, s second. For details of the format, see java.time.format.DateTimeFormatter.
+HOUR                     :HOUR({dateAndTime|interval}) :Returns the hour (0-23) from a date/time value.
+MINUTE                   :MINUTE({dateAndTime|interval}) :Returns the minute (0-59) from a date/time value.
+MONTH                    :MONTH({dateAndTime|interval}) :Returns the month (1-12) from a date/time value.
+MONTHNAME                :MONTHNAME(dateAndTime) :Returns the name of the month (in English).
+PARSEDATETIME            :PARSEDATETIME(string, formatString[, localeString [, timeZoneString]]) :Parses a string and returns a TIMESTAMP WITH TIME ZONE value. The most important format characters are: y year, M month, d day, H hour, m minute, s second. For details of the format, see java.time.format.DateTimeFormatter.
+QUARTER                  :QUARTER(dateAndTime) :Returns the quarter (1-4) from a date/time value.
+SECOND                   :SECOND(dateAndTime) :Returns the second (0-59) from a date/time value.
+WEEK                     :WEEK(dateAndTime) :Returns the week (1-53) from a date/time value.
+ISO_WEEK                 :ISO_WEEK(dateAndTime) :Returns the ISO week (1-53) from a date/time value.
+YEAR                     :YEAR({dateAndTime|interval}) :Returns the year from a date/time value.
+ISO_YEAR                 :ISO_YEAR(dateAndTime) :Returns the ISO week year from a date/time value.
+[System Functions]
+ABORT_SESSION                   :ABORT_SESSION(sessionInt) :Cancels the currently executing statement of another session. Closes the session and releases the allocated resources. Returns true if the session was closed, false if no session with the given id was found.
+ARRAY_GET                       :ARRAY_GET(arrayExpression, indexExpression) :Returns element at the specified 1-based index from an array.
+CARDINALITY                     :CARDINALITY (arrayExpression) :Returns the length of an array. Returns NULL if the specified array is NULL.
+ARRAY_LENGTH                    :ARRAY_LENGTH (arrayExpression) :Returns the length of an array. Returns NULL if the specified array is NULL.
+ARRAY_CONTAINS               :ARRAY_CONTAINS(arrayExpression, value) :Returns a boolean TRUE if the array contains the value or FALSE if it does not contain it. Returns NULL if the specified array is NULL.
+ARRAY_CAT                    :ARRAY_CAT(arrayExpression, arrayExpression) :Returns the concatenation of two arrays.
+ARRAY_APPEND                 :ARRAY_APPEND(arrayExpression, value) :Append an element to the end of an array.
+ARRAY_MAX_CARDINALITY        :ARRAY_MAX_CARDINALITY(arrayExpression) :Returns the maximum allowed array cardinality (length) of the declared data type of argument.
+TRIM_ARRAY                   :TRIM_ARRAY(arrayExpression, int) :Removes the specified number of elements from the end of the array.
+ARRAY_SLICE                  :ARRAY_SLICE(arrayExpression, lowerBoundInt, upperBoundInt) :Returns elements from the array as specified by the lower and upper bound parameters. Both parameters are inclusive and the first element has index 1, i.e. ARRAY_SLICE(a, 2, 2) has only the second element. Returns NULL if any parameter is NULL or if an index is out of bounds.
+AUTOCOMMIT                   :AUTOCOMMIT() :Returns true if auto commit is switched on for this session.
+CANCEL_SESSION               :CANCEL_SESSION(sessionInt) :Cancels the currently executing statement of another session. Returns true if the statement was canceled, false if the session is closed or no statement is currently executing.
+CASEWHEN Function            :CASEWHEN(boolean, aValue, bValue) :Returns 'aValue' if the boolean expression is true, otherwise 'bValue'.
+COALESCE                     :COALESCE (aValue, bValue [,...])| IFNULL(aValue, bValue) :Returns the first value that is not null.
+NVL                             :NVL (aValue, bValue [,...])| IFNULL(aValue, bValue) :Returns the first value that is not null.
+CONVERT                         :CONVERT(value, dataTypeOrDomain) :Converts a value to another data type.
+CURRVAL                         :CURRVAL( [ schemaNameString, ] sequenceString ) :Returns the latest generated value of the sequence for the current session. Current value may only be requested after generation of the sequence value in the current session. This method exists only for compatibility, when it isn't required use CURRENT VALUE FOR sequenceName instead. If the schema name is not set, the current schema is used. When sequence is not found, the uppercase name is also checked. This method returns a long.
+CSVWRITE                        :CSVWRITE ( fileNameString, queryString [, csvOptions [, lineSepString] ] ) :Writes a CSV (comma separated values). The file is overwritten if it exists. If only a file name is specified, it will be written to the current working directory. For each parameter, NULL means the default value should be used. The default charset is the default value for this system, and the default field separator is a comma.
+CURRENT_SCHEMA                  :CURRENT_SCHEMA :Returns the name of the default schema for this session.
+SCHEMA                          :SCHEMA() :Returns the name of the default schema for this session.
+CURRENT_CATALOG                 :CURRENT_CATALOG :Returns the name of the database.
+DATABASE                        :DATABASE() :Returns the name of the database.
+DATABASE_PATH                :DATABASE_PATH() :Returns the directory of the database files and the database name, if it is file based. Returns NULL otherwise.
+DATA_TYPE_SQL                :DATA_TYPE_SQL(objectSchemaString, objectNameString, objectTypeString, typeIdentifierString) :Returns SQL representation of data type of the specified constant, domain, table column, routine result or argument.
+DB_OBJECT_ID                 :DB_OBJECT_ID({{'ROLE'|'SETTING'|'SCHEMA'|'USER'}, objectNameString| {'CONSTANT'|'CONSTRAINT'|'DOMAIN'|'INDEX'|'ROUTINE'|'SEQUENCE' |'SYNONYM'|'TABLE'|'TRIGGER'}, schemaNameString, objectNameString }) :Returns internal identifier of the specified database object as integer value or NULL if object doesn't exist.
+DB_OBJECT_SQL                :DB_OBJECT_SQL({{'ROLE'|'SETTING'|'SCHEMA'|'USER'}, objectNameString| {'CONSTANT'|'CONSTRAINT'|'DOMAIN'|'INDEX'|'ROUTINE'|'SEQUENCE' |'SYNONYM'|'TABLE'|'TRIGGER'}, schemaNameString, objectNameString }) :Returns internal SQL definition of the specified database object or NULL if object doesn't exist or it is a system object without SQL definition.
+DECODE                       :DECODE(value, whenValue, thenValue [,...]) :Returns the first matching value. NULL is considered to match NULL. If no match was found, then NULL or the last parameter (if the parameter count is even) is returned. This function is provided for Oracle compatibility, use CASE instead of it.
+DISK_SPACE_USED              :DISK_SPACE_USED(tableNameString) :Returns the approximate amount of space used by the table specified. Does not currently take into account indexes or LOB's. This function may be expensive since it has to load every page in the table.
+SIGNAL                       :SIGNAL(sqlStateString, messageString) :Throw an SQLException with the passed SQLState and reason.
+ESTIMATED_ENVELOPE           :ESTIMATED_ENVELOPE(tableNameString, columnNameString) :Returns the estimated minimum bounding box that encloses all specified GEOMETRY values. Only 2D coordinate plane is supported. NULL values are ignored. Column must have a spatial index. This function is fast, but estimation may include uncommitted data (including data from other transactions), may return approximate bounds, or be different with actual value due to other reasons. Use with caution. If estimation is not available this function returns NULL. For accurate and reliable result use ESTIMATE aggregate function instead.
+FILE_READ                    :FILE_READ(fileNameString [,encodingString]) :Returns the contents of a file. If only one parameter is supplied, the data are returned as a BLOB. If two parameters are used, the data is returned as a CLOB (text). The second parameter is the character set to use, NULL meaning the default character set for this system.
+FILE_WRITE                   :FILE_WRITE(blobValue, fileNameString) :Write the supplied parameter into a file. Return the number of bytes written.
+GREATEST                     :GREATEST(aValue, bValue [,...]) :Returns the largest value that is not NULL, or NULL if all values are NULL.
+LEAST                        :LEAST(aValue, bValue [,...]) :Returns the smallest value that is not NULL, or NULL if all values are NULL.
+LOCK_MODE                    :LOCK_MODE() :Returns the current lock mode. See SET LOCK_MODE. This method returns an int.
+LOCK_TIMEOUT                 :LOCK_TIMEOUT() :Returns the lock timeout of the current session (in milliseconds).
+MEMORY_FREE                  :MEMORY_FREE() :Returns the free memory in KB (where 1024 bytes is a KB). This method returns a long. The garbage is run before returning the value. Admin rights are required to execute this command.
+MEMORY_USED                  :MEMORY_USED() :Returns the used memory in KB (where 1024 bytes is a KB). This method returns a long. The garbage is run before returning the value. Admin rights are required to execute this command.
+NEXTVAL                      :NEXTVAL ( [ schemaNameString, ] sequenceString ) :Increments the sequence and returns its value. The current value of the sequence and the last identity in the current session are updated with the generated value. Used values are never re-used, even when the transaction is rolled back. This method exists only for compatibility, it's recommended to use the standard NEXT VALUE FOR sequenceName instead. If the schema name is not set, the current schema is used. When sequence is not found, the uppercase name is also checked. This method returns a long.
+NULLIF                       :NULLIF(aValue, bValue) :Returns NULL if 'a' is equal to 'b', otherwise 'a'.
+NVL2                         :NVL2(testValue, aValue, bValue) :If the test value is null, then 'b' is returned. Otherwise, 'a' is returned. The data type of the returned value is the data type of 'a' if this is a text type.
+READONLY                     :READONLY() :Returns true if the database is read-only.
+ROWNUM                       :ROWNUM() :Returns the number of the current row. This method returns a long value. It is supported for SELECT statements, as well as for DELETE and UPDATE. The first row has the row number 1, and is calculated before ordering and grouping the result set, but after evaluating index conditions (even when the index conditions are specified in an outer query). Use the ROW_NUMBER() OVER () function to get row numbers after grouping or in specified order.
+SESSION_ID                   :SESSION_ID() :Returns the unique session id number for the current database connection. This id stays the same while the connection is open. This method returns an int. The database engine may re-use a session id after the connection is closed.
+SET                          :SET(@variableName, value) :Updates a variable with the given value. The new value is returned. When used in a query, the value is updated in the order the rows are read. When used in a subquery, not all rows might be read depending on the query plan. This can be used to implement running totals / cumulative sums.
+TRANSACTION_ID               :TRANSACTION_ID() :Returns the current transaction id for this session. This method returns NULL if there is no uncommitted change, or if the database is not persisted. Otherwise a value of the following form is returned: logFileId-position-sessionId. This method returns a string. The value is unique across database restarts (values are not re-used).
+TRUNCATE_VALUE               :TRUNCATE_VALUE(value, precisionInt, forceBoolean) :Truncate a value to the required precision. If force flag is set to FALSE fixed precision values are not truncated. The method returns a value with the same data type as the first parameter.
+CURRENT_PATH                 :CURRENT_PATH :Returns the comma-separated list of quoted schema names where user-defined functions are searched when they are referenced without the schema name.
+CURRENT_ROLE                 :CURRENT_ROLE :Returns the name of the PUBLIC role.
+CURRENT_USER                 :CURRENT_USER | SESSION_USER | SYSTEM_USER | USER :Returns the name of the current user of this session.
+H2VERSION                    :H2VERSION() :Returns the H2 version as a String.
+[JSON Functions]
+JSON_OBJECT                 :JSON_OBJECT([{{[KEY] string VALUE expression} | {string : expression}} [,...] ][ { NULL | ABSENT } ON NULL ][ { WITH | WITHOUT } UNIQUE KEYS ]) :Returns a JSON object constructed from the specified properties. If ABSENT ON NULL is specified properties with NULL value are not included in the object. If WITH UNIQUE KEYS is specified the constructed object is checked for uniqueness of keys, nested objects, if any, are checked too.
+JSON_ARRAY                  :JSON_ARRAY([expression [,...]]|{(query) [FORMAT JSON]}[ { NULL | ABSENT } ON NULL ]) :Returns a JSON array constructed from the specified values or from the specified single-column subquery. If NULL ON NULL is specified NULL values are included in the array.
+[Table Functions]
+CSVREAD                     :CSVREAD(fileNameString [, columnsString [, csvOptions ] ] ) :Returns the result set of reading the CSV (comma separated values) file. For each parameter, NULL means the default value should be used.
+LINK_SCHEMA                 :LINK_SCHEMA (targetSchemaString, driverString, urlString,userString, passwordString, sourceSchemaString) :Creates table links for all tables in a schema. If tables with the same name already exist, they are dropped first. The target schema is created automatically if it does not yet exist. The driver name may be empty if the driver is already loaded. The list of tables linked is returned in the form of a result set. Admin rights are required to execute this command.
+TABLE_DISTINCT              :TABLE_DISTINCT ( { name dataTypeOrDomain = {array|rowValueExpression} } [,...] ) :Returns the result set. TABLE_DISTINCT removes duplicate rows.
+TABLE                       :TABLE ( { name dataTypeOrDomain = {array|rowValueExpression} } [,...] ) :Returns the result set. TABLE_DISTINCT removes duplicate rows.
+UNNEST                      :UNNEST(array, [,...]) [WITH ORDINALITY] :Returns the result set. Number of columns is equal to number of arguments, plus one additional column with row number if WITH ORDINALITY is specified. Number of rows is equal to length of longest specified array. If multiple arguments are specified and they have different length, cells with missing values will contain null values.
