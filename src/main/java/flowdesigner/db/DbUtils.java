@@ -439,14 +439,24 @@ public class DbUtils {
                 separator = ":=";
             }
 
+            // 对内容中存在的':'或“:”做替换处理。以免拆分错误。
+            if (function.contains("':'")) {
+                function = function.replaceAll("':'","'：'");
+            }  else if (function.contains("\":\"")) {
+                function = function.replaceAll("\":\"","\"：\"");
+            }
+
             String[] split = function.split(separator);
             if (split.length < 2) {
                 continue;
             }
 
-            String name = split[0].trim();
-            String signature = split[1].trim();
-            String description = split.length == 3? split[2].trim():"" ;
+            // 替换后恢复
+            List<String> segments = Arrays.stream(split).map(c -> c.replaceAll("：", ":")).toList();
+
+            String name = segments.get(0).trim();
+            String signature = segments.get(1).trim();
+            String description = segments.size() == 3? segments.get(2).trim():"" ;
 
             functionInfos.add(new FunctionInfo(name, subCatalog, signature));
         }

@@ -1,12 +1,17 @@
 package flowdesigner.db;
 
 import com.alibaba.druid.DbType;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.NavigableMap;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +20,7 @@ class DbUtilsTest {
 
     @Test
     void getFunctions() {
-        Set<DbUtils.FunctionInfo> supportFunctions2 = DbUtils.getFunctions(DbType.postgresql);
+        Set<DbUtils.FunctionInfo> supportFunctions2 = DbUtils.getFunctions(DbType.gbase);
         System.out.println(supportFunctions2);
     }
 
@@ -1876,6 +1881,100 @@ class DbUtilsTest {
 
             System.out.println(signature);
         }
+    }
+
+    @Test
+    void KingBaseFunctionsProcessor() throws FileNotFoundException {
+
+        String fileName = "C:\\文档\\总结\\数据库函数\\kingbase.txt";
+
+        // 出现用法后等待功能的描述
+        boolean bInScope = false;
+        boolean bWaitDescription = false;
+        ArrayList<String> newLines = new ArrayList<>();
+
+        try (Scanner sc = new Scanner(new FileReader(fileName))) {
+            while (sc.hasNextLine()) {  //按行读取字符串
+                String line = sc.nextLine();
+                // 搜索name
+                Pattern p = Pattern.compile("^8\\.\\d*[1-9]\\."); //得到字符串中的数字
+                Matcher m = p.matcher(line);
+                if(m.find()){
+                    String ss = m.group();
+                    Pattern p2 = Pattern.compile("[A-Za-z]+"); //得到字符串中的数字
+                    Matcher m2 = p2.matcher(line);
+                    if (m2.find()) {
+                        newLines.add(m2.group());
+                        System.out.print(line);
+                    }
+                }
+
+                if (line.endsWith("用法：")) {
+
+                    assertFalse(bWaitDescription);
+
+                    String usage = sc.nextLine();
+                    newLines.add(usage);
+                    bInScope = true;
+                    bWaitDescription = true;
+                    System.out.print(usage);
+                    continue;
+                }
+
+                if (line.trim().endsWith("功能：") || line.endsWith("功能： ¶")) {
+
+                    assertTrue(bInScope);
+
+                    String description = sc.nextLine();
+                    newLines.add(description);
+                    System.out.println(description);
+                    bInScope = false;
+                    bWaitDescription = false;
+                }
+            }
+        }
+
+        int spaceNeeded = 8;    //2个TAB长度
+        for (int i = 0; i < newLines.size(); i+=3) {
+            String name = newLines.get(i);
+            String usage = newLines.get(i+1);
+            String descr = newLines.get(i+2);
+
+//            int spaceNeeded = NameLength - name.length() ;
+//            spaceNeeded = Math.max(spaceNeeded, 0);
+            String signature = name + " ".repeat(spaceNeeded) + ":" + usage  + ":" + descr;
+
+            System.out.println(signature);
+        }
+
+        // 计算对其函数名需要宽度
+//        int NameLength = 0;
+//        for (int i = 0; i < lines.length; i++) {
+//            String line = lines[i];
+//            String[] split = line.split("\\(");
+//
+//            String functionName = split[0];
+//            int length = functionName.length();
+//            if (length > NameLength) {
+//                NameLength = length;
+//            }
+//
+//            newLines.add(functionName);
+//            newLines.add(line);
+//        }
+//
+//        NameLength += 8;    //2个TAB长度
+//
+//        for (int i = 0; i < newLines.size(); i+=2) {
+//            String name = newLines.get(i);
+//            String line2 = newLines.get(i+1);
+//
+//            int spaceNeeded = NameLength - name.length() ;
+//            spaceNeeded = Math.max(spaceNeeded, 0);
+//            String signature = name + " ".repeat(spaceNeeded) + ":" + line2;
+//
+//            System.out.println(signature);
+//        }
     }
 
     public static boolean isNumeric(String str){
