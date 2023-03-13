@@ -138,9 +138,9 @@ HAS_SERVER_PRIVILEGE        :has_server_privilege(user, server， privilege)    
 HAS_TABLE_PRIVILEGE         :has_table_privilege(user, table， privilege)                :检查 user 用户（未指定时使用当前用户）是否可以用某种特定的方式访问一个表。 该用户可以通过名字或者 OID （ sys_authid.oid ） 来指定，也可以用 public 表示 PUBLIC 伪角色。如果省略该参数，则使用 current_user 。 该表可以通过名字或者 OID 指定（因此，实际上有六种 has_table_privilege 的变体，我们可以通过它们的参数数目和类型来区分它们） 。如果用名字指定，那么在必要时该名字可以是模式限定的。 所希望的权限类型是用一个文本串来指定的，它必须是下面的几个值之一： SELECT 、 INSERT 、 UPDATE 、 DELETE 、 TRUNCATE 、 REFERENCES 或 TRIGGER 。 WITH GRANT OPTION 可以被选择增加到一个权限类型来测试是否该权限是使用转授选项得到。另外，可以使用逗号分隔来列出多个权限类型，在这种情况下只要具有其中之一的权限则结果为 真 （权限字符串的大小写并不重要，可以在权限名称之间出现额外的空白，但是在权限名内部不能有空白）。
 HAS_TABLESPACE_PRIVILEGE    :has_tablespace_privilege(user, tablespace， privilege)      :检查 user 用户（未指定时使用当前用户）是否可以以某种特定的方式访问一个表空间。其参数可能性类似``has_table_privilege``。希望的访问权限类型必须是 CREATE 。
 HAS_TYPE_PRIVILEGE          :has_type_privilege(user, type， privilege)                  :检查 user 用户（未指定时使用当前用户）是否能以特定的方式访问一种类型。其参数的可能性类同于 has_table_privilege 。在用字符串而不是 OID 指定类型时，允许的输入和 regtype 数据类型相同（见 对象标识符类型 ）。期望的访问特权类型必须等于 USAGE 。
-HEIGHT:height(box) :几何函数，返回方框的垂直尺寸
-HOST:host(inet)    :inet函数，抽取IP地址为文本。
-HOSTMASK:hostmask(inet)     :inet函数，为网络地址构造主机掩码。
+HEIGHT                      :height(box) :几何函数，返回方框的垂直尺寸
+HOST                        :host(inet)    :inet函数，抽取IP地址为文本。
+HOSTMASK                    :hostmask(inet)     :inet函数，为网络地址构造主机掩码。
 IF                          :if(expr1 INT兼容类型, expr2 任意类型, expr3 任意类型)      :如果expr1 不为NULL并且expr1不等于0，返回expr2作为结果，否则返回expr3。
 IFNULL                      :ifnull(expr1, expr2)                                   :当 ``expr1`` 不是NULL， IFNULL返回 ``expr1`` 。否则它返回 ``expr2``
 inet_client_addr            :inet_client_addr()                                     :inet_client_addr 返回当前客户端的 IP地址。如果连接是通过 Unix域套接字进行的，返回 NULL。
@@ -168,277 +168,294 @@ json_array_elements             :json_array_elements(json)          :JSON处理�
 json_array_elements_text        :json_array_elements_text(json)     :JSON处理函数，把一个JSON数组扩展成 text 值集合。
 json_array_length               :json_array_length(json)            :JSON处理函数，返回最外层JSON数组中的元素数量。
 JSON_ARRAYAGG                   :JSON_ARRAYAGG ([ value_expression ][ ORDER BY sort_expression ][ { NULL | ABSENT } ON NULL ][ RETURNING data_type [ FORMAT JSON [ ENCODING UTF8 ] ] ])        :JSON处理函数，函数将提供的JSON数据聚合到JSON数组中。
-json_build_array                :json_build_array( VARIADIC "any")              :JSON处理函数，将可变参数列表构造成一个可能包含不同数据类型的JSON数组。
-json_build_object               :json_build_object( VARIADIC "any")             :JSON处理函数，将可变参数列表构造成一个JSON 对象，通过转换，该参数列表由交替出现的键和值构成。
-json_each                       :json_each(json)                                :JSON处理函数，扩展最外层的JSON对象成为一组键值对。
-json_each_text                  :json_each_text(json)                           :JSON处理函数，扩展最外层的JSON对象成为一组键值对，返回值为 text 类型。
-json_equal                      :json_equal( expr ,expr [{error|false|true} on error ])                 :JSON处理函数，用于判断输入的两个文本值是否相等，前提是两个文本必须是有效的JSON值，否则返回false，当都为有效JSON值且相等则返回true，否则返回false。
-json_exists                     :json_exists(context_item, path_expression[ PASSING { value AS varname }[, ...]][ RETURNING data_type ][ { TRUE | FALSE | UNKNOWN | ERROR } ON ERROR ])           :使用表达式JSON_EXISTS用于从一个输入的json文本中检索指定的jsonpath路径是否存在指定的JSON值,如果存在返回true，不存在返回false。
-json_extract_path               :json_extract_path(from_json json, VARIADIC path_elems text[])          :JSON处理函数，返回由 path_elems 指向的JSON值（等效于 #> 操作符）。
-json_extract_path_text          :json_extract_path_text(from_json json, VARIADIC path_elems text[])     :JSON处理函数，以 text 类型返回由 path_elems 指向的JSON值（等效于 #> 操作符）。
-json_object(text[])                         :json_object(text[])                                        :JSON处理函数，从文本数组中构造JSON对象。该函数必须可以使具有偶数个成员的一维数组(成员被当做交替出现的键值对)，或者是一个二维数组（每一个内部数组刚好有两个元素，可以被看做键值对）。
-json_object( keys text[], values text[])    :json_object( keys text[], values text[])                   :JSON处理函数，从文本数组中构造JSON对象。从两个独立的数组得到键/值对。在其他方面和一个参数的形式相同。
-json_object( key_expression,value_expression)    :json_object ([ { key_expression { value | ':' } value_expression [ format json [ encoding utf8 ] ] }[, ...] ][ { null | absent } on null ][ returning data_type [ format json [ encoding utf8 ] ] ][ { with | without } unique [ keys ] ]):JSON处理函数，从文本数组中构造JSON对象。从两个独立的数组得到键/值对。在其他方面和一个参数的形式相同。
-json_object_agg                     :json_object_agg(name, value)   :聚集函数，将 name 和 value 对聚合成JSON对象，值可以为空，名字不能为空。
-json_object_keys                    :json_object_keys(json)         :JSON函数，返回外层JSON对象中键的集合。
-json_objectagg({WITH | WITHOUT } UNIQUE [ KEYS ] ][ RETURNING data_type])                      :json_objectagg([ { key_expression { VALUE | ':' } value_expression } ][ { NULL | ABSENT } ON NULL ][ { WITH | WITHOUT } UNIQUE [ KEYS ] ][ RETURNING data_type [ FORMAT JSON [ ENCODING UTF8 ] ] ])                :聚集函数，把键值对聚集成一个JSON对象。
-json_objectagg([ RETURNING data_type]{WITH | WITHOUT } UNIQUE [ KEYS ] ])                      :json_objectagg([ { key_expression { VALUE | ':' } value_expression } ][ { NULL | ABSENT } ON NULL ][ RETURNING data_type [ FORMAT JSON [ ENCODING UTF8 ] ] ][ { WITH | WITHOUT } UNIQUE [ KEYS ] ])                :聚集函数，把键值对聚集成一个JSON对象。
-json_populate_record        :json_populate_record(base anyelement,from_json json)  :JSON函数，扩展 from_json 中的对象成一个行，它的列匹配由 base 定义的记录类型。
-json_query                  :json_query ( expression [FORMAT JSON [ENCODING UTF8]],JSON_basic_path_expression [ PASSING { value AS varname } [, ...]][ RETURNING data_type [ FORMAT JSON [ ENCODING UTF8 ] ][ { WITHOUT | WITH { CONDITIONAL | [UNCONDITIONAL] } } [ ARRAY ] WRAPPER ][ { KEEP | OMIT } QUOTES [ ON SCALAR STRING ] ][{ERROR|NULL|EMPTY|EMPTY ARRAY|EMPTY OBJECT|DEFAULT expression } ON EMPTY ][{ERROR|NULL|EMPTY|EMPTY ARRAY|EMPTY OBJECT|DEFAULT expression } ON ERROR ])   :JSON函数，用于从一个输入的json文本中根据指定的jsonpath路径检索所需的值（可以为标量值，也可以为对象或者数组）。
-:JSON:json_scalar (
-JSON函数，使用JSON_SCALAR函数从SQL数据生成JSON标量值。
-:JSON:json_serialize (
-JSON函数，表达式用于把JSON类型的数据转换为字符串或二进制字符串。返回值可以是任意字符串类型或二进制字符串类型。
-:JSON:json_strip_nulls(from_json json)
-JSON函数，返回 from_json ，其中所有具有空值的对象域都被过滤掉，其他空值不动。
-:JSON:json_table (
-JSON函数，查询JSON数据并将结果显示为关系视图，可以作为常规SQL表访问。只能在SELECT语句的FROM子句中使用json_table。
-:json_to_record(json):JSON函数，从一个JSON对象构建一个任意的记录，正如所有返回 record 的函数一样，调用者必须用一个 AS 子句显式的定义记录的结构。
-JSON        :json_to_recordset(json):JSON函数，从一个JSON对象数组构建一个任意的记录集合，正如所有返回 record 的函数一样，调用者必须用一个 AS 子句显式的定义记录的结构。
-JSON        :json_typeof(json):JSON函数，把最外层的JSON对象类型作为一个文本串返回。可能类型是： object 、 array 、 string 、 number 、 boolean 以及 null 。
-JSON        :json_value(:JSON函数，从一段给定的json文本中获取所需要的值，返回为标量值或者用户自定义的object或者collection类型 。
-JSONB        :jsonb_agg(expression):聚集函数，将传入值包括空值聚集成一个JSON数组。
-JSONB        :jsonb_array_elements(jsonb):JSON处理函数，将传入值包括空值聚集成一个JSON数组。
-JSONB        :jsonb_array_elements_text(jsonb):JSON处理函数，把一个JSON数组扩展成 text 值集合。
-JSONB        :jsonb_array_length(jsonb):JSON处理函数，返回最外层JSON数组中的元素数量。
-JSONB        :jsonb_build_array( VARIADIC "any"):JSON处理函数，将可变参数列表构造成一个可能包含不同数据类型的JSON数组。
-JSONB        :jsonb_build_object( VARIADIC "any"):JSON处理函数，将可变参数列表构造成一个JSON 对象，通过转换，该参数列表由交替出现的键和值构成。
-jsonb_each(jsonb)        :JSON处理函数，扩展最外层的JSON对象成为一组键值对。:JSONB
-jsonb_each_text(jsonb)        :JSON处理函数，扩展最外层的JSON对象成为一组键值对，返回值为 text 类型。:JSONB
-jsonb_extract_path(from_json jsonb, VARIADIC path_elems text[])        :JSON处理函数，返回由 path_elems 指向的JSON值（等效于 #> 操作符）。:JSONB
-jsonb_extract_path(from_json jsonb, VARIADIC path_elems text[])        :JSON处理函数，以 text 类型返回由 path_elems 指向的JSON值（等效于 #> 操作符）。:JSONB
-jsonb_insert(target jsonb, path text[], new_value jsonb [, insert_after boolean])        :JSON处理函数，返回被插入了 new_value 的 target 。如果 path 指定的 target 节在一个JSONB数组中， new_value 将被插入到目标之前（ insert_after 默认为false）或者之后（ insert_after 为true）。 如果 path 指定的 target 节在一个JSONB对象内，则只有当 target 不存在时才插入 new_value 。 对于面向路径的操作符来说，出现在 path 中的负整数表示从JSONB数组的末尾开始计数。:JSONB
-jsonb_object(text[])        :JSON处理函数，从文本数组中构造JSON对象。该函数必须可以使具有偶数个成员的一维数组(成员被当做交替出现的键值对)，或者是一个二维数组（每一个内部数组刚好有两个元素，可以被看做键值对）。:jsonb_object( keys text[], values text[])
-JSON处理函数，从文本数组中构造JSON对象。从两个独立的数组得到键/值对。在其他方面和一个参数的形式相同。        :JSONB:jsonb_object_agg(name, value)
-聚集函数，将 name 和 value 对聚合成JSON对象，值可以为空，名字不能为空。        :JSONB:jsonb_object_keys(jsonb)
-JSON函数，返回外层JSON对象中键的集合。        :JSONB:jsonb_path_exists(target jsonb, path jsonpath[, vars jsonb [, silent bool]])
-JSON函数，检查JSON路径是否返回指定JSON值的任何项。        :JSONB:jsonb_path_match(target jsonb, path jsonpath [, vars jsonb [, silent bool]])
-JSON函数，返回指定JSON值的JSON路径谓词检查的结果。只考虑结果的第一项。如果结果不是布尔值，则返回NULL.        :jsonb_path_query(targetjsonb, path jsonpath [, vars jsonb [, silent bool]]):JSON函数，获取指定JSON值的JSON路径返回的所有项.
-JSONB        :jsonb_path_query_array(target jsonb, path jsonpath[, vars jsonb [, silent bool]]):JSON函数，获取指定JSON值的JSON路径返回的所有项，并将结果包装到数组中。
-JSONB        :jsonb_path_query_first(targetjsonb, path  jsonpath [, vars jsonb [, silent bool]]):JSON函数，获取指定JSON值的JSON路径返回的第一个JSON项。在没有结果时返回NULL。
-JSONB        :jsonb_populate_record(base anyelement,from_json jsonb):JSON函数，扩展 from_json 中的对象成一个行，它的列匹配由 base 定义的记录类型。
-JSONB        :jsonb_populate_recordset(base anyelement,from_json jsonb):JSON函数，扩展 from_json 中最外层的对象数组成一个集合，它的列匹配由 base 定义的记录类型。
-JSONB        :jsonb_pretty(from_json jsonb):JSON函数，把 from_json 处理成一段带缩进的JSON文本。
-JSONB        :jsonb_set(target jsonb, path text[],new_value jsonb[, create_missing boolean]):JSON函数，返回 target 其中由 path 指定的节用 new_value 替换，如果指定的项不存在并且 create_missing 为真（默认为真）则加上 new_value 。 正如面向路径的操作符一样，出现在 path 中的负整数表示从JSON数组的末尾开始数
-JSONB        :jsonb_strip_nulls(from_json jsonb):JSON函数，返回 from_json ，其中所有具有空值的对象域都被过滤掉，其他空值不动。
-JSONB        :jsonb_to_record(jsonb):JSON函数，从一个JSON对象构建一个任意的记录，正如所有返回 record 的函数一样，调用者必须用一个 AS 子句显式的定义记录的结构。
-JSONB        :jsonb_to_recordset(json):JSON函数，从一个JSON对象数组构建一个任意的记录集合，正如所有返回 record 的函数一样，调用者必须用一个 AS 子句显式的定义记录的结构。
-jsonb_typeof(json)        :JSON函数，把最外层的JSON对象类型作为一个文本串返回。可能类型是： object 、 array 、 string 、 number 、 boolean 以及 null 。:JUSTIFY
-justify_days(interval)        :时间函数，调整间隔，使30天时间段表示为月 。:JUSTIFY
-justify_hours(interval)        :时间函数，调整间隔，使24小时时间段表示为日 。:JUSTIFY
-justify_interval(interval)        :时间函数，使用 justify_days 和 justify_hours 调整间隔，并进行额外的符号调整。:LAG
-lag(value anyelement[, offset integer [,default anyelement ]])        :返回value，它在分区内当前行的之前offset个位置的行上计算；如果没有这样的行，返回default替代（必须和value类型相同）。offset和default都是根据当前行计算的结果。如果忽略它们，则offset默认是1，default默认是空值。:LAST
-aggregate_function KEEP        :LAST 既是聚集函数，也是分析函数。 LAST 函数首先对输入行按指定排序规则排序，然后返回排名为LAST的一组行，最后在返回行的数值上执行聚集计算。如果只有唯一的排名为LAST的返回行，那么聚集操作只在非聚集的唯一行上执行。:LAST
-last_day(date date1)        :计算日期1所在月份的最后一天。:LAST
-last_value(value any)        :LAST_VALUE函数返回在窗口帧中的最后一行上计算的value值。类型与any一致。:LASTVAL
-lastval()        :LASTVAL返回最近一次使用的nextval获取的任何序列的值。:LCASE
-lcase(string)        :函数返回将指定字符串转为小写后的字符串:lead(value any, offset integer [, default any]) over ([partition by partition_expression] [order by sort_expression [ASC|DESC]])
-LEAD返回value,它在分区内当前行的之后offset个位置的行上计算结果，如果没有这样的行，返回default值替代(必须与value类型相同)。        :LEAST:least(value[,...])
-least函数从一个任意的数字表达式列表中选取最小的值，这些表达式必须都可以转换成一个普通的数据。这个类型也将会是结果的数据类型。 列表中的NULL值将会被忽略。只有所有表达式都是NULL时，结果才会是NULL。        :LEFT:left(str text, n int)
-返回字符串中的前 n 个字符。当 n 为负时，将返回除了最后 |n | 个字符之外的所有字符        :LENGTH:length(string)
-函数返回的LENGTH长度char。LENGTH使用输入字符集定义的字符计算长度。LENGTHB使用字节而不是字符。LENGTHC使用 Unicode 完整字符。LENGTH2使用 UCS2 代码点。LENGTH4使用 UCS4 代码点。        :LENGTHB:lengthb(string text )
-函数返回指定bytea或bit类型数据的字节数，仅支持单字节 LOB。它不能与CLOB多NCLOB字节字符集中的数据一起使用。        :LISTAGG:listagg (measure_expr[,’delimiter’]) WITHIN GROUP (order_by_clause) [OVER query_partition_clause]
-对于指定的度量值，LISTAGG函数在ORDER BY子句中指定的每个组中对数据进行排序，然后连接度量值列的值。 可作为单个集合聚集函数、分组聚集函数、分析函数在不同应用场景中使用。        :LN:ln({dp|numeric})
-LN返回n的自然对数，其中n大于 0。        :LNNVL:lnnvl(condition)
-如果condition 是FALSE或者是UNKNOWN,LNNVL 返回TRUE。如果condition 是TRUE，LNNVL 返回 FALSE。        :LOCALTIME:localtime
-获取当前时间。        :LOCALTIMESTAMP:localtimestamp()
-获取当前时间戳。        :log({dp|numeric}):LOG返回以n2为底n1的对数。底数n2可以是除0或1以外的任何正数，n1也可以是任何正数。
-LOG        :log10({numeric|double}):返回对numeric和double值进行取以10为底的对数值。
-LOWER        :lower(string):LOWER返回char，所有字母小写。char可以是任何数据类型CHAR, VARCHAR, NCHAR, NVARCHAR, CLOB, 或NCLOB. 返回值与 的数据类型相同char。数据库根据为基础字符集定义的二进制映射设置字符的大小写。对于语言敏感的小写，请参阅NLS_LOWER。
-LOWER        :lower_inc(anyrange):函数测试一个范围值的下界
-LOWER        :lower_inf(anyrange):函数测试一个范围值的下界是否无限
-LPAD        :lpad(string text,length int [, fill text]):LPAD返回expr1，n用expr2. 此函数对于格式化查询的输出很有用。
-LSEG        :lseg(box):测绘点到点的线段。
-LTRIM        :ltrim(string text [, characters text]):LTRIMchar从 .中包含的所有字符的左端删除set。如果不指定set，则默认为一个空白。KingbaseES 数据库char从其第一个字符开始扫描并删除所有出现的字符，set直到到达一个不在的字符set，然后返回结果。
-MAKE        :make_date(year int, month int, day int):从年，月，日域创建日期。
-MAKE        :make_interval(years int default 0, months int default 0, weeks int default 0,:从年，月，周，日，时， 分， 秒域创建时间间隔。
-MAKE_SET(bits,oid)        :返回一个SET值（一个由’,’分隔子字符串的字符串），该值由在bits中具有相应位的字符串组成(sys_set按照setdisplayorder从小到大排序后，setlable对应的bit位为1,2,4,8,…2^63)。oid为SET类型的oid，具体见sys_set中settypid。:MAKE
-make_time(hour int, min int, sec double)        :从时，分，秒域创建时间。:MAKE
-make_timestamp(year int, month int, day int, hour int, min int, sec double)        :从年，月，日，时，分，秒域创建时间戳。:MAKE
-make_timestamptz(year int, month int, day int, hour int, min int, sec double[, timezone text])        :从年，月，日，时，分，秒，时区域创建时间戳。:MAX
-max(expression)        :MAX返回 的最大值expression。您可以将其用作聚合或分析函数。:MD
-md5(string)        :MD5用于计算给定参数的MD5哈希值，结果以十六进制输出。:MIN
-min(expression)        :MIN返回expr的最小值。您可以将其用作聚合或分析函数。:MOD
-mod(y,x)        :MOD返回n2除以n1的余数。n1如果为 0，则返回n2。:MONTH
-month(datetime date)        :从日期时间域获取月份。:MONTHS
-months_between(date date1, date date2)        :计算日期1与日期2的月份差。:nanvl(numeric n1, numeric n2)
-如果n1是NaN，则返回n2；如果n1不是NaN，则返回n1。        :NEW:new_time(str timestamp, zonename1 text, zonename2 text)
-将时间戳在zonename1的时区下转换到在zonename2时区的时间戳。        :NEXT:next_day(date1 date, weekday text)
-获取下一个周几。        :NEXTVAL:nextval(regclass)
-NEXTVAL递增序列并返回新值。        :NLSSORT:nlssort(expr,nls_param)
-NLSSORT返回字符值的排序规则键char和显式或隐式指定的排序规则。排序规则键是一串字节，用于char根据指定的排序规则进行排序。排序规则键的属性是，当根据它们的二进制顺序比较时，为给定排序规则生成的两个这样的键的相互排序与根据给定排序规则比较时源字符值的相互排序相同。        :NOW:now()
-获取当前时间。        :NTH:nth_value(value any, nth integer) over ([partition by partition_expression] [order by sort_expression [ASC|DESC]])
-NTH_VALUE返回在窗口帧中的第nth行(行从1计数)上计算的value,类型与any一致。如果没有这样的行则返回空值。本函数为通用窗口函数。        :NTILE:ntile(num_buckets integer)
-NTILE从1到num_backet参数值的整数范围，尽可能等分分区。        :NULLIF:nullif(expr1, expr2)
-NULLIF比较expr1和expr2。如果它们相等，则函数返回null。如果它们不相等，则函数返回expr1。expr1不能指定文字‘NULL’。        :NUMTODSINTERVAL:../../../_images/numtodsinterval.png
-将输入的数字与UNIT转换为关于日期和时间的dsinterval。        :../../../_images/numtoyminterval.png:将输入的数字与UNIT转换为关于YEAR和MONTH的yminterval。
-NVL        :nvl(expr1, expr2):如果表达式expr1不为空，返回表达式expr1;如果expr1为空，返回表达式expr2。
-NVL        :nvl2(expr1,expr2,expr3):NVL2允许根据指定表达式是否为空来确定查询返回的值。如果表达式expr1不为空，返回表达式expr2, 如果expr1为空，返回表达式expr3。
-OCTET        :octet_length(string):函数返回以字节计的数据字符表达的长度,字符串尾部空格字符也会被计算在内。
-ORA        :ORA_HASH(expr [, max_bucket[,seed_value]]):ORA_HASH是一个计算给定表达式的哈希值的函数。
-OVERLAY        :overlay(string placing  string from  int [for int]):将用字符串expr1中指定起始位(from后的数值）开始后的(指定长度，for后的数值)字符串，用给定的字符串expr2替换。
-PERCENT        :聚合语法:PERCENT_RANK类似于CUME_DIST（累积分布）函数。返回值的范围PERCENT_RANK是 0 到 1，包括 0 到 1。任何集合中的第一行的 aPERCENT_RANK为 0。返回值为NUMBER。
-PI        :pi():返回一个π的double类型值
-POSITION        :position(substring in string):返回指定子串的位置
-POWER        :power(a dp, b dp):返回 a 的 b 次幂
-query_to_xml(query text, nulls boolean, tableforest boolean, targetns text)        :query_to_xml执行由参数query传递的查询并且映射结果集.:QUOTE
-quote_ident(string text)        :将给定字符串返回成合适的引用形式，使它可以在一个 SQL 语句字符串中被用作一个标识符。只有需要时才会加上引号（即，如果字符串包含非标识符字符或可能是大小写折叠的）。嵌入的引号会被正确地双写。:QUOTE
-quote_literal(string text)        :将给定字符串返回成合适的引用形式，使它可以在一个 SQL 语句字符串中被用作一个字符串文字。嵌入的引号会被正确地双写。注意quote_literal对空输入返回空； 如果参数可能为 空，quote_nullable 通常更合适。:QUOTE
-quote_nullable(string text)        :将给定字符串返回成合适的引用形式，使它可以在一个 SQL 语句 字符串中被用作一个字符串文字；或者，如果参数为空，返回 NULL。嵌入的引号会被正确地双写:RADIANS
-radians(dp)        :radians(dp)把角度dp转为弧度。:RADIUS
-radius(circle)        :radius(circle)求取输入圆circle的半径。:RANGE
-range_merge(anyrange,anyrange)        :range_merge(anyrange,anyrange)返回包含两个给定范围的最小范围。:RANK
-聚合语法：        :RANK计算一个值在一组值中的排名。返回类型是NUMBER.:RAND
-rand()        :生成范围 0.0 <= x < 1.0 中的随机值。:RANDOM
-random()        :生成范围 0.0 <= x < 1.0 中的随机值:ratio_to_report(expr1) over (query_partions_clasue)
-百分比计算函数。分子是expr的值，分母是over中的值，若over中没有指定，则分母是所有值。 expr可以是常量表达式，算术表达式，投影列表达式。且表达式expr是一个number类型或者可以隐式转换为number类型的表达式。其它类型的表达式报错。 如果expr的计算结果为NULL，则RATIO_TO_REPORT函数的计算结果也为NULL。若指定 了 query_partions_clasue，则分母是这个子句计算的值。 不能使用ratio_to_report自身或者其它windows函数作为expr参数来使用,否则报错处理。返回值类型numeric，使用默认精度与标度。        :REGEXP:regexp_like( source, pattern [,match_param])
-regexp_like函数判断输入字符串能否通过正则表达式进行匹配，source为输入源字符串，pattern为正则表达式，match_param可以改变匹配规则，其参数如下： i：大小写不敏感 c：大小写敏感 m：和n是一样的，加上‘m’后，“.”与“n”不匹配；插入符号（ ^）和美元符号（）分别解释为源字符串中任何位置的任何行的开头和结尾，而不仅仅是整个源字符串的开头或结尾。n：“n”敏感，加上‘n′后，“.”与“n”不匹配；插入符号（）和美元符号（        :REGEXP:regexp_match( source, pattern [,match_param])
-regexp_match函数返回一个POSIX正则表达式与source的第一个匹配得到的子串。source为输入源字符串，pattern为正则表达式，match_param可以改变匹配规则，其参数如下： i：大小写不敏感 c：大小写敏感 m：和n是一样的，加上‘m’后，“.”与“n”不匹配；插入符号（ ^）和美元符号（）分别解释为源字符串中任何位置的任何行的开头和结尾，而不仅仅是整个源字符串的开头或结尾。n：“n”敏感，加上‘n′后，“.”与“n”不匹配；插入符号（）和美元符号（        :REGEXP:regexp_match( source, pattern [,match_param])
-regexp_matches函数返回一个POSIX正则表达式与source的匹配得到的子串(可能有多个)。source为输入源字符串，pattern为正则表达式，match_param可以改变匹配规则，其参数如下： i：大小写不敏感 c：大小写敏感 m：和n是一样的，加上‘m’后，“.”与“n”不匹配；插入符号（ ^）和美元符号（）分别解释为源字符串中任何位置的任何行的开头和结尾，而不仅仅是整个源字符串的开头或结尾。n：“n”敏感，加上‘n′后，“.”与“n”不匹配；插入符号（）和美元符号（        :REGEXP:regexp_replace(source,  pattern, replacement [, match_param])
-regexp_replace函数替换匹配一个POSIX正则表达式的子串。 source为输入源字符串，pattern为正则表达式，replacement是用来替换的字符串， match_param可以改变匹配规则，其参数如下： i：大小写不敏感 c：大小写敏感 m：和n是一样的，加上‘m’后，“.”与“n”不匹配；插入符号（ ^）和美元符号（）分别解释为源字符串中任何位置的任何行的开头和结尾，而不仅仅是整个源字符串的开头或结尾。n：“n”敏感，加上‘n′后，“.”与“n”不匹配；插入符号（）和美元符号（        :REGEXP:regexp_split_to_array(source,  pattern, [, match_param])
-regexp_split_to_array函数使用一个POSIX正则表达式作为分隔符划分source来生成数组。 source为输入源字符串,pattern为正则表达式, match_param可以改变匹配规则。        :REGEXP:regexp_split_to_table(source,  pattern, [, match_param])
-regexp_split_to_table函数使用一个POSIX正则表达式作为分隔符划分source来生成表格。 source为输入源字符串，pattern为正则表达式, match_param可以改变匹配规则。        :REPEAT:repeat(string text, number int)
-函数返回将给定的字符串重复给定的次数后，得到的新字符串。        :REPLACE:replace(string text, from text, to text)
-REPLACEchar每次出现search_string替换为 时返回replacement_string。如果replacement_string省略或为 null，则search_string删除所有出现的 。如果search_string为空，则char返回。        :REVERSE:reverse(str)
-函数返回将指定字符串反转后的新字符串。        :reverse(str):获取给定字符串的从右向左数给定位数的子字符串
-ROUND        :round(date):参数为时间时
-ROW        :row_number() over([query_partition_clause,] order_by_clause):ROW_NUMBER是解析函数,用于为结果集中的每一行分配一个唯一的整数值，从1开始计数。
-ROW        :row_to_json(record [, pretty_bool]):把行作为一个 JSON对象返回。如果pretty_bool为真，将在第1层元素之间增加换行。
-RPAD        :rpad(string text, length int [, fill text]):RPAD返回expr1，用 右填充长度n字符expr2，根据需要复制多次。此函数对于格式化查询的输出很有用。
-RTRIM        :rtrim(string text [, characters text]):RTRIMchar从 .中出现的所有字符的右端删除set。此函数对于格式化查询的输出很有用。
-SCALE        :scale(numeric):SCALE返回参数的精度（小数点后的位数）。
-SCORE        :SCORE(lable number):在SELECT语句中使用SCORE函数返回CONTAINS查询生成的分数值。SCORE操作符可以在SELECT targetlist、ORDER BY或GROUP BY子句中使用，但若sql中没有包含对应label参数的contains函数，则报错。。
-SESSION        :session_id():SESSION_ID返回当前会话的整数。
-SESSION        :session_user:SESSION_USER返回当前会话的用户名。返回类型为NAME。
-sessiontimezone        :SESSIONTIMEZONE返回当前会话的时区。返回类型是时区偏移量（格式为字符类型'[+|-]TZH:TZM'）或时区区域名称，具体取决于用户如何在最近的ALTER SESSION语句中指定会话时区值。:SETSEED
-setseed(dp)        :为后续要使用的random函数设置种子。:SETVAL
-SETVAL(regclass, bigint)        :设定指定序列的当前值。:SETWEIGHT
-setweight(vector tsvector, weight "char")        :SETWEIGHT为vector的每一个元素分配权重。:SHA
-sha224(bytea)        :SHA224用于计算二进制字符串的SHA-224哈希值。:SHA
-sha256(bytea)        :SHA256用于计算二进制字符串的SHA-256哈希值。:SHA
-sha384(bytea)        :SHA384用于计算二进制字符串的SHA-384哈希值。:SHA
-sha512(bytea)        :SHA512用于计算二进制字符串的SHA-512哈希值。:SIGN
-sign({dp|numeric})        :SIGN返回 的符号n。此函数将任何数字数据类型或任何可以隐式转换为 的非数字数据类型作为参数NUMBER，并返回NUMBER。:SIN
-sin({dp|numeric})        :SIN返回（以弧度表示的角度） n的正弦值。:sinh({dp|numeric})
-SINH返回n的双曲正弦。        :SPLIT:split_part(string text, delimiter text, field int)
-函数返回给定字符串expr1中按给定字符expr2切分后的字符串数组中的第n个字符串。其中，指定返回的字符串序号n必须大于0        :SQRT:sqrt(n)
-SQRT返回n的平方根。        :STATEMENT:../../../_images/SQRT1.png
-STATEMENT_TIMESTAMP返回当前的日期和时间。返回类型为timestamp with time zone。        :STDDEV:STDDEV(expr)
-STDDEV返回一组数字expr的样本标准差。这是一组数字，您可以将其用作聚合函数和分析函数。它与STDDEV_SAMP的不同之处在于，当只有一行输入时STDDEV返回零，而STDDEV_SAMP返回null不同。        :STDDEV:STDDEV_POP(expr)
-STDDEV_POP计算总体标准差并返回总体方差的平方根。您可以将其用作聚合函数和分析函数。        :STR:STR_TO_DATE(expr1,format)
-把字符串按照指定格式转换成时间戳。返回类型为timestamp without time zone。        :STR:str_valid(`expr1 text, expr2 oid)
-STR_VALID判断所给定的表达式是否为正确的日期时间。        :STRING:string_agg(expr1, delimiter)
-非空输入连接成一个串，用delimiter分隔。        :STRING_TO_ARRAY(expr1,delimiter [,null_expr]):使用提供的分隔符将和可选的空串字符划分成数组元素。
-STRIP        :strip(tsvector):STRIP返回删除位置和权重后的 tsvector 。返回类型为 tsvector。
-STRPOS        :STRPOS:函数返回字符串expr1中，第一次出现expr2字符串的起始位置。
-SUBSTR        :substr(string [from int]  [for int]):这些SUBSTR函数返回 的一部分char，从字符开始position，substring_length字符长。SUBSTR使用输入字符集定义的字符计算长度。SUBSTRB使用字节而不是字符。SUBSTRC使用 Unicode 完整字符。SUBSTR2使用 UCS2 代码点。SUBSTR4使用 UCS4 代码点。
-SUBSTRB        :substrb(string [from int]  [for int]):这些SUBSTR函数返回 的一部分char，从字符开始position，substring_length字符长。SUBSTR使用输入字符集定义的字符计算长度。SUBSTRB使用字节而不是字符。SUBSTRC使用 Unicode 完整字符。SUBSTR2使用 UCS2 代码点。SUBSTR4使用 UCS4 代码点。 ¶
-SUBSTRING        :substring(string [from int]  [for int]):这些SUBSTR函数返回 的一部分char，从字符开始position，substring_length字符长。SUBSTR使用输入字符集定义的字符计算长度。SUBSTRB使用字节而不是字符。SUBSTRC使用 Unicode 完整字符。SUBSTR2使用 UCS2 代码点。SUBSTR4使用 UCS4 代码点。
-SUM        :sum(expression):SUM返回非空输入值的和。
-SYS        :sys_backend_pid():SYS_BACKEND_PID返回附加到当前会话的服务器进程的进程ID。
-SYS        :sys_cancel_backend(pid int):SYS_CANCEL_BACKEND用于取消对具有指定进程ID的后端进程的会话的当前查询。
-SYS        :sys_column_size(any):SYS_COLUMN_SIZE返回用于存储任何单个数据值的字节数。
-sys_context(namespace text, parameter text, length int default 256)        :SYS_CONTEXT返回当前时刻与上下文命名空间相关联的parameter的值。可以在SQL和PL/SQL语句中使用该函数。SYS_CONTEXT必须在本地执行。:SYS
-sys_database_size({oid|name})        :SYS_DATABASE_SIZE返回指定名称或OID的数据库使用的总磁盘空间。返回类型为bigint。:SYS
-sys_stat_file(filename text[, ``missing_ok`` boolean])        :返回关于一个文件/目录的统计信息。默认仅限于超级用户使用，但是可以给其他用户授予EXECUTE让他们运行这个函数。:SYS
-sys_read_binary_file(filename text [, ``offset`` bigint, ``length`` bigint [, ``missing_ok`` boolean] ])        :返回一个二进文件的内容。默认仅限于超级用户使用，但是可以给其他用户授予EXECUTE让他们运行这个函数。:SYS
-sys_read_file(filename text [, ``offset`` bigint, ``length`` bigint [, ``missing_ok`` boolean] ])        :返回一个文件的内容。默认仅限于超级用户使用，但是可以给其他用户授予EXECUTE让他们运行这个函数。:SYS
-sys_terminate_backend(pid int)        :中止一个后端。如果调用角色是被取消后端的拥有者角色的成员或者调用角色已经被授予 sys_signal_backend，这也是允许的，不过只有超级用户才能取消超级用户的后端。:SYS
-sys_total_relation_size (oid bigint)        :指定表所用的总磁盘空间，包括所有的索引和TOAST数据:SYS
-sys_function_is_visible(function_oid)        :判断函数在搜索路径中是否可见。:SYS
-sys_get_constraintdef(constraint_oid)        :获得对应约束的定义。pretty_bool为真则为优质打印方式。:SYS
-sys_get_expr(sys_node_tree, relation_oid)        :反编译一个表达式的内部形式，假定其中的任何 Var 指向由第二个参数指示的关系。pretty_bool为真则为优质打印方式。:sys_get_function_arguments(func_oid)
-获得一个函数或过程定义的参数列表（带有默认值）。        :SYS:sys_get_function_identity_arguments (func_oid)
-获得标识一个函数或过程的参数列表（不带默认值）。        :SYS:sys_get_function_result(func_oid)
-获得函数的RETURNS 子句（对过程返回空）。        :SYS:sys_get_functiondef(func_oid)
-获得一个函数或过程的定义。        :SYS:sys_get_indexdef(index_oid)
-根据参数不同。        :SYS:sys_get_keywords()
-获得 SQL 关键字的列表及其分类。        :SYS:sys_get_object_address(type text, name text[], args text[])
-从一个数据库对象的内部表示得到它的地址。        :SYS:sys_get_ruledef(rule_oid)
-重建规则的创建命令。        :SYS:sys_get_serial_sequence(table_name, column_name)
-获得一个序列列或标识列使用的序列的名称。        :SYS:sys_get_statisticsobjdef(statobj_oid)
-重建一个扩展统计对象的创建命令（CREATE STATISTICS命令）。        :sys_get_triggerdef(trigger_oid):重建一个触发器 的CREATE [ CONSTRAINT ] TRIGGER命令。
-SYS        :sys_get_userbyid(role_oid):获得给定 OID 指定的角色名。
-SYS        :sys_get_viewdef(view_name):sys_get_viewdef重构定义一个视图的SELECT查询。
-SYS        :sys_guid():SYS_GUID生成并返回一个RAW由 16 个字节组成的全局唯一标识符（值）。在大多数平台上，生成的标识符由主机标识符、调用函数的进程或线程的进程或线程标识符以及该进程或线程的非重复值（字节序列）组成。
-SYS        :sys_has_role(user, role, privilege):检查 user 用户（未指定时使用当前用户）是否能以特定的方式访问一个角色。其参数的可能性类同于 has_table_privilege 。除了 public 不允许作为一个用户名。希望的访问权限类型必须是下列值的某种组合： MEMBER 或 USAGE 。 MEMBER 表示该角色中的直接或间接成员关系（即使用 SET ROLE 的权力），而 USAGE 表示不做 SET ROLE 的情况下该角色的权限是否立即可用。
-SYS        :sys_identify_object(catalog_id oid, object_id oid, object_sub_id integer):返回一行数据，包含由参数目录OID、对象OID和一个（可能为零的）子对象ID所唯一标识的数据库对象的信息。该信息是供机器读取的，并且不会被翻译。 type 标识数据库对象的类型； schema 是该对象所属的模式名，如果对象类型不属于模式则为 NULL ；，如果需要的话，可以加上引号如果该名称（如果相关的话，还可以加上模式名）足以唯一标识该对象，则 name 就是对象的名称，必要时会被加上引号，否则为 NULL ; identity 是完整的兑现标识，它会表现为与对象类型相关的精确格式，并且如有必要，该格式中的每个部分都会被模式限定。
-SYS        :sys_identify_object_as_address(catalog_id oid, object_id oid, object_sub_id integer):返回一行数据，包含由参数目录OID、对象OID和一个（可能为零的）子对象ID所唯一标识的数据库对象的信息。返回的信息独立于当前服务器，也就是说，它可以被用来在另一个服务器中标识一个具有相同命名的对象。 type 标识数据库对象的类型； object_names 和 object_args 是文本数组，它们一起构成了对对象的引用。这三个值可以被传递给 sys_get_object_address 以获得该对象的内部地址。这个函数是 sys_get_object_address 的逆函数。
-SYS        : sys_indexes_size(regclass): 接受一个表的 OID 或名称，并返回附加到该表的所有索引所使用的全部磁盘空间。
-SYS        :sys_kingbase_start_time():返回服务器启动时的 timestamp with time zone 。
-SYS        :sys_ls_dir(dirname text [, missing_ok boolean, include_dot_dirs boolean]):系统函数，列出目录中的内容。默认仅限于超级用户使用，但是可以给其他用户授予Execute让他们运行这个函数。
-sys_ls_logdir()        :系统函数，列出日志目录中文件的名称、尺寸以及最后修改时间。访问被授予给sys_monitor 角色的成员，并且可以被授予给其他非超级用户角色。:SYS
-sys_ls_tmpdir()        :系统函数，为tablespace列出临时目录中文件的名称、大小和最后一次修改时间。 如果没有提 供tablespace，则在临时目录中的sys_default表空间被使用。sys_monitor角色的成员可以访问， 其他非超级用户角色也可以访问。:SYS
-sys_ls_waldir()        :系统函数，列出WAL目录中文件的名称、尺寸以及最后修改时间。访问被授予给sys_monitor角色 的成员，并且可以被授予给其他非超级用户角色。。:SYS
-sys_relation_filenode(relation regclass)        :接受一个表、索引、序列或 TOAST 表的 OID 或名称，返回当前分配给它的“filenode”号。文件结点是关系的文件名的基本组件。对于大多数表结果和 sys_class.relfilenode 相同，但是对于某些系统目录 relfilenode 为零，并且必须使用此函数获取正确的值。如果传递一个没有存储的关系（如视图），此函数将返回 NULL。:SYS
-sys_relation_filepath(relation regclass)        :返回关系的整个文件路径名（相对于数据库集簇的数据目录 KINGBASE_DATA）。:SYS
-sys_relation_size(relation regclass, fork text)        :接受一个表、索引或 TOAST 表的 OID 或者名称，并且返回那个关系的一个分叉所占的磁盘空间的字节尺寸。如果只得到一个参数，它会返回该关系的主数据分叉的尺寸。提供第二个参数 可以指定要检查哪个分叉（'main'、'fsm'、'vm'或'init'）使用的磁盘空间。:SYS
-sys_reload_conf()        :SYS_RELOAD_CONF给服务器发送一个SIGHUP信号，导致所有服务器进程重载配置文件,无参数。:SYS
-sys_size_bytes(text)        :可以被用来从人类可读格式的字符串得到其中所表示的字节数。其输入可能带有的单位包括字节、kB、MB、GB 或者 TB，并且对输入进行解析时是区分大小写的。如果没有指定单位，会假定单位为字节。:SYS
-sys_size_pretty(bigint)        :可以用于把其它函数之一的结果格式化成一种人类易读的格式，可以根据情况使用字节、kB、MB、GB 或者 TB。:SYS
-sys_sleep(seconds)        :SYS_SLEEP让服务进程延时执行,seconds是一个double precision类型的值。:sys_sleep_for(interval)
-SYS_SLEEP_FOR让服务进程延时执行,参数是一个interval,通常用于较长时间的休眠。        :SYS:sys_sleep_until(timestamp with time zone)
-SYS_SLEEP_UNTIL使程序休眠到一个指定的时间唤醒,参数是timestamp with time zone,通常用于较长时间的休眠。        :SYS:sys_table_is_visible(table_oid)
-表在搜索路径中是否可见，也可被用于视图、物化视图、索引、序列和外部表。        :SYS:sys_table_size(regclass)
-接受一个表的 OID 或名称，并返回该表所需的磁盘空间，但是排除索引（TOAST 空间、空闲空间映射和可见性映射包含在内）。        :SYS:sys_tablespace_databases(tablespace_oid)
-系统函数，获得在该表空间中所有对象的数据库OID 的集合。        :SYS:sys_tablespace_location(tablespace_oid)
-系统函数，获得在该表空间所在的文件系统的路径。        :SYS:sys_tablespace_size(tablespace_oid)
-系统函数，获得指定OID的表空间使用的磁盘空间。        :SYSDATE:SYSDATE()
-返回当时服务器时间。        :TABLE:table_to_xml(tbl regclass, nulls boolean, tableforest boolean, targetns text)
-table_to_xml映射由参数tbl传递的命名表的内容。regclass类型接受使用常见标记标识表的字符串，包括可选的模式限定和双引号。        :TAN:TAN(expr)
-TAN返回（以弧度表示的角度） n的正切。        :TANH(expr):TANH返回n的双曲正切。
-TIME        :time_format(time,format):time_format(time,format) 将时间串按照格式输出。格式字符串值只包含时间的小时、分钟、秒、微秒部分。其他格式字符串将返回NULL值或者0。如果时间值中的小时部分大于23，则%H和%K小时格式说明符会产生一个比通常范围0..23大的值。其他小时格式说明符会产生为模的小时值。 -> SELECT TIME_FORMAT('100:00:00', '%H %k %h %I %l'); -> '100 100 04 04 4'
-TIME        :TIME_TO_SEC():将输入的时间转换为秒数。
-TIMEOFDAY        :TIMEOFDAY():返回当时服务器时间。
-TIMESUB        :TIMESUB(head, tail):返回head和tail的时间差。单位为秒。
-TO        :to_ascii(string text [, encoding text]):to_ascii(string text [, encoding text]) 将string从另一个编码转换到ASCII（只支持从LATIN1、 LATIN2、LATIN9和WIN1250 编码的转换）
-TO        :to_base64(string text):to_base64 函数将传入的字符串转换为 base64 编码的形式，返回结果为具有连接字符集和排序规则的字符串。输入参数为null时，返回结果为null；输入为非字符串时，若参数为纯数字，默认转为字符串处理，其他会返回null。 to_base64 编码的字符串可以通过 from_base64 函数进行解码。
-TO        :TO_CHAR(bfile|blob):TO_CHAR(bfile|blob) 将数据BFILE或BLOB数据转换为数据库字符集。返回的值始终是VARCHAR。如果返回的值太大而无法适应VARCHAR数据类型，则数据将被截断。
-TO        :TO_CHAR(character):TO_CHAR(character) 将NCHAR、NVARCHAR、CLOB或NCLOB数据转换为数据库字符集。返回的值始终是 VARCHAR。
-TO        :to_char_date::TO_CHAR(datetime) 将 DATE,TIMESTAMP,TIMESTAMP WITH TIME ZONE ,TIMESTAMP WITH LOCAL TIME ZONE , INTERVAL DAY TO SECOND或INTERVAL YEAR TO MONTH数据类型转换为VARCHAR数据类型的值，该数据类型的格式由DATE类型的fmt指定，如果省略fmt, date将转换VARCHAR为如下值：
-TO        :TO:TO_DATE
-TO_DATE转换char为DATE数据类型的值。        :TO:to_datetime(datetimetxt, fmt) return datetime.
-TO_DATETIME转换char为DATETIME数据类型的值。        :TO_DSINTERVAL(...):将输入的格式串转换为关于日期和时间的dsinterval。
-TO        :to_hex(number int or bigint):将number转换到它等效的十六进制表示
-TO        :to_json(anyelement):to_json(anyelement) 把该值返回为json。数组和组合会被（递归）转换成数组和对象；对 于不是数组和组合的值，如果有从该类型到json的造型，造型函数将被用来执行该 转换 ；否则将产生一个标量值。对于任何不是数字、布尔、空值的标量类型， 将使用文本表达 ，在这种风格下它是一个合法的
-TO        :to_jsonb(anyelement):把该值返回为jsonb 。数组和组合会被（递归）转换成数组和对象；对 于不是数组和组合的值，如果有从该类型到json的造型，造型函数将被用来执行该 转换 ；否则将产生一个标量值。对于任何不是数字、布尔、空值的标量类型， 将使用文本表达 ，在这种风格下它是一个合法的
-TO        :../../../_images/ToNumber1.png:TO_NUMBER转换expr为NUMBER数据类型的值。
-TO        :to_timestamp (double precision ):把 Unix 时间（从 1970-01-01 00:00:00+00 开始的 秒）转换成 timestamp。 返回值类型为time stamp without time zone
-TO        :to_timestamp_tz(double precision ):把 Unix 时间（从 1970-01-01 00:00:00+00 开始的 秒）转换成 timestamp。 返回值类型为time stamp with time zone
-TO        :../../../_images/to_yminterval-sql.png:将输入的格式串转换为关于YEAR和MONTH的yminterval。
-TRANSACTION        :TRANSACTION_TIMESTAMP():返回当时服务器时间。
-TRANSLATE        :../../../_images/Translate1.png:TRANSLATE返回expr其中每个字符 in 的所有出现都from_string替换为其对应的字符 in to_string。expr不在其中的字符from_string不会被替换。参数from_string可以包含比 更多的字符to_string。在这种情况下，末尾的多余字符from_string在to_string. 如果这些额外的字符出现在 中expr，那么它们将从返回值中删除。
-TRIM        :TRIM使您能够从字符串中修剪前导字符或尾随字符（或两者）。如果trim_characterortrim_source是字符文字，则必须将其括在单引号中。:TRUNC
-trunc_date:        :( TRUNCdate) 函数返回date一天中的时间部分，截断为格式 model 指定的单位fmt。NLS_CALENDAR该函数对会话参数不敏感。它按照公历的规则运作。返回的值始终是数据类型DATE，即使您为 指定了不同的日期时间数据类型date。如果省略fmt，则使用默认格式模型 ' DD'，并且返回的值将被date截断为时间为午夜的日期。请参阅“ ROUND 和 TRUNC 日期函数”了解允许使用的格式模型fmt。:TRUNC
-trunc_number:        :( TRUNCnumber) 函数返回n1截断到n2小数位。如果n2省略，则将n1截断为 0 位。n2可以为负数以截断（使为零）n2小数点左侧的数字。:UCASE
-ucase(string)        :将字符串转换成大写形式。:UNICODE
-UNICODE(character_expression)        :UNICODE函数将为您提供第一个字符的整数值。对于输入表达式的第一个字符，它将返回整数值或者Unicode值。:UNIX
-select unix_timestamp;        :将时间戳转换为unix编码。:UNIX
-select unix_timestamp(expr);        :将时间戳转换为unix编码。:UNNEST
-UNNEST( array_expression [, ... ] ) [WITH ORDINALITY] [[AS] table_alias [(column_alias [, ... ])]]        :特殊的表函数UNNEST可以使用任意数量的数组参数， 它会返回对应的列数。:UPDATEXML
-updatexml(xml_instance xml, xpath text, value_expr xml)        :函数 updatexml 将 ``xml_instance`` 实例中 ``xpath`` 指定的节点内容替换为 ``value_expr`` 提供的值，成功则返回更新后的 ``xml_instance`` 实例，失败则返回ERROR。 此函数使用前需要创建kdb_utils_function扩展。:UPPER
-../../../_images/UPPER1.png        :UPPER返回所有字母大写。char可以是任何数据类型CHARACTER VARYING(N [CHAR | BYTE])、VARCHAR(N [CHAR | BYTE])、CHARACTER(N [CHAR | BYTE])、CHAR(N [CHAR | BYTE])、TEXT、CLOB或NCLOB，返回值与char的数据类型相同。非字符串类型作为upper函数的输入，默认隐式转换为text类型，返回类型为text。数据库根据为基础字符集定义的二进制映射设置字符的大小写。对于语言敏感的大写，请参阅NLS_UPPER。:USER
-USER        :USER返回会话用户（登录的用户）的名称。这可能会在数据库会话期间发生变化，因为 Real Application Security 会话被附加或分离。对于企业用户，此函数返回架构。对于其他用户，它返回数据库用户名。如果 Real Application Security 会话当前附加到数据库会话，则它返回 user XS$NULL。:USERENV
-../../../_images/USERENV1.png        :USERENV返回有关当前会话的信息。此信息可用于编写特定于应用程序的审计跟踪表或确定会话当前使用的特定于语言的字符。您不能USERENV在CHECK约束条件下使用。:value(x record)
-VALUE函数接受一个范围表别名作为参数，返回表的record类型的对象实例。        :VAR:var_pop(expression)
-VAR_POP在丢弃该集合中的空值后返回输入值的总体方差。您可以将其用作聚合函数和分析函数。        :VAR:var_samp(expression)
-VAR_SAMP在丢弃该集合中的空值后返回一组数字的样本方差。您可以将其用作聚合函数和分析函数。        :VARIANCE:variance([distinct | all] expr) [over (analytic_clause)]
-VARIANCE返回 expr的方差。您可以将其用作聚合或分析函数。        :VERSION:VERSION
-VERSION返回KingbaseES数据库版本信息，包含版本号及版本编译信息。 该函数返回一个TEXT值。        :WM:wm_concat(column)
-WM_CONCAT实现column字段合并(此函数使用前需要创建kdb_utils_function扩展)。        :XML:xml_is_well_formed(text)
-检查一个text串是不是一个良构的 XML，返回一个布尔结果。        :XML:xml_is_well_formed_document(text)
-检查一个text串是不是一个良构的 XML，返回一个布尔结果。xml_is_well_formed_document检查一个良构的文档.        :XML:xml_is_well_formed_content(text)
-检查一个text串是不是一个良构的 XML，返回一个布尔结果。xml_is_well_formed_content检查良构的内容        :XMLAGG:XMLAGG(XMLType_instance [order_by_clause])
-XMLAgg是一个聚合函数。它接受一组 XML 片段并返回一个聚合的 XML 文档。从结果中删除任何返回 null 的参数。        :XMLCOMMENT(values_expr):XMLComment使用 的评估结果生成 XML 注释value_expr。value_expr必须解析为字符串。它不能包含两个连续的破折号（连字符）。函数返回的值采用以下形式：
-XMLCONCAT        :XMLCONCAT(XMLType_instance [,...]):XMLConcat将一系列XMLType实例作为输入，连接每一行的一系列元素，并返回连接后的系列。XMLConcat是XMLSequence的倒数。
-XMLELEMENT        :XMLELEMENT([{ENTITYESCAPING|NOENTITYESCAPING}] {[NAME] identifier|EVALNAME value_expr} [, XML_attributes_clause] [,value_expr [[AS] c_alias]][,...]):XMLElement获取元素名称identifier或评估元素名称EVALNAME value_expr、元素的可选属性集合以及构成元素内容的参数。它返回一个类型的实例XMLType。XMLElement类似于SYS_XMLGen，除了XMLElement可以在返回的 XML 中包含属性，但它不接受使用XMLFormat对象进行格式化。
-XMLEXISTS        :XMLEXISTS(XQuery_string [XML_passing_clause]):XMLExists检查给定 XQuery 表达式是否返回非空 XQuery 序列。如果是，函数返回TRUE; 否则，它返回FALSE。该参数XQuery_string是一个文字字符串，但它可以包含您使用XML_passing_clause.
-XMLFOREST        :XMLFOREST(value_expr [as {c_alias|EVALINAME value_expr]}][,...]):XMLForest将其每个参数参数转换为 XML，然后返回一个 XML 片段，该片段是这些转换后的参数的串联。
-XMLPARSE        :XMLPARSE({DOCUMENT|CONTENT} value_expr [WELLFORMED]):XMLParse从 的评估结果解析并生成一个 XML 实例value_expr。value_expr必须解析为字符串。如果value_expr解析为 null，则该函数返回 null。
-XMLPI        :XMLPI({[NAME]idenfitier|EVALNAME value_expr} [, value_expr]):XMLPIidentifier使用和可选的评估结果生成 XML 处理指令value_expr。处理指令通常用于向应用程序提供与 XML 文档的全部或部分相关联的信息。应用程序使用处理指令来确定如何最好地处理 XML 文档。
-XMLROOT        :XMLROOT(value_expr,VERSION {value_expr| NO VALUE} [,STANDALONE {YES|NO|NO VALUE}]):XMLROOT允许您通过在现有 XML 值的 XML 根信息 (prolog) 中提供版本和独立属性来创建新的 XML 值。如果value_expr已经有序言，则数据库返回错误。如果输入为空，则函数返回空。
-XMLSEQUENCE        :XMLSEQUENCE(xml_instance xml):XMLSEQUENCE函数接受一个xml类型的XML实例，返回一个包含所有顶层XML节点的可变数组。
-XMLSERIALIZE        :XMLSERIALIZE({DOCUMENT|CONTENT} value_expr [AS datatype][ENCODING xml_encoding_spec][VERSION string_literal] [{NO INDENT|INDENT[SIZE=number]}] [{HIDE|SHOW} DEFAULTS]):XMLSerialize创建一个包含value_expr.返回的任何 lobXMLSERIALIZE都是只读的。
-XMLTABLE        :XMLTABLE([XML_namespaces_clause,] XQuery_string XMLTABLE_option):XMLTable将 XQuery 评估的结果映射到相关的行和列。您可以使用 SQL 将函数返回的结果作为虚拟关系表进行查询。
-xpath(xpath, xml [, nsarray])        :函数 xpath 在 XML 值 ``xml`` 上计算 XPath 1.0 表达式 xpath (a text value)。它返回一个 XML 值的数组，该数组对应于该 XPath 表达式产生的结点集合。如果该 XPath 表达式返回一个标量值而不是一个结点集合，将会返回一个单一元素的数组。第二个参数必须是一个良构的 XML 文档，它必须有一个单一根结点元素。该函数可选的第三个参数是一个名字空间映射的数组。这个数组应该是一个二维text数组，其第二轴长度等于2（即它应该是一个数组的数组，其中每一个都由刚好两个元素组成）。每个数组项的第一个元素是名字空间的名称（别名），第二个元素是名字空间的 URI。并不要求在这个数组中提供的别名和在 XML 文档本身中使用的那些名字空间相同（换句话说，在 XML 文档中和在 xpath 函数环境中，别名都是本地的）。:XPATH
-xpath_exists(xpath, xml [, nsarray])        :函数 xpath_exists 是 xpath 函数的一种特殊形式。这个函数不是返回满足 XPath 1.0 表达式的单一 XML 值，它返回一个布尔值表示查询是否被满足(具体来说，它是否产生了空节点集以外的任何值)。这个函数等价于标准的 XMLEXISTS 谓词，不过它还提供了对一个名字空间映射参数的支持。:YEAR
+JSON_BUILD_ARRAY                :json_build_array( VARIADIC "any")              :JSON处理函数，将可变参数列表构造成一个可能包含不同数据类型的JSON数组。
+JSON_BUILD_OBJECT               :json_build_object( VARIADIC "any")             :JSON处理函数，将可变参数列表构造成一个JSON 对象，通过转换，该参数列表由交替出现的键和值构成。
+JSON_EACH                       :json_each(json)                                :JSON处理函数，扩展最外层的JSON对象成为一组键值对。
+JSON_EACH_TEXT                  :json_each_text(json)                           :JSON处理函数，扩展最外层的JSON对象成为一组键值对，返回值为 text 类型。
+JSON_EQUAL                      :json_equal( expr ,expr [{error|false|true} on error ])                 :JSON处理函数，用于判断输入的两个文本值是否相等，前提是两个文本必须是有效的JSON值，否则返回false，当都为有效JSON值且相等则返回true，否则返回false。
+JSON_EXISTS                     :json_exists(context_item, path_expression[ PASSING { value AS varname }[, ...]][ RETURNING data_type ][ { TRUE | FALSE | UNKNOWN | ERROR } ON ERROR ])           :使用表达式JSON_EXISTS用于从一个输入的json文本中检索指定的jsonpath路径是否存在指定的JSON值,如果存在返回true，不存在返回false。
+JSON_EXTRACT_PATH               :json_extract_path(from_json json, VARIADIC path_elems text[])          :JSON处理函数，返回由 path_elems 指向的JSON值（等效于 #> 操作符）。
+JSON_EXTRACT_PATH_TEXT          :json_extract_path_text(from_json json, VARIADIC path_elems text[])     :JSON处理函数，以 text 类型返回由 path_elems 指向的JSON值（等效于 #> 操作符）。
+JSON_OBJECT(text[])                         :json_object(text[])                                        :JSON处理函数，从文本数组中构造JSON对象。该函数必须可以使具有偶数个成员的一维数组(成员被当做交替出现的键值对)，或者是一个二维数组（每一个内部数组刚好有两个元素，可以被看做键值对）。
+JSON_OBJECT( keys text[], values text[])    :json_object( keys text[], values text[])                   :JSON处理函数，从文本数组中构造JSON对象。从两个独立的数组得到键/值对。在其他方面和一个参数的形式相同。
+JSON_OBJECT( key_expression,value_expression)    :json_object ([ { key_expression { value | ':' } value_expression [ format json [ encoding utf8 ] ] }[, ...] ][ { null | absent } on null ][ returning data_type [ format json [ encoding utf8 ] ] ][ { with | without } unique [ keys ] ]):JSON处理函数，从文本数组中构造JSON对象。从两个独立的数组得到键/值对。在其他方面和一个参数的形式相同。
+JSON_OBJECT_AGG                     :json_object_agg(name, value)   :聚集函数，将 name 和 value 对聚合成JSON对象，值可以为空，名字不能为空。
+JSON_OBJECT_KEYS                    :json_object_keys(json)         :JSON函数，返回外层JSON对象中键的集合。
+JSON_OBJECTAGG({WITH | WITHOUT } UNIQUE [ KEYS ] ][ RETURNING data_type])                       :json_objectagg([ { key_expression { VALUE | ':' } value_expression } ][ { NULL | ABSENT } ON NULL ][ { WITH | WITHOUT } UNIQUE [ KEYS ] ][ RETURNING data_type [ FORMAT JSON [ ENCODING UTF8 ] ] ])                :聚集函数，把键值对聚集成一个JSON对象。
+JSON_OBJECTAGG([ RETURNING data_type]{WITH | WITHOUT } UNIQUE [ KEYS ] ])                       :json_objectagg([ { key_expression { VALUE | ':' } value_expression } ][ { NULL | ABSENT } ON NULL ][ RETURNING data_type [ FORMAT JSON [ ENCODING UTF8 ] ] ][ { WITH | WITHOUT } UNIQUE [ KEYS ] ])                :聚集函数，把键值对聚集成一个JSON对象。
+JSON_POPULATE_RECORD        :json_populate_record(base anyelement,from_json json)               :JSON函数，扩展 from_json 中的对象成一个行，它的列匹配由 base 定义的记录类型。
+JSON_QUERY                  :json_query ( expression [FORMAT JSON [ENCODING UTF8]],JSON_basic_path_expression [ PASSING { value AS varname } [, ...]][ RETURNING data_type [ FORMAT JSON [ ENCODING UTF8 ] ][ { WITHOUT | WITH { CONDITIONAL | [UNCONDITIONAL] } } [ ARRAY ] WRAPPER ][ { KEEP | OMIT } QUOTES [ ON SCALAR STRING ] ][{ERROR|NULL|EMPTY|EMPTY ARRAY|EMPTY OBJECT|DEFAULT expression } ON EMPTY ][{ERROR|NULL|EMPTY|EMPTY ARRAY|EMPTY OBJECT|DEFAULT expression } ON ERROR ])   :JSON函数，用于从一个输入的json文本中根据指定的jsonpath路径检索所需的值（可以为标量值，也可以为对象或者数组）。
+JSON_SCALAR                 :json_scalar (expression[ RETURNING json_data_type ])               :JSON函数，使用JSON_SCALAR函数从SQL数据生成JSON标量值。
+JSON_SERIALIZE              :json_serialize (   expression [ FORMAT JSON [ ENCODING UTF8 ] ]   [ RETURNING data_type [ FORMAT JSON [ ENCODING UTF8 ] ] ] )  :JSON函数，表达式用于把JSON类型的数据转换为字符串或二进制字符串。返回值可以是任意字符串类型或二进制字符串类型。
+JSON_STRIP_NULLS            :json_strip_nulls(from_json json)           :JSON函数，返回 from_json ，其中所有具有空值的对象域都被过滤掉，其他空值不动。
+JSON_TABLE                  :json_table (context_item, path_expression [ AS json_path_name ] [ PASSING { value AS varname } [, ...] ] COLUMNS ( json_table_column [, ...] )   [PLAN ( json_table_plan ) |PLAN DEFAULT ( { INNER | OUTER } [ , { CROSS | UNION } ] | { CROSS | UNION } [ , { INNER | OUTER } ] )   ] [{ERROR | EMPTY} ON ERROR] )   :JSON函数，查询JSON数据并将结果显示为关系视图，可以作为常规SQL表访问。只能在SELECT语句的FROM子句中使用json_table。
+JSON_TO_RECORD              :json_to_record(json)                       :JSON函数，从一个JSON对象构建一个任意的记录，正如所有返回 record 的函数一样，调用者必须用一个 AS 子句显式的定义记录的结构。
+JSON_TO_RECORDSET           :json_to_recordset(json)                    :JSON函数，从一个JSON对象数组构建一个任意的记录集合，正如所有返回 record 的函数一样，调用者必须用一个 AS 子句显式的定义记录的结构。
+JSON_TYPEOF                 :json_typeof(json)                          :JSON函数，把最外层的JSON对象类型作为一个文本串返回。可能类型是： object 、 array 、 string 、 number 、 boolean 以及 null 。
+JSON_VALUE                  :json_value(expression [ format json [ encoding utf8 ] ], json_basic_path_expression [returning json_value_return_type] [{ null|error|default literal}  on error]   [{ null|error|default literal}  on empty] )                       :JSON函数，从一段给定的json文本中获取所需要的值，返回为标量值或者用户自定义的object或者collection类型 。
+JSONB_AGG                   :jsonb_agg(expression)                      :聚集函数，将传入值包括空值聚集成一个JSON数组。
+JSONB_ARRAY_ELEMENTS        :jsonb_array_elements(jsonb)                :JSON处理函数，将传入值包括空值聚集成一个JSON数组。
+JSONB_ARRAY_ELEMENTS_TEXT   :jsonb_array_elements_text(jsonb)           :JSON处理函数，把一个JSON数组扩展成 text 值集合。
+JSONB_ARRAY_LENGTH          :jsonb_array_length(jsonb)                  :JSON处理函数，返回最外层JSON数组中的元素数量。
+JSONB_BUILD_ARRAY           :jsonb_build_array( VARIADIC "any")         :JSON处理函数，将可变参数列表构造成一个可能包含不同数据类型的JSON数组。
+JSONB_BUILD_OBJECT          :jsonb_build_object( VARIADIC "any")        :JSON处理函数，将可变参数列表构造成一个JSON 对象，通过转换，该参数列表由交替出现的键和值构成。
+JSONB_EACH                  :jsonb_each(jsonb)                          :JSON处理函数，扩展最外层的JSON对象成为一组键值对。
+JSONB_EACH_TEXT             :jsonb_each_text(jsonb)                     :JSON处理函数，扩展最外层的JSON对象成为一组键值对，返回值为 text 类型。
+JSONB_EXTRACT_PATH          :jsonb_extract_path(from_json jsonb, VARIADIC path_elems text[])        :JSON处理函数，返回由 path_elems 指向的JSON值（等效于 #> 操作符）。
+JSONB_EXTRACT_PATH          :jsonb_extract_path(from_json jsonb, VARIADIC path_elems text[])        :JSON处理函数，以 text 类型返回由 path_elems 指向的JSON值（等效于 #> 操作符）。
+JSONB_INSERT                :jsonb_insert(target jsonb, path text[], new_value jsonb [, insert_after boolean])        :JSON处理函数，返回被插入了 new_value 的 target 。如果 path 指定的 target 节在一个JSONB数组中， new_value 将被插入到目标之前（ insert_after 默认为false）或者之后（ insert_after 为true）。 如果 path 指定的 target 节在一个JSONB对象内，则只有当 target 不存在时才插入 new_value 。 对于面向路径的操作符来说，出现在 path 中的负整数表示从JSONB数组的末尾开始计数。
+JSONB_OBJECT(text[])                        :jsonb_object(text[])                       :JSON处理函数，从文本数组中构造JSON对象。该函数必须可以使具有偶数个成员的一维数组(成员被当做交替出现的键值对)，或者是一个二维数组（每一个内部数组刚好有两个元素，可以被看做键值对）。
+JSONB_OBJECT( keys text[], values text[])   :jsonb_object( keys text[], values text[])  :JSON处理函数，从文本数组中构造JSON对象。从两个独立的数组得到键/值对。在其他方面和一个参数的形式相同。
+JSONB_OBJECT_AGG            :jsonb_object_agg(name, value)                              :聚集函数，将 name 和 value 对聚合成JSON对象，值可以为空，名字不能为空。
+JSONB_OBJECT_KEYS           :jsonb_object_keys(jsonb)                                   :JSON函数，返回外层JSON对象中键的集合。
+JSONB_PATH_EXISTS           :jsonb_path_exists(target jsonb, path jsonpath[, vars jsonb [, silent bool]])       :JSON函数，检查JSON路径是否返回指定JSON值的任何项。
+JSONB_PATH_MATCH            :jsonb_path_match(target jsonb, path jsonpath [, vars jsonb [, silent bool]])       :JSON函数，返回指定JSON值的JSON路径谓词检查的结果。只考虑结果的第一项。如果结果不是布尔值，则返回NULL.
+JSONB_PATH_QUERY            :jsonb_path_query(targetjsonb, path jsonpath [, vars jsonb [, silent bool]])        :JSON函数，获取指定JSON值的JSON路径返回的所有项.
+JSONB_PATH_QUERY_ARRAY       :jsonb_path_query_array(target jsonb, path jsonpath[, vars jsonb [, silent bool]]):JSON函数，获取指定JSON值的JSON路径返回的所有项，并将结果包装到数组中。
+JSONB_PATH_QUERY_FIRST       :jsonb_path_query_first(targetjsonb, path  jsonpath [, vars jsonb [, silent bool]]):JSON函数，获取指定JSON值的JSON路径返回的第一个JSON项。在没有结果时返回NULL。
+JSONB_POPULATE_RECORD       :jsonb_populate_record(base anyelement,from_json jsonb)     :JSON函数，扩展 from_json 中的对象成一个行，它的列匹配由 base 定义的记录类型。
+JSONB_POPULATE_RECORDSET    :jsonb_populate_recordset(base anyelement,from_json jsonb)  :JSON函数，扩展 from_json 中最外层的对象数组成一个集合，它的列匹配由 base 定义的记录类型。
+JSONB_PRETTY                :jsonb_pretty(from_json jsonb)                              :JSON函数，把 from_json 处理成一段带缩进的JSON文本。
+JSONB_SET                   :jsonb_set(target jsonb, path text[],new_value jsonb[, create_missing boolean]):JSON函数，返回 target 其中由 path 指定的节用 new_value 替换，如果指定的项不存在并且 create_missing 为真（默认为真）则加上 new_value 。 正如面向路径的操作符一样，出现在 path 中的负整数表示从JSON数组的末尾开始数
+JSONB_STRIP_NULLS           :jsonb_strip_nulls(from_json jsonb)                         :JSON函数，返回 from_json ，其中所有具有空值的对象域都被过滤掉，其他空值不动。
+JSONB_TO_RECORD             :jsonb_to_record(jsonb)                                     :JSON函数，从一个JSON对象构建一个任意的记录，正如所有返回 record 的函数一样，调用者必须用一个 AS 子句显式的定义记录的结构。
+JSONB_TO_RECORDSET          :jsonb_to_recordset(json)                                   :JSON函数，从一个JSON对象数组构建一个任意的记录集合，正如所有返回 record 的函数一样，调用者必须用一个 AS 子句显式的定义记录的结构。
+JSONB_TYPEOF                :jsonb_typeof(json)                                         :JSON函数，把最外层的JSON对象类型作为一个文本串返回。可能类型是： object 、 array 、 string 、 number 、 boolean 以及 null 。
+JUSTIFY_DAYS                :justify_days(interval)                                     :时间函数，调整间隔，使30天时间段表示为月 。
+JUSTIFY_HOURS               :justify_hours(interval)                                    :时间函数，调整间隔，使24小时时间段表示为日 。
+JUSTIFY_INTERVAL            :justify_interval(interval)                                 :时间函数，使用 justify_days 和 justify_hours 调整间隔，并进行额外的符号调整。
+LAG                         :lag(value anyelement[, offset integer [,default anyelement ]])         :返回value，它在分区内当前行的之前offset个位置的行上计算；如果没有这样的行，返回default替代（必须和value类型相同）。offset和default都是根据当前行计算的结果。如果忽略它们，则offset默认是1，default默认是空值。
+LAST                        :LAST( DENSE_RANK LAST ORDER BY expr [ DESC | ASC ] [ NULLS { FIRST | LAST } ] [ , … ] )[ OVER ( [ query_partition_clause ] ) ][ FILTER ( WHERE filter_clause ) ]:LAST 既是聚集函数，也是分析函数。 LAST 函数首先对输入行按指定排序规则排序，然后返回排名为LAST的一组行，最后在返回行的数值上执行聚集计算。如果只有唯一的排名为LAST的返回行，那么聚集操作只在非聚集的唯一行上执行。
+LAST_DAY                    :last_day(date date1)           :计算日期1所在月份的最后一天。:LAST
+LAST_VALUE                  :last_value(value any)          :LAST_VALUE函数返回在窗口帧中的最后一行上计算的value值。类型与any一致。
+LASTVAL                     :lastval()                      :LASTVAL返回最近一次使用的nextval获取的任何序列的值。
+LCASE                       :lcase(string)                  :函数返回将指定字符串转为小写后的字符串
+LEAD                        :lead(value any, offset integer [, default any]) over ([partition by partition_expression] [order by sort_expression [ASC|DESC]])   :LEAD返回value,它在分区内当前行的之后offset个位置的行上计算结果，如果没有这样的行，返回default值替代(必须与value类型相同)。
+LEAST                       :least(value[,...])             :least函数从一个任意的数字表达式列表中选取最小的值，这些表达式必须都可以转换成一个普通的数据。这个类型也将会是结果的数据类型。 列表中的NULL值将会被忽略。只有所有表达式都是NULL时，结果才会是NULL。
+LEFT                        :left(str text, n int)          :返回字符串中的前 n 个字符。当 n 为负时，将返回除了最后 |n | 个字符之外的所有字符
+LENGTH                      :length(string)                 :函数返回的LENGTH长度char。LENGTH使用输入字符集定义的字符计算长度。LENGTHB使用字节而不是字符。LENGTHC使用 Unicode 完整字符。LENGTH2使用 UCS2 代码点。LENGTH4使用 UCS4 代码点。
+LENGTHB                     :lengthb(string text )          :函数返回指定bytea或bit类型数据的字节数，仅支持单字节 LOB。它不能与CLOB多NCLOB字节字符集中的数据一起使用。
+LISTAGG                     :listagg (measure_expr[,’delimiter’]) WITHIN GROUP (order_by_clause) [OVER query_partition_clause]  :对于指定的度量值，LISTAGG函数在ORDER BY子句中指定的每个组中对数据进行排序，然后连接度量值列的值。 可作为单个集合聚集函数、分组聚集函数、分析函数在不同应用场景中使用。
+LN                          :ln({dp|numeric})               :LN返回n的自然对数，其中n大于 0。
+LNNVL                       :lnnvl(condition)               :如果condition 是FALSE或者是UNKNOWN,LNNVL 返回TRUE。如果condition 是TRUE，LNNVL 返回 FALSE。
+LOCALTIME                   :localtime                      :获取当前时间。
+LOCALTIMESTAMP              :localtimestamp()               :获取当前时间戳。
+LOG                         :log({dp|numeric})              :LOG返回以n2为底n1的对数。底数n2可以是除0或1以外的任何正数，n1也可以是任何正数。
+LOG                         :log10({numeric|double})        :返回对numeric和double值进行取以10为底的对数值。
+LOWER                       :lower(string)                  :LOWER返回char，所有字母小写。char可以是任何数据类型CHAR, VARCHAR, NCHAR, NVARCHAR, CLOB, 或NCLOB. 返回值与 的数据类型相同char。数据库根据为基础字符集定义的二进制映射设置字符的大小写。对于语言敏感的小写，请参阅NLS_LOWER。
+LOWER_INC                   :lower_inc(anyrange)            :函数测试一个范围值的下界
+LOWER_INF                   :lower_inf(anyrange)            :函数测试一个范围值的下界是否无限
+LPAD                        :lpad(string text,length int [, fill text])     :LPAD返回expr1，n用expr2. 此函数对于格式化查询的输出很有用。
+LSEG                        :lseg(box)                                      :测绘点到点的线段。
+LTRIM                       :ltrim(string text [, characters text])         :LTRIMchar从 .中包含的所有字符的左端删除set。如果不指定set，则默认为一个空白。KingbaseES 数据库char从其第一个字符开始扫描并删除所有出现的字符，set直到到达一个不在的字符set，然后返回结果。
+MAKE_DATE                   :make_date(year int, month int, day int)        :从年，月，日域创建日期。
+MAKE_INTERVAL               :make_interval(years int default 0, months int default 0, weeks int default 0, days int default 0, hours int default 0, mins int default 0, secs double default 0.0):从年，月，周，日，时， 分， 秒域创建时间间隔。
+MAKE_SET                    :MAKE_SET(bits,oid)        :返回一个SET值（一个由’,’分隔子字符串的字符串），该值由在bits中具有相应位的字符串组成(sys_set按照setdisplayorder从小到大排序后，setlable对应的bit位为1,2,4,8,…2^63)。oid为SET类型的oid，具体见sys_set中settypid。
+MAKE_TIME                   :make_time(hour int, min int, sec double)                                                               :从时，分，秒域创建时间。
+MAKE_TIMESTAMP              :make_timestamp(year int, month int, day int, hour int, min int, sec double)                            :从年，月，日，时，分，秒域创建时间戳。
+MAKE_TIMESTAMPTZ            :make_timestamptz(year int, month int, day int, hour int, min int, sec double[, timezone text])         :从年，月，日，时，分，秒，时区域创建时间戳。
+MAX                         :max(expression)                                :MAX返回 的最大值expression。您可以将其用作聚合或分析函数。
+MD5                         :md5(string)                                    :MD5用于计算给定参数的MD5哈希值，结果以十六进制输出。
+MIN                         :min(expression)                                :MIN返回expr的最小值。您可以将其用作聚合或分析函数。
+MOD                         :mod(y,x)                                       :MOD返回n2除以n1的余数。n1如果为 0，则返回n2。
+MONTH                       :month(datetime date)                           :从日期时间域获取月份。
+MONTHS_BETWEEN              :months_between(date date1, date date2)         :计算日期1与日期2的月份差。
+NANVL                       :nanvl(numeric n1, numeric n2)                  :如果n1是NaN，则返回n2；如果n1不是NaN，则返回n1。
+NEW_TIME                    :new_time(str timestamp, zonename1 text, zonename2 text)    :将时间戳在zonename1的时区下转换到在zonename2时区的时间戳。
+NEXT_DAY                    :next_day(date1 date, weekday text)             :获取下一个周几。
+NEXTVAL                     :nextval(regclass)                              :NEXTVAL递增序列并返回新值。
+NLSSORT                     :nlssort(expr,nls_param)                        :NLSSORT返回字符值的排序规则键char和显式或隐式指定的排序规则。排序规则键是一串字节，用于char根据指定的排序规则进行排序。排序规则键的属性是，当根据它们的二进制顺序比较时，为给定排序规则生成的两个这样的键的相互排序与根据给定排序规则比较时源字符值的相互排序相同。
+NOW                         :now()                                          :获取当前时间。
+NTH_VALUE                   :nth_value(value any, nth integer) over ([partition by partition_expression] [order by sort_expression [ASC|DESC]]) :NTH_VALUE返回在窗口帧中的第nth行(行从1计数)上计算的value,类型与any一致。如果没有这样的行则返回空值。本函数为通用窗口函数。
+NTILE                       :ntile(num_buckets integer)                     :NTILE从1到num_backet参数值的整数范围，尽可能等分分区。
+NULLIF                      :nullif(expr1, expr2)                           :NULLIF比较expr1和expr2。如果它们相等，则函数返回null。如果它们不相等，则函数返回expr1。expr1不能指定文字‘NULL’。
+NUMTODSINTERVAL             :NUMTODSINTERVAL(n,'interval_unit')             :将输入的数字与UNIT转换为关于日期和时间的dsinterval。
+NUMTOYMINTERVAL             :NUMTOYMINTERVAL(n,'interval_unit')             :将输入的数字与UNIT转换为关于YEAR和MONTH的yminterval。
+NVL                         :nvl(expr1, expr2)                              :如果表达式expr1不为空，返回表达式expr1;如果expr1为空，返回表达式expr2。
+NVL2                        :nvl2(expr1,expr2,expr3)                        :NVL2允许根据指定表达式是否为空来确定查询返回的值。如果表达式expr1不为空，返回表达式expr2, 如果expr1为空，返回表达式expr3。
+OCTET_LENGTH                :octet_length(string)                           :函数返回以字节计的数据字符表达的长度,字符串尾部空格字符也会被计算在内。
+ORA_HASH                    :ORA_HASH(expr [, max_bucket[,seed_value]])     :ORA_HASH是一个计算给定表达式的哈希值的函数。
+OVERLAY                     :overlay(string placing  string from  int [for int]):将用字符串expr1中指定起始位(from后的数值）开始后的(指定长度，for后的数值)字符串，用给定的字符串expr2替换。
+PERCENT_RANK(percent_rank_aggregate)                :PERCENT_RANK(expr[,...]) WITHIN GROUP (ORDER BY { expr [ DESC | ASC ] [ NULLS { FIRST | LAST }}... ])  :PERCENT_RANK类似于CUME_DIST（累积分布）函数。返回值的范围PERCENT_RANK是 0 到 1，包括 0 到 1。任何集合中的第一行的 aPERCENT_RANK为 0。返回值为NUMBER。
+PERCENT_RANK(percent_rank_analytic)                 :PERCENT_RANK() OVER ( [ query_partition_clause ] order_by_clause)  :PERCENT_RANK类似于CUME_DIST（累积分布）函数。返回值的范围PERCENT_RANK是 0 到 1，包括 0 到 1。任何集合中的第一行的 aPERCENT_RANK为 0。返回值为NUMBER。
+PI                          :pi()                               :返回一个π的double类型值
+POSITION                    :position(substring in string)      :返回指定子串的位置
+POWER                       :power(a dp, b dp)                  :返回 a 的 b 次幂
+QUERY_TO_XML                :query_to_xml(query text, nulls boolean, tableforest boolean, targetns text)        :query_to_xml执行由参数query传递的查询并且映射结果集.
+QUOTE_IDENT                 :quote_ident(string text)           :将给定字符串返回成合适的引用形式，使它可以在一个 SQL 语句字符串中被用作一个标识符。只有需要时才会加上引号（即，如果字符串包含非标识符字符或可能是大小写折叠的）。嵌入的引号会被正确地双写。
+QUOTE_LITERAL               :quote_literal(string text)         :将给定字符串返回成合适的引用形式，使它可以在一个 SQL 语句字符串中被用作一个字符串文字。嵌入的引号会被正确地双写。注意quote_literal对空输入返回空； 如果参数可能为 空，quote_nullable 通常更合适。
+QUOTE_NULLABLE              :quote_nullable(string text)        :将给定字符串返回成合适的引用形式，使它可以在一个 SQL 语句 字符串中被用作一个字符串文字；或者，如果参数为空，返回 NULL。嵌入的引号会被正确地双写
+RADIANS                     :radians(dp)                        :radians(dp)把角度dp转为弧度。
+RADIUS                      :radius(circle)                     :radius(circle)求取输入圆circle的半径。
+RANGE_MERGE                 :range_merge(anyrange,anyrange)     :返回包含两个给定范围的最小范围。
+RANK(AGGREGATION)           :rank(args) WITHIN GROUP (ORDER BY sorted_args)             :RANK计算一个值在一组值中的排名。返回类型是NUMBER.
+RANK(ANALYSE)               :rank() OVER ([query_partition_clause] order_by_clause)     :RANK计算一个值在一组值中的排名。返回类型是NUMBER.
+RAND()                      :rand()                 :生成范围 0.0 <= x < 1.0 中的随机值。
+RAND(SEED)                  :rand(seed int)         :生成范围 0.0 <= x < 1.0 中的随机值。
+RANDOM                      :random()               :生成范围 0.0 <= x < 1.0 中的随机值
+RATIO_TO_REPORT             :ratio_to_report(expr1) over (query_partions_clasue)    :百分比计算函数。分子是expr的值，分母是over中的值，若over中没有指定，则分母是所有值。 expr可以是常量表达式，算术表达式，投影列表达式。且表达式expr是一个number类型或者可以隐式转换为number类型的表达式。其它类型的表达式报错。 如果expr的计算结果为NULL，则RATIO_TO_REPORT函数的计算结果也为NULL。若指定 了 query_partions_clasue，则分母是这个子句计算的值。 不能使用ratio_to_report自身或者其它windows函数作为expr参数来使用,否则报错处理。返回值类型numeric，使用默认精度与标度。
+REGEXP_LIKE                 :regexp_like ( source, pattern [,match_param])          :regexp_like函数判断输入字符串能否通过正则表达式进行匹配，source为输入源字符串，pattern为正则表达式，match_param可以改变匹配规则，其参数如下： i：大小写不敏感 c：大小写敏感 m：和n是一样的，加上‘m’后，“.”与“n”不匹配；插入符号（ ^）和美元符号（）分别解释为源字符串中任何位置的任何行的开头和结尾，而不仅仅是整个源字符串的开头或结尾。n：“n”敏感，加上‘n′后，“.”与“n”不匹配；插入符号（）和美元符号（
+REGEXP_MATCH                :regexp_match( source, pattern [,match_param])          :regexp_match函数返回一个POSIX正则表达式与source的第一个匹配得到的子串。source为输入源字符串，pattern为正则表达式，match_param可以改变匹配规则，其参数如下： i：大小写不敏感 c：大小写敏感 m：和n是一样的，加上‘m’后，“.”与“n”不匹配；插入符号（ ^）和美元符号（）分别解释为源字符串中任何位置的任何行的开头和结尾，而不仅仅是整个源字符串的开头或结尾。n：“n”敏感，加上‘n′后，“.”与“n”不匹配；插入符号（）和美元符号（
+REGEXP_MATCH                :regexp_match( source, pattern [,match_param])          :regexp_matches函数返回一个POSIX正则表达式与source的匹配得到的子串(可能有多个)。source为输入源字符串，pattern为正则表达式，match_param可以改变匹配规则，其参数如下： i：大小写不敏感 c：大小写敏感 m：和n是一样的，加上‘m’后，“.”与“n”不匹配；插入符号（ ^）和美元符号（）分别解释为源字符串中任何位置的任何行的开头和结尾，而不仅仅是整个源字符串的开头或结尾。n：“n”敏感，加上‘n′后，“.”与“n”不匹配；插入符号（）和美元符号（
+REGEXP_REPLACE              :regexp_replace(source,  pattern, replacement [, match_param])   :regexp_replace函数替换匹配一个POSIX正则表达式的子串。 source为输入源字符串，pattern为正则表达式，replacement是用来替换的字符串， match_param可以改变匹配规则，其参数如下： i：大小写不敏感 c：大小写敏感 m：和n是一样的，加上‘m’后，“.”与“n”不匹配；插入符号（ ^）和美元符号（）分别解释为源字符串中任何位置的任何行的开头和结尾，而不仅仅是整个源字符串的开头或结尾。n：“n”敏感，加上‘n′后，“.”与“n”不匹配；插入符号（）和美元符号（
+REGEXP_SPLIT_TO_ARRAY       :regexp_split_to_array(source,  pattern, [, match_param])    :regexp_split_to_array函数使用一个POSIX正则表达式作为分隔符划分source来生成数组。 source为输入源字符串,pattern为正则表达式, match_param可以改变匹配规则。
+REGEXP_SPLIT_TO_TABLE       :regexp_split_to_table(source,  pattern, [, match_param])    :regexp_split_to_table函数使用一个POSIX正则表达式作为分隔符划分source来生成表格。 source为输入源字符串，pattern为正则表达式, match_param可以改变匹配规则。
+REPEAT                      :repeat(string text, number int)            :函数返回将给定的字符串重复给定的次数后，得到的新字符串。
+REPLACE                     :replace(string text, from text, to text)   :REPLACEchar每次出现search_string替换为 时返回replacement_string。如果replacement_string省略或为 null，则search_string删除所有出现的 。如果search_string为空，则char返回。
+REVERSE                     :reverse(str)                               :函数返回将指定字符串反转后的新字符串。
+RIGHT                       :RIGHT (str)                                :获取给定字符串的从右向左数给定位数的子字符串
+ROUND                       :round(date)                                :参数为时间时
+ROW_NUMBER                  :row_number() over([query_partition_clause,] order_by_clause)   :ROW_NUMBER是解析函数,用于为结果集中的每一行分配一个唯一的整数值，从1开始计数。
+ROW_TO_JSON                 :row_to_json(record [, pretty_bool])                :把行作为一个 JSON对象返回。如果pretty_bool为真，将在第1层元素之间增加换行。
+RPAD                        :rpad(string text, length int [, fill text])        :RPAD返回expr1，用 右填充长度n字符expr2，根据需要复制多次。此函数对于格式化查询的输出很有用。
+RTRIM                       :rtrim(string text [, characters text])             :RTRIMchar从 .中出现的所有字符的右端删除set。此函数对于格式化查询的输出很有用。
+SCALE                       :scale(numeric)                                     :SCALE返回参数的精度（小数点后的位数）。
+SCORE                       :SCORE(lable number)                                :在SELECT语句中使用SCORE函数返回CONTAINS查询生成的分数值。SCORE操作符可以在SELECT targetlist、ORDER BY或GROUP BY子句中使用，但若sql中没有包含对应label参数的contains函数，则报错。。
+SESSION_ID                  :session_id()                                       :SESSION_ID返回当前会话的整数。
+SESSION_USER                :session_user                                       :SESSION_USER返回当前会话的用户名。返回类型为NAME。
+SESSIONTIMEZONE             :SESSIONTIMEZONE                                    :返回当前会话的时区。返回类型是时区偏移量（格式为字符类型'[+|-]TZH:TZM'）或时区区域名称，具体取决于用户如何在最近的ALTER SESSION语句中指定会话时区值。
+SETSEED                     :setseed(dp)                                        :为后续要使用的random函数设置种子。
+SETVAL                      :SETVAL(regclass, bigint)                           :设定指定序列的当前值。
+SETWEIGHT                   :setweight(vector tsvector, weight "char")          :SETWEIGHT为vector的每一个元素分配权重。
+SHA224                      :sha224(bytea)              :SHA224用于计算二进制字符串的SHA-224哈希值。
+SHA256                      :sha256(bytea)              :SHA256用于计算二进制字符串的SHA-256哈希值。
+SHA384                      :sha384(bytea)              :SHA384用于计算二进制字符串的SHA-384哈希值。
+SHA512                      :sha512(bytea)              :SHA512用于计算二进制字符串的SHA-512哈希值。
+SIGN                        :sign({dp|numeric})         :SIGN返回 的符号n。此函数将任何数字数据类型或任何可以隐式转换为 的非数字数据类型作为参数NUMBER，并返回NUMBER。
+SIN                         :sin({dp|numeric})          :SIN返回（以弧度表示的角度） n的正弦值。
+SINH                        :sinh({dp|numeric})         :SINH返回n的双曲正弦。
+SPLIT_PART                  :split_part(string text, delimiter text, field int) :函数返回给定字符串expr1中按给定字符expr2切分后的字符串数组中的第n个字符串。其中，指定返回的字符串序号n必须大于0
+SQRT                        :sqrt(n)                    :SQRT返回n的平方根。
+STATEMENT_TIMESTAMP         :STATEMENT_TIMESTAMP ()     :STATEMENT_TIMESTAMP返回当前的日期和时间。返回类型为timestamp with time zone。
+STDDEV                      :STDDEV(expr)               :STDDEV返回一组数字expr的样本标准差。这是一组数字，您可以将其用作聚合函数和分析函数。它与STDDEV_SAMP的不同之处在于，当只有一行输入时STDDEV返回零，而STDDEV_SAMP返回null不同。
+STDDEV_POP                  :STDDEV_POP(expr)           :STDDEV_POP计算总体标准差并返回总体方差的平方根。您可以将其用作聚合函数和分析函数。
+STR_TO_DATE                 :STR_TO_DATE(expr1,format)  :把字符串按照指定格式转换成时间戳。返回类型为timestamp without time zone。
+STR_VALID                   :str_valid(`expr1 text, expr2 oid)              :STR_VALID判断所给定的表达式是否为正确的日期时间。
+STRING_AGG                  :string_agg(expr1, delimiter)                   :非空输入连接成一个串，用delimiter分隔。
+STRING_TO_ARRAY             :STRING_TO_ARRAY(expr1,delimiter [,null_expr])  :使用提供的分隔符将和可选的空串字符划分成数组元素。
+STRIP                       :strip(tsvector)                            :STRIP返回删除位置和权重后的 tsvector 。返回类型为 tsvector。
+STRPOS                      :STRPOS                                     :函数返回字符串expr1中，第一次出现expr2字符串的起始位置。
+SUBSTR                      :substr(string [from int]  [for int])       :这些SUBSTR函数返回 的一部分char，从字符开始position，substring_length字符长。SUBSTR使用输入字符集定义的字符计算长度。SUBSTRB使用字节而不是字符。SUBSTRC使用 Unicode 完整字符。SUBSTR2使用 UCS2 代码点。SUBSTR4使用 UCS4 代码点。
+SUBSTRB                     :substrb(string [from int]  [for int])      :这些SUBSTR函数返回 的一部分char，从字符开始position，substring_length字符长。SUBSTR使用输入字符集定义的字符计算长度。SUBSTRB使用字节而不是字符。SUBSTRC使用 Unicode 完整字符。SUBSTR2使用 UCS2 代码点。SUBSTR4使用 UCS4 代码点。
+SUBSTRING                   :substring(string [from int]  [for int])    :这些SUBSTR函数返回 的一部分char，从字符开始position，substring_length字符长。SUBSTR使用输入字符集定义的字符计算长度。SUBSTRB使用字节而不是字符。SUBSTRC使用 Unicode 完整字符。SUBSTR2使用 UCS2 代码点。SUBSTR4使用 UCS4 代码点。
+SUM                         :sum(expression)                            :SUM返回非空输入值的和。
+SYS_BACKEND_PID             :sys_backend_pid()                          :SYS_BACKEND_PID返回附加到当前会话的服务器进程的进程ID。
+SYS_CANCEL_BACKEND          :sys_cancel_backend(pid int)                :SYS_CANCEL_BACKEND用于取消对具有指定进程ID的后端进程的会话的当前查询。
+SYS_COLUMN_SIZE             :sys_column_size(any)                       :SYS_COLUMN_SIZE返回用于存储任何单个数据值的字节数。
+SYS_CONTEXT                             :sys_context(namespace text, parameter text, length int default 256)        :SYS_CONTEXT返回当前时刻与上下文命名空间相关联的parameter的值。可以在SQL和PL/SQL语句中使用该函数。SYS_CONTEXT必须在本地执行。
+SYS_DATABASE_SIZE                       :sys_database_size({oid|name})                                              :SYS_DATABASE_SIZE返回指定名称或OID的数据库使用的总磁盘空间。返回类型为bigint。
+SYS_STAT_FILE                           :sys_stat_file(filename text[, ``missing_ok`` boolean])                     :返回关于一个文件/目录的统计信息。默认仅限于超级用户使用，但是可以给其他用户授予EXECUTE让他们运行这个函数。
+SYS_READ_BINARY_FILE                    :sys_read_binary_file(filename text [, ``offset`` bigint, ``length`` bigint [, ``missing_ok`` boolean] ])           :返回一个二进文件的内容。默认仅限于超级用户使用，但是可以给其他用户授予EXECUTE让他们运行这个函数。
+SYS_READ_FILE                           :sys_read_file(filename text [, ``offset`` bigint, ``length`` bigint [, ``missing_ok`` boolean] ])                  :返回一个文件的内容。默认仅限于超级用户使用，但是可以给其他用户授予EXECUTE让他们运行这个函数。
+SYS_TERMINATE_BACKEND                   :sys_terminate_backend(pid int)                                                         :中止一个后端。如果调用角色是被取消后端的拥有者角色的成员或者调用角色已经被授予 sys_signal_backend，这也是允许的，不过只有超级用户才能取消超级用户的后端。
+SYS_TOTAL_RELATION_SIZE                 :sys_total_relation_size (oid bigint)                                                   :指定表所用的总磁盘空间，包括所有的索引和TOAST数据
+SYS_FUNCTION_IS_VISIBLE                 :sys_function_is_visible(function_oid)                                                  :判断函数在搜索路径中是否可见。
+SYS_GET_CONSTRAINTDEF                   :sys_get_constraintdef(constraint_oid)                                                  :获得对应约束的定义。pretty_bool为真则为优质打印方式。
+SYS_GET_EXPR                            :sys_get_expr(sys_node_tree, relation_oid)                                              :反编译一个表达式的内部形式，假定其中的任何 Var 指向由第二个参数指示的关系。pretty_bool为真则为优质打印方式。
+SYS_GET_FUNCTION_ARGUMENTS              :sys_get_function_arguments(func_oid)                                                   :获得一个函数或过程定义的参数列表（带有默认值）。
+SYS_GET_FUNCTION_IDENTITY_ARGUMENTS     :sys_get_function_identity_arguments (func_oid)                                         :获得标识一个函数或过程的参数列表（不带默认值）。
+SYS_GET_FUNCTION_RESULT                 :sys_get_function_result(func_oid)                                                      :获得函数的RETURNS 子句（对过程返回空）。
+SYS_GET_FUNCTIONDEF                     :sys_get_functiondef(func_oid)                                                          :获得一个函数或过程的定义。
+SYS_GET_INDEXDEF                        :sys_get_indexdef(index_oid)                                                            :根据参数不同。
+SYS_GET_KEYWORDS                        :sys_get_keywords()                                                                     :获得 SQL 关键字的列表及其分类。
+SYS_GET_OBJECT_ADDRESS                  :sys_get_object_address(type text, name text[], args text[])                            :从一个数据库对象的内部表示得到它的地址。
+SYS_GET_RULEDEF                         :sys_get_ruledef(rule_oid)                                                              :重建规则的创建命令。
+SYS_GET_SERIAL_SEQUENCE                 :sys_get_serial_sequence(table_name, column_name)                                       :获得一个序列列或标识列使用的序列的名称。
+SYS_GET_STATISTICSOBJDEF                :sys_get_statisticsobjdef(statobj_oid)                                                  :重建一个扩展统计对象的创建命令（CREATE STATISTICS命令）。
+SYS_GET_TRIGGERDEF                      :sys_get_triggerdef(trigger_oid)                                                        :重建一个触发器 的CREATE [ CONSTRAINT ] TRIGGER命令。
+SYS_GET_USERBYID                        :sys_get_userbyid(role_oid)                                                             :获得给定 OID 指定的角色名。
+SYS_GET_VIEWDEF                         :sys_get_viewdef(view_name)                                                             :sys_get_viewdef重构定义一个视图的SELECT查询。
+SYS_GUID                                :sys_guid()                                                                             :SYS_GUID生成并返回一个RAW由 16 个字节组成的全局唯一标识符（值）。在大多数平台上，生成的标识符由主机标识符、调用函数的进程或线程的进程或线程标识符以及该进程或线程的非重复值（字节序列）组成。
+SYS_HAS_ROLE                            :sys_has_role(user, role, privilege)                                                    :检查 user 用户（未指定时使用当前用户）是否能以特定的方式访问一个角色。其参数的可能性类同于 has_table_privilege 。除了 public 不允许作为一个用户名。希望的访问权限类型必须是下列值的某种组合： MEMBER 或 USAGE 。 MEMBER 表示该角色中的直接或间接成员关系（即使用 SET ROLE 的权力），而 USAGE 表示不做 SET ROLE 的情况下该角色的权限是否立即可用。
+SYS_IDENTIFY_OBJECT                     :sys_identify_object(catalog_id oid, object_id oid, object_sub_id integer)              :返回一行数据，包含由参数目录OID、对象OID和一个（可能为零的）子对象ID所唯一标识的数据库对象的信息。该信息是供机器读取的，并且不会被翻译。 type 标识数据库对象的类型； schema 是该对象所属的模式名，如果对象类型不属于模式则为 NULL ；，如果需要的话，可以加上引号如果该名称（如果相关的话，还可以加上模式名）足以唯一标识该对象，则 name 就是对象的名称，必要时会被加上引号，否则为 NULL ; identity 是完整的兑现标识，它会表现为与对象类型相关的精确格式，并且如有必要，该格式中的每个部分都会被模式限定。
+SYS_IDENTIFY_OBJECT_AS_ADDRESS          :sys_identify_object_as_address(catalog_id oid, object_id oid, object_sub_id integer)   :返回一行数据，包含由参数目录OID、对象OID和一个（可能为零的）子对象ID所唯一标识的数据库对象的信息。返回的信息独立于当前服务器，也就是说，它可以被用来在另一个服务器中标识一个具有相同命名的对象。 type 标识数据库对象的类型； object_names 和 object_args 是文本数组，它们一起构成了对对象的引用。这三个值可以被传递给 sys_get_object_address 以获得该对象的内部地址。这个函数是 sys_get_object_address 的逆函数。
+SYS_INDEXES_SIZE                        :sys_indexes_size(regclass)                                                             : 接受一个表的 OID 或名称，并返回附加到该表的所有索引所使用的全部磁盘空间。
+SYS_KINGBASE_START_TIME                 :sys_kingbase_start_time()                                                              :返回服务器启动时的 timestamp with time zone 。
+SYS_LS_DIR                              :sys_ls_dir(dirname text [, missing_ok boolean, include_dot_dirs boolean])              :系统函数，列出目录中的内容。默认仅限于超级用户使用，但是可以给其他用户授予Execute让他们运行这个函数。
+SYS_LS_LOGDIR                           :sys_ls_logdir()                                    :系统函数，列出日志目录中文件的名称、尺寸以及最后修改时间。访问被授予给sys_monitor 角色的成员，并且可以被授予给其他非超级用户角色。
+SYS_LS_TMPDIR                           :sys_ls_tmpdir()                                    :系统函数，为tablespace列出临时目录中文件的名称、大小和最后一次修改时间。 如果没有提 供tablespace，则在临时目录中的sys_default表空间被使用。sys_monitor角色的成员可以访问， 其他非超级用户角色也可以访问。
+SYS_LS_WALDIR                           :sys_ls_waldir()                                    :系统函数，列出WAL目录中文件的名称、尺寸以及最后修改时间。访问被授予给sys_monitor角色 的成员，并且可以被授予给其他非超级用户角色。。
+SYS_RELATION_FILENODE                   :sys_relation_filenode(relation regclass)           :接受一个表、索引、序列或 TOAST 表的 OID 或名称，返回当前分配给它的“filenode”号。文件结点是关系的文件名的基本组件。对于大多数表结果和 sys_class.relfilenode 相同，但是对于某些系统目录 relfilenode 为零，并且必须使用此函数获取正确的值。如果传递一个没有存储的关系（如视图），此函数将返回 NULL。
+SYS_RELATION_FILEPATH                   :sys_relation_filepath(relation regclass)           :返回关系的整个文件路径名（相对于数据库集簇的数据目录 KINGBASE_DATA）。
+SYS_RELATION_SIZE                       :sys_relation_size(relation regclass, fork text)    :接受一个表、索引或 TOAST 表的 OID 或者名称，并且返回那个关系的一个分叉所占的磁盘空间的字节尺寸。如果只得到一个参数，它会返回该关系的主数据分叉的尺寸。提供第二个参数 可以指定要检查哪个分叉（'main'、'fsm'、'vm'或'init'）使用的磁盘空间。
+SYS_RELOAD_CONF                         :sys_reload_conf()                                  :SYS_RELOAD_CONF给服务器发送一个SIGHUP信号，导致所有服务器进程重载配置文件,无参数。
+SYS_SIZE_BYTES                          :sys_size_bytes(text)                               :可以被用来从人类可读格式的字符串得到其中所表示的字节数。其输入可能带有的单位包括字节、kB、MB、GB 或者 TB，并且对输入进行解析时是区分大小写的。如果没有指定单位，会假定单位为字节。
+SYS_SIZE_PRETTY                         :sys_size_pretty(bigint)                            :可以用于把其它函数之一的结果格式化成一种人类易读的格式，可以根据情况使用字节、kB、MB、GB 或者 TB。
+SYS_SLEEP                               :sys_sleep(seconds)                                 :SYS_SLEEP让服务进程延时执行,seconds是一个double precision类型的值。
+SYS_SLEEP_FOR                           :sys_sleep_for(interval)                            :SYS_SLEEP_FOR让服务进程延时执行,参数是一个interval,通常用于较长时间的休眠。
+SYS_SLEEP_UNTIL                         :sys_sleep_until(timestamp with time zone)          :SYS_SLEEP_UNTIL使程序休眠到一个指定的时间唤醒,参数是timestamp with time zone,通常用于较长时间的休眠。
+SYS_TABLE_IS_VISIBLE                    :sys_table_is_visible(table_oid)                    :表在搜索路径中是否可见，也可被用于视图、物化视图、索引、序列和外部表。
+SYS_TABLE_SIZE                          :sys_table_size(regclass)                           :接受一个表的 OID 或名称，并返回该表所需的磁盘空间，但是排除索引（TOAST 空间、空闲空间映射和可见性映射包含在内）。
+SYS_TABLESPACE_DATABASES                :sys_tablespace_databases(tablespace_oid)           :系统函数，获得在该表空间中所有对象的数据库OID 的集合。
+SYS_TABLESPACE_LOCATION                 :sys_tablespace_location(tablespace_oid)            :系统函数，获得在该表空间所在的文件系统的路径。
+SYS_TABLESPACE_SIZE                     :sys_tablespace_size(tablespace_oid)                :系统函数，获得指定OID的表空间使用的磁盘空间。
+SYSDATE                                 :SYSDATE()                                          :返回当时服务器时间。
+TABLE_TO_XML                            :table_to_xml(tbl regclass, nulls boolean, tableforest boolean, targetns text)        :table_to_xml映射由参数tbl传递的命名表的内容。regclass类型接受使用常见标记标识表的字符串，包括可选的模式限定和双引号。
+TAN                                     :TAN(expr)                                          :TAN返回（以弧度表示的角度） n的正切。
+TANH                                    :TANH(expr)                                         :TANH返回n的双曲正切。
+TIME_FORMAT                             :time_format(time,format)                           :time_format(time,format) 将时间串按照格式输出。格式字符串值只包含时间的小时、分钟、秒、微秒部分。其他格式字符串将返回NULL值或者0。如果时间值中的小时部分大于23，则%H和%K小时格式说明符会产生一个比通常范围0..23大的值。其他小时格式说明符会产生为模的小时值。
+TIME_TO_SEC                             :TIME_TO_SEC()                                      :将输入的时间转换为秒数。
+TIMEOFDAY                               :TIMEOFDAY()                                        :返回当时服务器时间。
+TIMESUB                                 :TIMESUB(head, tail)                                :返回head和tail的时间差。单位为秒。
+TO_ASCII                                :to_ascii(string text [, encoding text])            :将string从另一个编码转换到ASCII（只支持从LATIN1、 LATIN2、LATIN9和WIN1250 编码的转换）
+TO_BASE64                               :to_base64(string text)                             :to_base64 函数将传入的字符串转换为 base64 编码的形式，返回结果为具有连接字符集和排序规则的字符串。输入参数为null时，返回结果为null；输入为非字符串时，若参数为纯数字，默认转为字符串处理，其他会返回null。 to_base64 编码的字符串可以通过 from_base64 函数进行解码。
+TO_CHAR(BFILE|BLOB)                     :TO_CHAR(bfile|blob)                                :将数据BFILE或BLOB数据转换为数据库字符集。返回的值始终是VARCHAR。如果返回的值太大而无法适应VARCHAR数据类型，则数据将被截断。
+TO_CHAR(CHARACTER)                      :TO_CHAR(character)                                 :将NCHAR、NVARCHAR、CLOB或NCLOB数据转换为数据库字符集。返回的值始终是 VARCHAR。
+TO_CHAR(DATETIME)                       :TO_CHAR(datetime)                                  :将 DATE,TIMESTAMP,TIMESTAMP WITH TIME ZONE ,TIMESTAMP WITH LOCAL TIME ZONE , INTERVAL DAY TO SECOND或INTERVAL YEAR TO MONTH数据类型转换为VARCHAR数据类型的值，该数据类型的格式由DATE类型的fmt指定
+TO_DATE                                 :TO_DATE(char[ DEFAULT return_value ON CONVERSION ERROR ][,fmt[,'nlsparam']])        :TO_DATE转换char为DATE数据类型的值。
+TO_DATETIME                             :to_datetime(datetimetxt, fmt) return datetime.  :TO_DATETIME转换char为DATETIME数据类型的值。
+TO_DSINTERVAL                           :TO_DSINTERVAL('sql_format|ds_iso_format'[ DEFAULT return_value ON CONVERSION ERROR ][ [ +|- ]days hours:minutes:seconds[ .frac_secs ] [-]p[ days D][ T[ hour H ][ minute M ][ seconds [.frac_secs] ]S]]) :将输入的格式串转换为关于日期和时间的dsinterval。
+TO_HEX                                  :to_hex(number int or bigint)   :将number转换到它等效的十六进制表示.
+TO_JSON                                 :to_json(anyelement)            :to_json(anyelement) 把该值返回为json。数组和组合会被（递归）转换成数组和对象；对 于不是数组和组合的值，如果有从该类型到json的造型，造型函数将被用来执行该 转换 ；否则将产生一个标量值。对于任何不是数字、布尔、空值的标量类型， 将使用文本表达 ，在这种风格下它是一个合法的
+TO_JSONB                                :to_jsonb(anyelement)           :把该值返回为jsonb 。数组和组合会被（递归）转换成数组和对象；对 于不是数组和组合的值，如果有从该类型到json的造型，造型函数将被用来执行该 转换 ；否则将产生一个标量值。对于任何不是数字、布尔、空值的标量类型， 将使用文本表达 ，在这种风格下它是一个合法的
+TO_NUMBER                               :TO_NUMBER(expr[ DEFAULT return_value ON CONVERSION ERROR ][,fmt[,'nlsparam']])      :TO_NUMBER转换expr为NUMBER数据类型的值。
+TO_TIMESTAMP                            :to_timestamp (double precision )           :把 Unix 时间（从 1970-01-01 00:00:00+00 开始的 秒）转换成 timestamp。 返回值类型为time stamp without time zone
+TO_TIMESTAMP_TZ                         :to_timestamp_tz(double precision )         :把 Unix 时间（从 1970-01-01 00:00:00+00 开始的 秒）转换成 timestamp。 返回值类型为time stamp with time zone
+TO_YMINTERVAL                           :('{[ +|- ]years-months|ym_iso_format'}[ DEFAULT return_value ON CONVERSION ERROR ][ [ +|- ]days hours：minutes：seconds[ .frac_secs ] [-]p[ days D][ T[ hour H ][ minute M ][ seconds [.frac_secs] ]S]])   :将输入的格式串转换为关于YEAR和MONTH的yminterval。
+TRANSACTION                             :TRANSACTION_TIMESTAMP()                :返回当时服务器时间。
+TRANSLATE                               :TRANSLATE(expr,from_string, to_string) :返回expr其中每个字符 in 的所有出现都from_string替换为其对应的字符 in to_string。expr不在其中的字符from_string不会被替换。参数from_string可以包含比 更多的字符to_string。在这种情况下，末尾的多余字符from_string在to_string. 如果这些额外的字符出现在 中expr，那么它们将从返回值中删除。
+TRIM                                    :TRIM([{LEADING|TRAILING|BOTH[ trim_character]} | trim_character FROM ] trim_source)   :TRIM使您能够从字符串中修剪前导字符或尾随字符（或两者）。如果trim_characterortrim_source是字符文字，则必须将其括在单引号中。
+TRUNC(DATE)                             :TRUNC( date[,fmt])                     :函数返回date一天中的时间部分，截断为格式 model 指定的单位fmt。NLS_CALENDAR该函数对会话参数不敏感。它按照公历的规则运作。返回的值始终是数据类型DATE，即使您为 指定了不同的日期时间数据类型date。如果省略fmt，则使用默认格式模型 ' DD'，并且返回的值将被date截断为时间为午夜的日期。请参阅“ ROUND 和 TRUNC 日期函数”了解允许使用的格式模型fmt。
+TRUNC(NUMBER)                           :TRUN(n1[,n2])                          :函数返回n1截断到n2小数位。如果n2省略，则将n1截断为 0 位。n2可以为负数以截断（使为零）n2小数点左侧的数字。
+UCASE                                   :ucase(string)                          :将字符串转换成大写形式。
+UNICODE                                 :UNICODE(character_expression)          :UNICODE函数将为您提供第一个字符的整数值。对于输入表达式的第一个字符，它将返回整数值或者Unicode值。
+UNIX_TIMESTAMP				            :unix_timestamp							:将时间戳转换为unix编码。
+UNIX_TIMESTAMP()			            :unix_timestamp()						:将时间戳转换为unix编码。
+UNIX_TIMESTAMP(DATE)	                :unix_timestamp(date)					:将时间戳转换为unix编码。
+UNIX_TIMESTAMP(TIMESTAMP	            :unix_timestamp(timestamp				:将时间戳转换为unix编码。
+UNIX_TIMESTAMP(TIME)	                :unix_timestamp(time)					:将时间戳转换为unix编码。
+UNIX_TIMESTAMP(INTEGER)		            :unix_timestamp(integer)				:将时间戳转换为unix编码。
+UNIX_TIMESTAMP(BIGINT)	                :unix_timestamp(bigint)					:将时间戳转换为unix编码。
+UNIX_TIMESTAMP(NUMERIC)		            :unix_timestamp(numeric)				:将时间戳转换为unix编码。
+UNIX_TIMESTAMP(TEXT)	                :unix_timestamp(text)					:将时间戳转换为unix编码。
+UNNEST                                  :UNNEST( array_expression [, ... ] ) [WITH ORDINALITY] [[AS] table_alias [(column_alias [, ... ])]]             :特殊的表函数UNNEST可以使用任意数量的数组参数， 它会返回对应的列数。
+UPDATEXML(xml_instance,xpath, value_expr)                               :updatexml(xml_instance xml, xpath text, value_expr xml)                        :函数 updatexml 将 ``xml_instance`` 实例中 ``xpath`` 指定的节点内容替换为 ``value_expr`` 提供的值，成功则返回更新后的 ``xml_instance`` 实例，失败则返回ERROR。 此函数使用前需要创建kdb_utils_function扩展。
+UPDATEXML(xml_instance, xpath, value_expr)                              :updatexml(xml_instance xml, xpath text, value_expr text)                       :函数 updatexml 将 ``xml_instance`` 实例中 ``xpath`` 指定的节点内容替换为 ``value_expr`` 提供的值，成功则返回更新后的 ``xml_instance`` 实例，失败则返回ERROR。 此函数使用前需要创建kdb_utils_function扩展。
+UPDATEXML(xml_instance, xpath, value_expr, namespace)                   :updatexml(xml_instance xml, xpath text, value_expr text, namespace text)       :函数 updatexml 将 ``xml_instance`` 实例中 ``xpath`` 指定的节点内容替换为 ``value_expr`` 提供的值，成功则返回更新后的 ``xml_instance`` 实例，失败则返回ERROR。 此函数使用前需要创建kdb_utils_function扩展。
+UPPER                                   :UPPER(char)                        :UPPER返回所有字母大写。char可以是任何数据类型CHARACTER VARYING(N [CHAR | BYTE])、VARCHAR(N [CHAR | BYTE])、CHARACTER(N [CHAR | BYTE])、CHAR(N [CHAR | BYTE])、TEXT、CLOB或NCLOB，返回值与char的数据类型相同。非字符串类型作为upper函数的输入，默认隐式转换为text类型，返回类型为text。数据库根据为基础字符集定义的二进制映射设置字符的大小写。对于语言敏感的大写，请参阅NLS_UPPER。
+USER                                    :USER                               :USER返回会话用户（登录的用户）的名称。这可能会在数据库会话期间发生变化，因为 Real Application Security 会话被附加或分离。对于企业用户，此函数返回架构。对于其他用户，它返回数据库用户名。如果 Real Application Security 会话当前附加到数据库会话，则它返回 user XS$NULL。
+USERENV                                 :USERENV('parameter')               :USERENV返回有关当前会话的信息。此信息可用于编写特定于应用程序的审计跟踪表或确定会话当前使用的特定于语言的字符。您不能USERENV在CHECK约束条件下使用。
+VALUE                                   :value(x record)                    :VALUE函数接受一个范围表别名作为参数，返回表的record类型的对象实例。
+VAR_POP                                 :var_pop(expression)                :VAR_POP在丢弃该集合中的空值后返回输入值的总体方差。您可以将其用作聚合函数和分析函数。
+VAR_SAMP                                :var_samp(expression)               :VAR_SAMP在丢弃该集合中的空值后返回一组数字的样本方差。您可以将其用作聚合函数和分析函数。
+VARIANCE                                :variance([distinct | all] expr) [over (analytic_clause)]   :VARIANCE返回 expr的方差。您可以将其用作聚合或分析函数。
+VERSION                                 :VERSION                                                    :VERSION返回KingbaseES数据库版本信息，包含版本号及版本编译信息。 该函数返回一个TEXT值。
+WM_CONCAT                               :wm_concat(column)                                          :WM_CONCAT实现column字段合并(此函数使用前需要创建kdb_utils_function扩展)。
+XML_IS_WELL_FORMED                      :xml_is_well_formed(text)                                   :检查一个text串是不是一个良构的 XML，返回一个布尔结果。
+XML_IS_WELL_FORMED_DOCUMENT             :xml_is_well_formed_document(text)                          :检查一个text串是不是一个良构的 XML，返回一个布尔结果。xml_is_well_formed_document检查一个良构的文档.
+XML_IS_WELL_FORMED_CONTENT              :xml_is_well_formed_content(text)                           :检查一个text串是不是一个良构的 XML，返回一个布尔结果。xml_is_well_formed_content检查良构的内容
+XMLAGG                                  :XMLAGG(XMLType_instance [order_by_clause])                 :XMLAgg是一个聚合函数。它接受一组 XML 片段并返回一个聚合的 XML 文档。从结果中删除任何返回 null 的参数。
+XMLCOMMENT                              :XMLCOMMENT(values_expr)                                    :XMLComment使用 的评估结果生成 XML 注释value_expr。value_expr必须解析为字符串。它不能包含两个连续的破折号（连字符）。
+XMLCONCAT                               :XMLCONCAT(XMLType_instance [,...])                         :XMLConcat将一系列XMLType实例作为输入，连接每一行的一系列元素，并返回连接后的系列。XMLConcat是XMLSequence的倒数。
+XMLELEMENT                              :XMLELEMENT([{ENTITYESCAPING|NOENTITYESCAPING}] {[NAME] identifier|EVALNAME value_expr} [, XML_attributes_clause] [,value_expr [[AS] c_alias]][,...])   :XMLElement获取元素名称identifier或评估元素名称EVALNAME value_expr、元素的可选属性集合以及构成元素内容的参数。它返回一个类型的实例XMLType。XMLElement类似于SYS_XMLGen，除了XMLElement可以在返回的 XML 中包含属性，但它不接受使用XMLFormat对象进行格式化。
+XMLEXISTS                               :XMLEXISTS(XQuery_string [XML_passing_clause])                                          :XMLExists检查给定 XQuery 表达式是否返回非空 XQuery 序列。如果是，函数返回TRUE; 否则，它返回FALSE。该参数XQuery_string是一个文字字符串，但它可以包含您使用XML_passing_clause.
+XMLFOREST                               :XMLFOREST(value_expr [as {c_alias|EVALINAME value_expr]}][,...])                       :XMLForest将其每个参数参数转换为 XML，然后返回一个 XML 片段，该片段是这些转换后的参数的串联。
+XMLPARSE                                :XMLPARSE({DOCUMENT|CONTENT} value_expr [WELLFORMED])                                   :XMLParse从 的评估结果解析并生成一个 XML 实例value_expr。value_expr必须解析为字符串。如果value_expr解析为 null，则该函数返回 null。
+XMLPI                                   :XMLPI({[NAME]idenfitier|EVALNAME value_expr} [, value_expr])                           :XMLPIidentifier使用和可选的评估结果生成 XML 处理指令value_expr。处理指令通常用于向应用程序提供与 XML 文档的全部或部分相关联的信息。应用程序使用处理指令来确定如何最好地处理 XML 文档。
+XMLROOT                                 :XMLROOT(value_expr,VERSION {value_expr| NO VALUE} [,STANDALONE {YES|NO|NO VALUE}])     :XMLROOT允许您通过在现有 XML 值的 XML 根信息 (prolog) 中提供版本和独立属性来创建新的 XML 值。如果value_expr已经有序言，则数据库返回错误。如果输入为空，则函数返回空。
+XMLSEQUENCE                             :XMLSEQUENCE(xml_instance xml)                                                          :XMLSEQUENCE函数接受一个xml类型的XML实例，返回一个包含所有顶层XML节点的可变数组。
+XMLSERIALIZE                            :XMLSERIALIZE({DOCUMENT|CONTENT} value_expr [AS datatype][ENCODING xml_encoding_spec][VERSION string_literal] [{NO INDENT|INDENT[SIZE=number]}] [{HIDE|SHOW} DEFAULTS]) :XMLSerialize创建一个包含value_expr.返回的任何 lobXMLSERIALIZE都是只读的。
+XMLTABLE                                :XMLTABLE([XML_namespaces_clause,] XQuery_string XMLTABLE_option)                       :XMLTable将 XQuery 评估的结果映射到相关的行和列。您可以使用 SQL 将函数返回的结果作为虚拟关系表进行查询。
+XPATH                                   :xpath(xpath, xml [, nsarray])                  :函数 xpath 在 XML 值 ``xml`` 上计算 XPath 1.0 表达式 xpath (a text value)。它返回一个 XML 值的数组，该数组对应于该 XPath 表达式产生的结点集合。如果该 XPath 表达式返回一个标量值而不是一个结点集合，将会返回一个单一元素的数组。第二个参数必须是一个良构的 XML 文档，它必须有一个单一根结点元素。该函数可选的第三个参数是一个名字空间映射的数组。这个数组应该是一个二维text数组，其第二轴长度等于2（即它应该是一个数组的数组，其中每一个都由刚好两个元素组成）。每个数组项的第一个元素是名字空间的名称（别名），第二个元素是名字空间的 URI。并不要求在这个数组中提供的别名和在 XML 文档本身中使用的那些名字空间相同（换句话说，在 XML 文档中和在 xpath 函数环境中，别名都是本地的）。
+XPATH_EXISTS                            :xpath_exists(xpath, xml [, nsarray])           :函数 xpath_exists 是 xpath 函数的一种特殊形式。这个函数不是返回满足 XPath 1.0 表达式的单一 XML 值，它返回一个布尔值表示查询是否被满足(具体来说，它是否产生了空节点集以外的任何值)。这个函数等价于标准的 XMLEXISTS 谓词，不过它还提供了对一个名字空间映射参数的支持。
+YEAR                                    :year(text)                                     :抽取字符串中的 年份 字段
