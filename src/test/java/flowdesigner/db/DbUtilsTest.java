@@ -1,16 +1,14 @@
 package flowdesigner.db;
 
 import com.alibaba.druid.DbType;
+import flowdesigner.util.Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.NavigableMap;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -1975,6 +1973,47 @@ class DbUtilsTest {
 //
 //            System.out.println(signature);
 //        }
+    }
+
+
+    @Test
+    void ClassifyKingBaseFunctions() {
+        String nameString = "CURRENT_SETTING ;GET_DISK_INFO ;SYS_CANCEL_BACKEND ;SYS_COLUMN_SIZE ;SYS_DATABASE_SIZE ;SYS_INDEXES_SIZE ;SYS_LS_DIR ;SYS_LS_LOGDIR ;SYS_LS_TMPDIR ;SYS_LS_WALDIR ;SYS_READ_BINARY_FILE ;SYS_READ_FILE ;SYS_RELATION_FILENODE ;SYS_RELATION_FILEPATH ;SYS_RELATION_SIZE ;SYS_RELOAD_CONF ;SYS_SIZE_BYTES ;SYS_SIZE_PRETTY ;SYS_STAT_FILE ;SYS_TABLE_SIZE ;SYS_TABLESPACE_SIZE ;SYS_TERMINATE_BACKEND ;SYS_TOTAL_RELATION_SIZE";
+        List<String> functions = new ArrayList<>();
+        Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_functions", functions);
+
+        String[] names = nameString.split(";");
+
+        List<String> newFunctions = new ArrayList<>();
+        for (String name: names) {
+            boolean bFound = false;
+
+            // 先找完全匹配的
+            for (String function: functions) {
+                String[] split = function.split(":");
+                if (split[0].trim().equalsIgnoreCase(name.trim())) {
+                    newFunctions.add(function);
+                    bFound = true;
+                }
+            }
+
+            if (!bFound) {
+                // 再找部分匹配的
+                for (String function: functions) {
+                    if (function.startsWith(name.trim())) {
+                        newFunctions.add(function);
+                        bFound = true;
+                    }
+                }
+            }
+
+            if (!bFound) {
+                System.out.println("missing: " + name);
+            }
+        }
+
+        newFunctions.forEach(System.out::println);
+
     }
 
     public static boolean isNumeric(String str){
