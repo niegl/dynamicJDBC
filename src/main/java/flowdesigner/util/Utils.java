@@ -8,10 +8,7 @@ import org.apache.commons.io.filefilter.EmptyFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -76,5 +73,21 @@ public class Utils {
             JdbcUtils.close(reader);
         }
 
+    }
+
+
+    /**
+     * 方法 2：使用 BufferedWriter 写文件
+     * @param filepath 文件目录
+     * @param content  待写入内容
+     * @throws IOException
+     */
+    public static void bufferedWriterMethod(String filepath, String content) {
+
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filepath))) {
+            bufferedWriter.write(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

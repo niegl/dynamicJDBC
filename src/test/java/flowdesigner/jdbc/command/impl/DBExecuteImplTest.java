@@ -1,9 +1,9 @@
 package flowdesigner.jdbc.command.impl;
 
+import com.alibaba.druid.DbType;
 import com.alibaba.fastjson2.JSON;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.driver.DynamicDriver;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -17,27 +17,38 @@ import static org.junit.jupiter.api.Assertions.*;
 class DBExecuteImplTest {
     Connection connection;
 
-    @BeforeEach
-    void setUp() {
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
-        Properties properties = new Properties();
-        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000/default");
-//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-//        properties.setProperty("url","jdbc:mysql://localhost:3306");
-        properties.setProperty("username","root");
-        properties.setProperty("password","123456");
-        properties.setProperty("maxWait","3000");
-        properties.setProperty("connectTimeout","3000");
-        dynamicDriver.set_propertyInfo(properties);
+    Connection getConnection(DbType dbType) {
+
+        DynamicDriver dynamicDriver = null;
+
+        switch (dbType) {
+            case hive -> {
+                dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+                Properties properties = new Properties();
+                properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+                properties.setProperty("url","jdbc:hive2://10.248.190.13:10000/default");
+                dynamicDriver.set_propertyInfo(properties);
+            }
+            case mysql -> {
+                dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+                Properties properties = new Properties();
+                properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+                properties.setProperty("url","jdbc:mysql://localhost:3306");
+                properties.setProperty("username","root");
+                properties.setProperty("password","123456");
+                dynamicDriver.set_propertyInfo(properties);
+            }
+        }
 
         try {
-//            dynamicDriver.createDataSource();
             connection = dynamicDriver.getConnection();
         } catch (SQLException e) {
             System.out.println(dynamicDriver.get_errMessage());
             e.printStackTrace();
         }
+        assertNotNull(connection);
+
+        return connection;
     }
 
     @Test
@@ -56,10 +67,10 @@ class DBExecuteImplTest {
 
     @Test
     void execInsert() {
+        getConnection(DbType.mysql);
+
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(connection, "INSERT INTO test.field_info1\n" +
-                "(field_on, field_name, table_on, field_desc, field_type, edition_no)\n" +
-                "VALUES('dwh_pmart-t98_pasgr_qtty_query_st-pasgr_quatity', 'pasgr_quatity', 'dwh_pmart-t98_pasgr_qtty_query_st', 'dwh_pmart-t98_pasgr_qtty_query_st', '客运量', 'varchar');");
+        DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(connection, "insert into building_t(address, campus_id, department_id, floors, idbuilding_t, name, test1 ) values('???', 1, 1, 1, 1, '??иж??1', ");
         String status = exec.getStatus();
         if (status.equals(ExecResult.SUCCESS)) {
             String s = JSON.toJSONString(exec);

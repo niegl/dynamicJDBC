@@ -4,10 +4,12 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
+import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.sql.ast.statement.SQLStatementType;
 import flowdesigner.util.DbTypeKit;
+import flowdesigner.util.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +43,16 @@ public class DBExecuteImpl {
     public RunningStatus<Object> exec(@NotNull Connection conn, @NotNull String scripts) {
 
         log.info(scripts);
+        Utils.bufferedWriterMethod("c://logs//dynamic.txt",scripts);
 
         RunningStatus<Object> runningStatus = new RunningStatus<>();
 
         try {
-            runningStatus = execute(conn, scripts);
+            execute(conn, scripts, runningStatus);
             runningStatus.setStatus(ExecResult.SUCCESS);
+        } catch (ParserException e) {
+            runningStatus.setStatus(ExecResult.FAILED);
+            runningStatus.setResult("SQL ParserException :" + e.getMessage());
         } catch (SQLException | IllegalArgumentException e) {
             runningStatus.setStatus(ExecResult.FAILED);
             runningStatus.setResult(e.getMessage());
@@ -62,8 +68,8 @@ public class DBExecuteImpl {
      * @throws SQLException 异常
      * @return
      */
-    private RunningStatus<Object> execute(Connection conn, String scripts) throws SQLException {
-        RunningStatus<Object> runningStatus = new RunningStatus<>();
+    private void execute(Connection conn, String scripts, RunningStatus<Object> runningStatus) throws ParserException,SQLException {
+//        RunningStatus<Object> runningStatus = new RunningStatus<>();
 
         DbType dbType = DbTypeKit.getDbType(conn);
         if (dbType == null) {
@@ -95,8 +101,6 @@ public class DBExecuteImpl {
                 runningStatus.setResult(affected);
             }
         }
-
-        return runningStatus;
 
     }
 
