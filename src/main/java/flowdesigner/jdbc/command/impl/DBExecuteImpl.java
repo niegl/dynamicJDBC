@@ -39,6 +39,9 @@ public class DBExecuteImpl {
      * @throws SQLException
      */
     public RunningStatus<Object> exec(@NotNull Connection conn, @NotNull String scripts) {
+
+        log.info(scripts);
+
         RunningStatus<Object> runningStatus = new RunningStatus<>();
 
         try {
