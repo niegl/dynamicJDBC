@@ -3,18 +3,19 @@ package flowdesigner.jdbc.command.impl;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLType;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.command.ExecResult;
-import flowdesigner.sql.ast.statement.SQLStatementType;
 import flowdesigner.util.DbTypeKit;
 import flowdesigner.util.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -139,7 +140,7 @@ public class DBExecuteImpl {
                 case WHO :
                 case WHOAMI :
                     rs = stmt.executeQuery();
-                    List<Map<String, Object>> query = queryNext(200);
+                    ImmutablePair<List<String>, List<List<Object>>> query = queryNext(200);
                     runningStatus.setResult(query);
                     runningStatus.setHasQueryData(true);
                     break;
@@ -249,21 +250,29 @@ public class DBExecuteImpl {
      * @param num 获取行数
      * @return
      */
-    public List<Map<String, Object>> queryNext(int num) {
-        List<Map<String, Object>> rows = new ArrayList<>();
+    public ImmutablePair<List<String>, List<List<Object>>> queryNext(int num) {
+
+        List<String> header = new ArrayList<>();
+        List<List<Object>> rows = new ArrayList<>();
 
         try {
-            ResultSetMetaData rsMeta = rs.getMetaData();
+            int i = 0;
 
+            // 获取元数据表头
+            ResultSetMetaData rsMeta = rs.getMetaData();
+            for(int size = rsMeta.getColumnCount(); i < size; ++i) {
+                String columName = rsMeta.getColumnLabel(i + 1);
+                header.add(columName);
+            }
+
+            // 获取数据
             int count = 0;
             while(rs.next()) {
-                Map<String, Object> row = new LinkedHashMap<>();
+                ArrayList<Object> row = new ArrayList<>();
 
-                int i = 0;
-                for(int size = rsMeta.getColumnCount(); i < size; ++i) {
-                    String columName = rsMeta.getColumnLabel(i + 1);
-                    Object value = rs.getObject(i + 1);
-                    row.put(columName, value);
+                for (String columnName : header) {
+                    Object value = rs.getObject(columnName);
+                    row.add(value);
                 }
 
                 rows.add(row);
@@ -278,7 +287,7 @@ public class DBExecuteImpl {
             log.error(e.getMessage());
         }
 
-        return rows;
+        return new ImmutablePair<>(header, rows);
     }
 
     public void release() {

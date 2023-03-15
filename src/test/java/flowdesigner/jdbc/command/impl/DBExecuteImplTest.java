@@ -53,8 +53,8 @@ class DBExecuteImplTest {
 
     @Test
     void execSelect() {
-        exec(DbType.hive,"SELECT direction_cd, direction_desc\n" +
-                "FROM std_pcode.t99_direction_cd;");
+        exec(DbType.hive,"SELECT dimension_id, dimension_category, dimension_name, dimension_des, table_id, field_id, field_name, dimension_value_name, dimension_value_no\n" +
+                "FROM test.table1;");
     }
 
     @Test
