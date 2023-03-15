@@ -7,5 +7,16 @@ plus( )     :plus( expr1,expr2)        :加法
 minus( )    :minus( expr1,expr2)       :减法
 divide( )   :divide( expr1,expr2)      :除法
 times( )    :times( expr1,expr2)       :乘法
-正 + positive( )
-负 – negate( )
+[位逻辑函数]
+BITAND          :BITAND(int8_expr,int8_expr)            :位逻辑函数
+BITOR           :BITOR(int8_expr,int8_expr)             :位逻辑函数
+BITXOR          :BITXOR(int8_expr,int8_expr)            :位逻辑函数
+BITANDNOT       :BITANDNOT(int8_expr,int8_expr)         :位逻辑函数
+BITNOT          :BITNOT(int8_expr)                      :位逻辑函数
+[串联运算符]
+||  :   ||  :串联运算符是二元运算符，在 SQL 表达式 的通用图中展示其语法。您可使用串联运算符（||）来串联两个求值为字符数据类型或数值数据类型的两个表达式。
+[强制转型表达式]
+CAST    :CAST() :您可使用 CAST 和 AS 关键字或双冒号强制转型运算符（ :: ）来将表达式强制转型为另一数据类型。
+
+
+

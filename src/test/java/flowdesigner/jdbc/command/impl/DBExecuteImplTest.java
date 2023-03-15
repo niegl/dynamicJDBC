@@ -52,25 +52,27 @@ class DBExecuteImplTest {
     }
 
     @Test
-    void exec() {
-        DBExecuteImpl dbExecute = new DBExecuteImpl();
-        DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(connection, "SELECT direction_cd, direction_desc\n" +
+    void execSelect() {
+        exec(DbType.hive,"SELECT direction_cd, direction_desc\n" +
                 "FROM std_pcode.t99_direction_cd;");
-        String status = exec.getStatus();
-        if (status.equals(ExecResult.SUCCESS)) {
-            List<Map<String, Object>> result = (List<Map<String, Object>>) exec.getResult();
-            System.out.println(result);
-        }
-
-        dbExecute.release();
     }
 
     @Test
     void execInsert() {
-        getConnection(DbType.mysql);
+        exec(DbType.hive,"INSERT INTO test.table1\n" +
+                "(dimension_id, dimension_category, dimension_name, dimension_des, table_id, field_id, field_name, dimension_value_name, dimension_value_no)\n" +
+                "VALUES('1', '1', '1', '1', '1', '1', '1', '1', '1');");
+    }
 
+    @Test
+    void execShowDatabases() {
+        exec(DbType.hive,"show databases;");
+    }
+
+    void exec(DbType dbType,String scripts) {
+        getConnection(dbType);
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(connection, "insert into building_t(address, campus_id, department_id, floors, idbuilding_t, name, test1 ) values('???', 1, 1, 1, 1, '??иж??1', ");
+        DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(connection, scripts);
         String status = exec.getStatus();
         if (status.equals(ExecResult.SUCCESS)) {
             String s = JSON.toJSONString(exec);
