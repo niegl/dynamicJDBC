@@ -140,8 +140,8 @@ public class DBExecuteImpl {
                 case WHO :
                 case WHOAMI :
                     rs = stmt.executeQuery();
-                    ImmutablePair<List<String>, List<List<Object>>> query = queryNext(200);
-                    runningStatus.setResult(query);
+                    QueryData data = queryNext(200);
+                    runningStatus.setResult(data);
                     runningStatus.setHasQueryData(true);
                     break;
                 case UPDATE :
@@ -250,7 +250,7 @@ public class DBExecuteImpl {
      * @param num 获取行数
      * @return
      */
-    public ImmutablePair<List<String>, List<List<Object>>> queryNext(int num) {
+    public QueryData queryNext(int num) {
 
         List<String> header = new ArrayList<>();
         List<List<Object>> rows = new ArrayList<>();
@@ -287,7 +287,7 @@ public class DBExecuteImpl {
             log.error(e.getMessage());
         }
 
-        return new ImmutablePair<>(header, rows);
+        return new QueryData(header, rows);
     }
 
     public void release() {
@@ -329,6 +329,21 @@ public class DBExecuteImpl {
         @Setter
         @Getter
         private T result;
+    }
+
+    /**
+     * 用于将查询出来的数据进行header和data数据分离保存
+     */
+    public static class QueryData {
+        public QueryData(List<String> head, List<List<Object>> data) {
+            this.head = head;
+            this.data = data;
+        }
+
+        @Getter
+        List<String> head = new ArrayList<>();
+        @Getter
+        List<List<Object>> data = new ArrayList<>();
     }
 
 }
