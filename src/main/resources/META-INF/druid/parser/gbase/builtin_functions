@@ -65,13 +65,13 @@ SQLCODE             :SQLCODE    :SQLCODE 函数（SPL）
 [DBINFO函数]
 DBINFO  :DBINFO( {'dbspace', tblspace_num|expression}|{'sqlca.sqlerrd1'|'sqlca.sqlerrd2'}|'sessionid'|'cdrsession'|'dbname'|'dbhostname'|'serial8'|'bigserial'|'get_tz'|'utc_current'|{'utc_to_datetime', ute_value|table.column}|{'version', parameter} ) :DBINFO函数
 [指数和对数函数]
-EXP                 :EXP(float_expression)      :See also Java Math.exp. This method returns a double.
-LN                  :LN(float_expression)       :Calculates the natural (base e) logarithm as a double value. Argument must be a positive numeric value.
-LOG                 :LOG(float_expression)      :Calculates the logarithm with specified base as a double value. Argument and base must be positive numeric values. Base cannot be equal to 1.
-LOG10               :LOG10(float_expression)    :Calculates the base 10 logarithm as a double value. Argument must be a positive numeric value.
-LOGN                :LOGN(expr)                 :LOGN 函数返回数值参数的自然对数。
-NVL2                :NVL2(testValue, aValue, bValue) :If the test value is null, then 'b' is returned. Otherwise, 'a' is returned. The data type of the returned value is the data type of 'a' if this is a text type.
-HEX                 :HEX(exp)	                                            :将字符串的 exp 转换为十六进制字符串
+EXP                 :EXP(float_expression)              :See also Java Math.exp. This method returns a double.
+LN                  :LN(float_expression)               :Calculates the natural (base e) logarithm as a double value. Argument must be a positive numeric value.
+LOG                 :LOG(float_expression)              :Calculates the logarithm with specified base as a double value. Argument and base must be positive numeric values. Base cannot be equal to 1.
+LOG10               :LOG10(float_expression)            :Calculates the base 10 logarithm as a double value. Argument must be a positive numeric value.
+LOGN                :LOGN(expr)                         :LOGN 函数返回数值参数的自然对数。
+NVL2                :NVL2(testValue, aValue, bValue)    :If the test value is null, then 'b' is returned. Otherwise, 'a' is returned. The data type of the returned value is the data type of 'a' if this is a text type.
+HEX                 :HEX(exp)	                        :将字符串的 exp 转换为十六进制字符串
 [长度函数]
 LENGTH                  :LENGTH ( quoted_string|variable_name|{[table.]column} )            :Returns the number of characters in a character string. This method returns a long.
 LEN                     :LEN ( quoted_string|variable_name|{[table.]column} )               :Returns the number of characters in a character string. This method returns a long.
@@ -85,128 +85,139 @@ SECLABEL_BY_NAME        :SECLABEL_BY_NAME('policy','label')                     
 [SIGN 函数]
 SIGN                    :SIGN(expression) :SIGN 函数返回参数的符号的指示符。
 [时间函数]
-DAY                     :DAY(date|dtime_expr)	                    :返回日期中的天数
-DATE                    :DATE(non_date_expr)	                    :返回 DATE 或DATETIME 值的表达式
-LAST_DAY                :LAST_DAY(date|dtime_expr)                 :返回输入日期所在月份最后一天的日期
-MONTH                   :MONTH(date|dtime_expr)	                :返回日期中的月份分量
-QUARTER                 :QUARTER(date|dtime_expr)	                :返回日期在所处年中的季节数
-WEEKDAY                 :WEEKDAY(date|dtime_expr)	                                :返回当前日期的星期值
-YEAR                    :YEAR(date|dtime_expr)	                                    :返回日期的年分量
-extend                  :extend(date|dtime_expr [,first TO last])   :EXTEND 函数调整 DATETIME 或 DATE 值的精度。
-
-
-ADD_DAYS                :ADD_DAYS(date,n)	            :返回日期加上 n 天后的新日期
-ADD_MONTHS              :ADD_MONTHS(date,n)	            :在输入日期上加上指定的几个月返回一个新日期
-ADD_WEEKS               :ADD_WEEKS(date,n)	            :返回日期加上 n 个星期后的新日期
-CURDATE                 :CURDATE()	                    :返回系统当前日期
-CURTIME                 :CURTIME(n)	                    :返回系统当前时间
-CURRENT_DATE            :CURRENT_DATE()	                :返回系统当前日期
-CURRENT_TIME            :CURRENT_TIME(n)	            :返回系统当前时间
-CURRENT_TIMESTAMP       :CURRENT_TIMESTAMP(n)	        :返回系统当前带会话时区信息的时间戳
-DATEADD                 :DATEADD(datepart,n,date)	    :向指定的日期加上一段时间
-DATEDIFF                :DATEDIFF(datepart,date1,date2)	:返回跨两个指定日期的日期和时间边界数
-DATEPART                :DATEPART(datepart,date)	    :返回代表日期的指定部分的整数
-DAYNAME                 :DAYNAME(date)	                :返回日期的星期名称
-DAYOFMONTH              :DAYOFMONTH(date)	            :返回日期为所在月份中的第几天
-DAYOFWEEK               :DAYOFWEEK(date)	            :返回日期为所在星期中的第几天
-DAYOFYEAR               :DAYOFYEAR(date)	            :返回日期为所在年中的第几天
-DAYS_BETWEEN            :DAYS_BETWEEN(date1,date2)	    :返回两个日期之间的天数
-EXTRACT                 :EXTRACT(时间字段 FROM date)	    :抽取日期时间或时间间隔类型中某一个字段的值
-GETDATE                 :GETDATE(n)	                    :返回系统当前时间戳
-GREATEST                :GREATEST(date {,date})	        :求一个或多个日期中的最大日期
-GREAT                   :GREAT (date1,date2)	        :求 date1、date2 中的最大日期
-HOUR                    :HOUR(time)	                    :返回时间中的小时分量
-LEAST                   :LEAST(date {,date})	        :求一个或多个日期中的最小日期
-MINUTE                  :MINUTE(time)	                :返回时间中的分钟分量
-MONTHNAME               :MONTHNAME(date)	            :返回日期中月分量的名称
-MONTHS_BETWEEN          :MONTHS_BETWEEN(date1,date2)	:返回两个日期之间的月份数
-NEXT_DAY                :NEXT_DAY(date1,char2)	        :返回输入日期指定若干天后的日期
-NOW                     :NOW(n)	                        :返回系统当前时间戳
-SECOND                  :SECOND(time)	                :返回时间中的秒分量
-ROUND                   :ROUND (date1[, fmt])	        :把日期四舍五入到最接近格式元素指定的形式
-TIMESTAMPADD            :TIMESTAMPADD(datepart,n,timestamp)	            :返回时间戳 timestamp 加上 n 个 datepart 指定的时间段的结果
-TIMESTAMPDIFF           :TIMESTAMPDIFF(datepart,timeStamp1,timestamp2)	:返回一个表明 timestamp2 与 timestamp1 之间的指定 datepart 类型时间间隔的整数
-SYSDATE                 :SYSDATE()	                                    :返回系统的当前日期
-TO_DATE                 :TO_DATE(CHAR[,fmt[,'nls']]) 	                :字符串转换为日期时间数据类型
-TO_TIMESTAMP            :TO_TIMESTAMP(CHAR[,fmt[,'nls']]) 	            :字符串转换为日期时间数据类型
-TO_TIMESTAMP_TZ         :TO_TIMESTAMP_TZ(CHAR[,fmt])	                :字符串转换为日期时间数据类型
-FROM_TZ                 :FROM_TZ(timestamp,timezone|tz_name])	        :将时间戳类型 timestamp 和时区类型 timezone（或时区名称 tz_name）转化为 timestamp with timezone 类型
-TZ_OFFSET               :TZ_OFFSET(timezone| [tz_name]) 	            :返回给定的时区或时区名和标准时区(UTC)的偏移量
-TRUNC                   :TRUNC(date[,fmt])	                            :把日期截断到最接近格式元素指定的形式
-WEEK                    :WEEK(date)	                                    :返回日期为所在年中的第几周
-WEEKS_BETWEEN           :WEEKS_BETWEEN(date1,date2)	                    :返回两个日期之间相差周数
-YEARS_BETWEEN           :YEARS_BETWEEN(date1,date2)	                    :返回两个日期之间相差年数
-LOCALTIME               :LOCALTIME(n)	                                :返回系统当前时间
-LOCALTIMESTAMP          :LOCALTIMESTAMP(n)	                            :返回系统当前时间戳
-OVERLAPS	            :OVERLAPS	                                    :返回两个时间段是否存在重叠
-TO_CHAR                 :TO_CHAR(date[,fmt[,nls]])	                    :将日期数据类型 DATE 转换为一个在日期语法 fmt 中指定语法的 VARCHAR 类型字符串。
-SYSTIMESTAMP            :SYSTIMESTAMP(n)	                            :返回系统当前带数据库时区信息的时间戳
-NUMTODSINTERVAL         :NUMTODSINTERVAL(dec,interval_unit)	            :转换一个指定的 DEC 类型到 INTERVAL DAY TO SECOND
-NUMTOYMINTERVAL         :NUMTOYMINTERVAL (dec,interval_unit)	        :转换一个指定的 DEC 类型值到 INTERVAL YEAR TO MONTH
-WEEK                    :WEEK(date, mode)	                            :根据指定的 mode 计算日期为年中的第几周
-UNIX_TIMESTAMP          :UNIX_TIMESTAMP (datetime)	                    :返回自标准时区的'1970-01-01 00:00:00 +0:00'的到本地会话时区的指定时间的秒数差
-from_unixtime           :from_unixtime(unixtime)	                    :返回将自'1970-01-01 00:00:00'的秒数差转成本地会话时区的时间戳类型
-m_unixtime              :m_unixtime(unixtime, fmt)	                    :将自'1970-01-01 00:00:00'的秒数差转成本地会话时区的指定 fmt 格式的时间串
-SESSIONTIMEZONE	        :SESSIONTIMEZONE	            :返回当前会话的时区
-DBTIMEZONE	            :DBTIMEZONE	                    :返回当前数据库的时区
-DATE_FORMAT             :DATE_FORMAT(d, format)	        :以不同的格式显示日期/时间数据
-TIME_TO_SEC             :TIME_TO_SEC(d)	                :将时间换算成秒
-SEC_TO_TIME             :SEC_TO_TIME(sec)	            :将秒换算成时间
-TO_DAYS                 :TO_DAYS(timestamp)	            :转换成公元 0 年 1 月 1 日的天数差
-DATE_ADD                :DATE_ADD(datetime, interval)	:返回一个日期或时间值加上一个时间间隔的时间值
-DATE_SUB                :DATE_SUB(datetime, interval)	:返回一个日期或时间值减去一个时间间隔的时间值
-SYS_EXTRACT_UTC         :SYS_EXTRACT_UTC(d timestamp)	:将所给时区信息转换为 UTC 时区信息
-TO_DSINTERVAL           :TO_DSINTERVAL(d timestamp)	    :转换一个 timestamp 类型值到 INTERVAL DAY TO SECOND
-TO_YMINTERVAL           :TO_YMINTERVAL(d timestamp)	    :转换一个 timestamp 类型值到 INTERVAL YEAR TO MONTH
-
-
-
-
-
-ACOS                :ACOS(numeric) :Calculate the arc cosine. See also Java Math.acos. This method returns a double.
+DAY                     :DAY(date|dtime_expr)	                            :返回日期中的天数
+DATE                    :DATE(non_date_expr)	                            :返回 DATE 或DATETIME 值的表达式
+LAST_DAY                :LAST_DAY(date|dtime_expr)                          :返回输入日期所在月份最后一天的日期
+MONTH                   :MONTH(date|dtime_expr)	                            :返回日期中的月份分量
+QUARTER                 :QUARTER(date|dtime_expr)	                        :返回日期在所处年中的季节数
+WEEKDAY                 :WEEKDAY(date|dtime_expr)	                        :返回当前日期的星期值
+YEAR                    :YEAR(date|dtime_expr)	                            :返回日期的年分量
+extend                  :extend(date|dtime_expr [,first TO last])           :EXTEND 函数调整 DATETIME 或 DATE 值的精度。
+MDY                     :MDY(month, day, year)                              :从整数参数返回 DATE 值
+ADD_MONTHS              :ADD_MONTHS(date|dtime_expr,integer)	            :在输入日期上加上指定的几个月返回一个新日期
+MONTHS_BETWEEN          :MONTHS_BETWEEN(date|dtime_expr,date|dtime_expr)	:返回两个日期之间的月份数
+NEXT_DAY                :NEXT_DAY(date|dtime_expr,date|dtime_expr)	        :返回输入日期指定若干天后的日期
+GBASE_TO_CHAR           :GBASE_TO_CHAR(date|dtime_expr|num_expr [,format_string])   :GBASE_TO_CHAR 函数将一求值为 DATE、DATETIME 或数值值的表达式转换为字符串。
+TO_CHAR                 :TO_CHAR(date|dtime_expr|num_expr [,format_string]) :将日期数据类型 DATE 转换为一个在日期语法 fmt 中指定语法的 VARCHAR 类型字符串。
+GBASE_TO_DATE           :GBASE_TO_DATE(char_expr [,format_string])          :GBASE_TO_DATE 函数将字符串转换为 DATETIME 值。
+TO_DATE                 :TO_DATE(source_char,fmt) 	                        :字符串转换为日期时间数据类型
+[TO_NUMBER 函数]
+TO_NUMBER   :TO_NUMBER(char_expr|num_expr) :TO_NUMBER 函数可将表示数值值的数值或字符表达式转换为 DECIMAL 数据类型。
+[三角函数]
+COS                 :COS(radian_expr) :Calculate the trigonometric cosine. See also Java Math.cos. This method returns a double.
+COSH                :COSH(radian_expr) :Calculate the hyperbolic cosine. See also Java Math.cosh. This method returns a double.
+SIN                 :SIN(radian_expr) :Calculate the trigonometric sine. See also Java Math.sin. This method returns a double.
+SINH                :SINH(radian_expr) :Calculate the hyperbolic sine. See also Java Math.sinh. This method returns a double.
+TAN                 :TAN(radian_expr) :Calculate the trigonometric tangent. See also Java Math.tan. This method returns a double.
+TANH                :TANH(radian_expr) :Calculate the hyperbolic tangent. See also Java Math.tanh. This method returns a double.
+DEGREES             :DEGREES(radian_expr) :See also Java Math.toDegrees. This method returns a double.
 ASIN                :ASIN(numeric) :Calculate the arc sine. See also Java Math.asin. This method returns a double.
+ASINH               :ASINH(numeric) :Calculate the arc sine. See also Java Math.asin. This method returns a double.
+ACOS                :ACOS(numeric) :Calculate the arc cosine. See also Java Math.acos. This method returns a double.
+ACOSH               :ACOSH(numeric) :Calculate the arc cosine. See also Java Math.acos. This method returns a double.
 ATAN                :ATAN(numeric) :Calculate the arc tangent. See also Java Math.atan. This method returns a double.
-COS                 :COS(numeric) :Calculate the trigonometric cosine. See also Java Math.cos. This method returns a double.
-COSH                :COSH(numeric) :Calculate the hyperbolic cosine. See also Java Math.cosh. This method returns a double.
-COT                 :COT(numeric) :Calculate the trigonometric cotangent (1/TAN(ANGLE)). See also Java Math.* functions. This method returns a double.
-SIN                 :SIN(numeric) :Calculate the trigonometric sine. See also Java Math.sin. This method returns a double.
-SINH                :SINH(numeric) :Calculate the hyperbolic sine. See also Java Math.sinh. This method returns a double.
-TAN                 :TAN(numeric) :Calculate the trigonometric tangent. See also Java Math.tan. This method returns a double.
-TANH                :TANH(numeric) :Calculate the hyperbolic tangent. See also Java Math.tanh. This method returns a double.
-ATAN2               :ATAN2(numeric, numeric) :Calculate the angle when converting the rectangular coordinates to polar coordinates. See also Java Math.atan2. This method returns a double.
-BITAND              :BITAND(expression, expression) :The bitwise AND operation. Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-BITOR               :BITOR(expression, expression) :The bitwise OR operation. Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-BITXOR              :BITXOR(expression, expression) :Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-BITNOT              :BITNOT(expression) :The bitwise NOT operation. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-BITNAND             :BITNAND(expression, expression) :The bitwise NAND operation equivalent to BITNOT(BITAND(expression, expression)). Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-BITNOR              :BITNOR(expression, expression) :The bitwise NOR operation equivalent to BITNOT(BITOR(expression, expression)). Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-BITXNOR             :BITXNOR(expression, expression) :The bitwise XNOR operation equivalent to BITNOT(BITXOR(expression, expression)). Arguments should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-BITGET              :BITGET(expression, long) :Returns true if and only if the first argument has a bit set in the position specified by the second parameter. The first argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This method returns a boolean. The second argument is zero-indexed; the least significant bit has position 0.
-BITCOUNT            :BITCOUNT(expression) :Returns count of set bits in the specified value. Value should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This method returns a long.
-LSHIFT              :LSHIFT(expression, long) :The bitwise signed left shift operation. Shifts the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-RSHIFT              :RSHIFT(expression, long) :The bitwise signed right shift operation. Shifts the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-ULSHIFT             :ULSHIFT(expression, long) :The bitwise unsigned left shift operation. Shifts the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-URSHIFT             :URSHIFT(expression, long) :The bitwise unsigned right shift operation. Shifts the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-ROTATELEFT          :ROTATELEFT(expression, long) :The bitwise left rotation operation. Rotates the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-ROTATERIGHT         :ROTATERIGHT(expression, long) :The bitwise right rotation operation. Rotates the first argument by the number of bits given by the second argument. Argument should have TINYINT, SMALLINT, INTEGER, BIGINT, BINARY, or BINARY VARYING data type. This function returns result of the same data type.
-CEILING             :CEILING (numeric) :Returns the smallest integer value that is greater than or equal to the argument. This method returns value of the same type as argument, but with scale set to 0 and adjusted precision, if applicable.
-DEGREES             :DEGREES(numeric) :See also Java Math.toDegrees. This method returns a double.
-ORA_HASH            :ORA_HASH(expression [, bucketLong [, seedLong]]) :Computes a hash value. Optional bucket argument determines the maximum returned value. This argument should be between 0 and 4294967295, default is 4294967295. Optional seed argument is combined with the given expression to return the different values for the same expression. This argument should be between 0 and 4294967295, default is 0. This method returns a long value between 0 and the specified or default bucket value inclusive.
-RADIANS             :RADIANS(numeric) :See also Java Math.toRadians. This method returns a double.
-PI                  :PI()           :See also Java Math.PI. This method returns a double.
-RAND                :RAND ( [ int ] )               :Calling the function without parameter returns the next a pseudo random number. Calling it with an parameter seeds the session's random number generator. This method returns a double between 0 (including) and 1 (excluding).
-RANDOM              :RANDOM ( [ int ] )             :Calling the function without parameter returns the next a pseudo random number. Calling it with an parameter seeds the session's random number generator. This method returns a double between 0 (including) and 1 (excluding).
-RANDOM_UUID         :RANDOM_UUID ()                 :Returns a new UUID with 122 pseudo random bits.
-UUID                :UUID ()                        :Returns a new UUID with 122 pseudo random bits.
-SECURE_RAND         :SECURE_RAND(int)               :Generates a number of cryptographically secure random numbers. This method returns bytes.
-SIGN                :SIGN( { numeric | interval } ) :Returns -1 if the value is smaller than 0, 0 if zero or NaN, and otherwise 1.
-ENCRYPT             :ENCRYPT(algorithmString, keyBytes, dataBytes)                  :Encrypts data using a key. The supported algorithm is AES. The block size is 16 bytes. This method returns bytes.
-DECRYPT             :DECRYPT(algorithmString, keyBytes, dataBytes)                  :Decrypts data using a key. The supported algorithm is AES. The block size is 16 bytes. This method returns bytes.
-HASH                :HASH(algorithmString, expression [, iterationInt])             :Calculate the hash value using an algorithm, and repeat this process for a number of iterations.
-TRUNC               :TRUNC ( { {numeric [, digitsInt] }| { timestamp | timestampWithTimeZone | date | timestampString } } )     :When a numeric argument is specified, truncates it to a number of digits (to the next value closer to 0) and returns value of the same type as argument, but with adjusted precision and scale, if applicable.
-TRUNCATE            :TRUNCATE ( { {numeric [, digitsInt] }| { timestamp | timestampWithTimeZone | date | timestampString } } )  :When a numeric argument is specified, truncates it to a number of digits (to the next value closer to 0) and returns value of the same type as argument, but with adjusted precision and scale, if applicable.
-COMPRESS            :COMPRESS(dataBytes [, algorithmString])    :Compresses the data using the specified compression algorithm. Supported algorithms are: LZF (faster but lower compression; default), and DEFLATE (higher compression). Compression does not always reduce size. Very small objects and objects with little redundancy may get larger. This method returns bytes.
-EXPAND              :EXPAND(bytes)                              :Expands data that was compressed using the COMPRESS function. This method returns bytes.
-ZERO                :ZERO()                                     :Returns the value 0. This function can be used even if numeric literals are disabled.
-
-
+ATANH               :ATANH(numeric) :Calculate the arc tangent. See also Java Math.atan. This method returns a double.
+ATAN2               :ATAN2(Y, X) :Calculate the angle when converting the rectangular coordinates to polar coordinates. See also Java Math.atan2. This method returns a double.
+RADIANS             :RADIANS(degree_expr) :See also Java Math.toRadians. This method returns a double.
+[字符串操纵函数]
+CONCAT                  :CONCAT(expr1, expr2) :Combines strings. Unlike with the operator ||, NULL parameters are ignored, and do not cause the result to become NULL. If all parameters are NULL the result is an empty string. This method returns a string.
+ASCII                   :ASCII(char_expr) :Returns the ASCII value of the first character in the string. This method returns an int.
+TRIM                    :TRIM ( [ {LEADING | TRAILING | BOTH} [ pad_char ] FROM ] source_expression ) :Removes all leading spaces, trailing spaces, or spaces at both ends, from a string. Other characters can be removed as well.
+LTRIM                   :LTRIM(string [, pad_String]) :Removes all leading spaces or other specified characters from a string.
+RTRIM                   :RTRIM(string [, pad_String]) :Removes all trailing spaces or other specified characters from a string.
+SPACE                   :SPACE(expr1) :Returns a string consisting of a number of spaces.
+REVERSE                 :REVERSE(source_string)	                    :将字符串反序
+REPLACE                 :REPLACE(string, searchString [, replacementString]) :Replaces all occurrences of a search string in a text with another string. If no replacement is specified, the search string is removed from the original string. If any parameter is null, the result is null.
+LPAD                    :LPAD(string, int[, paddingString]) :Left pad the string to the specified length. If the length is shorter than the string, it will be truncated at the end. If the padding string is not set, spaces will be used.
+RPAD                    :RPAD(string, int[, paddingString]) :Right pad the string to the specified length. If the length is shorter than the string, it will be truncated. If the padding string is not set, spaces will be used.
+CHR                     :CHR ( expr1 ) :Returns the character that represents the ASCII value. This method returns a string.
+UPPER                   :UPPER ( string ) :Converts a string to uppercase.
+LOWER                   :LOWER ( string ) :Converts a string to lowercase.
+INITCAP                 :INITCAP  ( string ) :INITCAP 函数返回表达式的一个副本，其中表达式中每个词都以大写字母开头。
+CHARINDEX               :CHARINDEX(substring, source, [, startPosition])    :CHARINDEX 函数搜索字符串，找到目标子字符串的第一次出现，搜索从源字符串内指定的或缺省的字符位置开始。
+INSTR                   :INSTR(string, substring, [, startInt [,count]]) :Returns the location of a search string in a string. If a start position is used, the characters before it are ignored. If position is negative, the rightmost location is returned. 0 is returned if the search string is not found. Please note this function is case sensitive, even if the parameters are not.
+LEFT                    :LEFT(string, position) :Returns the leftmost number of characters.
+RIGHT                   :RIGHT(string, position) :Returns the rightmost number of characters.
+SUBSTR                  :SUBSTR(source,start_position [,length]) 	                :返回 char 中从字符位置 m 开始的 n 个字符
+SUBSTRB                 :SUBSTRB(source,start_position [,length])	                :SUBSTR 函数等价的单字节形式
+SUBSTRING               :SUBSTRING ( string FROM startInt [ FOR lengthInt ] )| { { SUBSTRING | SUBSTR } ( {string|bytes}, startInt [, lengthInt ] ) } :Returns a substring of a string starting at a position. If the start index is negative, then the start index is relative to the end of the string. The length is optional.
+SUBSTRING_INDEX         :SUBSTRING_INDEX(source, delim, count)	            :按关键字截取字符串，截取到指定分隔符出现指定次数位置之前
+FORMAT_UNITS            :FORMAT_UNITS([{'number units'} | {'number'|number,'units' [,'precision'|precision]}])   :FORMAT_UNITS 函数可解释指定内存或大量存储的单位的数目和缩写名称的字符串。
+[IFX_ALLOW_NEWLINE 函数]
+IFX_ALLOW_NEWLINE       :IFX_ALLOW_NEWLINE('t'|'f')    :IFX_ALLOW_NEWLINE 函数设置换行模式，在当前的会话内在用引号括起来的字符串中允许还是不允许换行字符。
+[正则表达式函数]
+REGEXP_COUNT            :REGEXP_COUNT(str,pattern[,position[,match_param]]) :根据 pattern 正则表达式，从 str 字符串的第 position 个字符开始查找符合正则表达式的子串的个数，并符合匹配参数 match_param
+REGEXP _ INSTR          :REGEXP_INSTR(str,pattern[,position[, occurrence[,return_opt [, match_param [, subexpr]]]]])    :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合 subexpr 正则表达式的子串，如果 return_opt 为 0，返回第 occurrence 次出现的位置，如果 return_opt 为 大于 0，则返回该出现位置的下一个字符位置，并符合匹配参数。
+REGEXP _SUBSTR          :REGEXP_SUBSTR(str , pattern[,position occurrence[,match_param[,subexpr]]]])    :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合 subexpr 正则表达式的子串，返回第 occurrence 次出现的子串，并符合匹配参数 match_param
+REGEXP _REPLACE         :REGEXP_REPLACE(str,pattern[,replace_str[,position[,occurrence[,match_param]]]] )   :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合正则表达式的子串，并用 replace_str 进行替换 第 occurrence 次出现的子串，并符合匹配参数 match_param
+[加密和解密函数]
+ENCRYPT_AES             :ENCRYPT_AES(data [,password [,hint]])   :ENCRYPT_AES 函数使用 AES（高级加密标准）算法进行加密。
+ENCRYPT_TDES            :ENCRYPT_TDES(data [,password [,hint]])   :ENCRYPT_TDES 函数使用 TDES（三重数据加密标准）算法进行加密。
+DECRYPT_CHAR            :DECRYPT_CHAR(encrypted_data [,password])   :DECRYPT_CHAR 函数是解密函数，函数的返回值为加密前的原始数据。
+GETHINT                 :GETHINT(encrypted_data)    :GETHINT 函数获取密码提示信息，返回值为加密函数设置的 hint 值或先前执行 SET ENCRYPTION PASSWORD 语句设置的 hint 值。
+MD5                     :MD5(expr)                  :MD5 函数生成并返回符合 MD5 算法的数据特征值。
+[汉字转拼音函数]
+GetHzFullPY             :GetHzFullPY(expr)          :GetHzFullPY 函数将汉字转换为全拼。
+GetHzPYCAP              :GetHzPYCAP(expr)           :GetHzPYCAP 函数将汉字转换为拼音首字母。
+GetHzFullPYsubstr       :GetHzFullPYsubstr(source,start_position [,length] )         :GetHzFullPYsubstr 函数将汉字转换为拼音后，提取指定个连续字符。
+SYS_GUID                :SYS_GUID()                 :SYS_GUID 函数生成并返回一个全球唯一标识符，它由 16 个字节组成。
+[列转行函数]
+WM_CONCAT               :WM_CONCAT(expr)            :WM_CONCAT 函数可以将结果集中指定列的数据合并成一行。
+WM_CONCAT_TEXT          :WM_CONCAT_TEXT(expr)     :WM_CONCAT_TEXT 函数可以将结果集中指定列的数据合并成一行。
+[AggregateFunctions]
+count(*)				:count(*)								:Returns the total number of retrieved rows, including rows containing NULL values.
+avg()					            :avg()									    :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+avg(DISTINCT|ALL|UNIQUE)			:avg([DISTINCT|ALL|UNIQUE ] ?)			    :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+avg(Subset of Expression)		    :avg([ALL ]Subset of Expression)	        :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+COUNT()					            :COUNT()							        :Returns the number of rows for which the supplied expression is non-NULL.
+COUNT(DISTINCT|ALL|UNIQUE)			:COUNT([DISTINCT|ALL|UNIQUE ] ?)	        :Returns the number of rows for which the supplied expression is non-NULL.
+COUNT(Subset of Expression)		    :COUNT([ALL ]Subset of Expression)          :Returns the number of rows for which the supplied expression is non-NULL.
+max()					            :max()							            :Returns the maximum value of the column in the group.
+max(DISTINCT|ALL|UNIQUE)			:max([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the maximum value of the column in the group.
+max(Subset of Expression)		    :max([ALL ]Subset of Expression)            :Returns the maximum value of the column in the group.
+min()					            :min()							            :Returns the minimum of the column in the group.
+min(DISTINCT|ALL|UNIQUE)			:min([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the minimum of the column in the group.
+min(Subset of Expression)		    :min([ALL ]Subset of Expression)            :Returns the minimum of the column in the group.
+sum()					            :sum()							            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+sum(DISTINCT|ALL|UNIQUE)			:sum([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+sum(Subset of Expression)		    :sum([ALL ]Subset of Expression)            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+range()					            :range()							        :RANGE 函数返回数值列表达式参数的值的范围。
+range(DISTINCT|ALL|UNIQUE)			:range([DISTINCT|ALL|UNIQUE ] ?)	        :RANGE 函数返回数值列表达式参数的值的范围。
+range(Subset of Expression)		    :range([ALL ]Subset of Expression)          :RANGE 函数返回数值列表达式参数的值的范围。
+stdev()					            :stdev()							        :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+stdev(DISTINCT|ALL|UNIQUE)			:stdev([DISTINCT|ALL|UNIQUE ] ?)	        :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+stdev(Subset of Expression)		    :stdev([ALL ]Subset of Expression)          :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+variance()					        :variance()							        :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+variance(DISTINCT|ALL|UNIQUE)       :variance([DISTINCT|ALL|UNIQUE ] ?)	        :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+variance(Subset of Expression)      :variance([ALL ]Subset of Expression)       :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+VAR_POP                             :VAR_POP(expr)                          : 返回 expr 的总体方差
+VAR_SAMP                            :VAR_SAMP(expr)                         :返回 expr 的样本方差
+COVAR_POP                           :COVAR_POP(expr1, expr2)                :COVAR_POP(expr1, expr2) 返回 expr1 和 expr2 的总体协方差
+COVAR_SAMP                          :COVAR_SAMP(expr1,expr2)                :返回 expr1 和 expr2 的样本协方差，如果 COUNT(NVL2(expr1,expr2, NULL)) expr 的行数为 1，则返回 NULL
+CORR                                :CORR(expr1, expr2)                     :返回 expr1 和 expr2 的相关系数，如果 expr 的 COUNT(NVL2(expr1,expr2, NULL)) −1 行数为 1，则返回 NULL。
+[OLAP window 表达式]
+ROW_NUMBER                          :ROW_NUMBER() OVER ( [window_partition_clause ][ window_order_clause])  :OLAP 编号函数表达式为单个查询的结果集中的每一行返回一序列的编号。
+ROWNUMBER                           :ROWNUMBER() OVER ( [window_partition_clause ][ window_order_clause])   :OLAP 编号函数表达式为单个查询的结果集中的每一行返回一序列的编号。
+LOG                                 :LOG() OVER ( [window_partition_clause ][ window_order_clause]) :LAG 和 LEAD 函数是 OLAP 分等级函数，在从当前 window 分区内的当前行的指定偏移量上，为该行返回它们的 expression 参数的值。
+LEAD                                :LEAD({ expression {RESPECT NULLS}|{IGNORE NULLS} [,offset [,default]] } | {expression [,offset [,default]] {RESPECT NULLS}|{IGNORE NULLS}}) OVER ( [window_partition_clause ][ window_order_clause])    :LAG 和 LEAD 函数是 OLAP 分等级函数，在从当前 window 分区内的当前行的指定偏移量上，为该行返回它们的 expression 参数的值。
+RANK                                :RANK() OVER ( [window_partition_clause ][ window_order_clause])    :RANK 函数是一个 OLAP 分等级函数，为 OLAP window 中的每一行计算分等级的值。
+DENSE_RANK                          :DENSE_RANK() OVER ( [window_partition_clause ][ window_order_clause])  :DENSE_RANK 函数是一个 OLAP 分等级函数，为 OLAP window 中的每一行计算等级值。
+PERCENT_RANK                        :PERCENT_RANK() OVER ( [window_partition_clause ][ window_order_clause])    :PERCENT_RANK 函数是一个 OLAP 分等级函数，为 OLAP window 中的每一行计算等级值，规格化为从 0 至 1 的范围。
+CUME_DIST                           :CUME_DIST() OVER ( [window_partition_clause ][ window_order_clause])   :CUME_DIST 函数是一个 OLAP 分等级函数，计算累计分布作为每一行的百分比等级。该等级表示为取值范围从 0 至 1 的实际值小数。
+NTILE                               :NTILE(unsigned) :NTILE 函数是一个 OLAP 分等级函数，将每一分区中的行划分成 N 等级的类别，称为片，每一类别包括大约相等的行数。
+[OLAP 聚集函数表达式]
+FIRST_VALUE() RESPECT NULLS}|{IGNORE NULLS                       :FIRST_VALUE(expression ) {RESPECT NULLS}|{IGNORE NULLS} OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])        :FIRST_VALUE window 聚集函数为每一 OLAP window 分区中的第一行返回指定的表达式的值。
+FIRST_VALUE(RESPECT NULLS}|{IGNORE NULLS)                        :FIRST_VALUE(expression {RESPECT NULLS}|{IGNORE NULLS})  OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])        :FIRST_VALUE window 聚集函数为每一 OLAP window 分区中的第一行返回指定的表达式的值。
+LAST_VALUE() RESPECT NULLS}|{IGNORE NULLS                        :LAST_VALUE(expression ) {RESPECT NULLS}|{IGNORE NULLS} OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])         :LAST_VALUE window 聚集函数为每一 OLAP window 分区中的最后一行返回指定的表达式的值。
+LAST_VALUE(RESPECT NULLS}|{IGNORE NULLS)                         :LAST_VALUE(expression {RESPECT NULLS}|{IGNORE NULLS})  OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])         :LAST_VALUE window 聚集函数为每一 OLAP window 分区中的最后一行返回指定的表达式的值。
+RATIO_TO_REPORT                                                 :RATIO_TO_REPORT() OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])    :RATIO_TO_REPORT 基于该函数的数值参数，计算每一行对于该 window 分区中剩余行的分数比率。
+RATIOTOREPORT                                                   :RATIO_TO_REPORT() OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])    :RATIO_TO_REPORT 基于该函数的数值参数，计算每一行对于该 window 分区中剩余行的分数比率。
+[关系运算符]
+<   :A < B		:NULL if A or B is NULL, TRUE if expression A is less than expression B, otherwise FALSE.
+<=  :A <= B		:NULL if A or B is NULL, TRUE if expression A is less than or equal to expression B, otherwise FALSE.
+>   :A > B		:NULL if A or B is NULL, TRUE if expression A is greater than expression B, otherwise FALSE.
+=   :A = B		:TRUE if expression A is equal to expression B otherwise FALSE.
+==  :A == B 	:A <=> B:Returns same result with EQUAL(=) operator for non-null operands, but returns TRUE if both are NULL, FALSE if one of the them is NULL. (As of version 0.9.0.)
+>=  :A >= B		:NULL if A or B is NULL, TRUE if expression A is greater than or equal to expression B, otherwise FALSE.
+<>  :A <> B		:NULL if A or B is NULL, TRUE if expression A is NOT equal to expression B, otherwise FALSE.
+!=  :A != B		:Synonym for the <> operator.

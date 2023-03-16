@@ -71,7 +71,6 @@ REPEAT                  :REPEAT(char,n)         	        :返回将字符串重�
 REPEATSTR               :REPEATSTR(char,n)	                :返回将字符串重复 n 次形成的字符串
 REPLACE                 :REPLACE(STR, search [,replace] )	:将输入字符串 STR 中所有出现的字符串 search 都替换成字符串 replace ,其中 STR 为 char、clob 或 text 类型
 REPLICATE               :REPLICATE(char,times)	            :把字符串 char 自己复制 times 份
-REVERSE                 :REVERSE(char)	                    :将字符串反序
 RIGHT                   :RIGHT              	            :返回字符串最右边 n 个字符组成的字符串
 RIGHTSTR                :RIGHTSTR(char,n)	                :返回字符串最右边 n 个字符组成的字符串
 RPAD                    :RPAD(char1,n,char2)	            :类似 LPAD 函数，只是向右拉伸该字符串使之达到 n 个字节长度
