@@ -7,6 +7,7 @@ import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLType;
 import com.alibaba.druid.util.JdbcUtils;
+import com.alibaba.fastjson2.annotation.JSONField;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.util.DbTypeKit;
 import flowdesigner.util.Utils;
@@ -91,7 +92,7 @@ public class DBExecuteImpl {
                 throw new SQLException(sql + ": SQLType is UNKNOWN or ERROR");
             }
 
-            runningStatus.setStatementType(sqlType);
+            runningStatus.setStatementType(sqlType.name());
 
             if (stmt != null) {
                 close(stmt);
@@ -304,21 +305,25 @@ public class DBExecuteImpl {
          */
         @Setter
         @Getter
+        @JSONField(ordinal = 1)
         private int step;
         /**
          * 标识当前执行的SQL语句的类型
          */
         @Setter
         @Getter
-        private SQLType statementType;
+        @JSONField(ordinal = 2)
+        private String statementType;
         /**
          * 运行结果：成功还是失败
          */
         @Setter
         @Getter
+        @JSONField(ordinal = 3)
         private String status;
         @Setter
         @Getter
+        @JSONField(ordinal = 4)
         private boolean hasQueryData = false;
         /**
          * 运行结果数据内容：
@@ -328,6 +333,7 @@ public class DBExecuteImpl {
          */
         @Setter
         @Getter
+        @JSONField(ordinal = 5)
         private T result;
     }
 
