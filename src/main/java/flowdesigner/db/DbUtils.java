@@ -29,31 +29,30 @@ public class DbUtils {
      */
     public static String getDbKeywordsAsString(DbType dbType) {
 
-        List<String> lines = new ArrayList<>();
+        Set<String> keywords = new HashSet<>();
 
         switch (dbType) {
-            case ads -> Utils.loadFromFile("META-INF/druid/parser/ads/builtin_keywords", lines);
-            case dm -> Utils.loadFromFile("META-INF/druid/parser/dm/builtin_keywords", lines);
-            case kingbase -> Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_keywords", lines);
-            case mysql -> Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_keywords", lines);
-            case oracle -> Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_keywords", lines);
-            case hive -> Utils.loadFromFile("META-INF/druid/parser/hive/builtin_keywords", lines);
-            case postgresql -> Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_keywords", lines);
-            case db2 -> Utils.loadFromFile("META-INF/druid/parser/db2/builtin_keywords", lines);
-            case mariadb -> Utils.loadFromFile("META-INF/druid/parser/mariadb/builtin_keywords", lines);
-            case presto -> Utils.loadFromFile("META-INF/druid/parser/presto/builtin_keywords", lines);
-            case sqlserver -> Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_keywords", lines);
-            case sapdb -> Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_keywords", lines);
-            case derby -> Utils.loadFromFile("META-INF/druid/parser/derby/builtin_keywords", lines);
-            case elastic_search -> Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_keywords", lines);
-            case h2 -> Utils.loadFromFile("META-INF/druid/parser/h2/builtin_keywords", lines);
-            case hsql -> Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_keywords", lines);
-            case blink -> Utils.loadFromFile("META-INF/druid/parser/blink/builtin_keywords", lines);
-            case odps -> Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_keywords", lines);
+            case ads -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/ads/builtin_keywords", keywords);
+            case dm -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/dm/builtin_keywords", keywords);
+            case kingbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_keywords", keywords);
+            case mysql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_keywords", keywords);
+            case oracle -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_keywords", keywords);
+            case hive -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hive/builtin_keywords", keywords);
+            case postgresql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_keywords", keywords);
+            case db2 -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/db2/builtin_keywords", keywords);
+            case mariadb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mariadb/builtin_keywords", keywords);
+            case presto -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/presto/builtin_keywords", keywords);
+            case sqlserver -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_keywords", keywords);
+            case sapdb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_keywords", keywords);
+            case derby -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/derby/builtin_keywords", keywords);
+            case elastic_search -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_keywords", keywords);
+            case h2 -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/h2/builtin_keywords", keywords);
+            case hsql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_keywords", keywords);
+            case blink -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/blink/builtin_keywords", keywords);
+            case odps -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_keywords", keywords);
             default -> {}
         }
 
-        Set<String> keywords = new HashSet<>(lines);
         if (keywords.isEmpty()) {
             keywords = getDbKeywords(dbType);
         }
@@ -408,34 +407,21 @@ public class DbUtils {
         List<String> functions = new ArrayList<>();
 
         // 实际数据库中可能获取的不全，需要配置补充
-        if (dbType.equals(DbType.oracle)) {
-            Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_functions", functions);
-        } else if (dbType.equals(DbType.mysql)) {
-            Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_functions", functions);
-        } else if (dbType.equals(DbType.hive)) {
-            Utils.loadFromFile("META-INF/druid/parser/hive/builtin_functions", functions);
-        } else if (dbType.equals(DbType.postgresql)) {
-            Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_functions", functions);
-        } else if (dbType.equals(DbType.db2)) {
-            Utils.loadFromFile("META-INF/druid/parser/db2/builtin_functions", functions);
-        } else if (dbType.equals(DbType.mariadb)) {
-            Utils.loadFromFile("META-INF/druid/parser/maria/builtin_functions", functions);
-        } else if (dbType.equals(DbType.sqlserver)) {
-            Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_functions", functions);
-        } else if (dbType.equals(DbType.sapdb)) {
-            Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_functions", functions);
-        } else if (dbType.equals(DbType.derby)) {
-            Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
-        } else if (dbType.equals(DbType.h2)) {
-            Utils.loadFromFile("META-INF/druid/parser/h2/builtin_functions", functions);
-        } else if (dbType.equals(DbType.dm)) {
-            Utils.loadFromFile("META-INF/druid/parser/dm/builtin_functions", functions);
-        } else if (dbType.equals(DbType.kingbase)) {
-            Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_functions", functions);
-        } else if (dbType.equals(DbType.gbase)) {
-            Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_functions", functions);
-        } else if (dbType.equals(DbType.oceanbase)) {
-            Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_functions", functions);
+        switch (dbType) {
+            case oracle ->Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_functions", functions);
+            case mysql ->Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_functions", functions);
+            case hive ->Utils.loadFromFile("META-INF/druid/parser/hive/builtin_functions", functions);
+            case postgresql ->Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_functions", functions);
+            case db2 ->Utils.loadFromFile("META-INF/druid/parser/db2/builtin_functions", functions);
+            case mariadb ->Utils.loadFromFile("META-INF/druid/parser/maria/builtin_functions", functions);
+            case sqlserver ->Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_functions", functions);
+            case sapdb ->Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_functions", functions);
+            case derby ->Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
+            case h2 ->Utils.loadFromFile("META-INF/druid/parser/h2/builtin_functions", functions);
+            case dm ->Utils.loadFromFile("META-INF/druid/parser/dm/builtin_functions", functions);
+            case kingbase ->Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_functions", functions);
+            case gbase ->Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_functions", functions);
+            case oceanbase ->Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_functions", functions);
         }
 
         /**
@@ -493,43 +479,6 @@ public class DbUtils {
         return functionInfos;
     }
 
-
-    /**
-     * 获取函数的使用说明
-     * @param connection 当前数据库连接
-     * @param name 通过getSupportFunctions接口获取到的函数名称
-     * @return 函数描述
-     */
-    public static String getFunctionDescription(Connection connection, String name) {
-        String ret = "";
-
-        DbType dbType = DbTypeKit.getDbType(connection);
-
-        SQLDescribeStatement stmt = new SQLDescribeStatement();
-        stmt.setDbType(dbType);
-        stmt.setObject(new SQLIdentifierExpr("function"));
-        stmt.setColumn(new SQLIdentifierExpr(name));
-
-        DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(connection, stmt.toString());
-
-        if (exec.getStatus().equalsIgnoreCase(ExecResult.FAILED)) {
-            return ret;
-        }
-
-//        ResultSet rs = exec.getBody();
-//        while (true) {
-//            try {
-//                if (!rs.next()) break;
-//                ret = (rs.getString("tab_name"));
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-        return ret;
-    }
-
     /**
      * 获取数据库离线数据类型
      * @param dbType 数据库类型
@@ -538,60 +487,34 @@ public class DbUtils {
     public static Set<String> getDbTypes(DbType dbType) {
         HashSet<String> types = new HashSet<String>();
 
-        if (dbType.equals(DbType.oracle)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.mysql)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.hive)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hive/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.postgresql)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.db2)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/db2/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.mariadb)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maria/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.sqlserver)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.sapdb)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.derby)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/derby/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.h2)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/h2/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.blink)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/blink/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.dm)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/dm/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.kingbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.gbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.oceanbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.edb)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/edb/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.elastic_search)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.firebirdsql)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/firebirdsql/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.hbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.hsql)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.informix)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/Informix/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.ingres)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/ingres/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.interbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/interbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.mimer)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mimer/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.sqlite)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlite/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.teradata)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.odps)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_datatypes", types);
+        switch (dbType) {
+            case oracle -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_datatypes", types);
+            case mysql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_datatypes", types);
+            case hive -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hive/builtin_datatypes", types);
+            case postgresql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_datatypes", types);
+            case db2 -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/db2/builtin_datatypes", types);
+            case mariadb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maria/builtin_datatypes", types);
+            case sqlserver -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_datatypes", types);
+            case sapdb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_datatypes", types);
+            case derby -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/derby/builtin_datatypes", types);
+            case h2 -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/h2/builtin_datatypes", types);
+            case blink -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/blink/builtin_datatypes", types);
+            case dm -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/dm/builtin_datatypes", types);
+            case kingbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_datatypes", types);
+            case gbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_datatypes", types);
+            case oceanbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_datatypes", types);
+            case edb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/edb/builtin_datatypes", types);
+            case elastic_search -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_datatypes", types);
+            case firebirdsql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/firebirdsql/builtin_datatypes", types);
+            case hbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hbase/builtin_datatypes", types);
+            case hsql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_datatypes", types);
+            case informix -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/Informix/builtin_datatypes", types);
+            case ingres -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/ingres/builtin_datatypes", types);
+            case interbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/interbase/builtin_datatypes", types);
+            case mimer -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mimer/builtin_datatypes", types);
+            case sqlite -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlite/builtin_datatypes", types);
+            case teradata -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
+            case odps -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_datatypes", types);
         }
 
         return types;
