@@ -2021,4 +2021,9 @@ class DbUtilsTest {
         return pattern.matcher(str).matches();
     }
 
+    @Test
+    void getDbKeywords() {
+        String dbKeywords = DbUtils.getDbKeywordsAsString(DbType.hive);
+        System.out.println(dbKeywords);
+    }
 }

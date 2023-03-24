@@ -22,19 +22,43 @@ import java.util.stream.Collectors;
  */
 public class DbUtils {
 
-    public static Set<String> getDbKeywords(DbType dbType) {
-        Lexer lexer = SQLParserUtils.createLexer("select *", dbType);
-        return lexer.getKeywords().getKeywords().keySet();
-    }
-
     /**
      * 返回数据库关键字
      * @param dbType 数据库类型
      * @return 以逗号分隔的关键字列表
      */
     public static String getDbKeywordsAsString(DbType dbType) {
-        Set<String> keywords = getDbKeywords(dbType);
-        return StringUtils.join(keywords,",");
+
+        List<String> lines = new ArrayList<>();
+
+        switch (dbType) {
+            case ads -> Utils.loadFromFile("META-INF/druid/parser/ads/builtin_keywords", lines);
+            case dm -> Utils.loadFromFile("META-INF/druid/parser/dm/builtin_keywords", lines);
+            case kingbase -> Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_keywords", lines);
+            case mysql -> Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_keywords", lines);
+            case oracle -> Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_keywords", lines);
+            case hive -> Utils.loadFromFile("META-INF/druid/parser/hive/builtin_keywords", lines);
+            case postgresql -> Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_keywords", lines);
+            case db2 -> Utils.loadFromFile("META-INF/druid/parser/db2/builtin_keywords", lines);
+            case mariadb -> Utils.loadFromFile("META-INF/druid/parser/mariadb/builtin_keywords", lines);
+            case presto -> Utils.loadFromFile("META-INF/druid/parser/presto/builtin_keywords", lines);
+            case sqlserver -> Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_keywords", lines);
+            case sapdb -> Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_keywords", lines);
+            case derby -> Utils.loadFromFile("META-INF/druid/parser/derby/builtin_keywords", lines);
+            case elastic_search -> Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_keywords", lines);
+            case h2 -> Utils.loadFromFile("META-INF/druid/parser/h2/builtin_keywords", lines);
+            case hsql -> Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_keywords", lines);
+            case blink -> Utils.loadFromFile("META-INF/druid/parser/blink/builtin_keywords", lines);
+            case odps -> Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_keywords", lines);
+            default -> {}
+        }
+
+        Set<String> keywords = new HashSet<>(lines);
+        if (keywords.isEmpty()) {
+            keywords = getDbKeywords(dbType);
+        }
+
+        return StringUtils.join(keywords, ",");
     }
 
     /**
@@ -270,6 +294,11 @@ public class DbUtils {
             case derby -> {
             }
             case hive -> {
+                /**
+                 * There are three namespaces for variables – hiveconf, system, and env.
+                 * (Custom variables can also be created in a separate namespace with the define or hivevar option in Hive 0.8.0 and later releases.)
+                 * hiveconf 是默认的namespace
+                 */
                 grammar = "${hiveconf:?}";
             }
             case h2 -> {
@@ -393,8 +422,8 @@ public class DbUtils {
             Utils.loadFromFile("META-INF/druid/parser/maria/builtin_functions", functions);
         } else if (dbType.equals(DbType.sqlserver)) {
             Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_functions", functions);
-        } else if (dbType.equals(DbType.sybase)) {
-            Utils.loadFromFile("META-INF/druid/parser/sybase/builtin_functions", functions);
+        } else if (dbType.equals(DbType.sapdb)) {
+            Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_functions", functions);
         } else if (dbType.equals(DbType.derby)) {
             Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
         } else if (dbType.equals(DbType.h2)) {
@@ -523,12 +552,14 @@ public class DbUtils {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maria/builtin_datatypes", types);
         } else if (dbType.equals(DbType.sqlserver)) {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.sybase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sybase/builtin_datatypes", types);
+        } else if (dbType.equals(DbType.sapdb)) {
+            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_datatypes", types);
         } else if (dbType.equals(DbType.derby)) {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/derby/builtin_datatypes", types);
         } else if (dbType.equals(DbType.h2)) {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/h2/builtin_datatypes", types);
+        } else if (dbType.equals(DbType.blink)) {
+            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/blink/builtin_datatypes", types);
         } else if (dbType.equals(DbType.dm)) {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/dm/builtin_datatypes", types);
         } else if (dbType.equals(DbType.kingbase)) {
@@ -559,9 +590,16 @@ public class DbUtils {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlite/builtin_datatypes", types);
         } else if (dbType.equals(DbType.teradata)) {
             com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
+        } else if (dbType.equals(DbType.odps)) {
+            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_datatypes", types);
         }
 
         return types;
+    }
+
+    private static Set<String> getDbKeywords(DbType dbType) {
+        Lexer lexer = SQLParserUtils.createLexer("select *", dbType);
+        return lexer.getKeywords().getKeywords().keySet();
     }
 
     /**

@@ -1,5 +1,5 @@
 [数学函数]
-ABS                         :abs (n)                :ABS返回n的绝对值。
+ABS                         :abs (n)                    :ABS返回n的绝对值。
 BITAND                      :bitand(expr1, expr2)               :该BITAND函数将其输入和输出视为位向量；输出是AND输入的按位。expr1和的类型expr2是NUMBER，结果是类型NUMBER。如果任一参数BITAND为NULL，则结果为NULL。参数必须在 -(2 (n-1) ) .. ((2 (n-1) )-1) 范围内。如果参数超出此范围，则结果未定义。
 BITTONUMERIC                :bittonumeric(expr)                 :此函数将0和1组成的位串转为numeric类型数值。expr可以是01组成的常量串('0110')，也可以是bit(n),varbit(n)类型的表达式，其中n最大支持64，超过会报错，即返回值范围为64位整数的取值范围。
 CBRT                        :cbrt(dp)                       :数学函数，返回 dp 的立方根。

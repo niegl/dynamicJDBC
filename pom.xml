@@ -28,7 +28,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.5</version>
+            <version>1.4.6</version>
             <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>23.1.0</version>
+            <version>24.0.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.houbb/auto-log-core -->
         <dependency>

@@ -62,8 +62,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         } else if (stmtList.size() > 1) {
             throw new IllegalArgumentException("not support multi-statement :" + sql);
         } else {
-            SQLSelectStatement stmt = (SQLSelectStatement)stmtList.get(0);
-            this.stmt = stmt;
+            this.stmt = (SQLSelectStatement)stmtList.get(0);
         }
     }
 
