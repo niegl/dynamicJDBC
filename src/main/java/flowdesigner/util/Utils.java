@@ -44,7 +44,7 @@ public class Utils {
      * @param path 文件路径
      * @param list 加载后的列表
      */
-    public static void loadFromFile(String path, List<String> list) {
+    public static void loadFromFile(String path, Collection<String> list) {
         InputStream is = null;
         BufferedReader reader = null;
 

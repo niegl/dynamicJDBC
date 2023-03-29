@@ -408,10 +408,6 @@ class CommandManagerTest {
     }
 
     @Test
-    void getSupportFunctionUsage() throws SQLException {
-        String usage = DbUtils.getFunctionDescription(connection,"acos");
-    }
-    @Test
     void getSupportFunctionType() throws SQLException {
         SQLOperatorUtils.getFunctionType(DbType.hive,"^=");
     }

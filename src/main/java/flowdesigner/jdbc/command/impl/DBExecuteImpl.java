@@ -75,9 +75,12 @@ public class DBExecuteImpl {
     private RunningStatus<Object> execute(Connection conn, String scripts) throws ParserException,SQLException {
         RunningStatus<Object> runningStatus = new RunningStatus<>();
 
+        if (conn == null || conn.isClosed()) {
+            throw new IllegalArgumentException("please connect to database first!");
+        }
         DbType dbType = DbTypeKit.getDbType(conn);
         if (dbType == null) {
-            throw new IllegalArgumentException("dbType is not supported");
+            throw new IllegalArgumentException("database is not supported");
         }
 
         int i = 0;
@@ -282,7 +285,7 @@ public class DBExecuteImpl {
                     break;
                 }
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             close(rs);
             close((Statement)stmt);
             log.error(e.getMessage());

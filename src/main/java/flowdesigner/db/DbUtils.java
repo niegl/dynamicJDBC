@@ -32,29 +32,30 @@ public class DbUtils {
         Set<String> keywords = new HashSet<>();
 
         switch (dbType) {
-            case ads -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/ads/builtin_keywords", keywords);
-            case dm -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/dm/builtin_keywords", keywords);
-            case kingbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_keywords", keywords);
-            case mysql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_keywords", keywords);
-            case oracle -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_keywords", keywords);
-            case hive -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hive/builtin_keywords", keywords);
-            case postgresql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_keywords", keywords);
-            case db2 -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/db2/builtin_keywords", keywords);
-            case mariadb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mariadb/builtin_keywords", keywords);
-            case presto -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/presto/builtin_keywords", keywords);
-            case sqlserver -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_keywords", keywords);
-            case sapdb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_keywords", keywords);
-            case derby -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/derby/builtin_keywords", keywords);
-            case elastic_search -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_keywords", keywords);
-            case h2 -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/h2/builtin_keywords", keywords);
-            case hsql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_keywords", keywords);
-            case blink -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/blink/builtin_keywords", keywords);
-            case odps -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_keywords", keywords);
+            case ads -> Utils.loadFromFile("META-INF/druid/parser/ads/builtin_keywords", keywords);
+            case dm -> Utils.loadFromFile("META-INF/druid/parser/dm/builtin_keywords", keywords);
+            case kingbase -> Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_keywords", keywords);
+            case mysql -> Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_keywords", keywords);
+            case oracle -> Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_keywords", keywords);
+            case hive -> Utils.loadFromFile("META-INF/druid/parser/hive/builtin_keywords", keywords);
+            case postgresql -> Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_keywords", keywords);
+            case db2 -> Utils.loadFromFile("META-INF/druid/parser/db2/builtin_keywords", keywords);
+            case mariadb -> Utils.loadFromFile("META-INF/druid/parser/mariadb/builtin_keywords", keywords);
+            case presto -> Utils.loadFromFile("META-INF/druid/parser/presto/builtin_keywords", keywords);
+            case sqlserver -> Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_keywords", keywords);
+            case sapdb -> Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_keywords", keywords);
+            case derby -> Utils.loadFromFile("META-INF/druid/parser/derby/builtin_keywords", keywords);
+            case elastic_search -> Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_keywords", keywords);
+            case h2 -> Utils.loadFromFile("META-INF/druid/parser/h2/builtin_keywords", keywords);
+            case hsql -> Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_keywords", keywords);
+            case blink -> Utils.loadFromFile("META-INF/druid/parser/blink/builtin_keywords", keywords);
+            case odps -> Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_keywords", keywords);
             default -> {}
         }
 
         if (keywords.isEmpty()) {
-            keywords = getDbKeywords(dbType);
+            Lexer lexer = SQLParserUtils.createLexer("select *", dbType);
+            keywords = lexer.getKeywords().getKeywords().keySet();
         }
 
         return StringUtils.join(keywords, ",");
@@ -262,6 +263,7 @@ public class DbUtils {
 
         return grammar;
     }
+
     /**
      * 环境变量的使用语法
      * @param dbType 数据库类型
@@ -269,131 +271,16 @@ public class DbUtils {
      */
     public static String getContextUseGrammar(DbType dbType) {
         String grammar = "${?}";
-        switch (dbType) {
 
-            case other -> {
-            }
-            case jtds -> {
-            }
-            case hsql -> {
-            }
-            case db2 -> {
-            }
-            case postgresql -> {
-            }
-            case sqlserver -> {
-            }
-            case oracle -> {
-            }
-            case mysql -> {
-                grammar = "@?";
-            }
-            case mariadb -> {
-            }
-            case derby -> {
-            }
-            case hive -> {
-                /**
-                 * There are three namespaces for variables – hiveconf, system, and env.
-                 * (Custom variables can also be created in a separate namespace with the define or hivevar option in Hive 0.8.0 and later releases.)
-                 * hiveconf 是默认的namespace
-                 */
-                grammar = "${hiveconf:?}";
-            }
-            case h2 -> {
-            }
-            case dm -> {
-            }
-            case kingbase -> {
-            }
-            case gbase -> {
-            }
-            case oceanbase -> {
-            }
-            case informix -> {
-            }
-            case odps -> {
-            }
-            case teradata -> {
-            }
-            case phoenix -> {
-            }
-            case edb -> {
-            }
-            case kylin -> {
-            }
-            case sqlite -> {
-            }
-            case ads -> {
-            }
-            case presto -> {
-            }
-            case elastic_search -> {
-            }
-            case hbase -> {
-            }
-            case drds -> {
-            }
-            case clickhouse -> {
-            }
-            case blink -> {
-            }
-            case antspark -> {
-            }
-            case oceanbase_oracle -> {
-            }
-            case polardb -> {
-            }
-            case ali_oracle -> {
-            }
-            case mock -> {
-            }
-            case sybase -> {
-            }
-            case highgo -> {
-            }
-            case greenplum -> {
-            }
-            case gaussdb -> {
-            }
-            case trino -> {
-            }
-            case oscar -> {
-            }
-            case tidb -> {
-            }
-            case tydb -> {
-            }
-            case ingres -> {
-            }
-            case cloudscape -> {
-            }
-            case timesten -> {
-            }
-            case as400 -> {
-            }
-            case sapdb -> {
-            }
-            case kdb -> {
-            }
-            case log4jdbc -> {
-            }
-            case xugu -> {
-            }
-            case firebirdsql -> {
-            }
-            case JSQLConnect -> {
-            }
-            case JTurbo -> {
-            }
-            case interbase -> {
-            }
-            case pointbase -> {
-            }
-            case edbc -> {
-            }
-            case mimer -> {
-            }
+        switch (dbType) {
+            case mysql -> grammar = "@?";
+            /**
+             * There are three namespaces for variables – hiveconf, system, and env.
+             * (Custom variables can also be created in a separate namespace with the define or hivevar option in Hive 0.8.0 and later releases.)
+             * hiveconf 是默认的namespace
+             */
+            case hive -> grammar = "${hiveconf:?}";
+
         }
 
         return  grammar;
@@ -488,41 +375,36 @@ public class DbUtils {
         HashSet<String> types = new HashSet<String>();
 
         switch (dbType) {
-            case oracle -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_datatypes", types);
-            case mysql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_datatypes", types);
-            case hive -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hive/builtin_datatypes", types);
-            case postgresql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_datatypes", types);
-            case db2 -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/db2/builtin_datatypes", types);
-            case mariadb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maria/builtin_datatypes", types);
-            case sqlserver -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_datatypes", types);
-            case sapdb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_datatypes", types);
-            case derby -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/derby/builtin_datatypes", types);
-            case h2 -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/h2/builtin_datatypes", types);
-            case blink -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/blink/builtin_datatypes", types);
-            case dm -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/dm/builtin_datatypes", types);
-            case kingbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_datatypes", types);
-            case gbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_datatypes", types);
-            case oceanbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_datatypes", types);
-            case edb -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/edb/builtin_datatypes", types);
-            case elastic_search -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_datatypes", types);
-            case firebirdsql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/firebirdsql/builtin_datatypes", types);
-            case hbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hbase/builtin_datatypes", types);
-            case hsql -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_datatypes", types);
-            case informix -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/Informix/builtin_datatypes", types);
-            case ingres -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/ingres/builtin_datatypes", types);
-            case interbase -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/interbase/builtin_datatypes", types);
-            case mimer -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mimer/builtin_datatypes", types);
-            case sqlite -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlite/builtin_datatypes", types);
-            case teradata -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
-            case odps -> com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_datatypes", types);
+            case oracle -> Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_datatypes", types);
+            case mysql -> Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_datatypes", types);
+            case hive -> Utils.loadFromFile("META-INF/druid/parser/hive/builtin_datatypes", types);
+            case postgresql -> Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_datatypes", types);
+            case db2 -> Utils.loadFromFile("META-INF/druid/parser/db2/builtin_datatypes", types);
+            case mariadb -> Utils.loadFromFile("META-INF/druid/parser/maria/builtin_datatypes", types);
+            case sqlserver -> Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_datatypes", types);
+            case sapdb -> Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_datatypes", types);
+            case derby -> Utils.loadFromFile("META-INF/druid/parser/derby/builtin_datatypes", types);
+            case h2 -> Utils.loadFromFile("META-INF/druid/parser/h2/builtin_datatypes", types);
+            case blink -> Utils.loadFromFile("META-INF/druid/parser/blink/builtin_datatypes", types);
+            case dm -> Utils.loadFromFile("META-INF/druid/parser/dm/builtin_datatypes", types);
+            case kingbase -> Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_datatypes", types);
+            case gbase -> Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_datatypes", types);
+            case oceanbase -> Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_datatypes", types);
+            case edb -> Utils.loadFromFile("META-INF/druid/parser/edb/builtin_datatypes", types);
+            case elastic_search -> Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_datatypes", types);
+            case firebirdsql -> Utils.loadFromFile("META-INF/druid/parser/firebirdsql/builtin_datatypes", types);
+            case hbase -> Utils.loadFromFile("META-INF/druid/parser/hbase/builtin_datatypes", types);
+            case hsql -> Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_datatypes", types);
+            case informix -> Utils.loadFromFile("META-INF/druid/parser/Informix/builtin_datatypes", types);
+            case ingres -> Utils.loadFromFile("META-INF/druid/parser/ingres/builtin_datatypes", types);
+            case interbase -> Utils.loadFromFile("META-INF/druid/parser/interbase/builtin_datatypes", types);
+            case mimer -> Utils.loadFromFile("META-INF/druid/parser/mimer/builtin_datatypes", types);
+            case sqlite -> Utils.loadFromFile("META-INF/druid/parser/sqlite/builtin_datatypes", types);
+            case teradata -> Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
+            case odps -> Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_datatypes", types);
         }
 
         return types;
-    }
-
-    private static Set<String> getDbKeywords(DbType dbType) {
-        Lexer lexer = SQLParserUtils.createLexer("select *", dbType);
-        return lexer.getKeywords().getKeywords().keySet();
     }
 
     /**

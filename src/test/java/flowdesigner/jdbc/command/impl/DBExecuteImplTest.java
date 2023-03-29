@@ -16,10 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DBExecuteImplTest {
     Connection connection;
+    DynamicDriver dynamicDriver = null;
 
     Connection getConnection(DbType dbType) {
 
-        DynamicDriver dynamicDriver = null;
+
 
         switch (dbType) {
             case hive -> {
@@ -52,24 +53,24 @@ class DBExecuteImplTest {
     }
 
     @Test
-    void execSelect() {
+    void execSelect() throws SQLException {
         exec(DbType.hive,"SELECT dimension_id, dimension_category, dimension_name, dimension_des, table_id, field_id, field_name, dimension_value_name, dimension_value_no\n" +
                 "FROM test.table1;");
     }
 
     @Test
-    void execInsert() {
+    void execInsert() throws SQLException {
         exec(DbType.hive,"INSERT INTO test.table1\n" +
                 "(dimension_id, dimension_category, dimension_name, dimension_des, table_id, field_id, field_name, dimension_value_name, dimension_value_no)\n" +
                 "VALUES('1', '1', '1', '1', '1', '1', '1', '1', '1');");
     }
 
     @Test
-    void execShowDatabases() {
+    void execShowDatabases() throws SQLException {
         exec(DbType.hive,"show databases;");
     }
 
-    void exec(DbType dbType,String scripts) {
+    void exec(DbType dbType,String scripts) throws SQLException {
         getConnection(dbType);
         DBExecuteImpl dbExecute = new DBExecuteImpl();
         DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(connection, scripts);
@@ -80,6 +81,7 @@ class DBExecuteImplTest {
         }
 
         dbExecute.release();
+        dynamicDriver.close(connection);
     }
 
 }

@@ -1,5 +1,6 @@
 package flowdesigner.jdbc.driver;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.JdbcConstantKey;
@@ -39,7 +40,7 @@ public class DynamicDriver {
     /**
      * 定义连接池对象
      */
-    private DataSource _ds = null;
+    private DruidDataSource _ds = null;
     /**
      * jar包驱动路径,用;分隔多个路径
      */
@@ -71,7 +72,7 @@ public class DynamicDriver {
     }
 
 
-    private void createDataSource() {
+    public void createDataSource() {
         try {
             // 文件后缀为.jar且不为空，读子文件夹
             Collection<File> files = new ArrayList<>();
@@ -89,7 +90,7 @@ public class DynamicDriver {
             }
             if (loadJar(files)) {
                 //通过prop创建连接池对象
-                _ds = DruidDataSourceFactory.createDataSource(_propertyInfo);
+                _ds = (DruidDataSource) DruidDataSourceFactory.createDataSource(_propertyInfo);
             }
 
         } catch (Exception e) {
@@ -123,11 +124,11 @@ public class DynamicDriver {
     /**
      * 释放资源
      */
-    public static void close(Connection connection) {
-        if (connection != null) {
-            _urls.remove(connection);
+    public void close() {
+        if (!_ds.isClosed()) {
+            _ds.close();
         }
-        JdbcUtils.close(connection);
+        _ds = null;
     }
 
     /**
@@ -138,11 +139,21 @@ public class DynamicDriver {
     }
 
     /**
+     * 断开连接
+     */
+    public static void close(Connection connection) {
+        if (connection != null) {
+            _urls.remove(connection);
+        }
+        JdbcUtils.close(connection);
+    }
+
+    /**
      * 动态加载Jar.支持JDK8和JDK11+
      *
      * @param jarPath jar包文件路径列表
      */
-    public static boolean loadJar(@NotNull Collection<File> jarPath) {
+    private static boolean loadJar(@NotNull Collection<File> jarPath) {
 
         //文件存在
         if (jarPath.isEmpty()) {
