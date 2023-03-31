@@ -134,7 +134,7 @@ public class DynamicDriver {
     /**
      * 获取连接池对象
      */
-    public DataSource getDataSource() {
+    public DruidDataSource getDataSource() {
         return _ds;
     }
 

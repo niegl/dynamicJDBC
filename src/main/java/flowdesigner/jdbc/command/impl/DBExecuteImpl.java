@@ -47,7 +47,6 @@ public class DBExecuteImpl {
     public RunningStatus<Object> exec(@NotNull Connection conn, @NotNull String scripts) {
 
         log.info(scripts);
-        Utils.bufferedWriterMethod("c://logs//dynamic.txt",scripts);
 
         RunningStatus<Object> runningStatus = new RunningStatus<>();
 
