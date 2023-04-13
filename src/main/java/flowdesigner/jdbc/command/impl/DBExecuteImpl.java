@@ -7,20 +7,19 @@ import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLType;
 import com.alibaba.druid.util.JdbcUtils;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.util.DbTypeKit;
-import flowdesigner.util.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.alibaba.druid.util.JdbcUtils.close;
 
@@ -35,6 +34,16 @@ public class DBExecuteImpl {
     private PreparedStatement stmt;
     private ResultSet rs;
 
+    static {
+        /**
+         * c++端加载后java端可以使用
+         */
+//        System.loadLibrary("DLLJVM.dll");
+    }
+
+    // 执行查询完成后回调
+    public native int nativeCallback(String result);
+
     /**
      * SQL=脚本
      * @param conn
@@ -48,20 +57,28 @@ public class DBExecuteImpl {
 
         log.info(scripts);
 
-        RunningStatus<Object> runningStatus = new RunningStatus<>();
+        final RunningStatus<Object>[] runningStatus = new RunningStatus[]{new RunningStatus<>()};
+        runningStatus[0].setStatus(ExecResult.SUCCESS);
 
-        try {
-            runningStatus = execute(conn, scripts );
-            runningStatus.setStatus(ExecResult.SUCCESS);
-        } catch (ParserException e) {
-            runningStatus.setStatus(ExecResult.FAILED);
-            runningStatus.setResult("SQL ParserException :" + e.getMessage());
-        } catch (SQLException | IllegalArgumentException e) {
-            runningStatus.setStatus(ExecResult.FAILED);
-            runningStatus.setResult(e.getMessage());
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    runningStatus[0] = execute(conn, scripts);
+                } catch (ParserException e) {
+                    runningStatus[0].setStatus(ExecResult.FAILED);
+                    runningStatus[0].setResult("SQL ParserException :" + e.getMessage());
+                } catch (SQLException | IllegalArgumentException e) {
+                    runningStatus[0].setStatus(ExecResult.FAILED);
+                    runningStatus[0].setResult(e.getMessage());
+                }
 
-        return runningStatus;
+                String jsonString = JSON.toJSONString(runningStatus[0]);
+                nativeCallback(jsonString);
+            }
+        }).start();
+
+        return runningStatus[0];
     }
 
     /**

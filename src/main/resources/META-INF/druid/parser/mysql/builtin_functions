@@ -323,8 +323,8 @@ AVG_DISTINCT()		:AVG(DISTINCT ?)	:Return the average value of the argument
 BIT_AND()			:BIT_AND(?)	:Return bitwise AND
 BIT_OR()			:BIT_OR(?)	:Return bitwise OR
 BIT_XOR()			:BIT_XOR(?)	:Return bitwise XOR
-COUNT()				:COUNT(?)	:Return a count of the number of rows returned
-COUNT(DISTINCT)		:COUNT(DISTINCT ?,[?...])	:Return the count of a number of different values
+COUNT				:COUNT(?)	:Return a count of the number of rows returned
+COUNT		        :COUNT(DISTINCT ?,[?...])	:Return the count of a number of different values
 GROUP_CONCAT()		:GROUP_CONCAT(?)	:Return a concatenated string
 JSON_ARRAYAGG()		:JSON_ARRAYAGG(?)	:Return result set as a single JSON array
 JSON_OBJECTAGG()	:JSON_OBJECTAGG(key, value)	:Return result set as a single JSON object
