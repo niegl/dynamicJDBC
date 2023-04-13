@@ -29,7 +29,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.4.6</version>
-            <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.alibaba/druid -->
         <dependency>
@@ -65,15 +64,10 @@
             <version>24.0.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.github.houbb/auto-log-core -->
-        <dependency>
-            <groupId>com.github.houbb</groupId>
-            <artifactId>auto-log-core</artifactId>
-            <version>0.0.16</version>
-        </dependency>
 <!--        <dependency>-->
-<!--            <groupId>flow</groupId>-->
-<!--            <artifactId>commonUtility</artifactId>-->
-<!--            <version>1.0</version>-->
+<!--            <groupId>com.github.houbb</groupId>-->
+<!--            <artifactId>auto-log-core</artifactId>-->
+<!--            <version>0.0.16</version>-->
 <!--        </dependency>-->
         <dependency>
             <groupId>org.jsoup</groupId>

@@ -34,13 +34,6 @@ public class DBExecuteImpl {
     private PreparedStatement stmt;
     private ResultSet rs;
 
-    static {
-        /**
-         * c++端加载后java端可以使用
-         */
-//        System.loadLibrary("DLLJVM.dll");
-    }
-
     // 执行查询完成后回调
     public native int nativeCallback(String result);
 

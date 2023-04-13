@@ -3,7 +3,6 @@ package flowdesigner.sql;
 import com.alibaba.druid.util.DruidDataSourceUtils;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson2.JSON;
-import com.github.houbb.auto.log.core.support.proxy.AutoLogProxy;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;

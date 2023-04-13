@@ -17,7 +17,6 @@ package flowdesigner.jdbc.command.impl;
 
 
 import com.alibaba.druid.DbType;
-import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.dialect.DBDialect;
@@ -53,7 +52,6 @@ public class DBReverseGetTablesImpl implements Command<ExecResult<List<TableEnti
      * 获取所有数据表列表
      * @return
      */
-    @AutoLog
     protected List<TableEntity> getTableEntities(Connection conn, String schemaPattern, String[] types) throws SQLException {
         DbType dbType = DbTypeKit.getDbType(conn);
         DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);

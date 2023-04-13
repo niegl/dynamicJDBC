@@ -14,7 +14,6 @@ import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGSelectStatement;
 import com.alibaba.druid.sql.dialect.presto.ast.stmt.PrestoSelectStatement;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
-import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.sql.builder.SQLSelectBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -515,7 +514,6 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
      * @return
      */
     @Override
-    @AutoLog
     public SQLSelectBuilder join(String joinType, String table, String alias,
                                    String conditionLeft, String conditionRight, String conditionOperator) {
 

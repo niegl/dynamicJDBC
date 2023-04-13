@@ -2,7 +2,6 @@ package flowdesigner.jdbc.command;
 
 import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.fastjson2.JSON;
-import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.jdbc.command.impl.*;
 import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +41,7 @@ public class CommandManager {
         ExecResult result = exeCommand(connection, cmdText, params);
         return JSON.toJSONString(result);
     }
+
     /***
      * 客户端调用命令的接口
      * @param connection jdbc连接
@@ -49,7 +49,6 @@ public class CommandManager {
      * @param params 命令参数，需要和具体命令相符合
      * @return
      */
-    @AutoLog
     public static ExecResult exeCommand(Connection connection, CommandKey commandKey, Map<String, String> params) {
         ExecResult ret = new ExecResult(ExecResult.FAILED, "未知异常");
         try {
