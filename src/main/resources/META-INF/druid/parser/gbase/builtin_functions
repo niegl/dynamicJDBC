@@ -3,10 +3,10 @@
 –   :–      :减法
 /   :/      :除法
 *   :*      :乘法
-plus( )     :plus( expr1,expr2)        :加法
-minus( )    :minus( expr1,expr2)       :减法
-divide( )   :divide( expr1,expr2)      :除法
-times( )    :times( expr1,expr2)       :乘法
+plus        :plus( expr1,expr2)        :加法
+minus       :minus( expr1,expr2)       :减法
+divide      :divide( expr1,expr2)      :除法
+times       :times( expr1,expr2)       :乘法
 [位逻辑函数]
 BITAND          :BITAND(int8_expr,int8_expr)            :位逻辑函数
 BITOR           :BITOR(int8_expr,int8_expr)             :位逻辑函数
@@ -19,8 +19,8 @@ BITNOT          :BITNOT(int8_expr)                      :位逻辑函数
 CAST        :CAST() :您可使用 CAST 和 AS 关键字或双冒号强制转型运算符（：： ）来将表达式强制转型为另一数据类型。
 ：：          :：：:您可使用 CAST 和 AS 关键字或双冒号强制转型运算符（ ：： ）来将表达式强制转型为另一数据类型。
 [条件表达式]
-Generic CASE Expression :CASE { WHEN Condition THEN expr|NULL }... [ELSE expr|NULL ] END    :通用的 CASE 表达式测试 WHEN 子句中为真的条件。如果它发现为真的条件，则它返回在THEN 子句中指定的结果。
-Linear CASE Expression  :CASE expr { WHEN expr THEN expr|NULL }... [ELSE expr|NULL ] END    :线性的 CASE 表达式将跟在 CASE 关键字之后的表达式的值与 WHEN 子句中的表达式作比较。
+CASE    :CASE { WHEN Condition THEN expr|NULL }... [ELSE expr|NULL ] END    :通用的 CASE 表达式测试 WHEN 子句中为真的条件。如果它发现为真的条件，则它返回在THEN 子句中指定的结果。
+CASE    :CASE expr { WHEN expr THEN expr|NULL }... [ELSE expr|NULL ] END    :线性的 CASE 表达式将跟在 CASE 关键字之后的表达式的值与 WHEN 子句中的表达式作比较。
 ISNULL                  :ISNULL(expr1, expr2)                                               :ISNULL 表达式返回不同的结果，这取决于于它的第一个参数求值是否为 NULL。
 NVL                     :NVL(expr1, expr2)                                                  :NVL 表达式返回不同的结果，这依赖于它的第一个参数求值是否为 NULL。
 NULLIF                  :NULLIF(expr1, expr2)                                               :NULLIF 表达式返回不同的结果，这依赖于它的两个参数是否相等。
@@ -147,9 +147,9 @@ FORMAT_UNITS            :FORMAT_UNITS([{'number units'} | {'number'|number,'unit
 IFX_ALLOW_NEWLINE       :IFX_ALLOW_NEWLINE('t'|'f')    :IFX_ALLOW_NEWLINE 函数设置换行模式，在当前的会话内在用引号括起来的字符串中允许还是不允许换行字符。
 [正则表达式函数]
 REGEXP_COUNT            :REGEXP_COUNT(str,pattern[,position[,match_param]]) :根据 pattern 正则表达式，从 str 字符串的第 position 个字符开始查找符合正则表达式的子串的个数，并符合匹配参数 match_param
-REGEXP _ INSTR          :REGEXP_INSTR(str,pattern[,position[, occurrence[,return_opt [, match_param [, subexpr]]]]])    :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合 subexpr 正则表达式的子串，如果 return_opt 为 0，返回第 occurrence 次出现的位置，如果 return_opt 为 大于 0，则返回该出现位置的下一个字符位置，并符合匹配参数。
-REGEXP _SUBSTR          :REGEXP_SUBSTR(str , pattern[,position occurrence[,match_param[,subexpr]]]])    :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合 subexpr 正则表达式的子串，返回第 occurrence 次出现的子串，并符合匹配参数 match_param
-REGEXP _REPLACE         :REGEXP_REPLACE(str,pattern[,replace_str[,position[,occurrence[,match_param]]]] )   :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合正则表达式的子串，并用 replace_str 进行替换 第 occurrence 次出现的子串，并符合匹配参数 match_param
+REGEXP_INSTR          :REGEXP_INSTR(str,pattern[,position[, occurrence[,return_opt [, match_param [, subexpr]]]]])    :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合 subexpr 正则表达式的子串，如果 return_opt 为 0，返回第 occurrence 次出现的位置，如果 return_opt 为 大于 0，则返回该出现位置的下一个字符位置，并符合匹配参数。
+REGEXP_SUBSTR          :REGEXP_SUBSTR(str , pattern[,position occurrence[,match_param[,subexpr]]]])    :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合 subexpr 正则表达式的子串，返回第 occurrence 次出现的子串，并符合匹配参数 match_param
+REGEXP_REPLACE         :REGEXP_REPLACE(str,pattern[,replace_str[,position[,occurrence[,match_param]]]] )   :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合正则表达式的子串，并用 replace_str 进行替换 第 occurrence 次出现的子串，并符合匹配参数 match_param
 [加密和解密函数]
 ENCRYPT_AES             :ENCRYPT_AES(data [,password [,hint]])   :ENCRYPT_AES 函数使用 AES（高级加密标准）算法进行加密。
 ENCRYPT_TDES            :ENCRYPT_TDES(data [,password [,hint]])   :ENCRYPT_TDES 函数使用 TDES（三重数据加密标准）算法进行加密。
@@ -165,31 +165,31 @@ SYS_GUID                :SYS_GUID()                 :SYS_GUID 函数生成并返
 WM_CONCAT               :WM_CONCAT(expr)            :WM_CONCAT 函数可以将结果集中指定列的数据合并成一行。
 WM_CONCAT_TEXT          :WM_CONCAT_TEXT(expr)     :WM_CONCAT_TEXT 函数可以将结果集中指定列的数据合并成一行。
 [AggregateFunctions]
-count(*)				:count(*)								:Returns the total number of retrieved rows, including rows containing NULL values.
-avg()					            :avg()									    :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
-avg(DISTINCT|ALL|UNIQUE)			:avg([DISTINCT|ALL|UNIQUE ] ?)			    :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
-avg(Subset of Expression)		    :avg([ALL ]Subset of Expression)	        :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
-COUNT()					            :COUNT()							        :Returns the number of rows for which the supplied expression is non-NULL.
-COUNT(DISTINCT|ALL|UNIQUE)			:COUNT([DISTINCT|ALL|UNIQUE ] ?)	        :Returns the number of rows for which the supplied expression is non-NULL.
-COUNT(Subset of Expression)		    :COUNT([ALL ]Subset of Expression)          :Returns the number of rows for which the supplied expression is non-NULL.
-max()					            :max()							            :Returns the maximum value of the column in the group.
-max(DISTINCT|ALL|UNIQUE)			:max([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the maximum value of the column in the group.
-max(Subset of Expression)		    :max([ALL ]Subset of Expression)            :Returns the maximum value of the column in the group.
-min()					            :min()							            :Returns the minimum of the column in the group.
-min(DISTINCT|ALL|UNIQUE)			:min([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the minimum of the column in the group.
-min(Subset of Expression)		    :min([ALL ]Subset of Expression)            :Returns the minimum of the column in the group.
-sum()					            :sum()							            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
-sum(DISTINCT|ALL|UNIQUE)			:sum([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
-sum(Subset of Expression)		    :sum([ALL ]Subset of Expression)            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
-range()					            :range()							        :RANGE 函数返回数值列表达式参数的值的范围。
-range(DISTINCT|ALL|UNIQUE)			:range([DISTINCT|ALL|UNIQUE ] ?)	        :RANGE 函数返回数值列表达式参数的值的范围。
-range(Subset of Expression)		    :range([ALL ]Subset of Expression)          :RANGE 函数返回数值列表达式参数的值的范围。
-stdev()					            :stdev()							        :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
-stdev(DISTINCT|ALL|UNIQUE)			:stdev([DISTINCT|ALL|UNIQUE ] ?)	        :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
-stdev(Subset of Expression)		    :stdev([ALL ]Subset of Expression)          :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
-variance()					        :variance()							        :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
-variance(DISTINCT|ALL|UNIQUE)       :variance([DISTINCT|ALL|UNIQUE ] ?)	        :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
-variance(Subset of Expression)      :variance([ALL ]Subset of Expression)       :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+count				                :count(*)								:Returns the total number of retrieved rows, including rows containing NULL values.
+avg					                :avg()									    :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+avg                     			:avg([DISTINCT|ALL|UNIQUE ] ?)			    :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+avg                     		    :avg([ALL ]Subset of Expression)	        :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+COUNT                               :COUNT()							        :Returns the number of rows for which the supplied expression is non-NULL.
+COUNT                               :COUNT([DISTINCT|ALL|UNIQUE ] ?)	        :Returns the number of rows for which the supplied expression is non-NULL.
+COUNT                               :COUNT([ALL ]Subset of Expression)          :Returns the number of rows for which the supplied expression is non-NULL.
+max                                   :max()							            :Returns the maximum value of the column in the group.
+max                         		:max([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the maximum value of the column in the group.
+max                         	    :max([ALL ]Subset of Expression)            :Returns the maximum value of the column in the group.
+min                                   :min()							            :Returns the minimum of the column in the group.
+min                         		:min([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the minimum of the column in the group.
+min                         	    :min([ALL ]Subset of Expression)            :Returns the minimum of the column in the group.
+sum                                   :sum()							            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+sum                         		:sum([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+sum                         	    :sum([ALL ]Subset of Expression)            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+range                               :range()							        :RANGE 函数返回数值列表达式参数的值的范围。
+range                   			:range([DISTINCT|ALL|UNIQUE ] ?)	        :RANGE 函数返回数值列表达式参数的值的范围。
+range                   		    :range([ALL ]Subset of Expression)          :RANGE 函数返回数值列表达式参数的值的范围。
+stdev                               :stdev()							        :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+stdev                       		:stdev([DISTINCT|ALL|UNIQUE ] ?)	        :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+stdev                       	    :stdev([ALL ]Subset of Expression)          :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+variance                            :variance()							        :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+variance                            :variance([DISTINCT|ALL|UNIQUE ] ?)	        :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+variance                            :variance([ALL ]Subset of Expression)       :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
 VAR_POP                             :VAR_POP(expr)                          : 返回 expr 的总体方差
 VAR_SAMP                            :VAR_SAMP(expr)                         :返回 expr 的样本方差
 COVAR_POP                           :COVAR_POP(expr1, expr2)                :COVAR_POP(expr1, expr2) 返回 expr1 和 expr2 的总体协方差
@@ -206,12 +206,10 @@ PERCENT_RANK                        :PERCENT_RANK() OVER ( [window_partition_cla
 CUME_DIST                           :CUME_DIST() OVER ( [window_partition_clause ][ window_order_clause])   :CUME_DIST 函数是一个 OLAP 分等级函数，计算累计分布作为每一行的百分比等级。该等级表示为取值范围从 0 至 1 的实际值小数。
 NTILE                               :NTILE(unsigned) :NTILE 函数是一个 OLAP 分等级函数，将每一分区中的行划分成 N 等级的类别，称为片，每一类别包括大约相等的行数。
 [OLAP 聚集函数表达式]
-FIRST_VALUE() RESPECT NULLS}|{IGNORE NULLS                       :FIRST_VALUE(expression ) {RESPECT NULLS}|{IGNORE NULLS} OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])        :FIRST_VALUE window 聚集函数为每一 OLAP window 分区中的第一行返回指定的表达式的值。
-FIRST_VALUE(RESPECT NULLS}|{IGNORE NULLS)                        :FIRST_VALUE(expression {RESPECT NULLS}|{IGNORE NULLS})  OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])        :FIRST_VALUE window 聚集函数为每一 OLAP window 分区中的第一行返回指定的表达式的值。
-LAST_VALUE() RESPECT NULLS}|{IGNORE NULLS                        :LAST_VALUE(expression ) {RESPECT NULLS}|{IGNORE NULLS} OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])         :LAST_VALUE window 聚集函数为每一 OLAP window 分区中的最后一行返回指定的表达式的值。
-LAST_VALUE(RESPECT NULLS}|{IGNORE NULLS)                         :LAST_VALUE(expression {RESPECT NULLS}|{IGNORE NULLS})  OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])         :LAST_VALUE window 聚集函数为每一 OLAP window 分区中的最后一行返回指定的表达式的值。
-RATIO_TO_REPORT                                                 :RATIO_TO_REPORT() OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])    :RATIO_TO_REPORT 基于该函数的数值参数，计算每一行对于该 window 分区中剩余行的分数比率。
-RATIOTOREPORT                                                   :RATIO_TO_REPORT() OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])    :RATIO_TO_REPORT 基于该函数的数值参数，计算每一行对于该 window 分区中剩余行的分数比率。
+FIRST_VALUE                         :FIRST_VALUE(expression ) {RESPECT NULLS}|{IGNORE NULLS} OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])        :FIRST_VALUE window 聚集函数为每一 OLAP window 分区中的第一行返回指定的表达式的值。
+LAST_VALUE                          :LAST_VALUE(expression ) {RESPECT NULLS}|{IGNORE NULLS} OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])         :LAST_VALUE window 聚集函数为每一 OLAP window 分区中的最后一行返回指定的表达式的值。
+RATIO_TO_REPORT                     :RATIO_TO_REPORT() OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])    :RATIO_TO_REPORT 基于该函数的数值参数，计算每一行对于该 window 分区中剩余行的分数比率。
+RATIOTOREPORT                       :RATIO_TO_REPORT() OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])    :RATIO_TO_REPORT 基于该函数的数值参数，计算每一行对于该 window 分区中剩余行的分数比率。
 [关系运算符]
 <   :A < B		:NULL if A or B is NULL, TRUE if expression A is less than expression B, otherwise FALSE.
 <=  :A <= B		:NULL if A or B is NULL, TRUE if expression A is less than or equal to expression B, otherwise FALSE.

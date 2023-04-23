@@ -77,10 +77,10 @@ RPAD                    :RPAD(char1,n,char2)	            :类似 LPAD 函数，�
 RTRIM                   :RTRIM(str[,set])	                :删除字符串 str 右边起出现的 set 中的任何字符，当遇到不在 set 中的第一个字符时返回结果
 SOUNDEX                 :SOUNDEX(char)	                    :返回一个表示字符串发音的字符串
 SPACE                   :SPACE(n)	                        :返回一个包含 n 个空格的字符串
-STRPOSDEC(char)         :STRPOSDEC(char)	                :把字符串 char 中最后一个字符的值减一
-STRPOSDEC(char,pos)     :STRPOSDEC(char,pos)	            :把字符串 char 中指定位置 pos 上的字符值减一
-STRPOSINC(char)         :STRPOSINC(char)	                :把字符串 char 中最后一个字符的值加一
-STRPOSINC(char,pos)     :STRPOSINC(char,pos)	            :把字符串 char 中指定位置 pos 上的字符值加一
+STRPOSDEC               :STRPOSDEC(char)	                :把字符串 char 中最后一个字符的值减一
+STRPOSDEC               :STRPOSDEC(char,pos)	            :把字符串 char 中指定位置 pos 上的字符值减一
+STRPOSINC               :STRPOSINC(char)	                :把字符串 char 中最后一个字符的值加一
+STRPOSINC               :STRPOSINC(char,pos)	            :把字符串 char 中指定位置 pos 上的字符值加一
 STUFF                   :STUFF(char1,begin,n,char2)	        :删除在字符串 char1 中以 begin 参数所指位置开始的 n 个字符, 再把 char2 插入到 char1 串的 begin 所指位置
 SUBSTR                  :SUBSTR(char,m,n) 	                :返回 char 中从字符位置 m 开始的 n 个字符
 SUBSTRING               :SUBSTRING(char FROM m [FOR n])	    :返回 char 中从字符位置 m 开始的 n 个字符
