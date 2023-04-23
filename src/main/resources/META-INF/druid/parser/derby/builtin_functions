@@ -1,91 +1,88 @@
 [Built-in functions]
-ABS function                        :ABS ( numericExpression ) :The ABS or ABSVAL function returns the absolute value of a numeric expression.
-ABSVAL function                     :ABSVAL ( numericExpression ) :The ABS or ABSVAL function returns the absolute value of a numeric expression.
-ACOS function                       :ACOS( number ) :The ACOS function returns the arc cosine of a specified number.
-ASIN function                       :ASIN( number ) :The ASIN function returns the arc sine of a specified number.
-ATAN function                       :ATAN( number ) :The ATAN function returns the arc tangent of a specified number.
-ATAN2 function                      :ATAN2 ( y, x ) :The ATAN2 function returns the arctangent, in radians, of the quotient of the two arguments.
-BIGINT function                     :BIGINT ( characterExpression | numericExpression ) :The BIGINT function returns a 64-bit integer representation of a number or character string in the form of an integer constant.
-CAST function                       :CAST ( [ expression | NULL | ? ]AS dataType ) :The CAST function converts a value from one data type to another and provides a data type to a dynamic parameter (?) or a NULL value.
-CEIL function                       :CEIL ( number ) :The CEIL or CEILING function rounds the specified number up, and returns the smallest number that is greater than or equal to the specified number.
-CEILING function                    :CEILING ( number ) :The CEIL or CEILING function rounds the specified number up, and returns the smallest number that is greater than or equal to the specified number.
-CHAR(Character to character)        :CHAR ( characterExpression [ , integer ] ) :The CHAR function returns a fixed-length character string representation.
-CHAR function                      :CHAR ( integerExpression|datetimeExpression|decimalExpression|floatingPointExpression    )  :The CHAR function returns a fixed-length character string representation.
-COALESCE function                  :COALESCE ( expression, expression [ , expression ]* ) :The COALESCE function takes two or more compatible arguments and returns the first argument that is not null.
-Concatenation operator             :characterExpression || characterExpression  :The concatenation operator, ||, concatenates its right operand to the end of its left operand. It operates on character or bit expressions.
-COS function                       :COS ( number ) :The COS function returns the cosine of a specified number.
-COSH function                      :COSH( number ) :The COSH function returns the hyperbolic cosine of a specified number.
-COT function                       :COT( number ) :The COT function returns the cotangent of a specified number.
-CURRENT DATE function              :CURRENT DATE :CURRENT DATE is a synonym for CURRENT_DATE.
-CURRENT_DATE function              :CURRENT_DATE :The CURRENT_DATE function returns the current date; the value returned does not change if it is executed more than once in a single statement.
-CURRENT ISOLATION function         :CURRENT ISOLATION :The CURRENT ISOLATION function returns the current isolation level as a CHAR(2) value of either "" (blank), "UR", "CS", "RS", or "RR".
-CURRENT_ROLE function              :CURRENT_ROLE :The CURRENT_ROLE function returns the authorization identifier of the current role. If there is no current role, it returns NULL.
-CURRENT SCHEMA function            :CURRENT SCHEMA :The CURRENT SCHEMA function returns the schema name used to qualify unqualified database object references.
-CURRENT TIME function              :CURRENT TIME :CURRENT TIME is a synonym for CURRENT_TIME.
-CURRENT_TIME function              :CURRENT_TIME :The CURRENT_TIME function returns the current time; the value returned does not change if it is executed more than once in a single statement.
-CURRENT TIMESTAMP function         :CURRENT TIMESTAMP :CURRENT TIMESTAMP is a synonym for CURRENT_TIMESTAMP.
-CURRENT_TIMESTAMP function         :CURRENT_TIMESTAMP :The CURRENT_TIMESTAMP function returns the current timestamp; the value returned does not change if it is executed more than once in a single statement.
-CURRENT_USER function              :CURRENT_USER :When used outside stored routines, the CURRENT_USER, USER, and SESSION_USER functions all return the authorization identifier of the user that created the SQL session.
-DATE function                      :DATE ( expression ) :The DATE function returns a date from a value.
-DAY function                       :DAY ( expression ) :The DAY function returns the day part of a value.
-DEGREES function                   :DEGREES ( number ) :The DEGREES function converts a specified number from radians to degrees.
-DOUBLE function                    :DOUBLE [ PRECISION ] ( numericExpression ):The DOUBLE function returns a floating-point number corresponding to a number or a character string.
-EXP function                       :EXP ( number ):The EXP function returns e raised to the power of the specified number.
-FLOOR function                     :FLOOR ( number ) :The FLOOR function rounds the specified number down, and returns the largest number that is less than or equal to the specified number.
-HOUR function                      :HOUR ( expression ) :The HOUR function returns the hour part of a value.
-IDENTITY_VAL_LOCAL function        :IDENTITY_VAL_LOCAL ( ) :The IDENTITY_VAL_LOCAL function is a non-deterministic function that returns the most recently assigned value of an identity column for a connection, where the assignment occurred as a result of a single row INSERT statement using a VALUES clause or a single row UPDATE statement.
-INTEGER function                   :INT[EGER] ( numericExpression | characterExpression )  :The INTEGER function returns an integer representation of a number or character string in the form of an integer constant.
-LCASE function                      :LCASE ( characterExpression ) :The LCASE or LOWER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to lowercase.
-LOWER function                      :LOWER ( characterExpression ) :The LCASE or LOWER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to lowercase.
-LENGTH function                    :LENGTH ( characterExpression | bitExpression ) :The LENGTH function is applied to either a character string expression or a bit string expression and returns the number of characters in the result.
-LN function                         :LN ( number ) :The LN and LOG functions return the natural logarithm (base e) of the specified number.
-LOG function                        :LOG ( number ) :The LN and LOG functions return the natural logarithm (base e) of the specified number.
-LOG10 function                     :LOG10 ( number ) :The LOG10 function returns the base-10 logarithm of the specified number.
-LOCATE function                    :LOCATE ( characterExpression, characterExpression [ , startPosition ] ) :The LOCATE function is used to search for a string within another string. If the desired string is found, LOCATE returns the index at which it is found. If the desired string is not found, LOCATE returns 0.
-LTRIM function                     :LTRIM ( characterExpression ) :The LTRIM function removes blanks from the beginning of a character string expression.
-MINUTE function                    :MINUTE ( expression ) :The MINUTE function returns the minute part of a value.
-MOD function                       :MOD ( integerExpression, integerExpression ) :The MOD function returns the remainder (modulus) of argument 1 divided by argument 2. The result is negative only if argument 1 is negative.
-MONTH function                     :MONTH ( expression ) :The MONTH function returns the month part of a value.
-NULLIF function                    :NULLIF ( expression, expression ) :The NULLIF function can be used for conditional expressions in Derby.
-PI function                        :PI ( ) :The PI function returns a value that is closer than any other value to pi.
-RADIANS function                   :RADIANS ( number ) :The RADIANS function converts a specified number from degrees to radians.
-RANDOM function                    :RANDOM ( ) :The RANDOM function returns a random number.
-RAND function                      :RAND ( seed ) :The RAND function returns a random number given a seed number
-ROW_NUMBER function                :ROW_NUMBER ( ) OVER [ windowSpecification | windowName ] :The ROW_NUMBER function returns the row number over a named or unnamed window specification.
-RTRIM function                     :RTRIM ( characterExpression ) :The RTRIM function removes blanks from the end of a character string expression.
-SECOND function                    :SECOND ( expression ) :The SECOND function returns the seconds part of a value.
-SESSION_USER function              :SESSION_USER :When used outside stored routines, the SESSION_USER, USER, and CURRENT_USER functions all return the authorization identifier of the user that created the SQL session.
-SIGN function                      :SIGN ( number ) :The SIGN function returns the sign of the specified number.
-SIN function                       :SIN ( number ) :The SIN function returns the sine of a specified number.
-SINH function                      :SINH ( number ) :The SINH function returns the hyperbolic sine of a specified number.
-SMALLINT function                  :SMALLINT ( numericExpression | characterExpression ) :The SMALLINT function returns a small integer representation of a number or character string in the form of a small integer constant.
-SQRT function                      :SQRT( number ) :The SQRT function returns the square root of a floating-point number; only the built-in types REAL, FLOAT, and DOUBLE PRECISION are supported.
-SUBSTR function                    :SUBSTR( characterExpression, startPosition [, lengthOfString ] ) :The SUBSTR function acts on a character string expression or a bit string expression.
-TAN function                       :TAN ( number ):The TAN function returns the tangent of a specified number.
-TANH function                      :TANH ( number ):The TANH function returns the hyperbolic tangent of a specified number.
-TIME function                      :TIME ( expression ) :The TIME function returns a time from a value.
-TIMESTAMP function                 :TIMESTAMP ( expression [ , expression ] ) :The TIMESTAMP function returns a timestamp from a value or a pair of values.
-TRIM function                      :TRIM( [ trimOperands ] trimSource ) :The TRIM function takes a character expression and returns that expression with leading and/or trailing pad characters removed.
-UCASE function                      :UCASE ( characterExpression ) :The UCASE or UPPER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to uppercase.
-UPPER function                      :UPPER ( characterExpression ) :The UCASE or UPPER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to uppercase.
-USER function                      :USER :When used outside stored routines, the USER, CURRENT_USER, and SESSION_USER functions all return the authorization identifier of the user that created the SQL session.
-VARCHAR function                   :VARCHAR ( characterStringExpression|datetimeExpression  ) :The VARCHAR function returns a varying-length character string representation of a character string.
-XMLEXISTS operator                 :XMLEXISTS ( xqueryStringLiteral PASSING BY REF xmlValueExpression [ BY REF ] ) :XMLEXISTS is an SQL/XML operator that you can use to query XML values in SQL.
-XMLPARSE operator                  :XMLPARSE ( DOCUMENT stringValueExpression PRESERVE WHITESPACE ) :XMLPARSE is a SQL/XML operator that you use to parse a character string expression into a Derby XML value.
-XMLQUERY operator                  :XMLQUERY ( xqueryStringLiteral PASSING BY REF xmlValueExpression  [ RETURNING SEQUENCE [ BY REF ] ] EMPTY ON EMPTY) :XMLQUERY is a SQL/XML operator that you can use to query XML values in SQL.
-XMLSERIALIZE operator              :XMLSERIALIZE ( xmlValueExpression AS stringDataType ) :XMLSERIALIZE is a SQL/XML operator that you can use to convert an XML type to a character type. There is no other way to convert the type of a Derby XML value.
-YEAR function                      :YEAR ( expression ) :The YEAR function returns the year part of a value.
-[AggregateFunctions]
-AVG function                       :AVG ( [ DISTINCT | ALL ] expression ) :AVG is an aggregate function that evaluates the average of an expression over a set of rows.
-COUNT function                     :COUNT ( [ DISTINCT | ALL ] expression )  :COUNT is an aggregate function that counts the number of rows accessed in an expression. COUNT is allowed on all types of expressions.
-COUNT(*) function                  :COUNT(*) :COUNT(*) is an aggregate function that counts the number of rows accessed. No NULLs or duplicates are eliminated. COUNT(*) does not operate on an expression.
-MAX function                       :MAX ( [ DISTINCT | ALL ] expression ) :MAX is an aggregate function that evaluates the maximum of an expression over a set of rows.
-MIN function                       :MIN ( [ DISTINCT | ALL ] expression ) :MIN is an aggregate function that evaluates the minimum of an expression over a set of rows.
-STDDEV_POP function                :STDDEV_POP ( expression ) :STDDEV_POP is an aggregate function that evaluates the standard deviation of an expression over a population.
-STDDEV_SAMP function               :STDDEV_SAMP ( expression ) :STDDEV_SAMP is an aggregate function that evaluates the sample deviation of an expression over a set of rows.
-SUM function                       :SUM ( [ DISTINCT | ALL ] expression ) :SUM is an aggregate function that evaluates the sum of the expression over a set of rows.
-VAR_POP function                   :VAR_POP ( expression ) :VAR_POP is an aggregate function that evaluates the population variance of an expression over a set of rows.
-VAR_SAMP function                  :VAR_SAMP ( expression ) :VAR_SAMP is an aggregate function that evaluates the sample variance of an expression over a set of rows.
+ABS                         :ABS ( numericExpression ) :The ABS or ABSVAL function returns the absolute value of a numeric expression.
+ABSVAL                      :ABSVAL ( numericExpression ) :The ABS or ABSVAL function returns the absolute value of a numeric expression.
+ACOS                        :ACOS( number ) :The ACOS function returns the arc cosine of a specified number.
+ASIN                        :ASIN( number ) :The ASIN function returns the arc sine of a specified number.
+ATAN                        :ATAN( number ) :The ATAN function returns the arc tangent of a specified number.
+ATAN2                       :ATAN2 ( y, x ) :The ATAN2 function returns the arctangent, in radians, of the quotient of the two arguments.
+BIGINT                      :BIGINT ( characterExpression | numericExpression ) :The BIGINT function returns a 64-bit integer representation of a number or character string in the form of an integer constant.
+CAST                        :CAST ( [ expression | NULL | ? ]AS dataType ) :The CAST function converts a value from one data type to another and provides a data type to a dynamic parameter (?) or a NULL value.
+CEIL                        :CEIL ( number ) :The CEIL or CEILING function rounds the specified number up, and returns the smallest number that is greater than or equal to the specified number.
+CEILING                     :CEILING ( number ) :The CEIL or CEILING function rounds the specified number up, and returns the smallest number that is greater than or equal to the specified number.
+CHAR                        :CHAR ( characterExpression [ , integer ] ) :The CHAR function returns a fixed-length character string representation.
+CHAR                        :CHAR ( integerExpression|datetimeExpression|decimalExpression|floatingPointExpression    )  :The CHAR function returns a fixed-length character string representation.
+COALESCE                    :COALESCE ( expression, expression [ , expression ]* ) :The COALESCE function takes two or more compatible arguments and returns the first argument that is not null.
+Concatenation               :characterExpression || characterExpression  :The concatenation operator, ||, concatenates its right operand to the end of its left operand. It operates on character or bit expressions.
+COS                         :COS ( number ) :The COS function returns the cosine of a specified number.
+COSH                        :COSH( number ) :The COSH function returns the hyperbolic cosine of a specified number.
+COT                         :COT( number ) :The COT function returns the cotangent of a specified number.
+CURRENT_DATE                :CURRENT_DATE :The CURRENT_DATE function returns the current date; the value returned does not change if it is executed more than once in a single statement.
+CURRENT ISOLATION           :CURRENT ISOLATION :The CURRENT ISOLATION function returns the current isolation level as a CHAR(2) value of either "" (blank), "UR", "CS", "RS", or "RR".
+CURRENT_ROLE                :CURRENT_ROLE :The CURRENT_ROLE function returns the authorization identifier of the current role. If there is no current role, it returns NULL.
+CURRENT SCHEMA              :CURRENT SCHEMA :The CURRENT SCHEMA function returns the schema name used to qualify unqualified database object references.
+CURRENT_TIME                :CURRENT_TIME :The CURRENT_TIME function returns the current time; the value returned does not change if it is executed more than once in a single statement.
+CURRENT_TIMESTAMP           :CURRENT_TIMESTAMP :The CURRENT_TIMESTAMP function returns the current timestamp; the value returned does not change if it is executed more than once in a single statement.
+CURRENT_USER                :CURRENT_USER :When used outside stored routines, the CURRENT_USER, USER, and SESSION_USER functions all return the authorization identifier of the user that created the SQL session.
+DATE                        :DATE ( expression ) :The DATE function returns a date from a value.
+DAY                         :DAY ( expression ) :The DAY function returns the day part of a value.
+DEGREES                     :DEGREES ( number ) :The DEGREES function converts a specified number from radians to degrees.
+DOUBLE                      :DOUBLE [ PRECISION ] ( numericExpression ):The DOUBLE function returns a floating-point number corresponding to a number or a character string.
+EXP                         :EXP ( number ):The EXP function returns e raised to the power of the specified number.
+FLOOR                       :FLOOR ( number ) :The FLOOR function rounds the specified number down, and returns the largest number that is less than or equal to the specified number.
+HOUR                        :HOUR ( expression ) :The HOUR function returns the hour part of a value.
+IDENTITY_VAL_LOCAL          :IDENTITY_VAL_LOCAL ( ) :The IDENTITY_VAL_LOCAL function is a non-deterministic function that returns the most recently assigned value of an identity column for a connection, where the assignment occurred as a result of a single row INSERT statement using a VALUES clause or a single row UPDATE statement.
+INTEGER                     :INT[EGER] ( numericExpression | characterExpression )  :The INTEGER function returns an integer representation of a number or character string in the form of an integer constant.
+LCASE                        :LCASE ( characterExpression ) :The LCASE or LOWER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to lowercase.
+LOWER                        :LOWER ( characterExpression ) :The LCASE or LOWER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to lowercase.
+LENGTH                      :LENGTH ( characterExpression | bitExpression ) :The LENGTH function is applied to either a character string expression or a bit string expression and returns the number of characters in the result.
+LN                           :LN ( number ) :The LN and LOG functions return the natural logarithm (base e) of the specified number.
+LOG                          :LOG ( number ) :The LN and LOG functions return the natural logarithm (base e) of the specified number.
+LOG10                       :LOG10 ( number ) :The LOG10 function returns the base-10 logarithm of the specified number.
+LOCATE                      :LOCATE ( characterExpression, characterExpression [ , startPosition ] ) :The LOCATE function is used to search for a string within another string. If the desired string is found, LOCATE returns the index at which it is found. If the desired string is not found, LOCATE returns 0.
+LTRIM                       :LTRIM ( characterExpression ) :The LTRIM function removes blanks from the beginning of a character string expression.
+MINUTE                      :MINUTE ( expression ) :The MINUTE function returns the minute part of a value.
+MOD                         :MOD ( integerExpression, integerExpression ) :The MOD function returns the remainder (modulus) of argument 1 divided by argument 2. The result is negative only if argument 1 is negative.
+MONTH                       :MONTH ( expression ) :The MONTH function returns the month part of a value.
+NULLIF                      :NULLIF ( expression, expression ) :The NULLIF function can be used for conditional expressions in Derby.
+PI                          :PI ( ) :The PI function returns a value that is closer than any other value to pi.
+RADIANS                     :RADIANS ( number ) :The RADIANS function converts a specified number from degrees to radians.
+RANDOM                      :RANDOM ( ) :The RANDOM function returns a random number.
+RAND                        :RAND ( seed ) :The RAND function returns a random number given a seed number
+ROW_NUMBER                  :ROW_NUMBER ( ) OVER [ windowSpecification | windowName ] :The ROW_NUMBER function returns the row number over a named or unnamed window specification.
+RTRIM                       :RTRIM ( characterExpression ) :The RTRIM function removes blanks from the end of a character string expression.
+SECOND                      :SECOND ( expression ) :The SECOND function returns the seconds part of a value.
+SESSION_USER                :SESSION_USER :When used outside stored routines, the SESSION_USER, USER, and CURRENT_USER functions all return the authorization identifier of the user that created the SQL session.
+SIGN                        :SIGN ( number ) :The SIGN function returns the sign of the specified number.
+SIN                         :SIN ( number ) :The SIN function returns the sine of a specified number.
+SINH                        :SINH ( number ) :The SINH function returns the hyperbolic sine of a specified number.
+SMALLINT                    :SMALLINT ( numericExpression | characterExpression ) :The SMALLINT function returns a small integer representation of a number or character string in the form of a small integer constant.
+SQRT                        :SQRT( number ) :The SQRT function returns the square root of a floating-point number; only the built-in types REAL, FLOAT, and DOUBLE PRECISION are supported.
+SUBSTR                      :SUBSTR( characterExpression, startPosition [, lengthOfString ] ) :The SUBSTR function acts on a character string expression or a bit string expression.
+TAN                         :TAN ( number ):The TAN function returns the tangent of a specified number.
+TANH                        :TANH ( number ):The TANH function returns the hyperbolic tangent of a specified number.
+TIME                        :TIME ( expression ) :The TIME function returns a time from a value.
+TIMESTAMP                   :TIMESTAMP ( expression [ , expression ] ) :The TIMESTAMP function returns a timestamp from a value or a pair of values.
+TRIM                        :TRIM( [ trimOperands ] trimSource ) :The TRIM function takes a character expression and returns that expression with leading and/or trailing pad characters removed.
+UCASE                       :UCASE ( characterExpression ) :The UCASE or UPPER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to uppercase.
+UPPER                       :UPPER ( characterExpression ) :The UCASE or UPPER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to uppercase.
+USER                        :USER :When used outside stored routines, the USER, CURRENT_USER, and SESSION_USER functions all return the authorization identifier of the user that created the SQL session.
+VARCHAR                     :VARCHAR ( characterStringExpression|datetimeExpression  ) :The VARCHAR function returns a varying-length character string representation of a character string.
+XMLEXISTS                   :XMLEXISTS ( xqueryStringLiteral PASSING BY REF xmlValueExpression [ BY REF ] ) :XMLEXISTS is an SQL/XML operator that you can use to query XML values in SQL.
+XMLPARSE                    :XMLPARSE ( DOCUMENT stringValueExpression PRESERVE WHITESPACE ) :XMLPARSE is a SQL/XML operator that you use to parse a character string expression into a Derby XML value.
+XMLQUERY                    :XMLQUERY ( xqueryStringLiteral PASSING BY REF xmlValueExpression  [ RETURNING SEQUENCE [ BY REF ] ] EMPTY ON EMPTY) :XMLQUERY is a SQL/XML operator that you can use to query XML values in SQL.
+XMLSERIALIZE                :XMLSERIALIZE ( xmlValueExpression AS stringDataType ) :XMLSERIALIZE is a SQL/XML operator that you can use to convert an XML type to a character type. There is no other way to convert the type of a Derby XML value.
+YEAR                        :YEAR ( expression ) :The YEAR function returns the year part of a value.
+[Aggregates]
+AVG                      :AVG ( [ DISTINCT | ALL ] expression )     :AVG is an aggregate function that evaluates the average of an expression over a set of rows.
+COUNT                    :COUNT ( [ DISTINCT | ALL ] expression )   :COUNT is an aggregate function that counts the number of rows accessed in an expression. COUNT is allowed on all types of expressions.
+COUNT                    :COUNT(*)                                  :COUNT(*) is an aggregate function that counts the number of rows accessed. No NULLs or duplicates are eliminated. COUNT(*) does not operate on an expression.
+MAX                      :MAX ( [ DISTINCT | ALL ] expression )     :MAX is an aggregate function that evaluates the maximum of an expression over a set of rows.
+MIN                      :MIN ( [ DISTINCT | ALL ] expression )     :MIN is an aggregate function that evaluates the minimum of an expression over a set of rows.
+STDDEV_POP               :STDDEV_POP ( expression )                 :STDDEV_POP is an aggregate function that evaluates the standard deviation of an expression over a population.
+STDDEV_SAMP              :STDDEV_SAMP ( expression )                :STDDEV_SAMP is an aggregate function that evaluates the sample deviation of an expression over a set of rows.
+SUM                      :SUM ( [ DISTINCT | ALL ] expression )     :SUM is an aggregate function that evaluates the sum of the expression over a set of rows.
+VAR_POP                  :VAR_POP ( expression )                    :VAR_POP is an aggregate function that evaluates the population variance of an expression over a set of rows.
+VAR_SAMP                 :VAR_SAMP ( expression )                   :VAR_SAMP is an aggregate function that evaluates the sample variance of an expression over a set of rows.
 [Built-in system functions]
 SYSCS_UTIL.SYSCS_CHECK_TABLE                  :SYSCS_UTIL.SYSCS_CHECK_TABLE(IN SCHEMANAME VARCHAR(128), IN TABLENAME VARCHAR(128))  :The SYSCS_UTIL.SYSCS_CHECK_TABLE function checks the specified table, ensuring that all of its indexes are consistent with the base table.
 SYSCS_UTIL.SYSCS_GET_DATABASE_NAME            :VARCHAR(32672) SYSCS_UTIL.SYSCS_GET_DATABASE_NAME() :The SYSCS_UTIL.SYSCS_GET_DATABASE_NAME function returns the name of the database of the current connection.
@@ -133,6 +130,6 @@ SYSCS_UTIL.SYSCS_SET_XPLAIN_SCHEMA                                         :SYSC
 SYSCS_UTIL.SYSCS_UNFREEZE_DATABASE                                         :SYSCS_UTIL.SYSCS_UNFREEZE_DATABASE() :The SYSCS_UTIL.SYSCS_UNFREEZE_DATABASE unfreezes a database after backup.
 SYSCS_UTIL.SYSCS_UPDATE_STATISTICS                                         :SYSCS_UTIL.SYSCS_UPDATE_STATISTICS(IN SCHEMANAME VARCHAR(128), IN TABLENAME VARCHAR(128), IN INDEXNAME VARCHAR(128)) :The SYSCS_UTIL.SYSCS_UPDATE_STATISTICS updates the cardinality statistics, or creates the statistics if they do not exist, for the index that you specify or for all of the indexes on a table.
 [System procedures for storing jar files in a database]
-SQLJ.INSTALL_JAR system procedure   :SQLJ.INSTALL_JAR(IN JAR_FILE_PATH_OR_URL VARCHAR(32672), IN QUALIFIED_JAR_NAME VARCHAR(32672),IN DEPLOY INTEGER):The SQLJ.INSTALL_JAR system procedure stores a jar file in a database.
-SQLJ.REMOVE_JAR system procedure    :SQLJ.REMOVE_JAR(IN QUALIFIED_JAR_NAME VARCHAR(32672),IN UNDEPLOY INTEGER):The SQLJ.REMOVE_JAR system procedure removes a jar file from a database.
-SQLJ.REPLACE_JAR system procedure   :SQLJ.REPLACE_JAR(IN JAR_FILE_PATH_OR_URL VARCHAR(32672), IN QUALIFIED_JAR_NAME VARCHAR(32672)):The SQLJ.REPLACE_JAR system procedure replaces a jar file in a database.
+SQLJ.INSTALL_JAR        :SQLJ.INSTALL_JAR(IN JAR_FILE_PATH_OR_URL VARCHAR(32672), IN QUALIFIED_JAR_NAME VARCHAR(32672),IN DEPLOY INTEGER):The SQLJ.INSTALL_JAR system procedure stores a jar file in a database.
+SQLJ.REMOVE_JAR         :SQLJ.REMOVE_JAR(IN QUALIFIED_JAR_NAME VARCHAR(32672),IN UNDEPLOY INTEGER):The SQLJ.REMOVE_JAR system procedure removes a jar file from a database.
+SQLJ.REPLACE_JAR        :SQLJ.REPLACE_JAR(IN JAR_FILE_PATH_OR_URL VARCHAR(32672), IN QUALIFIED_JAR_NAME VARCHAR(32672)):The SQLJ.REPLACE_JAR system procedure replaces a jar file in a database.
