@@ -1,229 +1,229 @@
 [Comparison Functions and Operators]
->:? > expr:Greater than operator
->=:? >= expr:Greater than or equal operator
-<:? < expr:	Less than operator
-<>:? <> expr:Not equal operator
-!=:? != expr:Not equal operator
-<=:? <= expr:Less than or equal operator
-<=>:? <=> expr:NULL-safe equal to operator
-= : ? = expr : Equal operator
-BETWEEN ... AND ... :? BETWEEN min AND max :Whether a value is within a range of values
-COALESCE:COALESCE(T v1, T v2, ...) :Return the first non-NULL argument
-GREATEST:GREATEST(x1, x2, ...):Return the largest argument
-IN : ? IN (value,...) :Whether a value is within a set of values
-INTERVAL:INTERVAL():Return the index of the argument that is less than the first argument
-IS	: ? IS boolean_value:Test a value against a boolean
-IS NOT	: ? IS NOT boolean_value:Test a value against a boolean
-IS NOT NULL	:? IS NOT NULL:NOT NULL value test
-IS NULL	:? IS NULL :NULL value test
-ISNULL() : ISNULL(?):Test whether the argument is NULL
-LEAST()	: LEAST(value1,value2,...):Return the smallest argument
-NOT BETWEEN ... AND ...	:? NOT BETWEEN min AND max:Whether a value is not within a range of values
-NOT IN()	:? NOT IN (value,...):Whether a value is not within a set of values
+>                       :? > expr           :Greater than operator
+>=                      :? >= expr          :Greater than or equal operator
+<                       :? < expr           :	Less than operator
+<>                      :? <> expr          :Not equal operator
+!=                      :? != expr          :Not equal operator
+<=                      :? <= expr          :Less than or equal operator
+<=>                     :? <=> expr         :NULL-safe equal to operator
+=                       : ? = expr          : Equal operator
+BETWEEN ... AND ...     :? BETWEEN min AND max      :Whether a value is within a range of values
+COALESCE                :COALESCE(T v1, T v2, ...)  :Return the first non-NULL argument
+GREATEST                :GREATEST(x1, x2, ...)      :Return the largest argument
+IN                      : ? IN (value,...)          :Whether a value is within a set of values
+INTERVAL                :INTERVAL()                 :Return the index of the argument that is less than the first argument
+IS	                    : ? IS boolean_value        :Test a value against a boolean
+IS NOT	                : ? IS NOT boolean_value    :Test a value against a boolean
+IS NOT NULL	            :? IS NOT NULL              :NOT NULL value test
+IS NULL	                :? IS NULL                  :NULL value test
+ISNULL()                : ISNULL(?)                 :Test whether the argument is NULL
+LEAST()	                : LEAST(value1,value2,...)  :Return the smallest argument
+NOT BETWEEN ... AND ...	:? NOT BETWEEN min AND max  :Whether a value is not within a range of values
+NOT IN()	            :? NOT IN (value,...)       :Whether a value is not within a set of values
 [Logical Operators]
-AND:? AND B:Logical AND
-&&: ? && B:Logical AND
-NOT:NOT ? :Negates value
-!:! ? :Negates value
-OR:? OR B :Logical OR
-||  :? || B :Logical OR
-XOR: ? XOR B :Logical XOR
+AND                     :? AND B                    :Logical AND
+&&                      : ? && B                    :Logical AND
+NOT                     :NOT ?                      :Negates value
+!                       :! ?                        :Negates value
+OR                      :? OR B                     :Logical OR
+||                      :? || B                     :Logical OR
+XOR                     : ? XOR B                   :Logical XOR
 [Assignment Operators]
-:= : @var1 := expr : Assign a value
-= : @var1 = expr : Assign a value
+：=                      : @var1 ：= expr : Assign a value
+=                       : @var1 = expr  : Assign a value
 [Flow Control Functions]
-CASE_VALUE	:CASE value WHEN compare_value THEN result [WHEN compare_value THEN result ...] [ELSE result] END:Case operator
-CASE	:CASE WHEN condition THEN result [WHEN condition THEN result ...] [ELSE result] END:Case operator
-IF()	:IF(expr1,expr2,expr3):If/else construct
-IFNULL():IFNULL(expr1,expr2):	Null if/else construct
-NULLIF():NULLIF(expr1,expr2):	Return NULL if expr1 = expr2
+CASE_VALUE	        :CASE value WHEN compare_value THEN result [WHEN compare_value THEN result ...] [ELSE result] END   :Case operator
+CASE	            :CASE WHEN condition THEN result [WHEN condition THEN result ...] [ELSE result] END                 :Case operator
+IF()	            :IF(expr1,expr2,expr3)                      :If/else construct
+IFNULL()            :IFNULL(expr1,expr2)                        :Null if/else construct
+NULLIF()            :NULLIF(expr1,expr2)                        :Return NULL if expr1 = expr2
 [Arithmetic Operators]
-%:? % ?:Modulo operator
-MOD:? MOD ?:Modulo operator
-*:? * ? : Multiplication operator
-+:? + ?: Addition operator
--:? - ? :Minus operator
--: - ? : Change the sign of the argument
-/:? / ? : Division operator
-DIV:? DIV ? :	Integer division
+%                   :? % ?          :Modulo operator
+MOD                 :? MOD ?        :Modulo operator
+*                   :? * ?          : Multiplication operator
++                   :? + ?          : Addition operator
+-                   :? - ?          :Minus operator
+-                   : - ?           : Change the sign of the argument
+/                   :? / ?          : Division operator
+DIV                 :? DIV ?        :Integer division
 [Mathematical Functions]
-ABS():ABS(?) :Return the absolute value
-ACOS():ACOS(?) :Return the arc cosine
-ASIN():ASIN(?): Return the arc sine
-ATAN():ATAN(?): Return the arc tangent
-ATAN2():ATAN2(?, ?): Return the arc tangent of the two arguments
-CEIL():CEIL(?):Return the smallest integer value not less than the argument
-CEILING():CEILING(?):Return the smallest integer value not less than the argument
-CONV():CONV(?,from_base,to_base):Convert numbers between different number bases
-COS():COS(?):Return the cosine
-COT():COT(?):Return the cotangent
-CRC32():CRC32(?):Compute a cyclic redundancy check value
-DEGREES():DEGREES(?):Convert radians to degrees
-EXP():EXP(?):Raise to the power of
-FLOOR():FLOOR(?):Return the largest integer value not greater than the argument
-LN():LN(?):Return the natural logarithm of the argument
-LOG():LOG(?):Return the natural logarithm of the first argument
-LOG10():LOG10(?):Return the base-10 logarithm of the argument
-LOG2():LOG2(?):Return the base-2 logarithm of the argument
-MOD():MOD(N,M):Return the remainder
-PI():PI():Return the value of pi
-POW():POW(?,n)         :Return the argument raised to the specified power
-POWER():POWER(?,n)     :Return the argument raised to the specified power
-RADIANS():RADIANS(?)   :Return argument converted to radians
-RAND():RAND(seed)      :Return a random floating-point value
-ROUND():ROUND(?)       :Round the argument
-SIGN():SIGN(?)         :Return the sign of the argument
-SIN():SIN(?)           :Return the sine of the argument
-SQRT():SQRT(?)         :Return the square root of the argument
-TAN():TAN(?)           :Return the tangent of the argument
-TRUNCATE:TRUNCATE(X,D) :Truncate to specified number of decimal places
+ABS                 :ABS(?) :Return the absolute value
+ACOS                :ACOS(?) :Return the arc cosine
+ASIN                :ASIN(?): Return the arc sine
+ATAN                :ATAN(?): Return the arc tangent
+ATAN2               :ATAN2(?, ?): Return the arc tangent of the two arguments
+CEIL                :CEIL(?):Return the smallest integer value not less than the argument
+CEILING             :CEILING(?):Return the smallest integer value not less than the argument
+CONV                :CONV(?,from_base,to_base):Convert numbers between different number bases
+COS                 :COS(?):Return the cosine
+COT                 :COT(?):Return the cotangent
+CRC32               :CRC32(?):Compute a cyclic redundancy check value
+DEGREES             :DEGREES(?):Convert radians to degrees
+EXP                 :EXP(?):Raise to the power of
+FLOOR               :FLOOR(?):Return the largest integer value not greater than the argument
+LN                  :LN(?):Return the natural logarithm of the argument
+LOG                 :LOG(?):Return the natural logarithm of the first argument
+LOG10               :LOG10(?):Return the base-10 logarithm of the argument
+LOG2                :LOG2(?):Return the base-2 logarithm of the argument
+MOD                 :MOD(N,M):Return the remainder
+PI                  :PI():Return the value of pi
+POW                 :POW(?,n)         :Return the argument raised to the specified power
+POWER               :POWER(?,n)     :Return the argument raised to the specified power
+RADIANS             :RADIANS(?)   :Return argument converted to radians
+RAND                :RAND(seed)      :Return a random floating-point value
+ROUND               :ROUND(?)       :Round the argument
+SIGN                :SIGN(?)         :Return the sign of the argument
+SIN                 :SIN(?)           :Return the sine of the argument
+SQRT                :SQRT(?)         :Return the square root of the argument
+TAN                 :TAN(?)           :Return the tangent of the argument
+TRUNCATE            :TRUNCATE(X,D) :Truncate to specified number of decimal places
 [Date and Time Functions]
-ADDDATE()			:ADDDATE(?,days) :Add time values (intervals) to a date value
-ADDDATE()			:ADDDATE(?,INTERVAL expr unit) :Add time values (intervals) to a date value
-ADDTIME()			:ADDTIME(expr1,expr2) :Add time
-CONVERT_TZ()		:CONVERT_TZ(?,from_tz,to_tz) :Convert from one time zone to another
-CURDATE()			:CURDATE() :Return the current date
-CURRENT_DATE()		:CURRENT_DATE() :Synonyms for CURDATE()
-CURRENT_DATE		:CURRENT_DATE :Synonyms for CURDATE()
-CURRENT_TIME()		:CURRENT_TIME(([fsp])) :Synonyms for CURTIME()
-CURRENT_TIME		:CURRENT_TIME :Synonyms for CURTIME()
-CURRENT_TIMESTAMP()	:CURRENT_TIMESTAMP(([fsp])) :Synonyms for NOW()
-CURRENT_TIMESTAMP	:CURRENT_TIMESTAMP :Synonyms for NOW()
-CURTIME()			:CURTIME([fsp]) :Return the current time
-DATE()				:DATE(?) :Extract the date part of a date or datetime expression
-DATE_ADD()			:DATE_ADD(?,INTERVAL expr unit) :Add time values (intervals) to a date value
-DATE_FORMAT()		:DATE_FORMAT(?,format) :Format date as specified
-DATE_SUB()			:DATE_SUB(date,INTERVAL expr unit) :Subtract a time value (interval) from a date
-DATEDIFF()			:DATEDIFF(expr1,expr2) :Subtract two dates
-DAY()				:DAY(?) :Synonym for DAYOFMONTH()
-DAYNAME()			:DAYNAME(?) :Return the name of the weekday
-DAYOFMONTH()		:DAYOFMONTH(?) :Return the day of the month (0-31)
-DAYOFWEEK()			:DAYOFWEEK(?) :Return the weekday index of the argument
-DAYOFYEAR()			:DAYOFYEAR(?) :Return the day of the year (1-366)
-EXTRACT()			:EXTRACT(unit FROM ?) :Extract part of a date
-FROM_DAYS()			:FROM_DAYS(?) :Convert a day number to a date
-FROM_UNIXTIME()		:FROM_UNIXTIME(?[,format]) :Format Unix timestamp as a date
-GET_FORMAT()		:GET_FORMAT({DATE|TIME|DATETIME}, {'EUR'|'USA'|'JIS'|'ISO'|'INTERNAL'}) :Return a date format string
-HOUR()				:HOUR(?) :Extract the hour
-LAST_DAY			:LAST_DAY(?) :Return the last day of the month for the argument
-LOCALTIME()			:LOCALTIME([fsp]) :Synonym for NOW()
-LOCALTIME			:LOCALTIME :Synonym for NOW()
-LOCALTIMESTAMP		:LOCALTIMESTAMP :Synonym for NOW()
-LOCALTIMESTAMP()	:LOCALTIMESTAMP([fsp]) :Synonym for NOW()
-MAKEDATE()			:MAKEDATE(year,dayofyear) :Create a date from the year and day of year
-MAKETIME()			:MAKETIME(hour,minute,second) :Create time from hour, minute, second
-MICROSECOND()		:MICROSECOND(?) :Return the microseconds from argument
-MINUTE()			:MINUTE(?) :Return the minute from the argument
-MONTH()				:MONTH(?) :Return the month from the date passed
-MONTHNAME()			:MONTHNAME(?) :Return the name of the month
-NOW()				:NOW([fsp]) :Return the current date and time
-PERIOD_ADD()		:PERIOD_ADD(P,N) :Add a period to a year-month
-PERIOD_DIFF()		:PERIOD_DIFF(P1,P2) :Return the number of months between periods
-QUARTER()			:QUARTER(?) :Return the quarter from a date argument
-SEC_TO_TIME()		:SEC_TO_TIME(?) :Converts seconds to 'hh:mm:ss' format
-SECOND()			:SECOND(?) :Return the second (0-59)
-STR_TO_DATE()		:STR_TO_DATE(?,format) :Convert a string to a date
-SUBDATE()			:SUBDATE(?,INTERVAL expr unit), SUBDATE(expr,days) :Synonym for DATE_SUB() when invoked with three arguments
-SUBDATE()			:SUBDATE(?,days) :Synonym for DATE_SUB() when invoked with three arguments
-SUBTIME()			:SUBTIME(expr1,expr2) :Subtract times
-SYSDATE()			:SYSDATE([fsp]) :Return the time at which the function executes
-TIME()				:TIME(?) :Extract the time portion of the expression passed
-TIME_FORMAT()		:TIME_FORMAT(?,format) :Format as time
-TIME_TO_SEC()		:TIME_TO_SEC(?) :Return the argument converted to seconds
-TIMEDIFF()			:TIMEDIFF(expr1,expr2) :Subtract time
-TIMESTAMP()			:TIMESTAMP(expr) :With a single argument, this function returns the date or datetime expression; with two arguments, the sum of the arguments
-TIMESTAMP()			:TIMESTAMP(expr1,expr2) :With a single argument, this function returns the date or datetime expression; with two arguments, the sum of the arguments
-TIMESTAMPADD()		:TIMESTAMPADD(unit,interval,?) :Add an interval to a datetime expression
-TIMESTAMPDIFF()		:TIMESTAMPDIFF(unit,datetime_expr1,datetime_expr2) :Subtract an interval from a datetime expression
-TO_DAYS()			:TO_DAYS(?) :Return the date argument converted to days
-TO_SECONDS()		:TO_SECONDS(?) :Return the date or datetime argument converted to seconds since Year 0
-UNIX_TIMESTAMP()	:UNIX_TIMESTAMP([date]) :Return a Unix timestamp
-UTC_DATE			:UTC_DATE :Return the current UTC date
-UTC_DATE()			:UTC_DATE() :Return the current UTC date
-UTC_TIME()			:UTC_TIME([fsp]) :Return the current UTC time
-UTC_TIME			:UTC_TIME    :Return the current UTC time
-UTC_TIMESTAMP()		:UTC_TIMESTAMP([fsp]) :Return the current UTC date and time
-UTC_TIMESTAMP		:UTC_TIMESTAMP :Return the current UTC date and time
-WEEK()				:WEEK(?[,mode]) :Return the week number
-WEEKDAY()			:WEEKDAY(?) :Return the weekday index
-WEEKOFYEAR()		:WEEKOFYEAR(?) :Return the calendar week of the date (1-53)
-YEAR()				:YEAR(?) :Return the year
-YEARWEEK()			:YEARWEEK(?) :Return the year and week
-YEARWEEK()			:YEARWEEK(?,mode) :Return the year and week
+ADDDATE			        :ADDDATE(?,days) :Add time values (intervals) to a date value
+ADDDATE			        :ADDDATE(?,INTERVAL expr unit) :Add time values (intervals) to a date value
+ADDTIME			        :ADDTIME(expr1,expr2) :Add time
+CONVERT_TZ		        :CONVERT_TZ(?,from_tz,to_tz) :Convert from one time zone to another
+CURDATE			        :CURDATE() :Return the current date
+CURRENT_DATE		    :CURRENT_DATE() :Synonyms for CURDATE()
+CURRENT_DATE		    :CURRENT_DATE :Synonyms for CURDATE()
+CURRENT_TIME		    :CURRENT_TIME(([fsp])) :Synonyms for CURTIME()
+CURRENT_TIME		    :CURRENT_TIME :Synonyms for CURTIME()
+CURRENT_TIMESTAMP	    :CURRENT_TIMESTAMP(([fsp])) :Synonyms for NOW()
+CURRENT_TIMESTAMP	    :CURRENT_TIMESTAMP :Synonyms for NOW()
+CURTIME			        :CURTIME([fsp]) :Return the current time
+DATE				    :DATE(?) :Extract the date part of a date or datetime expression
+DATE_ADD			    :DATE_ADD(?,INTERVAL expr unit) :Add time values (intervals) to a date value
+DATE_FORMAT		        :DATE_FORMAT(?,format) :Format date as specified
+DATE_SUB			    :DATE_SUB(date,INTERVAL expr unit) :Subtract a time value (interval) from a date
+DATEDIFF			    :DATEDIFF(expr1,expr2) :Subtract two dates
+DAY				        :DAY(?) :Synonym for DAYOFMONTH()
+DAYNAME			        :DAYNAME(?) :Return the name of the weekday
+DAYOFMONTH		        :DAYOFMONTH(?) :Return the day of the month (0-31)
+DAYOFWEEK			    :DAYOFWEEK(?) :Return the weekday index of the argument
+DAYOFYEAR			    :DAYOFYEAR(?) :Return the day of the year (1-366)
+EXTRACT			        :EXTRACT(unit FROM ?) :Extract part of a date
+FROM_DAYS			    :FROM_DAYS(?) :Convert a day number to a date
+FROM_UNIXTIME		    :FROM_UNIXTIME(?[,format]) :Format Unix timestamp as a date
+GET_FORMAT		        :GET_FORMAT({DATE|TIME|DATETIME}, {'EUR'|'USA'|'JIS'|'ISO'|'INTERNAL'}) :Return a date format string
+HOUR				    :HOUR(?) :Extract the hour
+LAST_DAY			    :LAST_DAY(?) :Return the last day of the month for the argument
+LOCALTIME			    :LOCALTIME([fsp]) :Synonym for NOW()
+LOCALTIME			    :LOCALTIME :Synonym for NOW()
+LOCALTIMESTAMP		    :LOCALTIMESTAMP :Synonym for NOW()
+LOCALTIMESTAMP	        :LOCALTIMESTAMP([fsp]) :Synonym for NOW()
+MAKEDATE			    :MAKEDATE(year,dayofyear) :Create a date from the year and day of year
+MAKETIME			    :MAKETIME(hour,minute,second) :Create time from hour, minute, second
+MICROSECOND		        :MICROSECOND(?) :Return the microseconds from argument
+MINUTE			        :MINUTE(?) :Return the minute from the argument
+MONTH				    :MONTH(?) :Return the month from the date passed
+MONTHNAME			    :MONTHNAME(?) :Return the name of the month
+NOW				        :NOW([fsp]) :Return the current date and time
+PERIOD_ADD		        :PERIOD_ADD(P,N) :Add a period to a year-month
+PERIOD_DIFF		        :PERIOD_DIFF(P1,P2) :Return the number of months between periods
+QUARTER			        :QUARTER(?) :Return the quarter from a date argument
+SEC_TO_TIME		        :SEC_TO_TIME(?) :Converts seconds to 'hh:mm:ss' format
+SECOND			        :SECOND(?) :Return the second (0-59)
+STR_TO_DATE		        :STR_TO_DATE(?,format) :Convert a string to a date
+SUBDATE			        :SUBDATE(?,INTERVAL expr unit), SUBDATE(expr,days) :Synonym for DATE_SUB() when invoked with three arguments
+SUBDATE			        :SUBDATE(?,days) :Synonym for DATE_SUB() when invoked with three arguments
+SUBTIME			        :SUBTIME(expr1,expr2) :Subtract times
+SYSDATE			        :SYSDATE([fsp]) :Return the time at which the function executes
+TIME				    :TIME(?) :Extract the time portion of the expression passed
+TIME_FORMAT		        :TIME_FORMAT(?,format) :Format as time
+TIME_TO_SEC		        :TIME_TO_SEC(?) :Return the argument converted to seconds
+TIMEDIFF			    :TIMEDIFF(expr1,expr2) :Subtract time
+TIMESTAMP			    :TIMESTAMP(expr) :With a single argument, this function returns the date or datetime expression; with two arguments, the sum of the arguments
+TIMESTAMP			    :TIMESTAMP(expr1,expr2) :With a single argument, this function returns the date or datetime expression; with two arguments, the sum of the arguments
+TIMESTAMPADD		    :TIMESTAMPADD(unit,interval,?) :Add an interval to a datetime expression
+TIMESTAMPDIFF		    :TIMESTAMPDIFF(unit,datetime_expr1,datetime_expr2) :Subtract an interval from a datetime expression
+TO_DAYS			        :TO_DAYS(?) :Return the date argument converted to days
+TO_SECONDS		        :TO_SECONDS(?) :Return the date or datetime argument converted to seconds since Year 0
+UNIX_TIMESTAMP	        :UNIX_TIMESTAMP([date]) :Return a Unix timestamp
+UTC_DATE			    :UTC_DATE :Return the current UTC date
+UTC_DATE			    :UTC_DATE() :Return the current UTC date
+UTC_TIME			    :UTC_TIME([fsp]) :Return the current UTC time
+UTC_TIME			    :UTC_TIME    :Return the current UTC time
+UTC_TIMESTAMP		    :UTC_TIMESTAMP([fsp]) :Return the current UTC date and time
+UTC_TIMESTAMP		    :UTC_TIMESTAMP :Return the current UTC date and time
+WEEK				    :WEEK(?[,mode]) :Return the week number
+WEEKDAY			        :WEEKDAY(?) :Return the weekday index
+WEEKOFYEAR		        :WEEKOFYEAR(?) :Return the calendar week of the date (1-53)
+YEAR				    :YEAR(?) :Return the year
+YEARWEEK			    :YEARWEEK(?) :Return the year and week
+YEARWEEK			    :YEARWEEK(?,mode) :Return the year and week
 [String Comparison Functions and Operators]
-ASCII()				: ASCII(?)    :Return numeric value of left-most character
-BIN()				: BIN(?)                        :Return a string containing binary representation of a number
-BIT_LENGTH()		: BIT_LENGTH(str)                      :Return length of argument in bits
-CHAR()				: CHAR(N,... [USING charset_name])                :Return the character for each integer passed
-CHAR_LENGTH()		: CHAR_LENGTH(?)                     :Return number of characters in argument
-CHARACTER_LENGTH()	: CHARACTER_LENGTH(?)                 :Synonym for CHAR_LENGTH()
-CONCAT()			: CONCAT(str1,str2,...)            :Return concatenated string
-CONCAT_WS()			: CONCAT_WS(separator,str1,str2,...)     :Return concatenate with separator
-ELT()				: ELT(N,str1,str2,str3,...)         :Return string at index number
-EXPORT_SET()		: EXPORT_SET(bits,on,off[,separator[,number_of_bits]])       :Return a string such that for every bit set in the value bits, you get an on string and for every unset bit, you get an off string
-FIELD()				: FIELD(?,str1,str2,str3,...)     :Index (position) of first argument in subsequent arguments
-FIND_IN_SET()		: FIND_IN_SET(?,strlist)                               :Index (position) of first argument within second argument
-FORMAT()			: FORMAT(?,D[,locale])            :Return a number formatted to specified number of decimal places
-FROM_BASE64()		: FROM_BASE64(?)                  :Decode base64 encoded string and return result
-HEX()				: HEX(?)                 :Hexadecimal representation of decimal or string value
-INSERT()			: INSERT(str,pos,len,newstr)                               :Insert substring at specified position up to specified number of characters
-INSTR()				: INSTR(str,substr)                               :Return the index of the first occurrence of substring
-LCASE()				: LCASE(?)                    :Synonym for LOWER()
-LEFT()				: LEFT(?,len)                               :Return the leftmost number of characters as specified
-LENGTH()			: LENGTH(?)                               :Return the length of a string in bytes
-LOAD_FILE()			: LOAD_FILE(file_name)                               :Load the named file
-LOCATE()			: LOCATE(substr,str[,pos])                               :Return the position of the first occurrence of substring
-LOWER()				: LOWER(?)                          :Return the argument in lowercase
-LPAD()				: LPAD(?,len,padstr)             :Return the string argument, left-padded with the specified string
-MAKE_SET()			: LTRIM(?)                     :Return a set of comma-separated strings that have the corresponding bit in bits set
-MATCH()				: MAKE_SET(bits,str1,str2,...)                   :Perform full-text search
-MID()				: MID(?,pos,len)                               :Return a substring starting from the specified position
-OCT()				: OCT(?)                         :Return a string containing octal representation of a number
-OCTET_LENGTH()		: OCTET_LENGTH(?)                      :Synonym for LENGTH()
-ORD()				: ORD(?)                      :Return character code for leftmost character of the argument
-POSITION()			: POSITION(substr IN str)                       :Synonym for LOCATE()
-QUOTE()				: QUOTE(?)                               :Escape the argument for use in an SQL statement
-REPEAT()			: REPEAT(?,count)                         :Repeat a string the specified number of times
-REPLACE()			: REPLACE(?,from_str,to_str)               :Replace occurrences of a specified string
-REVERSE()			: REVERSE(?)        :Reverse the characters in a string
-RIGHT()				: RIGHT(?,len)                     :Return the specified rightmost number of characters
-RPAD()				: RPAD(?,len,padstr)                                :Append string the specified number of times
-RTRIM()				: RTRIM(?)                               :Remove trailing spaces
-SOUNDEX()			: SOUNDEX(?)                               :Return a soundex string
-SOUNDS LIKE			: ? SOUNDS LIKE ?                               :Compare sounds
-SPACE()				: SPACE(?)                               :Return a string of the specified number of spaces
-SUBSTR()			: SUBSTR(?,pos[,len])                              :Return the substring as specified
-SUBSTRING()			: SUBSTRING(?,pos[,len])                               :Return the substring as specified
-SUBSTRING_INDEX()	: SUBSTRING_INDEX(?,delim,count)                               :Return a substring from a string before the specified number of occurrences of the delimiter
-TO_BASE64()			: TO_BASE64(?)                               :Return the argument converted to a base-64 string
-TRIM()				: TRIM([{BOTH | LEADING | TRAILING} [remstr] FROM] ?)                              :Remove leading and trailing spaces
-TRIM()				: TRIM([remstr FROM] ?)                               :Remove leading and trailing spaces
-UCASE()				: UCASE(?)                               :Synonym for UPPER()
-UNHEX()				: UNHEX(?)                               :Return a string containing hex representation of a number
-UPPER()				: UPPER(?)                               :Convert to uppercase
-WEIGHT_STRING()		: WEIGHT_STRING(? [AS {CHAR|BINARY}(N)] [flags])                               :Return the weight string for a string
+ASCII				    : ASCII(?)    :Return numeric value of left-most character
+BIN				        : BIN(?)                        :Return a string containing binary representation of a number
+BIT_LENGTH		        : BIT_LENGTH(str)                      :Return length of argument in bits
+CHAR				    : CHAR(N,... [USING charset_name])                :Return the character for each integer passed
+CHAR_LENGTH		        : CHAR_LENGTH(?)                     :Return number of characters in argument
+CHARACTER_LENGTH	    : CHARACTER_LENGTH(?)                 :Synonym for CHAR_LENGTH()
+CONCAT			        : CONCAT(str1,str2,...)            :Return concatenated string
+CONCAT_WS			    : CONCAT_WS(separator,str1,str2,...)     :Return concatenate with separator
+ELT				        : ELT(N,str1,str2,str3,...)         :Return string at index number
+EXPORT_SET		        : EXPORT_SET(bits,on,off[,separator[,number_of_bits]])       :Return a string such that for every bit set in the value bits, you get an on string and for every unset bit, you get an off string
+FIELD				    : FIELD(?,str1,str2,str3,...)     :Index (position) of first argument in subsequent arguments
+FIND_IN_SET		        : FIND_IN_SET(?,strlist)                               :Index (position) of first argument within second argument
+FORMAT			        : FORMAT(?,D[,locale])            :Return a number formatted to specified number of decimal places
+FROM_BASE64		        : FROM_BASE64(?)                  :Decode base64 encoded string and return result
+HEX				        : HEX(?)                 :Hexadecimal representation of decimal or string value
+INSERT			        : INSERT(str,pos,len,newstr)                               :Insert substring at specified position up to specified number of characters
+INSTR				    : INSTR(str,substr)                               :Return the index of the first occurrence of substring
+LCASE				    : LCASE(?)                    :Synonym for LOWER()
+LEFT				    : LEFT(?,len)                               :Return the leftmost number of characters as specified
+LENGTH			        : LENGTH(?)                               :Return the length of a string in bytes
+LOAD_FILE			    : LOAD_FILE(file_name)                               :Load the named file
+LOCATE			        : LOCATE(substr,str[,pos])                               :Return the position of the first occurrence of substring
+LOWER				    : LOWER(?)                          :Return the argument in lowercase
+LPAD				    : LPAD(?,len,padstr)             :Return the string argument, left-padded with the specified string
+MAKE_SET			    : LTRIM(?)                     :Return a set of comma-separated strings that have the corresponding bit in bits set
+MATCH				    : MAKE_SET(bits,str1,str2,...)                   :Perform full-text search
+MID				        : MID(?,pos,len)                               :Return a substring starting from the specified position
+OCT				        : OCT(?)                         :Return a string containing octal representation of a number
+OCTET_LENGTH		    : OCTET_LENGTH(?)                      :Synonym for LENGTH()
+ORD				        : ORD(?)                      :Return character code for leftmost character of the argument
+POSITION			    : POSITION(substr IN str)                       :Synonym for LOCATE()
+QUOTE				    : QUOTE(?)                               :Escape the argument for use in an SQL statement
+REPEAT			        : REPEAT(?,count)                         :Repeat a string the specified number of times
+REPLACE			        : REPLACE(?,from_str,to_str)               :Replace occurrences of a specified string
+REVERSE			        : REVERSE(?)        :Reverse the characters in a string
+RIGHT				    : RIGHT(?,len)                     :Return the specified rightmost number of characters
+RPAD				    : RPAD(?,len,padstr)                                :Append string the specified number of times
+RTRIM				    : RTRIM(?)                               :Remove trailing spaces
+SOUNDEX			        : SOUNDEX(?)                               :Return a soundex string
+SOUNDS LIKE			    : ? SOUNDS LIKE ?                               :Compare sounds
+SPACE				    : SPACE(?)                               :Return a string of the specified number of spaces
+SUBSTR			        : SUBSTR(?,pos[,len])                              :Return the substring as specified
+SUBSTRING			    : SUBSTRING(?,pos[,len])                               :Return the substring as specified
+SUBSTRING_INDEX	        : SUBSTRING_INDEX(?,delim,count)                               :Return a substring from a string before the specified number of occurrences of the delimiter
+TO_BASE64			    : TO_BASE64(?)                               :Return the argument converted to a base-64 string
+TRIM				    : TRIM([{BOTH | LEADING | TRAILING} [remstr] FROM] ?)                              :Remove leading and trailing spaces
+TRIM				    : TRIM([remstr FROM] ?)                               :Remove leading and trailing spaces
+UCASE				    : UCASE(?)                               :Synonym for UPPER()
+UNHEX				    : UNHEX(?)                               :Return a string containing hex representation of a number
+UPPER				    : UPPER(?)                               :Convert to uppercase
+WEIGHT_STRING		    : WEIGHT_STRING(? [AS {CHAR|BINARY}(N)] [flags])                               :Return the weight string for a string
 [String Comparison Functions and Operators]
 LIKE	            : ? LIKE pat [ESCAPE 'escape_char']      :Simple pattern matching
 NOT LIKE	        : ? NOT LIKE pat [ESCAPE 'escape_char']      :Negation of simple pattern matching
-STRCMP()	        : STRCMP(expr1,expr2)      :Compare two strings
+STRCMP  	        : STRCMP(expr1,expr2)      :Compare two strings
 [Regular Expressions]
 NOT REGEXP			: ? NOT REGEXP pat     :Negation of REGEXP
 REGEXP				: ? REGEXP pat                               :Whether string matches regular expression
-REGEXP_INSTR()		: REGEXP_INSTR(?, pat[, pos[, occurrence[, return_option[, match_type]]]])                               :Starting index of substring matching regular expression
-REGEXP_LIKE()		: REGEXP_LIKE(?, pat[, match_type])                               :Whether string matches regular expression
-REGEXP_REPLACE()	: REGEXP_REPLACE(?, pat, repl[, pos[, occurrence[, match_type]]])                               :Replace substrings matching regular expression
-REGEXP_SUBSTR()		: REGEXP_SUBSTR(?, pat[, pos[, occurrence[, match_type]]])                               :Return substring matching regular expression
+REGEXP_INSTR		: REGEXP_INSTR(?, pat[, pos[, occurrence[, return_option[, match_type]]]])                               :Starting index of substring matching regular expression
+REGEXP_LIKE		    : REGEXP_LIKE(?, pat[, match_type])                               :Whether string matches regular expression
+REGEXP_REPLACE	    : REGEXP_REPLACE(?, pat, repl[, pos[, occurrence[, match_type]]])                               :Replace substrings matching regular expression
+REGEXP_SUBSTR		: REGEXP_SUBSTR(?, pat[, pos[, occurrence[, match_type]]])                               :Return substring matching regular expression
 RLIKE				: ? RLIKE pat                 :Whether string matches regular expression
 NOT RLIKE		    : ? NOT RLIKE pat                 :Whether string NOT matches regular expression
 [Full-Text Search Functions]
-MATCH:  MATCH (?,...) AGAINST (expr [search_modifier]) : Full-Text Search Functions
+MATCH               : MATCH (?,...) AGAINST (expr [search_modifier]) : Full-Text Search Functions
 [Cast Functions and Operators]
 BINARY		:BINARY ?                           :Cast a string to a binary string
-CAST()		:CAST(? AS type [ARRAY])            :Cast a value as a certain type
-CONVERT()	:CONVERT(? USING transcoding_name)  :Cast a value as a certain type
+CAST		:CAST(? AS type [ARRAY])            :Cast a value as a certain type
+CONVERT	    :CONVERT(? USING transcoding_name)  :Cast a value as a certain type
 [XML Functions]
-ExtractValue()  :ExtractValue(xml_frag, xpath_expr)         :Extract a value from an XML string using XPath notation
-UpdateXML()     :UpdateXML(xml_target, xpath_expr, new_xml)	:Return replaced XML fragment
+ExtractValue        :ExtractValue(xml_frag, xpath_expr)         :Extract a value from an XML string using XPath notation
+UpdateXML           :UpdateXML(xml_target, xpath_expr, new_xml)	:Return replaced XML fragment
 [Bit Functions and Operators]
 &	            :&              :Bitwise AND
 >>	            :>>             :  Right shift
@@ -233,156 +233,156 @@ BIT_COUNT()	    :BIT_COUNT(N)   :Return the number of bits that are set
 |	            :|              :Bitwise OR
 ~	            :~              :Bitwise inversion
 [Encryption and Compression Functions]
-AES_DECRYPT()	        		:AES_DECRYPT(?,key_str[,init_vector][,kdf_name][,salt][,info | iterations]) :Decrypt using AES
-AES_ENCRYPT()	        		:AES_ENCRYPT(?,key_str[,init_vector][,kdf_name][,salt][,info | iterations]) :Encrypt using AES
-COMPRESS()	            		:COMPRESS(?)    :Return result as a binary string
-MD5()	                		:MD5(?)         :Calculate MD5 checksum
-RANDOM_BYTES()	        		:RANDOM_BYTES(?):Return a random byte vector
-SHA1()	        		        :SHA1(?)        :Calculate an SHA-1 160-bit checksum
-SHA()	        		        :SHA(?)         :Calculate an SHA-1 160-bit checksum
-SHA2()	                		:SHA2(?, hash_length)               :Calculate an SHA-2 checksum
-STATEMENT_DIGEST()	    		:STATEMENT_DIGEST(statement)        :Compute statement digest hash value
-STATEMENT_DIGEST_TEXT()			:STATEMENT_DIGEST_TEXT(statement)   :Compute normalized statement digest
-UNCOMPRESS()	        		:UNCOMPRESS(?)                      :Uncompress a string compressed
-UNCOMPRESSED_LENGTH()			:UNCOMPRESSED_LENGTH(?)             :Return the length of a string before compression
-VALIDATE_PASSWORD_STRENGTH()	:VALIDATE_PASSWORD_STRENGTH(?)      :Determine strength of password
+AES_DECRYPT	        		    :AES_DECRYPT(?,key_str[,init_vector][,kdf_name][,salt][,info | iterations]) :Decrypt using AES
+AES_ENCRYPT	        		    :AES_ENCRYPT(?,key_str[,init_vector][,kdf_name][,salt][,info | iterations]) :Encrypt using AES
+COMPRESS	            	    :COMPRESS(?)    :Return result as a binary string
+MD5	                		    :MD5(?)         :Calculate MD5 checksum
+RANDOM_BYTES	        	    :RANDOM_BYTES(?):Return a random byte vector
+SHA1	        		        :SHA1(?)        :Calculate an SHA-1 160-bit checksum
+SHA	        		            :SHA(?)         :Calculate an SHA-1 160-bit checksum
+SHA2	                	    :SHA2(?, hash_length)               :Calculate an SHA-2 checksum
+STATEMENT_DIGEST	    	    :STATEMENT_DIGEST(statement)        :Compute statement digest hash value
+STATEMENT_DIGEST_TEXT		    :STATEMENT_DIGEST_TEXT(statement)   :Compute normalized statement digest
+UNCOMPRESS	        		    :UNCOMPRESS(?)                      :Uncompress a string compressed
+UNCOMPRESSED_LENGTH			    :UNCOMPRESSED_LENGTH(?)             :Return the length of a string before compression
+VALIDATE_PASSWORD_STRENGTH	    :VALIDATE_PASSWORD_STRENGTH(?)      :Determine strength of password
 [Locking Functions]
-GET_LOCK()	        :GET_LOCK(?,timeout)    :Get a named lock
-IS_FREE_LOCK()	    :IS_FREE_LOCK(?)        :Whether the named lock is free
-IS_USED_LOCK()	    :IS_USED_LOCK(?)        :Whether the named lock is in use; return connection identifier if true
-RELEASE_ALL_LOCKS()	:RELEASE_ALL_LOCKS()    :Release all current named locks
-RELEASE_LOCK()	    :RELEASE_LOCK(?)        :Release the named lock
+GET_LOCK	        :GET_LOCK(?,timeout)    :Get a named lock
+IS_FREE_LOCK	    :IS_FREE_LOCK(?)        :Whether the named lock is free
+IS_USED_LOCK	    :IS_USED_LOCK(?)        :Whether the named lock is in use; return connection identifier if true
+RELEASE_ALL_LOCKS	:RELEASE_ALL_LOCKS()    :Release all current named locks
+RELEASE_LOCK	    :RELEASE_LOCK(?)        :Release the named lock
 [Information Functions]
-BENCHMARK()	    :BENCHMARK(count,?) :Repeatedly execute an expression
-CHARSET()	    :CHARSET(?)         :Return the character set of the argument
-COERCIBILITY()	:COERCIBILITY(?)    :Return the collation coercibility value of the string argument
-COLLATION()	    :COLLATION(?)       :Return the collation of the string argument
-CONNECTION_ID()	:CONNECTION_ID()    :Return the connection ID (thread ID) for the connection
-CURRENT_ROLE()	:CURRENT_ROLE()     :Return the current active roles
-CURRENT_USER()  :CURRENT_USER()     :The authenticated user name and host name
-CURRENT_USER	:CURRENT_USER       :The authenticated user name and host name
-DATABASE()	    :DATABASE()         :Return the default (current) database name
-FOUND_ROWS()	:FOUND_ROWS()       :For a SELECT with a LIMIT clause, the number of rows that would be returned were there no LIMIT clause
-ICU_VERSION()	:ICU_VERSION()      :ICU library version
-LAST_INSERT_ID():LAST_INSERT_ID([expr]) :Value of the AUTOINCREMENT column for the last INSERT
-ROLES_GRAPHML()	:ROLES_GRAPHML()        :Return a GraphML document representing memory role subgraphs
-ROW_COUNT()	    :ROW_COUNT()        :The number of rows updated
-SCHEMA()	    :SCHEMA()           :Synonym for DATABASE()
-SESSION_USER()	:SESSION_USER()     :Synonym for USER()
-SYSTEM_USER()	:SYSTEM_USER()      :Synonym for USER()
-USER()	        :USER()	            :The user name and host name provided by the client
-VERSION()	    :VERSION()          :Return a string that indicates the MySQL server version
+BENCHMARK	        :BENCHMARK(count,?) :Repeatedly execute an expression
+CHARSET	            :CHARSET(?)         :Return the character set of the argument
+COERCIBILITY	    :COERCIBILITY(?)    :Return the collation coercibility value of the string argument
+COLLATION	        :COLLATION(?)       :Return the collation of the string argument
+CONNECTION_ID	    :CONNECTION_ID()    :Return the connection ID (thread ID) for the connection
+CURRENT_ROLE	    :CURRENT_ROLE()     :Return the current active roles
+CURRENT_USER        :CURRENT_USER()     :The authenticated user name and host name
+CURRENT_USER	    :CURRENT_USER       :The authenticated user name and host name
+DATABASE	        :DATABASE()         :Return the default (current) database name
+FOUND_ROWS	        :FOUND_ROWS()       :For a SELECT with a LIMIT clause, the number of rows that would be returned were there no LIMIT clause
+ICU_VERSION	        :ICU_VERSION()      :ICU library version
+LAST_INSERT_ID      :LAST_INSERT_ID([expr]) :Value of the AUTOINCREMENT column for the last INSERT
+ROLES_GRAPHML	    :ROLES_GRAPHML()        :Return a GraphML document representing memory role subgraphs
+ROW_COUNT	        :ROW_COUNT()        :The number of rows updated
+SCHEMA	            :SCHEMA()           :Synonym for DATABASE()
+SESSION_USER	    :SESSION_USER()     :Synonym for USER()
+SYSTEM_USER	        :SYSTEM_USER()      :Synonym for USER()
+USER	            :USER()	            :The user name and host name provided by the client
+VERSION	            :VERSION()          :Return a string that indicates the MySQL server version
 [Functions That Search JSON Values]
 ->						:column->path	:Return value from JSON column after evaluating path; equivalent to JSON_EXTRACT().
 ->>						:column->>path	:Return value from JSON column after evaluating path and unquoting the result; equivalent to JSON_UNQUOTE(JSON_EXTRACT()).
-JSON_CONTAINS()			:JSON_CONTAINS(target, candidate[, path])	:Whether JSON document contains specific object at path
-JSON_CONTAINS_PATH()	:JSON_CONTAINS_PATH(json_doc, one_or_all, path[, path] ...)	:Whether JSON document contains any data at path
-JSON_EXTRACT()			:JSON_EXTRACT(json_doc, path[, path] ...)	:Return data from JSON document
-JSON_KEYS()				:JSON_KEYS(json_doc[, path])	:Array of keys from JSON document
-JSON_OVERLAPS()			:JSON_OVERLAPS(json_doc1, json_doc2)	:Compares two JSON documents, returns TRUE (1) if these have any key-value pairs or array elements in common, otherwise FALSE (0)
-JSON_SEARCH()			:JSON_SEARCH(json_doc, one_or_all, search_str[, escape_char[, path] ...])	:Path to value within JSON document
-JSON_VALUE()			:JSON_VALUE(json_doc, path)	:Extract value from JSON document at location pointed to by path provided; return this value as VARCHAR(512) or specified type
-MEMBER OF()				:value MEMBER OF(json_array)	:Returns true (1) if first operand matches any element of JSON array passed as second operand, otherwise returns false (0)
+JSON_CONTAINS			:JSON_CONTAINS(target, candidate[, path])	:Whether JSON document contains specific object at path
+JSON_CONTAINS_PATH	:JSON_CONTAINS_PATH(json_doc, one_or_all, path[, path] ...)	:Whether JSON document contains any data at path
+JSON_EXTRACT			:JSON_EXTRACT(json_doc, path[, path] ...)	:Return data from JSON document
+JSON_KEYS				:JSON_KEYS(json_doc[, path])	:Array of keys from JSON document
+JSON_OVERLAPS			:JSON_OVERLAPS(json_doc1, json_doc2)	:Compares two JSON documents, returns TRUE (1) if these have any key-value pairs or array elements in common, otherwise FALSE (0)
+JSON_SEARCH			:JSON_SEARCH(json_doc, one_or_all, search_str[, escape_char[, path] ...])	:Path to value within JSON document
+JSON_VALUE			:JSON_VALUE(json_doc, path)	:Extract value from JSON document at location pointed to by path provided; return this value as VARCHAR(512) or specified type
+MEMBER OF				:value MEMBER OF(json_array)	:Returns true (1) if first operand matches any element of JSON array passed as second operand, otherwise returns false (0)
 [Functions That Create JSON Values]
-JSON_ARRAY()			:JSON_ARRAY([val[, val] ...])	:Create JSON array
-JSON_OBJECT()			:JSON_OBJECT([key, val[, key, val] ...])	:Create JSON object
-JSON_QUOTE()			:JSON_QUOTE(?)	:Quote JSON document
+JSON_ARRAY			:JSON_ARRAY([val[, val] ...])	:Create JSON array
+JSON_OBJECT			:JSON_OBJECT([key, val[, key, val] ...])	:Create JSON object
+JSON_QUOTE			:JSON_QUOTE(?)	:Quote JSON document
 [Functions That Modify JSON Values]
-JSON_ARRAY_APPEND()		:JSON_ARRAY_APPEND(json_doc, path, val[, path, val] ...)	:Append data to JSON document
-JSON_ARRAY_INSERT()		:JSON_ARRAY_INSERT(json_doc, path, val[, path, val] ...)	:Insert into JSON array
-JSON_MERGE()			:JSON_MERGE(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, preserving duplicate keys. Deprecated synonym for JSON_MERGE_PRESERVE()
-JSON_INSERT()			:JSON_INSERT(json_doc, path, val[, path, val] ...)	:Insert data into JSON document
-JSON_MERGE_PATCH()		:JSON_MERGE_PATCH(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, replacing values of duplicate keys
-JSON_MERGE_PRESERVE()	:JSON_MERGE_PRESERVE(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, preserving duplicate keys
-JSON_REMOVE()			:JSON_REMOVE(json_doc, path[, path] ...)	:Remove data from JSON document
-JSON_REPLACE()			:JSON_REPLACE(json_doc, path, val[, path, val] ...)	:Replace values in JSON document
-JSON_SET()				:JSON_SET(json_doc, path, val[, path, val] ...)	:Insert data into JSON document
-JSON_UNQUOTE()			:JSON_UNQUOTE(?)	:Unquote JSON value
+JSON_ARRAY_APPEND		:JSON_ARRAY_APPEND(json_doc, path, val[, path, val] ...)	:Append data to JSON document
+JSON_ARRAY_INSERT		:JSON_ARRAY_INSERT(json_doc, path, val[, path, val] ...)	:Insert into JSON array
+JSON_MERGE			:JSON_MERGE(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, preserving duplicate keys. Deprecated synonym for JSON_MERGE_PRESERVE
+JSON_INSERT			:JSON_INSERT(json_doc, path, val[, path, val] ...)	:Insert data into JSON document
+JSON_MERGE_PATCH		:JSON_MERGE_PATCH(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, replacing values of duplicate keys
+JSON_MERGE_PRESERVE	:JSON_MERGE_PRESERVE(json_doc, json_doc[, json_doc] ...)	:Merge JSON documents, preserving duplicate keys
+JSON_REMOVE			:JSON_REMOVE(json_doc, path[, path] ...)	:Remove data from JSON document
+JSON_REPLACE			:JSON_REPLACE(json_doc, path, val[, path, val] ...)	:Replace values in JSON document
+JSON_SET				:JSON_SET(json_doc, path, val[, path, val] ...)	:Insert data into JSON document
+JSON_UNQUOTE			:JSON_UNQUOTE(?)	:Unquote JSON value
 [Functions That Return JSON Value Attributes]
-JSON_DEPTH()			:JSON_DEPTH(?)	:Maximum depth of JSON document
-JSON_LENGTH()			:JSON_LENGTH(?[, path])	:Number of elements in JSON document
-JSON_TYPE()				:JSON_TYPE(?)	:Type of JSON value
-JSON_VALID()			:JSON_VALID(?)	:Whether JSON value is valid
+JSON_DEPTH			:JSON_DEPTH(?)	:Maximum depth of JSON document
+JSON_LENGTH			:JSON_LENGTH(?[, path])	:Number of elements in JSON document
+JSON_TYPE				:JSON_TYPE(?)	:Type of JSON value
+JSON_VALID			:JSON_VALID(?)	:Whether JSON value is valid
 [JSON Table Functions]
-JSON_TABLE()			:JSON_TABLE(expr, path COLUMNS (column_list) [AS] alias)	:Return data from a JSON expression as a relational table
+JSON_TABLE			:JSON_TABLE(expr, path COLUMNS (column_list) [AS] alias)	:Return data from a JSON expression as a relational table
 [JSON Schema Validation Functions]
-JSON_SCHEMA_VALID()		:JSON_SCHEMA_VALID(schema,document)	:Validate JSON document against JSON schema; returns TRUE/1 if document validates against schema, or FALSE/0 if it does not
-JSON_SCHEMA_VALIDATION_REPORT()	:JSON_SCHEMA_VALIDATION_REPORT(schema,document)	:Validate JSON document against JSON schema; returns report in JSON format on outcome on validation including success or failure and reasons for failure
+JSON_SCHEMA_VALID		:JSON_SCHEMA_VALID(schema,document)	:Validate JSON document against JSON schema; returns TRUE/1 if document validates against schema, or FALSE/0 if it does not
+JSON_SCHEMA_VALIDATION_REPORT	:JSON_SCHEMA_VALIDATION_REPORT(schema,document)	:Validate JSON document against JSON schema; returns report in JSON format on outcome on validation including success or failure and reasons for failure
 [JSON Utility Functions]
-JSON_PRETTY()			:JSON_PRETTY(?)	:Print a JSON document in human-readable format
-JSON_STORAGE_FREE()		:JSON_STORAGE_FREE(?)	:Freed space within binary representation of JSON column value following partial update
-JSON_STORAGE_SIZE()		:JSON_STORAGE_SIZE(json_val)	:Space used for storage of binary representation of a JSON document
+JSON_PRETTY			:JSON_PRETTY(?)	:Print a JSON document in human-readable format
+JSON_STORAGE_FREE		:JSON_STORAGE_FREE(?)	:Freed space within binary representation of JSON column value following partial update
+JSON_STORAGE_SIZE		:JSON_STORAGE_SIZE(json_val)	:Space used for storage of binary representation of a JSON document
 [Functions Used with Global Transaction Identifiers (GTIDs)]
-GTID_SUBSET()	                :GTID_SUBSET(set1,set2):Return true if all GTIDs in subset are also in set; otherwise false.
-GTID_SUBTRACT()	                :GTID_SUBTRACT(set1,set2):Return all GTIDs in set that are not in subset.
-WAIT_FOR_EXECUTED_GTID_SET()	:WAIT_FOR_EXECUTED_GTID_SET(?[, timeout]):Wait until the given GTIDs have executed on the replica.
-WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS()	:WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS(?[, timeout][,channel]):Use WAIT_FOR_EXECUTED_GTID_SET().
+GTID_SUBSET	                :GTID_SUBSET(set1,set2):Return true if all GTIDs in subset are also in set; otherwise false.
+GTID_SUBTRACT	                :GTID_SUBTRACT(set1,set2):Return all GTIDs in set that are not in subset.
+WAIT_FOR_EXECUTED_GTID_SET	:WAIT_FOR_EXECUTED_GTID_SET(?[, timeout]):Wait until the given GTIDs have executed on the replica.
+WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS	:WAIT_UNTIL_SQL_THREAD_AFTER_GTIDS(?[, timeout][,channel]):Use WAIT_FOR_EXECUTED_GTID_SET().
 [AggregateFunctions]
-AVG()				:AVG([DISTINCT] ?)	:Return the average value of the argument
-AVG_DISTINCT()		:AVG(DISTINCT ?)	:Return the average value of the argument
-BIT_AND()			:BIT_AND(?)	:Return bitwise AND
-BIT_OR()			:BIT_OR(?)	:Return bitwise OR
-BIT_XOR()			:BIT_XOR(?)	:Return bitwise XOR
+AVG				:AVG([DISTINCT] ?)	:Return the average value of the argument
+AVG_DISTINCT		:AVG(DISTINCT ?)	:Return the average value of the argument
+BIT_AND			:BIT_AND(?)	:Return bitwise AND
+BIT_OR			:BIT_OR(?)	:Return bitwise OR
+BIT_XOR			:BIT_XOR(?)	:Return bitwise XOR
 COUNT				:COUNT(?)	:Return a count of the number of rows returned
 COUNT		        :COUNT(DISTINCT ?,[?...])	:Return the count of a number of different values
-GROUP_CONCAT()		:GROUP_CONCAT(?)	:Return a concatenated string
-JSON_ARRAYAGG()		:JSON_ARRAYAGG(?)	:Return result set as a single JSON array
-JSON_OBJECTAGG()	:JSON_OBJECTAGG(key, value)	:Return result set as a single JSON object
-MAX()				:MAX(?)	:Return the maximum value
+GROUP_CONCAT		:GROUP_CONCAT(?)	:Return a concatenated string
+JSON_ARRAYAGG		:JSON_ARRAYAGG(?)	:Return result set as a single JSON array
+JSON_OBJECTAGG	:JSON_OBJECTAGG(key, value)	:Return result set as a single JSON object
+MAX				:MAX(?)	:Return the maximum value
 MAX(DISTINCT)		:MAX(DISTINCT ?)	:Return the maximum value
-MIN()				:MIN(?)	:Return the minimum value
+MIN				:MIN(?)	:Return the minimum value
 MIN(DISTINCT)		:MIN(DISTINCT ?)	:Return the minimum value
-STD()				:STD(?)	:Return the population standard deviation
-STDDEV()			:STDDEV(?)	:Return the population standard deviation
-STDDEV_POP()		:STDDEV_POP(?)	:Return the population standard deviation
-STDDEV_SAMP()		:STDDEV_SAMP(?)	:Return the sample standard deviation
-SUM()				:SUM(?)	:Return the sum
+STD				:STD(?)	:Return the population standard deviation
+STDDEV			:STDDEV(?)	:Return the population standard deviation
+STDDEV_POP		:STDDEV_POP(?)	:Return the population standard deviation
+STDDEV_SAMP		:STDDEV_SAMP(?)	:Return the sample standard deviation
+SUM				:SUM(?)	:Return the sum
 SUM(DISTINCT)		:SUM(DISTINCT ?)	:Return the sum
-VAR_POP()			:VAR_POP(?)	:Return the population standard variance
-VAR_SAMP()			:VAR_SAMP(?)	:Return the sample variance
-VARIANCE()			:VARIANCE(?)	:Return the population standard variance
+VAR_POP			:VAR_POP(?)	:Return the population standard variance
+VAR_SAMP			:VAR_SAMP(?)	:Return the sample variance
+VARIANCE			:VARIANCE(?)	:Return the population standard variance
 [GROUP BY Modifiers]
 GROUP BY                :GROUP BY(?,[?...])	: represent summary operations
 GROUP BY(WITH ROLLUP)   :GROUP BY(?,[?...]) WITH ROLLUP	: The GROUP BY clause permits a WITH ROLLUP modifier that causes summary output to include extra rows that represent higher-level (that is, super-aggregate) summary operations.
 [Window Function Descriptions]
-CUME_DIST()		:CUME_DIST() over_clause	:Cumulative distribution value
-DENSE_RANK()	:DENSE_RANK() over_clause	:Rank of current row within its partition, without gaps
-FIRST_VALUE()	:FIRST_VALUE(?) [null_treatment] over_clause	:Value of argument from first row of window frame
-LAG()			:LAG(? [, N[, default]]) [null_treatment] over_clause	:Value of argument from row lagging current row within partition
-LAST_VALUE()	:LAST_VALUE(?) [null_treatment] over_clause	:Value of argument from last row of window frame
-LEAD()			:LEAD(? [, N[, default]]) [null_treatment] over_clause	:Value of argument from row leading current row within partition
-NTH_VALUE()		:NTH_VALUE(?, N) [from_first_last] [null_treatment] over_clause	:Value of argument from N-th row of window frame
-NTILE()			:NTILE(N) over_clause	:Bucket number of current row within its partition.
-PERCENT_RANK()	:PERCENT_RANK() over_clause	:Percentage rank value
-RANK()			:RANK() over_clause	:Rank of current row within its partition, with gaps
-ROW_NUMBER()	:ROW_NUMBER() over_clause	:Number of current row within its partition
+CUME_DIST		:CUME_DIST() over_clause	:Cumulative distribution value
+DENSE_RANK	:DENSE_RANK() over_clause	:Rank of current row within its partition, without gaps
+FIRST_VALUE	:FIRST_VALUE(?) [null_treatment] over_clause	:Value of argument from first row of window frame
+LAG			:LAG(? [, N[, default]]) [null_treatment] over_clause	:Value of argument from row lagging current row within partition
+LAST_VALUE	:LAST_VALUE(?) [null_treatment] over_clause	:Value of argument from last row of window frame
+LEAD			:LEAD(? [, N[, default]]) [null_treatment] over_clause	:Value of argument from row leading current row within partition
+NTH_VALUE		:NTH_VALUE(?, N) [from_first_last] [null_treatment] over_clause	:Value of argument from N-th row of window frame
+NTILE			:NTILE(N) over_clause	:Bucket number of current row within its partition.
+PERCENT_RANK	:PERCENT_RANK() over_clause	:Percentage rank value
+RANK			:RANK() over_clause	:Rank of current row within its partition, with gaps
+ROW_NUMBER	:ROW_NUMBER() over_clause	:Number of current row within its partition
 [Performance Schema Functions]
-FORMAT_BYTES()				:FORMAT_BYTES(?)	:Convert byte count to value with units
-FORMAT_PICO_TIME()			:FORMAT_PICO_TIME(?)	:Convert time in picoseconds to value with units
-PS_CURRENT_THREAD_ID()		:PS_CURRENT_THREAD_ID()	:Performance Schema thread ID for current thread
-PS_THREAD_ID()				:PS_THREAD_ID(?)	:Performance Schema thread ID for given thread
+FORMAT_BYTES				:FORMAT_BYTES(?)	:Convert byte count to value with units
+FORMAT_PICO_TIME			:FORMAT_PICO_TIME(?)	:Convert time in picoseconds to value with units
+PS_CURRENT_THREAD_ID		:PS_CURRENT_THREAD_ID()	:Performance Schema thread ID for current thread
+PS_THREAD_ID				:PS_THREAD_ID(?)	:Performance Schema thread ID for given thread
 [Miscellaneous Functions]
-ANY_VALUE()			:ANY_VALUE(?)	:Suppress ONLY_FULL_GROUP_BY value rejection
-BIN_TO_UUID()		:BIN_TO_UUID(binary_uuid)	:Convert binary UUID to string
+ANY_VALUE			:ANY_VALUE(?)	:Suppress ONLY_FULL_GROUP_BY value rejection
+BIN_TO_UUID		:BIN_TO_UUID(binary_uuid)	:Convert binary UUID to string
 BIN_TO_UUID(swap_flag)		:BIN_TO_UUID(binary_uuid, swap_flag)	:Convert binary UUID to string
-DEFAULT()			:DEFAULT(?)	:Return the default value for a table column
-FORMAT()			:FORMAT(X,D)	:Formats the number X to a format like '#,###,###.##', rounded to D decimal places, and returns the result as a string
-GROUPING()			:GROUPING(? [, ?] ...)	:Distinguish super-aggregate ROLLUP rows from regular rows
-INET_ATON()			:INET_ATON(?)	:Return the numeric value of an IP address
-INET_NTOA()			:INET_NTOA(?)	:Return the IP address from a numeric value
-INET6_ATON()		:INET6_ATON(?)	:Return the numeric value of an IPv6 address
-INET6_NTOA()		:INET6_NTOA(?)	:Return the IPv6 address from a numeric value
-IS_IPV4()			:IS_IPV4(?)	:Whether argument is an IPv4 address
-IS_IPV4_COMPAT()	:IS_IPV4_COMPAT(?)	:Whether argument is an IPv4-compatible address
-IS_IPV4_MAPPED()	:IS_IPV4_MAPPED(?)	:Whether argument is an IPv4-mapped address
-IS_IPV6()			:IS_IPV6(?)	:Whether argument is an IPv6 address
-IS_UUID()			:IS_UUID(?)	:Whether argument is a valid UUID
-MASTER_POS_WAIT()	:MASTER_POS_WAIT(log_name,log_pos[,timeout][,channel])	:Block until the replica has read and applied all updates up to the specified position
-NAME_CONST()		:NAME_CONST(name,value)	:Cause the column to have the given name
-SLEEP()				:SLEEP(?)	:Sleep for a number of seconds
-SOURCE_POS_WAIT()	:SOURCE_POS_WAIT(log_name,log_pos[,timeout][,channel])	:Block until the replica has read and applied all updates up to the specified position
-UUID()				:UUID()	:Return a Universal Unique Identifier (UUID)
-UUID_SHORT()		:UUID_SHORT()	:Return an integer-valued universal identifier
-UUID_TO_BIN()		:UUID_TO_BIN(?)	:Convert string UUID to binary
+DEFAULT			:DEFAULT(?)	:Return the default value for a table column
+FORMAT			:FORMAT(X,D)	:Formats the number X to a format like '#,###,###.##', rounded to D decimal places, and returns the result as a string
+GROUPING			:GROUPING(? [, ?] ...)	:Distinguish super-aggregate ROLLUP rows from regular rows
+INET_ATON			:INET_ATON(?)	:Return the numeric value of an IP address
+INET_NTOA			:INET_NTOA(?)	:Return the IP address from a numeric value
+INET6_ATON		:INET6_ATON(?)	:Return the numeric value of an IPv6 address
+INET6_NTOA		:INET6_NTOA(?)	:Return the IPv6 address from a numeric value
+IS_IPV4			:IS_IPV4(?)	:Whether argument is an IPv4 address
+IS_IPV4_COMPAT	:IS_IPV4_COMPAT(?)	:Whether argument is an IPv4-compatible address
+IS_IPV4_MAPPED	:IS_IPV4_MAPPED(?)	:Whether argument is an IPv4-mapped address
+IS_IPV6			:IS_IPV6(?)	:Whether argument is an IPv6 address
+IS_UUID			:IS_UUID(?)	:Whether argument is a valid UUID
+MASTER_POS_WAIT	:MASTER_POS_WAIT(log_name,log_pos[,timeout][,channel])	:Block until the replica has read and applied all updates up to the specified position
+NAME_CONST		:NAME_CONST(name,value)	:Cause the column to have the given name
+SLEEP				:SLEEP(?)	:Sleep for a number of seconds
+SOURCE_POS_WAIT	:SOURCE_POS_WAIT(log_name,log_pos[,timeout][,channel])	:Block until the replica has read and applied all updates up to the specified position
+UUID				:UUID()	:Return a Universal Unique Identifier (UUID)
+UUID_SHORT		:UUID_SHORT()	:Return an integer-valued universal identifier
+UUID_TO_BIN		:UUID_TO_BIN(?)	:Convert string UUID to binary
 UUID_TO_BIN(swap_flag)		:UUID_TO_BIN(?, swap_flag)	:Convert string UUID to binary
-VALUES()			:VALUES(?)	:Define the values to be used during an INSERT
+VALUES			:VALUES(?)	:Define the values to be used during an INSERT

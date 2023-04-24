@@ -3,21 +3,21 @@
 NOT REGEXP      :expr NOT REGEXP pat                        :Same as NOT (expr REGEXP pat).
 NOT RLIKE       :expr NOT RLIKE pat                         :Same as NOT (expr REGEXP pat).
 REGEXP          :expr REGEXP pat                            :Performs pattern matching
-RLIKE          :expr RLIKE pat                              :Performs pattern matching
+RLIKE           :expr RLIKE pat                              :Performs pattern matching
 REGEXP_INSTR    :REGEXP_INSTR(subject, pattern)             :Position of the first appearance of a regex.
 REGEXP_REPLACE  :REGEXP_REPLACE(subject, pattern, replace)  :Replaces all occurrences of a pattern.
 REGEXP_SUBSTR   :REGEXP_SUBSTR(subject,pattern)             :Returns the matching part of a string.
 RLIKE           :expr REGEXP pat, expr RLIKE pat            :Synonym for REGEXP
 [-->Dynamic Columns Functions]
-COLUMN_ADD(column_nr)           :COLUMN_ADD(dyncol_blob, column_nr, value [as type], [column_nr, value [as type]]...)                 COLUMN_ADD(dyncol_blob, column_name, value [as type], [column_name, value [as type]]...);   :Adds or updates dynamic columns.
-COLUMN_ADD(column_name)         :COLUMN_ADD(dyncol_blob, column_name, value [as type], [column_name, value [as type]]...)   :Adds or updates dynamic columns.
+COLUMN_ADD                      :COLUMN_ADD(dyncol_blob, column_nr, value [as type], [column_nr, value [as type]]...)                 COLUMN_ADD(dyncol_blob, column_name, value [as type], [column_name, value [as type]]...);   :Adds or updates dynamic columns.
+COLUMN_ADD                      :COLUMN_ADD(dyncol_blob, column_name, value [as type], [column_name, value [as type]]...)   :Adds or updates dynamic columns.
 COLUMN_CHECK                    :COLUMN_CHECK(dyncol_blob)   :Checks if a dynamic column blob is valid
-COLUMN_CREATE(column_nr)        :COLUMN_CREATE(column_nr, value [as type], [column_nr, value [as type]]...   :Returns a dynamic columns blob.
-COLUMN_CREATE(column_name)      :COLUMN_CREATE(column_name, value [as type], [column_name, value [as type]]...)   :Returns a dynamic columns blob.
-COLUMN_DELETE(column_nr)        :COLUMN_DELETE(dyncol_blob, column_nr, column_nr...)        :Deletes a dynamic column.
-COLUMN_DELETE(column_name)      :COLUMN_DELETE(dyncol_blob, column_name, column_name...)    :Deletes a dynamic column.
-COLUMN_EXISTS(column_nr)        :COLUMN_EXISTS(dyncol_blob, column_nr)          :Checks is a column exists.
-COLUMN_EXISTS(column_name)      :COLUMN_EXISTS(dyncol_blob, column_name)        :Checks is a column exists.
+COLUMN_CREATE                   :COLUMN_CREATE(column_nr, value [as type], [column_nr, value [as type]]...   :Returns a dynamic columns blob.
+COLUMN_CREATE                   :COLUMN_CREATE(column_name, value [as type], [column_name, value [as type]]...)   :Returns a dynamic columns blob.
+COLUMN_DELETE                   :COLUMN_DELETE(dyncol_blob, column_nr, column_nr...)        :Deletes a dynamic column.
+COLUMN_DELETE                   :COLUMN_DELETE(dyncol_blob, column_name, column_name...)    :Deletes a dynamic column.
+COLUMN_EXISTS                   :COLUMN_EXISTS(dyncol_blob, column_nr)          :Checks is a column exists.
+COLUMN_EXISTS                   :COLUMN_EXISTS(dyncol_blob, column_name)        :Checks is a column exists.
 COLUMN_GET                      :COLUMN_GET(dyncol_blob, column_nr as type)     :Gets a dynamic column value by name.
 COLUMN_GET                      :COLUMN_GET(dyncol_blob, column_name as type)   :Gets a dynamic column value by name.
 COLUMN_JSON                     :COLUMN_JSON(dyncol_blob)                       :Returns a JSON representation of dynamic column blob data
@@ -36,9 +36,9 @@ CHR                         :CHR(?)   :Returns string based on integer values of
 CONCAT                      :CONCAT(str1,str2,...)   :Returns concatenated string.
 CONCAT_WS                   :CONCAT_WS(separator,str1,str2,...)   :Concatenate with separator.
 CONVERT                     :CONVERT(?,type)        :Convert a value from one type to another type.
-CONVERT(USING transcoding_name) :CONVERT(? USING transcoding_name)   :Convert a value from one type to another type.
+CONVERT                     :CONVERT(? USING transcoding_name)   :Convert a value from one type to another type.
 ELT                         :CONVERT(?,type), CONVERT(expr USING transcoding_name)   :Returns the N'th element from a set of strings.
-ELT(USING transcoding_name) :CONVERT(? USING transcoding_name)   :Returns the N'th element from a set of strings.
+ELT                         :CONVERT(? USING transcoding_name)   :Returns the N'th element from a set of strings.
 EXPORT_SET                  :EXPORT_SET(bits, on, off[, separator[, number_of_bits]])   :Returns an on string for every bit set, an off string for every bit not set.
 EXTRACTVALUE                :EXTRACTVALUE(xml_frag, xpath_expr)   :Returns the text of the first text node matched by the XPath expression.
 FIELD                       :FIELD(pattern, str1[,str2,...])   :Returns the index position of a string in a list.
@@ -80,35 +80,35 @@ SOUNDEX                     :SOUNDEX(str)   :Returns a string based on how the s
 SOUNDS LIKE                 :expr1 SOUNDS LIKE expr2   :SOUNDEX(expr1) = SOUNDEX(expr2).
 SPACE                       :SPACE(N)   :Returns a string of space characters.
 STRCMP                      :STRCMP(expr1,expr2)            :Compares two strings in sort order.
-SUBSTR(pos)                         :SUBSTR(?,pos)          :Returns a substring from string starting at a given position.
-SUBSTR(pos,len)                     :SUBSTR(?,pos,len)      :Returns a substring from string starting at a given position.
-SUBSTR(str FROM pos)                :SUBSTR(? FROM pos)     :Returns a substring from string starting at a given position.
-SUBSTR(str FROM pos FOR len)        :SUBSTR(? FROM pos FOR len)    :Returns a substring from string starting at a given position.
-SUBSTRING(pos)                      :SUBSTRING(?,pos)           :Returns a substring from string starting at a given position.
-SUBSTRING(pos,len)                  :SUBSTRING(?,pos,len)       :Returns a substring from string starting at a given position.
-SUBSTRING(str FROM pos)             :SUBSTRING(? FROM pos)      :Returns a substring from string starting at a given position.
-SUBSTRING(str FROM pos FOR len)     :SUBSTRING(? FROM pos FOR len)      :Returns a substring from string starting at a given position.
-SUBSTRING_INDEX                     :SUBSTRING_INDEX(?,delim,count)     :Returns the substring from string before count occurrences of a delimiter.
-TO_BASE64                           :TO_BASE64(?)                       :Converts a string to its base-64 encoded form.
-TO_CHAR                             :TO_CHAR(?[, fmt])                  :Converts a date/time/timestamp type expression to a string.
-TRIM(BOTH | LEADING | TRAILING)     :TRIM([{BOTH | LEADING | TRAILING} [remstr] FROM] ?)    :Returns a string with all given prefixes or suffixes removed.
-TRIM                                :TRIM([remstr FROM] str)                                :Returns a string with all given prefixes or suffixes removed.
-UCASE                               :UCASE(?)   :Synonym for UPPER().
-UNCOMPRESS                          :UNCOMPRESS(?)   :Uncompresses string compressed with COMPRESS().
-UNCOMPRESSED_LENGTH                 :UNCOMPRESSED_LENGTH(?)   :Returns length of a string before being compressed with COMPRESS().
-UNHEX                               :UNHEX(?)   :Interprets pairs of hex digits as numbers and converts to the character represented by the number.
-UPDATEXML                           :UpdateXML(xml_target, xpath_expr, new_xml)   :Replace XML.
-UPPER                               :UPPER(str)   :Changes string to uppercase.
-WEIGHT_STRING                       :WEIGHT_STRING(str [AS {CHAR|BINARY}(N)] [LEVEL levels] [flags])   :Weight of the input string.
+SUBSTR                      :SUBSTR(?,pos)          :Returns a substring from string starting at a given position.
+SUBSTR                      :SUBSTR(?,pos,len)      :Returns a substring from string starting at a given position.
+SUBSTR                      :SUBSTR(? FROM pos)     :Returns a substring from string starting at a given position.
+SUBSTR                      :SUBSTR(? FROM pos FOR len)    :Returns a substring from string starting at a given position.
+SUBSTRING                   :SUBSTRING(?,pos)           :Returns a substring from string starting at a given position.
+SUBSTRING                   :SUBSTRING(?,pos,len)       :Returns a substring from string starting at a given position.
+SUBSTRING                   :SUBSTRING(? FROM pos)      :Returns a substring from string starting at a given position.
+SUBSTRING                   :SUBSTRING(? FROM pos FOR len)      :Returns a substring from string starting at a given position.
+SUBSTRING_INDEX             :SUBSTRING_INDEX(?,delim,count)     :Returns the substring from string before count occurrences of a delimiter.
+TO_BASE64                   :TO_BASE64(?)                       :Converts a string to its base-64 encoded form.
+TO_CHAR                     :TO_CHAR(?[, fmt])                  :Converts a date/time/timestamp type expression to a string.
+TRIM                        :TRIM([{BOTH | LEADING | TRAILING} [remstr] FROM] ?)    :Returns a string with all given prefixes or suffixes removed.
+TRIM                        :TRIM([remstr FROM] str)                                :Returns a string with all given prefixes or suffixes removed.
+UCASE                       :UCASE(?)   :Synonym for UPPER().
+UNCOMPRESS                  :UNCOMPRESS(?)   :Uncompresses string compressed with COMPRESS().
+UNCOMPRESSED_LENGTH         :UNCOMPRESSED_LENGTH(?)   :Returns length of a string before being compressed with COMPRESS().
+UNHEX                       :UNHEX(?)   :Interprets pairs of hex digits as numbers and converts to the character represented by the number.
+UPDATEXML                   :UpdateXML(xml_target, xpath_expr, new_xml)   :Replace XML.
+UPPER                       :UPPER(str)   :Changes string to uppercase.
+WEIGHT_STRING               :WEIGHT_STRING(str [AS {CHAR|BINARY}(N)] [LEVEL levels] [flags])   :Weight of the input string.
 [Date & Time Functions]
 ADD_MONTHS                  :ADD_MONTHS(date, months) :Adds a number of months to a date.
-ADDDATE(unit)               :ADDDATE(date,INTERVAL expr unit) :Add days or another interval to a date.
+ADDDATE                     :ADDDATE(date,INTERVAL expr unit) :Add days or another interval to a date.
 ADDDATE                     :ADDDATE(expr,days) :Add days or another interval to a date.
 ADDTIME                     :ADDTIME(expr1,expr2) :Adds a time to a time or datetime.
 CONVERT_TZ                  :CONVERT_TZ(dt,from_tz,to_tz) :Converts a datetime from one time zone to another.
 CURDATE                     :CURDATE() :Returns the current date.
 CURRENT_DATE                :CURRENT_DATE :Synonym for CURDATE().
-CURRENT_DATE()              :CURRENT_DATE() :Synonym for CURDATE().
+CURRENT_DATE              :CURRENT_DATE() :Synonym for CURDATE().
 CURRENT_TIME              :CURRENT_TIME([precision]) :Synonym for CURTIME().
 CURRENT_TIMESTAMP         :CURRENT_TIMESTAMP([precision]) :Synonym for NOW().
 CURTIME                   :CURTIME([precision]) :Returns the current time.
@@ -143,7 +143,7 @@ QUARTER                   :QUARTER(date) :Returns year quarter from 1 to 4.
 SECOND                    :SECOND(time) :Returns the second of a time.
 SEC_TO_TIME               :SEC_TO_TIME(seconds) :Converts a second to a time.
 STR_TO_DATE               :STR_TO_DATE(str,format) :Converts a string to date.
-SUBDATE(unit)                   :SUBDATE(date,INTERVAL expr unit) :Subtract a date unit or number of days.
+SUBDATE                   :SUBDATE(date,INTERVAL expr unit) :Subtract a date unit or number of days.
 SUBDATE                   :SUBDATE(expr,days) :Subtract a date unit or number of days.
 SUBTIME                   :SUBTIME(expr1,expr2) :Subtracts a time from a date/time.
 SYSDATE                   :SYSDATE([precision]) :Returns the current date and time.
@@ -186,17 +186,17 @@ VARIANCE              :VARIANCE(?)  :Population standard variance.
 VAR_POP               :VAR_POP(?) :Population standard variance.
 VAR_SAMP              :VAR_SAMP(?) :Returns the sample variance.
 [Numeric Functions]
-Addition Operator (+)              :+ :Addition.
-Subtraction Operator (-)           :- :Subtraction and unary minus.
-Division Operator (/)              :/ :Division.
-Multiplication Operator (*)        :* :Multiplication.
-Modulo Operator (%)                :N % M :Modulo operator. Returns the remainder of N divided by M.
++               :+      :Addition.
+-               :-      :Subtraction and unary minus.
+/               :/      :Division.
+*               :*      :Multiplication.
+%               :N % M  :Modulo operator. Returns the remainder of N divided by M.
 DIV                                :DIV :Integer division.
 ABS                                :ABS(?) :Returns an absolute value.
 ACOS                               :ACOS(?) :Returns an arc cosine.
 ASIN                               :ASIN(?) :Returns the arc sine.
 ATAN                               :ATAN(?) :Returns the arc tangent.
-ATAN(Y,X)                           :ATAN(Y,X) :Returns the arc tangent.
+ATAN                               :ATAN(Y,X) :Returns the arc tangent.
 ATAN2                              :ATAN2(Y,X) :Returns the arc tangent of two variables.
 CEIL                               :CEIL(?) :Synonym for CEILING().
 CEILING                            :CEILING(?) :Returns the smallest integer not less than X.
@@ -214,7 +214,7 @@ LN                                 :LN(?) :Returns natural logarithm.
 LOG                                :LOG([B,]?) :Returns the natural logarithm.
 LOG10                              :LOG10(?) :Returns the base-10 logarithm.
 LOG2                               :LOG2(?) :Returns the base-2 logarithm.
-MOD()                               :MOD(N,M) :Modulo operation. Remainder of N divided by M.
+MOD                               :MOD(N,M) :Modulo operation. Remainder of N divided by M.
 MOD                                :N MOD M :Modulo operation. Remainder of N divided by M.
 OCT                                :OCT(?) :Returns octal value.
 PI                                 :PI() :Returns the value of π (pi).
@@ -229,10 +229,10 @@ SQRT                               :SQRT(?) :Square root.
 TAN                                :TAN(?) :Returns the tangent.
 TRUNCATE                           :TRUNCATE(?,D) :The TRUNCATE function truncates a number to a specified number of decimal places.
 [Control Flow Functions]
-CASE value WHEN         :CASE value WHEN [compare_value] THEN result [WHEN [compare_value] THEN result ...] [ELSE result] END   :Returns the result where value=compare_value or for the first condition that is true.
-CASE WHEN               :CASE WHEN [condition] THEN result [WHEN [condition] THEN result ...][ELSE result] END                  :Returns the result where value=compare_value or for the first condition that is true.
+CASE                    :CASE value WHEN [compare_value] THEN result [WHEN [compare_value] THEN result ...] [ELSE result] END   :Returns the result where value=compare_value or for the first condition that is true.
+CASE                    :CASE WHEN [condition] THEN result [WHEN [condition] THEN result ...][ELSE result] END                  :Returns the result where value=compare_value or for the first condition that is true.
 DECODE                  :DECODE(crypt_str,pass_str)     :Decrypts a string encoded with ENCODE(), or, in Oracle mode, matches expressions.
-IF Function             :IF(expr1,expr2,expr3)          :If expr1 is TRUE, returns expr2; otherwise it returns expr3.
+IF                      :IF(expr1,expr2,expr3)          :If expr1 is TRUE, returns expr2; otherwise it returns expr3.
 IFNULL                  :IFNULL(expr1,expr2)            :Check whether an expression is NULL.
 NULLIF                  :NULLIF(expr1,expr2)            :Returns NULL if expr1 = expr2.
 NVL                     :NVL(expr1,expr2)               :Synonym for IFNULL.
@@ -272,9 +272,9 @@ COERCIBILITY                :COERCIBILITY(str)                                  
 COLLATION                   :COLLATION(str)                                     :Collation of the string argument.
 CONNECTION_ID               :CONNECTION_ID()                                    :Connection ID.
 CURRENT_ROLE                :CURRENT_ROLE                                       :Current role name.
-CURRENT_ROLE()              :CURRENT_ROLE()                                     :Current role name.
+CURRENT_ROLE              :CURRENT_ROLE()                                     :Current role name.
 CURRENT_USER                :CURRENT_USER                                       :Username/host that authenticated the current client.
-CURRENT_USER()              :CURRENT_USER()                                     :Username/host that authenticated the current client.
+CURRENT_USER              :CURRENT_USER()                                     :Username/host that authenticated the current client.
 DATABASE                    :DATABASE()                                         :Current default database.
 DECODE_HISTOGRAM            :DECODE_HISTOGRAM(hist_type,histogram)              :Returns comma separated numerics corresponding to a probability distribution.
 DEFAULT                     :DEFAULT(col_name)                                  :Returns column default.
@@ -313,7 +313,7 @@ UUID_SHORT               :UUID_SHORT()              :Return short universal iden
 VALUE                   :VALUE(col_name)            :Refer to columns in INSERT ... ON DUPLICATE KEY UPDATE.
 VALUES                  :VALUES(col_name)           :Refer to columns in INSERT ... ON DUPLICATE KEY UPDATE.
 [Dynamic Columns Functions]
-COLUMN_ADD()            :COLUMN_ADD(dyncol_blob, column_nr|column_name, value [as type], [column_nr|column_name, value [as type]]...); :Adds or updates dynamic columns.
+COLUMN_ADD            :COLUMN_ADD(dyncol_blob, column_nr|column_name, value [as type], [column_nr|column_name, value [as type]]...); :Adds or updates dynamic columns.
 COLUMN_CHECK            :COLUMN_CHECK(dyncol_blob);                                                                            :Checks if a dynamic column blob is valid
 COLUMN_CREATE           :COLUMN_CREATE(column_nr|column_name, value [as type], [column_nr|column_name, value [as type]]...);   :Returns a dynamic columns blob.
 COLUMN_DELETE           :COLUMN_DELETE(dyncol_blob, column_nr|column_name, column_nr|column_name...);                          :Deletes a dynamic column.
@@ -539,7 +539,7 @@ JSON_ARRAYAGG                                  :JSON_ARRAYAGG(column_or_expressi
 JSON_OBJECTAGG                                 :JSON_OBJECTAGG(key, value) :Returns a JSON object containing key-value pairs.
 LAG                                            :LAG (expr[, offset]) OVER ( [ PARTITION BY partition_expression ] < ORDER BY order_list >) :Accesses data from a previous row in the same result set without the need for a self-join.
 LAST_VALUE                                     :LAST_VALUE(expr,[expr,...]) :Returns the last value in a list or set of values.
-LAST_VALUE(OVER)                                :LAST_VALUE(?) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ]) :Returns the last value in a list or set of values.
+LAST_VALUE                                      :LAST_VALUE(?) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ]) :Returns the last value in a list or set of values.
 LEAD                                           :LEAD (?[, offset]) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Accesses data from a following row in the same result set without the need for a self-join.
 MAX                                            :MAX([DISTINCT] ?) :Returns the maximum value.
 MEDIAN                                         :MEDIAN(?) OVER ( [ PARTITION BY partition_expression ] ) :Window function that returns the median value of a range of values.
