@@ -35,7 +35,7 @@ public class DBExecuteImpl {
     private ResultSet rs;
 
     // 执行查询完成后回调
-    public native int nativeCallback(String result);
+    public native int nativeCallback(int queryId, String result);
 
     /**
      * SQL=脚本
@@ -49,15 +49,17 @@ public class DBExecuteImpl {
     public RunningStatus<Object> exec(@NotNull Connection conn, @NotNull String scripts) {
 
         log.info(scripts);
+        int queryId = scripts.hashCode();
 
         final RunningStatus<Object>[] runningStatus = new RunningStatus[]{new RunningStatus<>()};
         runningStatus[0].setStatus(ExecResult.SUCCESS);
+        runningStatus[0].setQueryId(queryId);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    runningStatus[0] = execute(conn, scripts);
+                     execute(conn, scripts, runningStatus[0]);
                 } catch (ParserException e) {
                     runningStatus[0].setStatus(ExecResult.FAILED);
                     runningStatus[0].setResult("SQL ParserException :" + e.getMessage());
@@ -67,7 +69,7 @@ public class DBExecuteImpl {
                 }
 
                 String jsonString = JSON.toJSONString(runningStatus[0]);
-                nativeCallback(jsonString);
+                nativeCallback(queryId, jsonString);
             }
         }).start();
 
@@ -81,8 +83,7 @@ public class DBExecuteImpl {
      * @throws SQLException 异常
      * @return
      */
-    private RunningStatus<Object> execute(Connection conn, String scripts) throws ParserException,SQLException {
-        RunningStatus<Object> runningStatus = new RunningStatus<>();
+    private void execute(Connection conn, String scripts,RunningStatus<Object> runningStatus) throws ParserException,SQLException {
 
         if (conn == null || conn.isClosed()) {
             throw new IllegalArgumentException("please connect to database first!");
@@ -254,8 +255,6 @@ public class DBExecuteImpl {
             }
         }
 
-        return runningStatus;
-
     }
 
     /**
@@ -337,6 +336,12 @@ public class DBExecuteImpl {
         @Getter
         @JSONField(ordinal = 4)
         private boolean hasQueryData = false;
+        /**
+         * sql query id用来匹配回调函数中的执行结果查询
+         */
+        @Setter
+        @Getter
+        private int queryId;
         /**
          * 运行结果数据内容：
          *   <li>  如果是select，保存查询结果;
