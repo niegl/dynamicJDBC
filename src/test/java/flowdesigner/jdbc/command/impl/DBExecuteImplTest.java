@@ -73,7 +73,7 @@ class DBExecuteImplTest {
     void exec(DbType dbType,String scripts) throws SQLException {
         getConnection(dbType);
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(connection, scripts);
+        DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(0,connection, scripts);
         String status = exec.getStatus();
         if (status.equals(ExecResult.SUCCESS)) {
             String s = JSON.toJSONString(exec);

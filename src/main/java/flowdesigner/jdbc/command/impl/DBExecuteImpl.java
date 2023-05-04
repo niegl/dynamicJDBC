@@ -46,7 +46,7 @@ public class DBExecuteImpl {
      * or (3) row data for SQL select statements
      * @throws SQLException
      */
-    public RunningStatus<Object> exec(@NotNull Connection conn, @NotNull String scripts) {
+    public RunningStatus<Object> exec(int appId, @NotNull Connection conn, @NotNull String scripts) {
 
         log.info(scripts);
         int queryId = scripts.hashCode();
@@ -69,7 +69,7 @@ public class DBExecuteImpl {
                 }
 
                 String jsonString = JSON.toJSONString(runningStatus[0]);
-                nativeCallback(queryId, jsonString);
+                nativeCallback(appId, jsonString);
             }
         }).start();
 

@@ -145,7 +145,7 @@ class CommandManagerTest {
     void testExecuteUpdate() throws SQLException {
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
+        var exec = dbExecute.exec(0,connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
 
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(exec);
@@ -156,7 +156,7 @@ class CommandManagerTest {
     void testExecuteSelect() throws SQLException, InterruptedException {
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(connection, "SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm FROM std_pcode.t99_cala_stat_index_mapping");
+        var exec = dbExecute.exec(0,connection, "SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm FROM std_pcode.t99_cala_stat_index_mapping");
 
         String s = JSON.toJSONString(exec);
         System.out.println(s);
