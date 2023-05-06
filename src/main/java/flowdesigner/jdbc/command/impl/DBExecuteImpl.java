@@ -16,6 +16,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,8 +36,14 @@ public class DBExecuteImpl {
     private PreparedStatement stmt;
     private ResultSet rs;
 
+    static {
+        String dlljvmpath = System.getProperty("dlljvmpath");
+        System.load(dlljvmpath);
+        log.info("load dll success, path:" + dlljvmpath);
+    }
+
     // 执行查询完成后回调
-    public native int nativeCallback(int queryId, String result);
+    private native int nativeCallback(int appId, int queryId, String result);
 
     /**
      * SQL=脚本
@@ -69,7 +77,7 @@ public class DBExecuteImpl {
                 }
 
                 String jsonString = JSON.toJSONString(runningStatus[0]);
-                nativeCallback(appId, jsonString);
+                nativeCallback(appId, queryId, jsonString);
             }
         }).start();
 
@@ -369,4 +377,10 @@ public class DBExecuteImpl {
         List<List<Object>> data = new ArrayList<>();
     }
 
+    public static void main(String[] args) {
+        String javaHome = System.getenv("dlljvmpath");
+        String dlljvmpath = System.getProperty("dlljvmpath");
+        System.out.println("javaHome的值:" + javaHome);
+        System.out.println("dlljvmpath:" + dlljvmpath);
+    }
 }

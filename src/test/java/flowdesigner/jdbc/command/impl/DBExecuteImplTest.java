@@ -80,6 +80,12 @@ class DBExecuteImplTest {
             System.out.println(s);
         }
 
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         dbExecute.release();
         dynamicDriver.close(connection);
     }
