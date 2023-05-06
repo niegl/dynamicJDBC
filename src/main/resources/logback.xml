@@ -1,39 +1,61 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
 
-    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <pattern>%d -- %msg%n</pattern>
         </layout>
     </appender>
-
-    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="FILEINFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
         <encoder>
+            <!--格式化输出:-->
             <pattern>%d -- %msg%n</pattern>
         </encoder>
         <!--滚动策略-->
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!--路径-->
-            <fileNamePattern>./logs/info-%d.log</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志输出文件名-->
+            <fileNamePattern>${LOG_HOME}/info-%d-%i.log</fileNamePattern>
+            <!--日志文件保留天数-->
+            <maxHistory>60</maxHistory>
+            <!--单文件大小-->
+            <maxFileSize>50MB</maxFileSize>
+            <!--用来指定日志文件的大小上限，到了这个值，就会删除旧的日志-->
+            <totalSizeCap>2GB</totalSizeCap>
+            <clearHistoryOnStart>true</clearHistoryOnStart>
         </rollingPolicy>
     </appender>
-
-    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!--添加 范围 过滤-->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
+            <!--格式化输出:-->
             <pattern>%d -- %msg%n</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./logs/error-%d.log</fileNamePattern>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志输出文件名-->
+            <fileNamePattern>${LOG_HOME}/error-%d-%i.log</fileNamePattern>
+            <!--日志文件保留天数-->
+            <maxHistory>60</maxHistory>
+            <!--单文件大小-->
+            <maxFileSize>50MB</maxFileSize>
+            <!--用来指定日志文件的大小上限，到了这个值，就会删除旧的日志-->
+            <totalSizeCap>2GB</totalSizeCap>
+            <clearHistoryOnStart>true</clearHistoryOnStart>
         </rollingPolicy>
     </appender>
-
     <root level="info">
-        <appender-ref ref="consoleLog" />
-        <appender-ref ref="fileInfoLog"/>
-        <appender-ref ref="fileErrorLog"/>
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILEINFO"/>
+        <appender-ref ref="FILEERROR"/>
     </root>
+    <property name="LOG_HOME" value="./log"/>
 </configuration>

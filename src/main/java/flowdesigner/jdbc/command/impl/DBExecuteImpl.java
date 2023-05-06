@@ -22,6 +22,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.alibaba.druid.util.JdbcUtils.close;
 
@@ -32,7 +33,10 @@ import static com.alibaba.druid.util.JdbcUtils.close;
  */
 @Slf4j
 public class DBExecuteImpl {
-
+    /**
+     * 原子计算。用来保证每次查询获取到不同的ID值
+     */
+    private static final AtomicInteger count = new AtomicInteger(0);
     private PreparedStatement stmt;
     private ResultSet rs;
 
@@ -57,7 +61,8 @@ public class DBExecuteImpl {
     public RunningStatus<Object> exec(int appId, @NotNull Connection conn, @NotNull String scripts) {
 
         log.info(scripts);
-        int queryId = scripts.hashCode();
+
+        int queryId = count.incrementAndGet();
 
         final RunningStatus<Object>[] runningStatus = new RunningStatus[]{new RunningStatus<>()};
         runningStatus[0].setStatus(ExecResult.SUCCESS);
@@ -377,10 +382,4 @@ public class DBExecuteImpl {
         List<List<Object>> data = new ArrayList<>();
     }
 
-    public static void main(String[] args) {
-        String javaHome = System.getenv("dlljvmpath");
-        String dlljvmpath = System.getProperty("dlljvmpath");
-        System.out.println("javaHome的值:" + javaHome);
-        System.out.println("dlljvmpath:" + dlljvmpath);
-    }
 }
