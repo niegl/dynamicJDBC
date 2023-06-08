@@ -20,4 +20,10 @@ class SQLUtilsTest {
         String resuslt = com.alibaba.druid.sql.SQLUtils.format(sql, DbType.hive);
         System.out.println(resuslt);
     }
+
+    @Test
+    void parseContextDefinitionASString() {
+        String ret = SQLUtils.parseContextDefinitionASString("hive","a=1");
+        System.out.println(ret);
+    }
 }

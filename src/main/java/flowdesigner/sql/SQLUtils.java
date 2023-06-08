@@ -18,6 +18,7 @@ import com.alibaba.druid.sql.dialect.oracle.visitor.OracleOutputVisitor;
 import com.alibaba.druid.sql.dialect.oscar.visitor.OscarOutputVisitor;
 import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
 import com.alibaba.druid.sql.dialect.sqlserver.visitor.SQLServerOutputVisitor;
+import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.druid.sql.parser.SQLParserFeature;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
 import com.alibaba.druid.sql.visitor.VisitorFeature;
@@ -27,6 +28,7 @@ import flowdesigner.sql.visitor.SQLASTOutputVisitorV2;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLSyntaxErrorException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,7 +56,12 @@ public class SQLUtils {
      * @return 变量列表
      */
     public static List<String> parseContextDefinition(String dbType, String sql) {
-        List<SQLStatement> list = parseStatements(sql, dbType);
+        List<SQLStatement> list = new ArrayList<>();
+
+        try {
+            list = parseStatements(sql, dbType);
+        } catch (ParserException ignored) {
+        }
 
         return list.stream()
                 .filter(s -> s instanceof SQLSetStatement)
