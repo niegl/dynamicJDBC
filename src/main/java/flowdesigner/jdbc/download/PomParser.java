@@ -120,7 +120,7 @@ public class PomParser {
                     case groupId -> dependency.setGroupId(content);
                     case artifactId -> dependency.setArtifactId(content);
                     case version -> {
-                        if (content.startsWith("$")) {
+                        if (content.startsWith("${")) {
                             content = properties.getOrDefault(content, content);
                         }
                         if (content.equalsIgnoreCase(projectVersion)) {
@@ -139,7 +139,6 @@ public class PomParser {
                 }
             }
 
-            // 将解析好的book加入返回列表
             if (dependency.getGroupId() != null) {
                 dependencyList.add(dependency);
             }

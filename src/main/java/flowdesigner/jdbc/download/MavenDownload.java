@@ -108,7 +108,7 @@ public class MavenDownload {
                 continue;
             }
 
-            if (scope1 != null && (scope1.equals("test")||scope1.equals("provided")||scope1.equals("system"))) {
+            if (scope1 != null && (scope1.equals("test")||scope1.equals("provided")||scope1.equals("system")||scope1.equals("runtime"))) {
                 continue;
             }
             if (dependency.isOptional()) {
