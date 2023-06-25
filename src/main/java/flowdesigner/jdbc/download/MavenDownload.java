@@ -1,6 +1,7 @@
 package flowdesigner.jdbc.download;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
+
 @Slf4j
 public class MavenDownload {
 
@@ -28,7 +30,7 @@ public class MavenDownload {
     private static volatile boolean bStopDownload = false;
 
     /**
-     * 从网络下载指定驱动jar文件
+     * 从网络下载指定驱动pom、jar文件
      * @param url 网络地址
      * @param scope 网络地址范围，完整URL为：url/scope/groupId/artifactId/version/***.jar
      * @param repository 本地存储库
@@ -62,11 +64,17 @@ public class MavenDownload {
                                            String groupId, String artifactId, String version) {
         ArrayList<String> locations = new ArrayList<>();
         try {
-            bStopDownload = false;
-            downloadRecursive(url, scope, repository, new Dependency(groupId, artifactId, version), locations);
+            if (url.endsWith(".jar")) {
+                String download = NetDownload.downloadByNIO2(url, repository, FilenameUtils.getName(url));
+                locations.add(download);
+            } else {
+                bStopDownload = false;
+                downloadRecursive(url, scope, repository, new Dependency(groupId, artifactId, version), locations);
+            }
         } catch (IOException e) {
             log.error(e.getMessage());
         }
+
         return locations;
     }
 

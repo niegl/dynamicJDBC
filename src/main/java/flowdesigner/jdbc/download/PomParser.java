@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class PomParser {
+    private static final String _packaging = "packaging";
+
     private static final String properties = "properties";
 
     private static final String dependencies = "dependencies";
@@ -70,7 +72,7 @@ public class PomParser {
 
     }
 
-    public static List<Dependency> getDependencies(Document document, Dependency pom) {
+    private static List<Dependency> getDependencies(Document document, Dependency pom) {
         // 用于保存解析后的Dependency对象
         List<Dependency> dependencyList = new ArrayList<>();
         if (document == null) {
@@ -99,7 +101,7 @@ public class PomParser {
         NodeList dependencyNodes = nodeDependencies.getChildNodes();
 
         // 遍历具有book标签的所有Node
-        for (int i = 1; i < dependencyNodes.getLength(); i+=2) {
+        for (int i = 1; i < dependencyNodes.getLength(); i += 2) {
             // 获取第i个dependency结点
             Node node = dependencyNodes.item(i);
 
@@ -149,7 +151,7 @@ public class PomParser {
     }
 
     private static ArrayList<Dependency.Exclusion> getExclusions(Node exclusionsNode) {
-        ArrayList<Dependency.Exclusion>  exclusions= new ArrayList<>();
+        ArrayList<Dependency.Exclusion> exclusions = new ArrayList<>();
 
         if (exclusionsNode == null) {
             return exclusions;
@@ -158,7 +160,7 @@ public class PomParser {
         NodeList exclusionNodes = exclusionsNode.getChildNodes();
 
         // 遍历具有book标签的所有Node
-        for (int i = 1; i < exclusionNodes.getLength(); i+=2) {
+        for (int i = 1; i < exclusionNodes.getLength(); i += 2) {
             // 获取第i个dependency结点
             Node node = exclusionNodes.item(i);
 
@@ -190,7 +192,7 @@ public class PomParser {
         return exclusions;
     }
 
-    public static HashMap<String, String> getProperties(Document document) {
+    private static HashMap<String, String> getProperties(Document document) {
         // 用于保存解析后的 key=value
         HashMap<String, String> propertiesMap = new HashMap<>();
 
@@ -215,5 +217,7 @@ public class PomParser {
         return propertiesMap;
 
     }
-
 }
+
+
+

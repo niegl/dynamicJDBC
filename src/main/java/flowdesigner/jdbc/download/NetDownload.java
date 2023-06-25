@@ -4,12 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.*;
-import java.nio.file.LinkOption;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.file.*;
 
 @Slf4j
 public class NetDownload {
@@ -28,10 +28,10 @@ public class NetDownload {
 
         // 检查是否为路径
         URL url = new URL(netPath);
-        boolean urlExist = doesURLExist(url);
-        if (!urlExist) {
-            return null;
-        }
+//        boolean urlExist = doesURLExist(url);
+//        if (!urlExist) {
+//            return null;
+//        }
 
         if (!FileUtils.isDirectory(new File(localPath), LinkOption.NOFOLLOW_LINKS)) {
             return null;
@@ -49,34 +49,164 @@ public class NetDownload {
             return toFile;
         }
 
-        try {
-            URLConnection connection = url.openConnection();
-            connection.setConnectTimeout(connectTimeout);
-            connection.setReadTimeout(connectTimeout);
-            inputStream = connection.getInputStream();
-            outputStream = new FileOutputStream(toFile);
-            byte[] buffer = new byte[1024];
-
-            int byteRead;
-            while ((byteRead = inputStream.read(buffer)) != -1) {
-                outputStream.write(buffer,0, byteRead);
-            }
-        } catch (SocketTimeoutException e) {
-            log.error(e.getMessage());
-            throw e;
-        }   catch (IOException e) {
-            log.error(e.getMessage());
-            throw e;
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
-            }
-            if (outputStream != null) {
-                outputStream.close();
-            }
-        }
+        downloadByNIO2(netPath, localPath, fileName);
+//        try {
+//            URLConnection connection = url.openConnection();
+//            connection.setConnectTimeout(connectTimeout);
+//            connection.setReadTimeout(connectTimeout);
+//            inputStream = connection.getInputStream();
+//            outputStream = new FileOutputStream(toFile);
+//            byte[] buffer = new byte[1024];
+//
+//            int byteRead;
+//            while ((byteRead = inputStream.read(buffer)) != -1) {
+//                outputStream.write(buffer,0, byteRead);
+//            }
+//        } catch (SocketTimeoutException e) {
+//            log.error(e.getMessage());
+//            throw e;
+//        }   catch (IOException e) {
+//            log.error(e.getMessage());
+//            throw e;
+//        } finally {
+//            if (inputStream != null) {
+//                inputStream.close();
+//            }
+//            if (outputStream != null) {
+//                outputStream.close();
+//            }
+//        }
 
         return toFile;
+    }
+
+    /**
+     * 使用 common-io库下载文件，需要引入commons-io-2.6.jar
+     * @param url
+     * @param saveDir
+     * @return
+     */
+    public static String downloadByCommonIO(String url, String saveDir) {
+
+        try {
+            String fileName = FilenameUtils.getName(url);
+            if (fileName.isEmpty()) {
+                return null;
+            }
+
+            String fileString = saveDir + "/" + fileName;
+            File destination1 = new File(fileString);
+            if (destination1.exists()) {
+                System.out.println("file exists: " + fileString);
+                return fileString;
+            }
+            FileUtils.copyURLToFile(new URL(url), destination1);
+            return fileString;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * 使用NIO下载文件，需要 jdk 1.4+
+     * @param url
+     * @param saveDir
+     * @param fileName
+     */
+    public static void downloadByNIO(String url, String saveDir, String fileName) {
+        ReadableByteChannel rbc = null;
+        FileOutputStream fos = null;
+        FileChannel foutc = null;
+        try {
+            rbc = Channels.newChannel(new URL(url).openStream());
+            File file = new File(saveDir, fileName);
+            file.getParentFile().mkdirs();
+            fos = new FileOutputStream(file);
+            foutc = fos.getChannel();
+            foutc.transferFrom(rbc, 0, Long.MAX_VALUE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (rbc != null) {
+                try {
+                    rbc.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (foutc != null) {
+                try {
+                    foutc.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * 使用NIO下载文件，需要 jdk 1.7+
+     * @param url
+     * @param saveDir
+     * @param fileName
+     * @return
+     */
+    public static String downloadByNIO2(String url, String saveDir, String fileName) {
+        File file = new File(saveDir, fileName);
+        if (file.exists()) {
+            return file.getAbsolutePath();
+        }
+
+        try (InputStream ins = new URL(url).openStream()) {
+            Path target = Paths.get(saveDir, fileName);
+            Files.createDirectories(target.getParent());
+            Files.copy(ins, target, StandardCopyOption.REPLACE_EXISTING);
+            return target.toAbsolutePath().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 使用传统io stream下载文件
+     * @param url
+     * @param saveDir
+     * @param fileName
+     */
+    public static void downloadByIO(String url, String saveDir, String fileName) {
+        BufferedOutputStream bos = null;
+        InputStream is = null;
+        try {
+            byte[] buff = new byte[8192];
+            is = new URL(url).openStream();
+            File file = new File(saveDir, fileName);
+            file.getParentFile().mkdirs();
+            bos = new BufferedOutputStream(new FileOutputStream(file));
+            int count = 0;
+            while ((count = is.read(buff)) != -1) {
+                bos.write(buff, 0, count);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static boolean doesURLExist(URL url)
