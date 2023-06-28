@@ -42,6 +42,7 @@ public class NetDownload {
         if (fileName.isEmpty()) {
             return null;
         }
+
         String toFile = localPath + "/" + fileName;
         File file = new File(toFile);
         if (file.exists()) {

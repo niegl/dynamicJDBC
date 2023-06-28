@@ -22,8 +22,7 @@ public class XmlParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         // 将给定URI的内容解析为一个 XML文档,并返回Document对象
-        Document document = builder.parse(fileName);
-        return document;
+        return builder.parse(fileName);
     }
 
     public static Document getDocument(InputStream is) throws ParserConfigurationException, SAXException, IOException {
@@ -31,8 +30,7 @@ public class XmlParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         // 将给定URI的内容解析为一个 XML文档,并返回Document对象
-        Document document = builder.parse(is);
-        return document;
+        return builder.parse(is);
     }
 
 }
