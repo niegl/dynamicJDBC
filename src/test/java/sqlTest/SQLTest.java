@@ -9,6 +9,9 @@ import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleStatementParser;
 import com.alibaba.druid.sql.dialect.oracle.visitor.OracleExportParameterVisitor;
+import com.alibaba.druid.sql.dialect.oscar.visitor.OscarOutputVisitor;
+import com.alibaba.druid.sql.dialect.postgresql.visitor.PGASTVisitor;
+import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
 import com.alibaba.druid.sql.parser.SQLParserFeature;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
@@ -156,6 +159,22 @@ public class SQLTest {
                 "(\n" +
                 "FOREIGN KEY (Id_P) REFERENCES Persons(Id_P)\n" +
                 ")";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_drop_database_mysql() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="DROP DATABASE  IF EXISTS db_name";//DROP {DATABASE | SCHEMA} [IF EXISTS] db_name
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_drop_database_oracle() throws SQLSyntaxErrorException {
+        String dbType = "oracle";
+        String sql ="drop user username";//DROP {DATABASE | SCHEMA} [IF EXISTS] db_name
         SQLStatement statement = parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
@@ -1684,32 +1703,55 @@ public class SQLTest {
         String sql = "--插入开始时间用来计算跑批时间\nCREATE TABLE tbl_name(name VARCHAR(20));";
         parser(sql, "mysql");
     }
+
     @org.junit.jupiter.api.Test
     void test1() throws SQLSyntaxErrorException {
         String sql = "select name,age from (select name,age from test_tab1 join std_pcode.t20_index_code) A join B";
         parser(sql, "hive");
     }
-    public static SQLStatement parser(String sql, DbType dbType) throws SQLSyntaxErrorException {
-        return parser(sql,dbType.toString());
+
+    @org.junit.jupiter.api.Test
+    void test_insert_update() throws SQLSyntaxErrorException {
+        String sql = "INSERT \n" +
+                "    INTO tbl_name\n" +
+                "    (col_name1 , col_name2)\n" +
+                "     VALUES (value_list1,value_list1)";
+        parser(sql, DbType.mysql);
     }
+
+    @org.junit.jupiter.api.Test
+    void test_show_database() throws SQLSyntaxErrorException {
+        String sql = "SHOW CREATE TABLE tbl_name";
+        parser(sql, DbType.mysql);
+    }
+
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
+        return parser(sql,DbType.of(dbType));
+    }
+
+    public static SQLStatement parser(String sql, DbType dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {
-//            final StringBuilder out = new StringBuilder();
-//            SQLASTOutputVisitor visitor = new SQLASTOutputVisitor(out);
-////            visitor.setDesensitize(true);
-//            visitor.setParameterizedQuesUnMergeInList(true);
-//            statement.accept(visitor);
-
-            SchemaStatVisitor visitor = new SchemaStatVisitor();
+            final StringBuilder out = new StringBuilder();
+            SQLASTOutputVisitor visitor = switch (dbType) {
+                case postgresql -> new PGOutputVisitor(out);
+                case oscar ->  new OscarOutputVisitor(out);
+                default -> new SQLASTOutputVisitor(out);
+            };
+//            visitor.setDesensitize(true);
+            visitor.setParameterizedQuesUnMergeInList(true);
             statement.accept(visitor);
 
-            SQLSelectStatement statement1 = (SQLSelectStatement) statement;
-            SQLSelectQueryBlock queryBlock = statement1.getSelect().getQueryBlock();
-            SQLTableSource from = queryBlock.getFrom();
-
-            System.out.println(visitor.getTables());
-            System.out.println(visitor.getOriginalTables());
+//            SchemaStatVisitor visitor = new SchemaStatVisitor();
+//            statement.accept(visitor);
+//
+//            SQLSelectStatement statement1 = (SQLSelectStatement) statement;
+//            SQLSelectQueryBlock queryBlock = statement1.getSelect().getQueryBlock();
+//            SQLTableSource from = queryBlock.getFrom();
+//
+//            System.out.println(visitor.getTables());
+//            System.out.println(visitor.getOriginalTables());
 
             System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
         });

@@ -4,13 +4,17 @@ import com.alibaba.druid.DbType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 class SQLInsertBuilderImplTest {
     SQLInsertBuilderImpl insertBuilder;
 
     @BeforeEach
     void setUp() {
 
-        insertBuilder = new SQLInsertBuilderImpl(DbType.hive);
+        insertBuilder = new SQLInsertBuilderImpl(DbType.mysql);
         insertBuilder.setTableSource("tableA");
     }
 
@@ -47,4 +51,13 @@ class SQLInsertBuilderImplTest {
         insertBuilder.setQuery("SELECT column1, column2, columnN FROM second_table_name WHERE column1=2;");
         System.out.println(insertBuilder);
     }
+
+    @Test
+    void parseValueClause() {
+        insertBuilder.setInsertColumns("a","b");
+        insertBuilder.addValueClause(List.of("columnvalue1"," columnvalue2"));
+        insertBuilder.addValueClause(List.of("columnvalue11"," columnvalue21"));
+        System.out.println(insertBuilder);
+    }
+
 }

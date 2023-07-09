@@ -18,12 +18,11 @@ import flowdesigner.sql.dialect.hive.HiveCreateTableBuilderImpl;
 import flowdesigner.sql.dialect.hive.HiveInsertBuilderImpl;
 import flowdesigner.sql.dialect.mysql.builder.*;
 import flowdesigner.sql.dialect.odps.OdpsCreateTableBuilderImpl;
-import flowdesigner.sql.dialect.oracle.OracleAlterTableBuilderImpl;
-import flowdesigner.sql.dialect.oracle.OracleCreateTableBuilderImpl;
-import flowdesigner.sql.dialect.oracle.OracleInsertBuilderImpl;
-import flowdesigner.sql.dialect.oracle.OracleSelectBuilderImpl;
-import flowdesigner.sql.dialect.pg.PGInsertBuilderImpl;
-import flowdesigner.sql.dialect.pg.PGSelectBuilderImpl;
+import flowdesigner.sql.dialect.oracle.*;
+import flowdesigner.sql.dialect.oscar.builder.OscarDropDatabaseBuilderImpl;
+import flowdesigner.sql.dialect.pg.builder.PGDropDatabaseBuilderImpl;
+import flowdesigner.sql.dialect.pg.builder.PGInsertBuilderImpl;
+import flowdesigner.sql.dialect.pg.builder.PGSelectBuilderImpl;
 import flowdesigner.sql.dialect.sqlserver.SQLServerInsertBuilderImpl;
 
 public class SQLBuilderFactory {
@@ -111,6 +110,14 @@ public class SQLBuilderFactory {
         };
     }
 
+    public static SQLDropDatabaseBuilder createSQLDropDatabaseBuilder(DbType dbType) {
+        return switch (dbType) {
+            case postgresql -> new PGDropDatabaseBuilderImpl(dbType);
+            case oscar -> new OscarDropDatabaseBuilderImpl(dbType);
+            case oracle , oceanbase_oracle -> new SQLDropUserBuilderImpl(dbType);
+            default -> new SQLDropDatabaseBuilderImpl(dbType);
+        };
+    }
     public static SQLDropTableBuilder createDropTableBuilder(DbType dbType) {
         return new SQLDropTableBuilderImpl(dbType);
     }
