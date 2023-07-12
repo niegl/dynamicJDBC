@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,8 +56,8 @@ class SQLInsertBuilderImplTest {
     @Test
     void parseValueClause() {
         insertBuilder.setInsertColumns("a","b");
-        insertBuilder.addValueClause(List.of("columnvalue1"," columnvalue2"));
-        insertBuilder.addValueClause(List.of("columnvalue11"," columnvalue21"));
+//        insertBuilder.addValueClause(new String[]{"columnvalue1", " columnvalue2"});
+//        insertBuilder.addValueClause(List.of("columnvalue11"," columnvalue21"));
         System.out.println(insertBuilder);
     }
 

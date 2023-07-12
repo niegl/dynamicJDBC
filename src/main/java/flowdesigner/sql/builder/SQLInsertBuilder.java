@@ -5,7 +5,7 @@ import com.alibaba.druid.sql.ast.statement.SQLInsertStatement;
 import com.alibaba.druid.sql.ast.statement.SQLSelect;
 import com.alibaba.druid.sql.ast.statement.SQLSelectQuery;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface SQLInsertBuilder extends SQLBuilder {
     SQLInsertBuilder setTableSource(String tableName);
@@ -17,7 +17,7 @@ public interface SQLInsertBuilder extends SQLBuilder {
      * 生成insert语句中的values部分，可多次调用，生成value_list[，value_list...]
      * @param columnValues value list值
      */
-    void addValueClause(List<String> columnValues);
+    void addValueClause(ArrayList<String> columnValues);
 
     SQLInsertBuilder setIfNotExists(boolean ifNotExists);
 
