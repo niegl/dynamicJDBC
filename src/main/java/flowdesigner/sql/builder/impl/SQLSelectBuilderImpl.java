@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -44,6 +45,15 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         supportMethods.add("joinAnd");
         supportMethods.add("joinOr");
         supportMethods.add("join");
+    }
+
+    protected static HashMap<String,SQLJoinTableSource.JoinType> join_type_rel = new HashMap<String,SQLJoinTableSource.JoinType>();
+    static {
+        join_type_rel.put("INNER JOIN", SQLJoinTableSource.JoinType.INNER_JOIN);
+        join_type_rel.put("CROSS JOIN", SQLJoinTableSource.JoinType.CROSS_JOIN);
+        join_type_rel.put("LEFT JOIN", SQLJoinTableSource.JoinType.LEFT_OUTER_JOIN);
+        join_type_rel.put("RIGHT JOIN", SQLJoinTableSource.JoinType.RIGHT_OUTER_JOIN);
+        join_type_rel.put("FULL JOIN", SQLJoinTableSource.JoinType.FULL_OUTER_JOIN);
     }
 
     public SQLSelectBuilderImpl(DbType dbType) {
@@ -549,8 +559,15 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         }
 
         try {
-            String joinType1 = joinType.replaceAll(" ", "_").toUpperCase();
-            SQLJoinTableSource.JoinType SQLJoinType = SQLJoinTableSource.JoinType.valueOf(joinType1);
+            String upperCase_join = joinType.toUpperCase();
+            boolean b = join_type_rel.containsKey(upperCase_join);
+            if (!b) {
+                return this;
+            }
+
+            SQLJoinTableSource.JoinType SQLJoinType = join_type_rel.get(upperCase_join);
+//            String joinType1 = joinType.replaceAll(" ", "_").toUpperCase();
+//            SQLJoinTableSource.JoinType SQLJoinType = SQLJoinTableSource.JoinType.valueOf(joinType1);
             joinTableSource.setJoinType(SQLJoinType);
 
             SQLExpr exprTable = SQLUtils.toSQLExpr(table, dbType);

@@ -58,7 +58,13 @@ class SQLSelectBuilderImplTest {
         builder.join("COMMA","CT", null,null,null,null);
                 System.out.println(builder);
     }
+    @Test
+    void test_select_hive() {
+        SQLSelectBuilder builder = SQLBuilderFactory.createSelectSQLBuilder(DbType.hive);
+        builder.select("t3.gregorian_date");
 
+        System.out.println(builder);
+    }
     @Test
     void whereAnd() {
         SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.mysql);
@@ -104,6 +110,24 @@ class SQLSelectBuilderImplTest {
 
     }
 
+    @Test
+    void testUnionWithWhere() throws SQLSyntaxErrorException {
+
+        SQLSelectBuilder builder2 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder2.select("c", "d")
+                .from("test.building_t" ,"tt")
+                .where("a != 1");
+
+        SQLSelectBuilder builder3 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder3.select("e", "f")
+                .from("test.building_t2","tt")
+                .where("b != 1");
+
+        builder2.union(builder3, "DISTINCT");
+
+        SQLTest.parser(builder2.toString(),DbType.mysql);
+
+    }
 
     @Test
     void setBigResult() {
@@ -190,8 +214,8 @@ class SQLSelectBuilderImplTest {
         builderEx.where("t01_pty_area_h.area_typ_cd = '00'")
                 .whereAnd("t02_fac_point_pty_rel_h.fac_point_pty_rel_ctgy_cd = '06'")
                 .whereAnd("t01_pty_area_h.area != 0");
-        builderEx.join("inner join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
-        builderEx.join("inner join","pdata.t02_fac_point_pty_rel_h","c","a.househld_pty_id","c.fac_point_id","=");
+        builderEx.join("left join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
+        builderEx.join("right join","pdata.t02_fac_point_pty_rel_h","c","a.househld_pty_id","c.fac_point_id","=");
         builderEx.join("inner join","pdata.t01_househld_pty","c","a.househld_pty_id","d.househld_pty_id","=");
 
         SQLTest.parser(builderEx.toString(),dbType);
@@ -282,4 +306,7 @@ class SQLSelectBuilderImplTest {
         return arguments.stream();
     }
 
+    @Test
+    void testJoin() {
+    }
 }
