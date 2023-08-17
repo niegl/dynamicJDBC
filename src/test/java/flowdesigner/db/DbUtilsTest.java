@@ -1789,6 +1789,531 @@ class DbUtilsTest {
     }
 
     @Test
+    void ImpalaDBFunctionsPreProcessor() {
+        String content ="BITAND(integer_type a, same_type b)\n" +
+                "Purpose: Returns an integer value representing the bits that are set to 1 in both of the arguments. If the arguments are of different sizes, the smaller is promoted to the type of the larger.\n" +
+                "Usage notes: The BITAND() function is equivalent to the & binary operator.\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "The following examples show the results of ANDing integer values. 255 contains all 1 bits in its lowermost 7 bits. 32767 contains all 1 bits in its lowermost 15 bits. You can use the BIN() function to check the binary representation of any integer value, although the result is always represented as a 64-bit value. If necessary, the smaller argument is promoted to the type of the larger one.\n" +
+                "\n" +
+                "select bitand(255, 32767); /* 0000000011111111 & 0111111111111111 */\n" +
+                "+--------------------+\n" +
+                "| bitand(255, 32767) |\n" +
+                "+--------------------+\n" +
+                "| 255                |\n" +
+                "+--------------------+\n" +
+                "\n" +
+                "select bitand(32767, 1); /* 0111111111111111 & 0000000000000001 */\n" +
+                "+------------------+\n" +
+                "| bitand(32767, 1) |\n" +
+                "+------------------+\n" +
+                "| 1                |\n" +
+                "+------------------+\n" +
+                "\n" +
+                "select bitand(32, 16); /* 00010000 & 00001000 */\n" +
+                "+----------------+\n" +
+                "| bitand(32, 16) |\n" +
+                "+----------------+\n" +
+                "| 0              |\n" +
+                "+----------------+\n" +
+                "\n" +
+                "select bitand(12,5); /* 00001100 & 00000101 */\n" +
+                "+---------------+\n" +
+                "| bitand(12, 5) |\n" +
+                "+---------------+\n" +
+                "| 4             |\n" +
+                "+---------------+\n" +
+                "\n" +
+                "select bitand(-1,15); /* 11111111 & 00001111 */\n" +
+                "+----------------+\n" +
+                "| bitand(-1, 15) |\n" +
+                "+----------------+\n" +
+                "| 15             |\n" +
+                "+----------------+\n" +
+                "BITNOT(integer_type a)\n" +
+                "Purpose: Inverts all the bits of the input argument.\n" +
+                "Usage notes: The BITNOT() function is equivalent to the ~ unary operator.\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "These examples illustrate what happens when you flip all the bits of an integer value. The sign always changes. The decimal representation is one different between the positive and negative values.\n" +
+                "\n" +
+                "select bitnot(127); /* 01111111 -> 10000000 */\n" +
+                "+-------------+\n" +
+                "| bitnot(127) |\n" +
+                "+-------------+\n" +
+                "| -128        |\n" +
+                "+-------------+\n" +
+                "\n" +
+                "select bitnot(16); /* 00010000 -> 11101111 */\n" +
+                "+------------+\n" +
+                "| bitnot(16) |\n" +
+                "+------------+\n" +
+                "| -17        |\n" +
+                "+------------+\n" +
+                "\n" +
+                "select bitnot(0); /* 00000000 -> 11111111 */\n" +
+                "+-----------+\n" +
+                "| bitnot(0) |\n" +
+                "+-----------+\n" +
+                "| -1        |\n" +
+                "+-----------+\n" +
+                "\n" +
+                "select bitnot(-128); /* 10000000 -> 01111111 */\n" +
+                "+--------------+\n" +
+                "| bitnot(-128) |\n" +
+                "+--------------+\n" +
+                "| 127          |\n" +
+                "+--------------+\n" +
+                "BITOR(integer_type a, same_type b)\n" +
+                "Purpose: Returns an integer value representing the bits that are set to 1 in either of the arguments. If the arguments are of different sizes, the smaller is promoted to the type of the larger.\n" +
+                "Usage notes: The BITOR() function is equivalent to the | binary operator.\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "The following examples show the results of ORing integer values.\n" +
+                "\n" +
+                "select bitor(1,4); /* 00000001 | 00000100 */\n" +
+                "+-------------+\n" +
+                "| bitor(1, 4) |\n" +
+                "+-------------+\n" +
+                "| 5           |\n" +
+                "+-------------+\n" +
+                "\n" +
+                "select bitor(16,48); /* 00001000 | 00011000 */\n" +
+                "+---------------+\n" +
+                "| bitor(16, 48) |\n" +
+                "+---------------+\n" +
+                "| 48            |\n" +
+                "+---------------+\n" +
+                "\n" +
+                "select bitor(0,7); /* 00000000 | 00000111 */\n" +
+                "+-------------+\n" +
+                "| bitor(0, 7) |\n" +
+                "+-------------+\n" +
+                "| 7           |\n" +
+                "+-------------+\n" +
+                "BITXOR(integer_type a, same_type b)\n" +
+                "Purpose: Returns an integer value representing the bits that are set to 1 in one but not both of the arguments. If the arguments are of different sizes, the smaller is promoted to the type of the larger.\n" +
+                "Usage notes: The BITXOR() function is equivalent to the ^ binary operator.\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "The following examples show the results of XORing integer values. XORing a non-zero value with zero returns the non-zero value. XORing two identical values returns zero, because all the 1 bits from the first argument are also 1 bits in the second argument. XORing different non-zero values turns off some bits and leaves others turned on, based on whether the same bit is set in both arguments.\n" +
+                "\n" +
+                "select bitxor(0,15); /* 00000000 ^ 00001111 */\n" +
+                "+---------------+\n" +
+                "| bitxor(0, 15) |\n" +
+                "+---------------+\n" +
+                "| 15            |\n" +
+                "+---------------+\n" +
+                "\n" +
+                "select bitxor(7,7); /* 00000111 ^ 00000111 */\n" +
+                "+--------------+\n" +
+                "| bitxor(7, 7) |\n" +
+                "+--------------+\n" +
+                "| 0            |\n" +
+                "+--------------+\n" +
+                "\n" +
+                "select bitxor(8,4); /* 00001000 ^ 00000100 */\n" +
+                "+--------------+\n" +
+                "| bitxor(8, 4) |\n" +
+                "+--------------+\n" +
+                "| 12           |\n" +
+                "+--------------+\n" +
+                "\n" +
+                "select bitxor(3,7); /* 00000011 ^ 00000111 */\n" +
+                "+--------------+\n" +
+                "| bitxor(3, 7) |\n" +
+                "+--------------+\n" +
+                "| 4            |\n" +
+                "+--------------+\n" +
+                "COUNTSET(integer_type a [, INT zero_or_one])\n" +
+                "Purpose: By default, returns the number of 1 bits in the specified integer value. If the optional second argument is set to zero, it returns the number of 0 bits instead.\n" +
+                "Usage notes:\n" +
+                "\n" +
+                "In discussions of information theory, this operation is referred to as the \"population count\" or \"popcount\".\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "The following examples show how to count the number of 1 bits in an integer value.\n" +
+                "\n" +
+                "select countset(1); /* 00000001 */\n" +
+                "+-------------+\n" +
+                "| countset(1) |\n" +
+                "+-------------+\n" +
+                "| 1           |\n" +
+                "+-------------+\n" +
+                "\n" +
+                "select countset(3); /* 00000011 */\n" +
+                "+-------------+\n" +
+                "| countset(3) |\n" +
+                "+-------------+\n" +
+                "| 2           |\n" +
+                "+-------------+\n" +
+                "\n" +
+                "select countset(16); /* 00010000 */\n" +
+                "+--------------+\n" +
+                "| countset(16) |\n" +
+                "+--------------+\n" +
+                "| 1            |\n" +
+                "+--------------+\n" +
+                "\n" +
+                "select countset(17); /* 00010001 */\n" +
+                "+--------------+\n" +
+                "| countset(17) |\n" +
+                "+--------------+\n" +
+                "| 2            |\n" +
+                "+--------------+\n" +
+                "\n" +
+                "select countset(7,1); /* 00000111 = 3 1 bits; the function counts 1 bits by default */\n" +
+                "+----------------+\n" +
+                "| countset(7, 1) |\n" +
+                "+----------------+\n" +
+                "| 3              |\n" +
+                "+----------------+\n" +
+                "\n" +
+                "select countset(7,0); /* 00000111 = 5 0 bits; third argument can only be 0 or 1 */\n" +
+                "+----------------+\n" +
+                "| countset(7, 0) |\n" +
+                "+----------------+\n" +
+                "| 5              |\n" +
+                "+----------------+\n" +
+                "GETBIT(integer_type a, INT position)\n" +
+                "Purpose: Returns a 0 or 1 representing the bit at a specified position. The positions are numbered right to left, starting at zero. The position argument cannot be negative.\n" +
+                "Usage notes:\n" +
+                "\n" +
+                "When you use a literal input value, it is treated as an 8-bit, 16-bit, and so on value, the smallest type that is appropriate. The type of the input value limits the range of the positions. Cast the input value to the appropriate type if you need to ensure it is treated as a 64-bit, 32-bit, and so on value.\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "The following examples show how to test a specific bit within an integer value.\n" +
+                "\n" +
+                "select getbit(1,0); /* 00000001 */\n" +
+                "+--------------+\n" +
+                "| getbit(1, 0) |\n" +
+                "+--------------+\n" +
+                "| 1            |\n" +
+                "+--------------+\n" +
+                "\n" +
+                "select getbit(16,1) /* 00010000 */\n" +
+                "+---------------+\n" +
+                "| getbit(16, 1) |\n" +
+                "+---------------+\n" +
+                "| 0             |\n" +
+                "+---------------+\n" +
+                "\n" +
+                "select getbit(16,4) /* 00010000 */\n" +
+                "+---------------+\n" +
+                "| getbit(16, 4) |\n" +
+                "+---------------+\n" +
+                "| 1             |\n" +
+                "+---------------+\n" +
+                "\n" +
+                "select getbit(16,5) /* 00010000 */\n" +
+                "+---------------+\n" +
+                "| getbit(16, 5) |\n" +
+                "+---------------+\n" +
+                "| 0             |\n" +
+                "+---------------+\n" +
+                "\n" +
+                "select getbit(-1,3); /* 11111111 */\n" +
+                "+---------------+\n" +
+                "| getbit(-1, 3) |\n" +
+                "+---------------+\n" +
+                "| 1             |\n" +
+                "+---------------+\n" +
+                "\n" +
+                "select getbit(-1,25); /* 11111111 */\n" +
+                "ERROR: Invalid bit position: 25\n" +
+                "\n" +
+                "select getbit(cast(-1 as int),25); /* 11111111111111111111111111111111 */\n" +
+                "+-----------------------------+\n" +
+                "| getbit(cast(-1 as int), 25) |\n" +
+                "+-----------------------------+\n" +
+                "| 1                           |\n" +
+                "+-----------------------------+\n" +
+                "ROTATELEFT(integer_type a, INT positions)\n" +
+                "Purpose: Rotates an integer value left by a specified number of bits. As the most significant bit is taken out of the original value, if it is a 1 bit, it is \"rotated\" back to the least significant bit. Therefore, the final value has the same number of 1 bits as the original value, just in different positions. In computer science terms, this operation is a \"circular shift\".\n" +
+                "Usage notes:\n" +
+                "\n" +
+                "Specifying a second argument of zero leaves the original value unchanged. Rotating a -1 value by any number of positions still returns -1, because the original value has all 1 bits and all the 1 bits are preserved during rotation. Similarly, rotating a 0 value by any number of positions still returns 0. Rotating a value by the same number of bits as in the value returns the same value. Because this is a circular operation, the number of positions is not limited to the number of bits in the input value. For example, rotating an 8-bit value by 1, 9, 17, and so on positions returns an identical result in each case.\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "select rotateleft(1,4); /* 00000001 -> 00010000 */\n" +
+                "+------------------+\n" +
+                "| rotateleft(1, 4) |\n" +
+                "+------------------+\n" +
+                "| 16               |\n" +
+                "+------------------+\n" +
+                "\n" +
+                "select rotateleft(-1,155); /* 11111111 -> 11111111 */\n" +
+                "+---------------------+\n" +
+                "| rotateleft(-1, 155) |\n" +
+                "+---------------------+\n" +
+                "| -1                  |\n" +
+                "+---------------------+\n" +
+                "\n" +
+                "select rotateleft(-128,1); /* 10000000 -> 00000001 */\n" +
+                "+---------------------+\n" +
+                "| rotateleft(-128, 1) |\n" +
+                "+---------------------+\n" +
+                "| 1                   |\n" +
+                "+---------------------+\n" +
+                "\n" +
+                "select rotateleft(-127,3); /* 10000001 -> 00001100 */\n" +
+                "+---------------------+\n" +
+                "| rotateleft(-127, 3) |\n" +
+                "+---------------------+\n" +
+                "| 12                  |\n" +
+                "+---------------------+\n" +
+                "\n" +
+                "ROTATERIGHT(integer_type a, INT positions)\n" +
+                "Purpose: Rotates an integer value right by a specified number of bits. As the least significant bit is taken out of the original value, if it is a 1 bit, it is \"rotated\" back to the most significant bit. Therefore, the final value has the same number of 1 bits as the original value, just in different positions. In computer science terms, this operation is a \"circular shift\".\n" +
+                "Usage notes:\n" +
+                "\n" +
+                "Specifying a second argument of zero leaves the original value unchanged. Rotating a -1 value by any number of positions still returns -1, because the original value has all 1 bits and all the 1 bits are preserved during rotation. Similarly, rotating a 0 value by any number of positions still returns 0. Rotating a value by the same number of bits as in the value returns the same value. Because this is a circular operation, the number of positions is not limited to the number of bits in the input value. For example, rotating an 8-bit value by 1, 9, 17, and so on positions returns an identical result in each case.\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "select rotateright(16,4); /* 00010000 -> 00000001 */\n" +
+                "+--------------------+\n" +
+                "| rotateright(16, 4) |\n" +
+                "+--------------------+\n" +
+                "| 1                  |\n" +
+                "+--------------------+\n" +
+                "\n" +
+                "select rotateright(-1,155); /* 11111111 -> 11111111 */\n" +
+                "+----------------------+\n" +
+                "| rotateright(-1, 155) |\n" +
+                "+----------------------+\n" +
+                "| -1                   |\n" +
+                "+----------------------+\n" +
+                "\n" +
+                "select rotateright(-128,1); /* 10000000 -> 01000000 */\n" +
+                "+----------------------+\n" +
+                "| rotateright(-128, 1) |\n" +
+                "+----------------------+\n" +
+                "| 64                   |\n" +
+                "+----------------------+\n" +
+                "\n" +
+                "select rotateright(-127,3); /* 10000001 -> 00110000 */\n" +
+                "+----------------------+\n" +
+                "| rotateright(-127, 3) |\n" +
+                "+----------------------+\n" +
+                "| 48                   |\n" +
+                "+----------------------+\n" +
+                "SETBIT(integer_type a, INT position [, INT zero_or_one])\n" +
+                "Purpose: By default, changes a bit at a specified position to a 1, if it is not already. If the optional third argument is set to zero, the specified bit is set to 0 instead.\n" +
+                "Usage notes:\n" +
+                "\n" +
+                "If the bit at the specified position was already 1 (by default) or 0 (with a third argument of zero), the return value is the same as the first argument. The positions are numbered right to left, starting at zero. (Therefore, the return value could be different from the first argument even if the position argument is zero.) The position argument cannot be negative.\n" +
+                "When you use a literal input value, it is treated as an 8-bit, 16-bit, and so on value, the smallest type that is appropriate. The type of the input value limits the range of the positions. Cast the input value to the appropriate type if you need to ensure it is treated as a 64-bit, 32-bit, and so on value.\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "select setbit(0,0); /* 00000000 -> 00000001 */\n" +
+                "+--------------+\n" +
+                "| setbit(0, 0) |\n" +
+                "+--------------+\n" +
+                "| 1            |\n" +
+                "+--------------+\n" +
+                "\n" +
+                "select setbit(0,3); /* 00000000 -> 00001000 */\n" +
+                "+--------------+\n" +
+                "| setbit(0, 3) |\n" +
+                "+--------------+\n" +
+                "| 8            |\n" +
+                "+--------------+\n" +
+                "\n" +
+                "select setbit(7,3); /* 00000111 -> 00001111 */\n" +
+                "+--------------+\n" +
+                "| setbit(7, 3) |\n" +
+                "+--------------+\n" +
+                "| 15           |\n" +
+                "+--------------+\n" +
+                "\n" +
+                "select setbit(15,3); /* 00001111 -> 00001111 */\n" +
+                "+---------------+\n" +
+                "| setbit(15, 3) |\n" +
+                "+---------------+\n" +
+                "| 15            |\n" +
+                "+---------------+\n" +
+                "\n" +
+                "select setbit(0,32); /* By default, 0 is a TINYINT with only 8 bits. */\n" +
+                "ERROR: Invalid bit position: 32\n" +
+                "\n" +
+                "select setbit(cast(0 as bigint),32); /* For BIGINT, the position can be 0..63. */\n" +
+                "+-------------------------------+\n" +
+                "| setbit(cast(0 as bigint), 32) |\n" +
+                "+-------------------------------+\n" +
+                "| 4294967296                    |\n" +
+                "+-------------------------------+\n" +
+                "\n" +
+                "select setbit(7,3,1); /* 00000111 -> 00001111; setting to 1 is the default */\n" +
+                "+-----------------+\n" +
+                "| setbit(7, 3, 1) |\n" +
+                "+-----------------+\n" +
+                "| 15              |\n" +
+                "+-----------------+\n" +
+                "\n" +
+                "select setbit(7,2,0); /* 00000111 -> 00000011; third argument of 0 clears instead of sets */\n" +
+                "+-----------------+\n" +
+                "| setbit(7, 2, 0) |\n" +
+                "+-----------------+\n" +
+                "| 3               |\n" +
+                "+-----------------+\n" +
+                "SHIFTLEFT(integer_type a, INT positions)\n" +
+                "Purpose: Shifts an integer value left by a specified number of bits. As the most significant bit is taken out of the original value, it is discarded and the least significant bit becomes 0. In computer science terms, this operation is a \"logical shift\".\n" +
+                "Usage notes:\n" +
+                "\n" +
+                "The final value has either the same number of 1 bits as the original value, or fewer. Shifting an 8-bit value by 8 positions, a 16-bit value by 16 positions, and so on produces a result of zero.\n" +
+                "\n" +
+                "Specifying a second argument of zero leaves the original value unchanged. Shifting any value by 0 returns the original value. Shifting any value by 1 is the same as multiplying it by 2, as long as the value is small enough; larger values eventually become negative when shifted, as the sign bit is set. Starting with the value 1 and shifting it left by N positions gives the same result as 2 to the Nth power, or POW(2,N).\n" +
+                "\n" +
+                "Return type: Same as the input value\n" +
+                "\n" +
+                "Added in: Impala 2.3.0\n" +
+                "\n" +
+                "Examples:\n" +
+                "\n" +
+                "select shiftleft(1,0); /* 00000001 -> 00000001 */\n" +
+                "+-----------------+\n" +
+                "| shiftleft(1, 0) |\n" +
+                "+-----------------+\n" +
+                "| 1               |\n" +
+                "+-----------------+\n" +
+                "\n" +
+                "select shiftleft(1,3); /* 00000001 -> 00001000 */\n" +
+                "+-----------------+\n" +
+                "| shiftleft(1, 3) |\n" +
+                "+-----------------+\n" +
+                "| 8               |\n" +
+                "+-----------------+\n" +
+                "\n" +
+                "select shiftleft(8,2); /* 00001000 -> 00100000 */\n" +
+                "+-----------------+\n" +
+                "| shiftleft(8, 2) |\n" +
+                "+-----------------+\n" +
+                "| 32              |\n" +
+                "+-----------------+\n" +
+                "\n" +
+                "select shiftleft(127,1); /* 01111111 -> 11111110 */\n" +
+                "+-------------------+\n" +
+                "| shiftleft(127, 1) |\n" +
+                "+-------------------+\n" +
+                "| -2                |\n" +
+                "+-------------------+\n" +
+                "\n" +
+                "select shiftleft(127,5); /* 01111111 -> 11100000 */\n" +
+                "+-------------------+\n" +
+                "| shiftleft(127, 5) |\n" +
+                "+-------------------+\n" +
+                "| -32               |\n" +
+                "+-------------------+\n" +
+                "\n" +
+                "select shiftleft(-1,4); /* 11111111 -> 11110000 */\n" +
+                "+------------------+\n" +
+                "| shiftleft(-1, 4) |\n" +
+                "+------------------+\n" +
+                "| -16              |\n" +
+                "+------------------+\n" +
+                "SHIFTRIGHT(integer_type a, INT positions)\n" +
+                "Purpose: Shifts an integer value right by a specified number of bits. As the least significant bit is taken out of the original value, it is discarded and the most significant bit becomes 0. In computer science terms, this operation is a \"logical shift\".\n" +
+                "Usage notes:\n" +
+                "\n" +
+                "Therefore, the final value has either the same number of 1 bits as the original value, or fewer. Shifting an 8-bit value by 8 positions, a 16-bit value by 16 positions, and so on produces a result of zero.\n" +
+                "\n" +
+                "Specifying a second argument of zero leaves the original value unchanged. Shifting any value by 0 returns the original value. Shifting any positive value right by 1 is the same as dividing it by 2. Negative values become positive when shifted right.\n" +
+                "\n" +
+                "Return type: Same as the input value";
+
+        int GROUP_COUNT = 3;
+
+        ArrayList<String> newLines = new ArrayList<>();
+        String[] lines = content.split("\n");
+
+        // 计算对其函数名需要宽度
+        String prevLine = "";
+        String currLine = "";
+        int NameLength = 0;
+        for (String line : lines) {
+            currLine = line;
+            // 首先查找Purpose:
+            if (currLine.contains("Purpose:")) {
+                String name = prevLine;
+                if (prevLine.contains("(")) {
+                    name = prevLine.substring(0,prevLine.indexOf('('));
+                }
+                newLines.add(name);
+                newLines.add(prevLine);
+                newLines.add(currLine.replace("Purpose:",""));
+
+                int length = name.length();
+                if (length > NameLength) {
+                    NameLength = length;
+                }
+            }
+            prevLine = line;
+
+        }
+
+        NameLength += 8;    //2个TAB长度
+
+        for (int i = 0; i < newLines.size(); i+=GROUP_COUNT) {
+            String line1 = newLines.get(i);
+            String line2 = newLines.get(i+1);
+            String line3 = newLines.get(i+2);
+
+            int spaceNeeded = NameLength - line1.length() ;
+            spaceNeeded = Math.max(spaceNeeded, 0);
+            String signature = line1 + " ".repeat(spaceNeeded) + ":" + line2 +" :" + line3;
+
+            System.out.println(signature);
+        }
+
+    }
+
+    @Test
     void H2DBFunctionsPostProcessor() {
         String content ="CSVREAD\n" +
                 "CSVREAD(fileNameString [, columnsString [, csvOptions ] ] )\n" +
