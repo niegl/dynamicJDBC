@@ -1706,7 +1706,7 @@ public class SQLTest {
 
     @org.junit.jupiter.api.Test
     void test1() throws SQLSyntaxErrorException {
-        String sql = "select name,age from (select name,age from test_tab1 join std_pcode.t20_index_code) A join B";
+        String sql = "select distinct name,age from (select name,age from test_tab1 join std_pcode.t20_index_code) A join B";
         parser(sql, "hive");
     }
 

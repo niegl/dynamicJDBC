@@ -2,10 +2,7 @@ package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
-import com.alibaba.druid.sql.ast.SQLExpr;
-import com.alibaba.druid.sql.ast.SQLLimit;
-import com.alibaba.druid.sql.ast.SQLOrderBy;
-import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.*;
 import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
@@ -175,6 +172,18 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         SQLSelectQueryBlock queryBlock = getQueryBlock();
         SQLExprTableSource from = new SQLExprTableSource(expr, alias);
         queryBlock.setFrom(from);
+
+        return this;
+    }
+
+    /**
+     * select distinct
+     * @return
+     */
+    @Override
+    public SQLSelectBuilder setDistionOption() {
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        queryBlock.setDistionOption(SQLSetQuantifier.DISTINCT);
 
         return this;
     }

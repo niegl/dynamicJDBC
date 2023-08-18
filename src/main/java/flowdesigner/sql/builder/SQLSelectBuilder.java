@@ -27,6 +27,8 @@ public interface SQLSelectBuilder extends SQLBuilder {
 
     SQLSelectBuilder from(SQLExpr expr, String alias);
 
+    SQLSelectBuilder setDistionOption();
+
     SQLSelectBuilder orderBy(String... columns);
 
     SQLSelectBuilder groupBy(String expr);
