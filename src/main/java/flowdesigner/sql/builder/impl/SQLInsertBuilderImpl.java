@@ -74,7 +74,7 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
 
     @Override
     public void addValueClause(ArrayList<String> columnValues) {
-        columnValues.add("");
+
         SQLInsertStatement statement = getSQLStatement();
         List<SQLInsertStatement.ValuesClause> valueClauseList = statement.getValuesList();
 

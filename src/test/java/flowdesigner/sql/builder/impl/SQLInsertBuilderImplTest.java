@@ -61,4 +61,13 @@ class SQLInsertBuilderImplTest {
         System.out.println(insertBuilder);
     }
 
+    @Test
+    void addValueClause() {
+        insertBuilder.setInsertColumns("a","b");
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("value1");
+        strings.add("value2");
+        insertBuilder.addValueClause(strings);
+        System.out.println(insertBuilder);
+    }
 }
