@@ -124,14 +124,15 @@ class CommandManagerTest {
         boolean supportsCatalogsInTableDefinitions = connection.getMetaData().supportsCatalogsInTableDefinitions();
         System.out.println(supportsCatalogsInTableDefinitions);
         System.out.println(supportsSchemasInTableDefinitions);
-        ResultSet rs = meta.getTables(null, null, null, new String[]{"VIEW"});
+        ResultSet rs = meta.getTables(null, null, null, new String[]{"TABLE","VIEW"});
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
             String TABLE_CAT = rs.getString("TABLE_CAT");
             String TABLE_SCHEM = rs.getString("TABLE_SCHEM");
+            String TABLE_TYPE = rs.getString("TABLE_TYPE");
 
-            System.out.println(tableName + "," + TABLE_CAT + "," + TABLE_SCHEM);
+            System.out.println(tableName + "," + TABLE_CAT + "," + TABLE_SCHEM+ "," + TABLE_TYPE);
 
         }
     }

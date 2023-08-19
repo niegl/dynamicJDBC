@@ -34,7 +34,7 @@ import java.util.Map;
  * 数据库逆向，解析表清单功能. 支持表和视图
  */
 @Slf4j
-public class DBReverseGetTablesImpl implements Command<ExecResult<List<TableEntity>>> {
+public class DBReverseGetAllTablesListImpl implements Command<ExecResult<List<TableEntity>>> {
 
     public ExecResult<List<TableEntity>> exec(Connection conn,Map<String, String> params) throws SQLException {
         String schema = params.getOrDefault("schemaPattern",null);

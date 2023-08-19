@@ -32,7 +32,7 @@ import java.util.*;
  * @desc : 数据库逆向，解析表清单的字段以及索引
  */
 @Slf4j
-public class DBReverseGetTablesDDLImpl implements Command<ExecResult<List<TableEntity>>> {
+public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEntity>>> {
     public ExecResult<List<TableEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
 
         String schema = params.getOrDefault("schemaPattern",null);

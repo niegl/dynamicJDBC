@@ -20,7 +20,7 @@ import java.util.Map;
  * 利用druid解析DDL
  */
 @Slf4j
-public class DBParseDDLImpl implements Command<ExecResult<List<TableEntity>>> {
+public class DBParseDDLToTableImpl implements Command<ExecResult<List<TableEntity>>> {
 
     public ExecResult<List<TableEntity>> exec(Connection connection, Map<String, String> params) throws SQLException {
 

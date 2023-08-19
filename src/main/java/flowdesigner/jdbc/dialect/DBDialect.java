@@ -168,6 +168,7 @@ public class DBDialect {
         String tableCat = rs.getString(1);
         String tableSchem = rs.getString(2);
         String tableName = rs.getString(3);
+        String TABLE_TYPE = rs.getString(4);
         String remarks = StringKit.trim(rs.getString(5));
 //        String defName = remarks;
 //        String comment = "";
@@ -179,11 +180,11 @@ public class DBDialect {
 //            comment = pair.getRight();
 //        }
 //        tableEntity.setDefKey(defKey);
-        tableEntity.setTABLE_NAME(tableName);
-        tableEntity.setREMARKS(remarks);
         tableEntity.setTABLE_CAT(tableCat);
         tableEntity.setTABLE_SCHEM(tableSchem);
-
+        tableEntity.setTABLE_NAME(tableName);
+        tableEntity.setTABLE_TYPE(TABLE_TYPE);
+        tableEntity.setREMARKS(remarks);
     }
 
     /**
