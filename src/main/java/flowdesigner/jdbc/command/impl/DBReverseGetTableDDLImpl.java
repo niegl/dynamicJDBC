@@ -42,7 +42,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
         String[] tableList = tables.split(",");
 
         ExecResult<List<TableEntity>> ret = new ExecResult<>();
-        List<TableEntity> tableEntities = fillTablesEntities(conn, schema, tableList, types.split(","));
+        List<TableEntity> tableEntities = getTablesEntities(conn, schema, tableList, types.split(","));
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(tableEntities);
 
@@ -57,7 +57,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
      * @param tableNameList
      * @return
      */
-    protected List<TableEntity> fillTablesEntities(Connection conn, String schemaPattern, String[] tableNameList, String[] types) throws SQLException {
+    protected List<TableEntity> getTablesEntities(Connection conn, String schemaPattern, String[] tableNameList, String[] types) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<>();
 
         DatabaseMetaData meta = conn.getMetaData();
@@ -66,11 +66,11 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
 
         if (1 == tableNameList.length && "".equals(tableNameList[0])) {
             String tableNamePattern = dbDialect.getTableNamePattern(conn);
-            return dbDialect.createTableEntity(conn, meta, schemaPattern, tableNamePattern, types);
+            return dbDialect.getTableEntities(conn, meta, schemaPattern, tableNamePattern, types);
         }
 
         for (String tableName : tableNameList) {
-            List<TableEntity> tableEntities1 = dbDialect.createTableEntity(conn, meta, schemaPattern, tableName, types);
+            List<TableEntity> tableEntities1 = dbDialect.getTableEntities(conn, meta, schemaPattern, tableName, types);
             if (tableEntities1.isEmpty()) {
                 continue;
             }

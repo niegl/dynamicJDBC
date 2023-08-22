@@ -112,13 +112,20 @@ public class DBDialect {
      * @return
      */
     public SchemaEntity createSchemaEntity(Connection connection, ResultSet rs) throws SQLException {
-        SchemaEntity entity = new SchemaEntity();
-        fillSchemaEntityNoTable(entity, connection,rs);
-        if (StringKit.isNotBlank(entity.getDefKey())) {
-            return entity;
-        } else {
-            return null;
+        SchemaEntity entity = null;
+
+        String tableCat = rs.getString("TABLE_CATALOG");
+        String tableSchema = rs.getString("TABLE_SCHEM");
+        String defKey = tableCat + "_" + tableSchema;
+
+        if (StringKit.isNotBlank(defKey)) {
+            entity = new SchemaEntity();
+            entity.setDefKey(defKey);
+            entity.setTABLE_CAT(tableCat);
+            entity.setTABLE_SCHEM(tableSchema);
         }
+
+        return entity;
     }
 
     /**
@@ -139,23 +146,6 @@ public class DBDialect {
         }
 
         return null;
-    }
-
-    /**
-     * 传入一个空对象，填充表名，中文名，注释信息
-     * @param schemaEntity
-     * @param rs
-     * @throws SQLException
-     */
-    public void fillSchemaEntityNoTable(SchemaEntity schemaEntity, Connection connection,ResultSet rs) throws SQLException {
-        String tableCat = rs.getString("TABLE_CATALOG");
-        String tableSchem = rs.getString("TABLE_SCHEM");
-        String defKey = tableCat+"_" + tableSchem;
-
-        schemaEntity.setDefKey(defKey);
-        schemaEntity.setTABLE_CAT(tableCat);
-        schemaEntity.setTABLE_SCHEM(tableSchem);
-
     }
 
     /**
@@ -221,6 +211,24 @@ public class DBDialect {
         } finally {
             JdbcKit.close(rs);
             JdbcKit.close(pkRs);
+        }
+    }
+
+    /**
+     * 传入表名，中文名，注释信息，获取字段明细，索引信息
+     * @param tableEntity
+     * @param rs
+     */
+    public void fillTableEntity(TableEntity tableEntity, ResultSet rs) {
+        String tableName = tableEntity.getTABLE_NAME();
+
+        try {
+            ColumnField field = new ColumnField();
+            fillColumnField(field, rs);
+            tableEntity.getFields().add(field);
+
+        } catch (SQLException e) {
+            log.error("读取数据表"+tableName+"的字段明细出错");
         }
     }
 
@@ -313,6 +321,100 @@ public class DBDialect {
         }
 
         field.setPrimaryKey(pkSet.contains(colName));
+        field.setNotNull(!"YES".equalsIgnoreCase(isNullable));
+        field.setAutoIncrement(!"NO".equalsIgnoreCase(isAutoincrement));
+        field.setDefaultValue(defaultValue);
+    }
+
+    /**
+     * 填充列数据
+     * TABLE_CAT String => 表类别（可为 null）
+     * TABLE_SCHEM String => 表模式（可为 null）
+     * TABLE_NAME String => 表名称
+     * COLUMN_NAME String => 列名称
+     * DATA_TYPE int => 来自 java.sql.Types 的 SQL 类型
+     * TYPE_NAME String => 数据源依赖的类型名称，对于 UDT，该类型名称是完全限定的
+     * COLUMN_SIZE int => 列的大小。
+     * BUFFER_LENGTH 未被使用。
+     * DECIMAL_DIGITS int => 小数部分的位数。对于 DECIMAL_DIGITS 不适用的数据类型，则返回 Null。
+     * NUM_PREC_RADIX int => 基数（通常为 10 或 2）
+     * NULLABLE int => 是否允许使用 NULL。
+     * columnNoNulls - 可能不允许使用 NULL 值
+     * columnNullable - 明确允许使用 NULL 值
+     * columnNullableUnknown - 不知道是否可使用 null
+     * REMARKS String => 描述列的注释（可为 null）
+     * COLUMN_DEF String => 该列的默认值，当值在单引号内时应被解释为一个字符串（可为 null）
+     * SQL_DATA_TYPE int => 未使用
+     * SQL_DATETIME_SUB int => 未使用
+     * CHAR_OCTET_LENGTH int => 对于 char 类型，该长度是列中的最大字节数
+     * ORDINAL_POSITION int => 表中的列的索引（从 1 开始）
+     * IS_NULLABLE String => ISO 规则用于确定列是否包括 null。
+     * YES --- 如果参数可以包括 NULL
+     * NO --- 如果参数不可以包括 NULL
+     * 空字符串 --- 如果不知道参数是否可以包括 null
+     * SCOPE_CATLOG String => 表的类别，它是引用属性的作用域（如果 DATA_TYPE 不是 REF，则为 null）
+     * SCOPE_SCHEMA String => 表的模式，它是引用属性的作用域（如果 DATA_TYPE 不是 REF，则为 null）
+     * SCOPE_TABLE String => 表名称，它是引用属性的作用域（如果 DATA_TYPE 不是 REF，则为 null）
+     * SOURCE_DATA_TYPE short => 不同类型或用户生成 Ref 类型、来自 java.sql.Types 的 SQL 类型的源类型（如果 DATA_TYPE 不是 DISTINCT 或用户生成的 REF，则为 null）
+     * IS_AUTOINCREMENT String => 指示此列是否自动增加
+     * YES --- 如果该列自动增加
+     * NO --- 如果该列不自动增加
+     * 空字符串 --- 如果不能确定该列是否是自动增加参数
+     * COLUMN_SIZE 列表示给定列的指定列大小。对于数值数据，这是最大精度。对于字符数据，这是字符长度。对于日期时间数据类型，这是 String 表示形式的字符长度（假定允许的最大小数秒组件的精度）。对于二进制数据，这是字节长度。对于 ROWID 数据类型，这是字节长度。对于列大小不适用的数据类型，则返回 Null。
+     *
+     *
+     * 参数：
+     * catalog - 类别名称；它必须与存储在数据库中的类别名称匹配；该参数为 "" 表示获取没有类别的那些描述；为 null 则表示该类别名称不应该用于缩小搜索范围
+     * schemaPattern - 模式名称的模式；它必须与存储在数据库中的模式名称匹配；该参数为 "" 表示获取没有模式的那些描述；为 null 则表示该模式名称不应该用于缩小搜索范围
+     * tableNamePattern - 表名称模式；它必须与存储在数据库中的表名称匹配
+     * columnNamePattern - 列名称模式；它必须与存储在数据库中的列名称匹配
+     * @param field
+     * @param rs
+     * @throws SQLException
+     */
+    public void fillColumnField(ColumnField field, ResultSet rs) throws SQLException {
+
+        String colName = rs.getString("COLUMN_NAME");
+        String remarks = StringKit.trim(rs.getString("REMARKS"));
+        String typeName = rs.getString("TYPE_NAME");
+        int dataType = rs.getInt("DATA_TYPE");
+        int columnSize = rs.getInt("COLUMN_SIZE");
+        int decimalDigits = rs.getInt("DECIMAL_DIGITS");
+        String defaultValue = rs.getString("COLUMN_DEF");
+        String isNullable = rs.getString("IS_NULLABLE");
+        String isAutoincrement = "NO";
+        defaultValue = StringKit.nvl(parseDefaultValue(dataType,defaultValue),"");
+
+
+        String label = remarks;
+        String comment = null;
+        if(StringKit.isNotBlank(remarks)){
+            Pair<String,String> columnRemarks = ConnParseKit.parseNameAndComment(remarks);
+            label = columnRemarks.getLeft();
+            comment = columnRemarks.getRight();
+        }
+
+        field.setDefKey(colName);
+        field.setDefName(label);
+        field.setComment(comment);
+        field.setTypeName(typeName);
+        field.setDataType(dataType);
+
+        if(columnSize > 0){
+            field.setLen(columnSize);
+        }
+        if(decimalDigits<=0){
+            field.setScale(null);
+        }else{
+            field.setScale(decimalDigits);
+        }
+        //不需要长度的数据类型，把数据类型清除掉，防止部分数据库解析出有长度的情况
+        if(withoutLenDataType(dataType)){
+            field.setLen(null);
+            field.setScale(null);
+        }
+
+//        field.setPrimaryKey(pkSet.contains(colName));
         field.setNotNull(!"YES".equalsIgnoreCase(isNullable));
         field.setAutoIncrement(!"NO".equalsIgnoreCase(isAutoincrement));
         field.setDefaultValue(defaultValue);
@@ -412,9 +514,9 @@ public class DBDialect {
     }
 
     /**
-     * 取所有的数据库表单
+     * 获取所有的数据库
      * @param conn
-     * @return
+     * @return 数据库列表
      */
     public List<SchemaEntity> getAllSchemas(Connection conn, String schemaPattern) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
@@ -440,8 +542,6 @@ public class DBDialect {
                 if(entity != null){
                     schemaEntities.add(entity);
                 }
-            }else{
-                continue;
             }
         }
         return schemaEntities;
@@ -468,8 +568,6 @@ public class DBDialect {
                 // 对于mysql类数据库来说，CAT和SCHEMA相等---待测试其他库
                 entity.setTABLE_SCHEM(TABLE_CAT);
                 schemaEntities.add(entity);
-            }else{
-                continue;
             }
         }
         return schemaEntities;
@@ -515,18 +613,19 @@ public class DBDialect {
      * 根据表名，创建数据表实体的字段及索引
      * @param conn
      * @param meta
-     * @param tableName
+     * @param tableNamePattern
      * @return
      * @throws SQLException
      */
-    public List<TableEntity> createTableEntity(Connection conn, DatabaseMetaData meta, String schemaPattern, String tableName, String[] types) throws SQLException {
+    public List<TableEntity> getTableEntities(Connection conn, DatabaseMetaData meta, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<>();
         ResultSet rs = null;
+        ResultSet rsCols = null;
         try {
             String schemaPattern1 = getSchemaPattern(conn, schemaPattern);
             String catalogPattern = getCatalogPattern(conn, schemaPattern);
 
-            rs = meta.getTables(catalogPattern, schemaPattern1, tableName, types);
+            rs = meta.getTables(catalogPattern, schemaPattern1, tableNamePattern, types);
             rs.setFetchSize(200);
 
             while (rs.next()) {
@@ -536,14 +635,60 @@ public class DBDialect {
                 }
             }
 
+            // 针对获取到多个表的情况，需要优化为一次性获取所有表的字段、主键、索引。然后在赋值到对应的 TableEntity，
+            // 针对获取到多个表的情况，需要优化为一次性获取所有表的字段、主键、索引。然后在赋值到对应的 TableEntity。避免多次调用造成性能瓶颈。
+            String table_cat_temp = "";
+            String table_schema_temp = "";
+            String table_name_temp = "";
+            TableEntity tableEntity = null;
+
+            rsCols = meta.getColumns(catalogPattern, schemaPattern1, tableNamePattern, "%");
+            while(rsCols.next()) {
+                String TABLE_CAT = rsCols.getString("TABLE_CAT");
+                String TABLE_SCHEM = rsCols.getString("TABLE_SCHEM");
+                String TABLE_NAME = rsCols.getString("TABLE_NAME");
+
+                if (TABLE_CAT == null) TABLE_CAT = "";
+                if (TABLE_SCHEM == null) TABLE_SCHEM = "";
+
+                // 查找当前表以便字段填充
+                if (!TABLE_CAT.equals(table_cat_temp) ||
+                        !TABLE_SCHEM.equals(table_schema_temp) ||
+                        !TABLE_NAME.equals(table_name_temp)) {
+                    boolean find = false;
+                    for (TableEntity entity : tableEntities) {
+                        if (TABLE_CAT.equals(entity.getTABLE_CAT()) &&
+                                TABLE_SCHEM.equals(entity.getTABLE_SCHEM()) &&
+                                TABLE_NAME.equals(entity.getTABLE_NAME())) {
+                            tableEntity = entity;
+                            find = true;
+                            break;
+                        }
+                    }
+                    if (!find) {
+                        continue;
+                    }
+                }
+
+                // 字段填充
+                if (tableEntity != null) {
+                    fillTableEntity(tableEntity, rsCols);
+                }
+
+                table_cat_temp = TABLE_CAT;
+                table_schema_temp = TABLE_SCHEM;
+                table_name_temp = TABLE_NAME;
+            }
+
+            // 处理类型名
             for (TableEntity entity : tableEntities) {
-                fillTableEntity(entity, conn);
                 entity.fillFieldsCalcValue();
             }
 
             return tableEntities;
         } finally {
             JdbcKit.close(rs);
+            JdbcKit.close(rsCols);
         }
     }
 

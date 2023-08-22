@@ -74,7 +74,7 @@ public class DBReverseParseDDLToTableImpl implements Command<ExecResult<List<Tab
     @SuppressWarnings("unchecked")
     private String getALLTablesString(Connection connection) throws SQLException {
         Map<String,String> params = new HashMap<>();
-        DBReverseGetAllTablesListImpl cmd = new DBReverseGetAllTablesListImpl();
+        DBReverseGetAllTableListImpl cmd = new DBReverseGetAllTableListImpl();
 //        cmd.setDbConn(connection);
         ExecResult<List<TableEntity>> ret = cmd.exec(connection, new HashMap<>());
         if(ret.getStatus().equals(ExecResult.SUCCESS)){

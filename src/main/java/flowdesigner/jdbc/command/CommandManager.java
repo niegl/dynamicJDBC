@@ -20,11 +20,11 @@ import static flowdesigner.jdbc.command.CommandKey.*;
 public class CommandManager {
     /** 命令注册表*/
     private static final Map<CommandKey, Class<?>> commandRegister = new HashMap<CommandKey, Class<?>>() {{
-        put(CMD_DBReverseGetTypeInfo, DBReverseGetTypeInfoImpl.class);          //逆向解析，获取数据表清单
-        put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);            //逆向解析，获取数据表清单
-        put(CMD_DBReverseGetAllTablesList, DBReverseGetAllTablesListImpl.class);       //逆向解析，获取数据表清单
-        put(CMD_DBReverseGetTableDDL, DBReverseGetTableDDLImpl.class);          //逆向解析，获取指定数据表DDL
-        put(CMD_ParseDDLToTableImpl, DBParseDDLToTableImpl.class);                     //逆向解析，获取指定数据表DDL
+        put(CMD_DBReverseGetTypeInfo, DBReverseGetTypeInfoImpl.class);                  //逆向解析，获取数据表清单
+        put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);                    //逆向解析，获取数据库清单
+        put(CMD_DBReverseGetAllTablesList, DBReverseGetAllTableListImpl.class);         //逆向解析，获取表清单功能. 支持表和视图
+        put(CMD_DBReverseGetTableDDL, DBReverseGetTableDDLImpl.class);                  //逆向解析，获取指定数据表DDL
+        put(CMD_ParseDDLToTableImpl, DBParseDDLToTableImpl.class);                      //逆向解析，获取指定数据表DDL
         put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);    //正向执行，获取SQL语句执行结果
         put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);        //正向执行，获取SQL语句执行结果
         put(CMD_DBReverseGetFunctionsImpl, DBReverseGetFunctionsImpl.class);            //正向执行，获取SQL语句执行结果
