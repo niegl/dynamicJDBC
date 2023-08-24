@@ -307,7 +307,7 @@ class CommandManagerTest {
     }
 
     @Test
-    void testExeCommandParseDDL() throws SQLException {
+    void testExeCommandParseDDL() {
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{

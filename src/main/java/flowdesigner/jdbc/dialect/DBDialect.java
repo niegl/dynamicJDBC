@@ -183,53 +183,35 @@ public class DBDialect {
      * @param conn
      */
     public void fillTableEntity(TableEntity tableEntity, Connection conn) throws SQLException {
-        String tableName = tableEntity.getTABLE_NAME();
-
-        ResultSet rs = null;
-        ResultSet pkRs = null;
-
-        try {
-            Pair<ResultSet,ResultSet> pair = getColumnAndPrimaryKeyResultSetPair(conn,tableEntity);
-            rs = pair.getLeft();
-            pkRs = pair.getRight();
-
-            Set<String> pkSet = new HashSet<String>();
-            while(pkRs.next()) {
-                String columnName = pkRs.getString("COLUMN_NAME");
-                pkSet.add(columnName);
-            }
-
-            while(rs.next()) {
-                ColumnField field = new ColumnField();
-                fillColumnField(field, conn, rs, pkSet);
-                tableEntity.getFields().add(field);
-            }
-            fillTableIndexes(tableEntity,conn);
-        } catch (SQLException e) {
-            log.error("读取数据表"+tableName+"的字段明细出错");
-//            throw new RuntimeException("读取数据表"+tableName+"的字段明细出错",e);
-        } finally {
-            JdbcKit.close(rs);
-            JdbcKit.close(pkRs);
-        }
-    }
-
-    /**
-     * 传入表名，中文名，注释信息，获取字段明细，索引信息
-     * @param tableEntity
-     * @param rs
-     */
-    public void fillTableEntity(TableEntity tableEntity, ResultSet rs) {
-        String tableName = tableEntity.getTABLE_NAME();
-
-        try {
-            ColumnField field = new ColumnField();
-            fillColumnField(field, null, rs, null);
-            tableEntity.getFields().add(field);
-
-        } catch (SQLException e) {
-            log.error("读取数据表"+tableName+"的字段明细出错");
-        }
+//        String tableName = tableEntity.getTABLE_NAME();
+//
+//        ResultSet rs = null;
+//        ResultSet pkRs = null;
+//
+//        try {
+//            Pair<ResultSet,ResultSet> pair = getColumnAndPrimaryKeyResultSetPair(conn,tableEntity);
+//            rs = pair.getLeft();
+//            pkRs = pair.getRight();
+//
+//            Set<String> pkSet = new HashSet<String>();
+//            while(pkRs.next()) {
+//                String columnName = pkRs.getString("COLUMN_NAME");
+//                pkSet.add(columnName);
+//            }
+//
+//            while(rs.next()) {
+//                ColumnField field = new ColumnField();
+//                fillColumnField(field, conn, rs, pkSet);
+//                tableEntity.getFields().add(field);
+//            }
+//            fillTableIndexes(tableEntity,conn);
+//        } catch (SQLException e) {
+//            log.error("读取数据表"+tableName+"的字段明细出错");
+////            throw new RuntimeException("读取数据表"+tableName+"的字段明细出错",e);
+//        } finally {
+//            JdbcKit.close(rs);
+//            JdbcKit.close(pkRs);
+//        }
     }
 
     /**
@@ -531,6 +513,7 @@ public class DBDialect {
             String schemaPattern1 = getSchemaPattern(conn, schemaPattern);
             String catalogPattern = getCatalogPattern(conn, schemaPattern);
 
+            // step1: 通用jdbc处理
             rs = meta.getTables(catalogPattern, schemaPattern1, tableNamePattern, types);
             rs.setFetchSize(200);
 
@@ -557,7 +540,7 @@ public class DBDialect {
                 if (TABLE_CAT == null) TABLE_CAT = "";
                 if (TABLE_SCHEM == null) TABLE_SCHEM = "";
 
-                // 查找当前表以便字段填充
+                // 查找当前表--以便字段填充
                 if (!TABLE_CAT.equals(table_cat_temp) ||
                         !TABLE_SCHEM.equals(table_schema_temp) ||
                         !TABLE_NAME.equals(table_name_temp)) {
@@ -578,7 +561,9 @@ public class DBDialect {
 
                 // 字段填充
                 if (tableEntity != null) {
-                    fillTableEntity(tableEntity, rsCols);
+                    ColumnField field = new ColumnField();
+                    fillColumnField(field, null, rsCols, null);
+                    tableEntity.getFields().add(field);
                 }
 
                 table_cat_temp = TABLE_CAT;
@@ -586,8 +571,9 @@ public class DBDialect {
                 table_name_temp = TABLE_NAME;
             }
 
-            // 处理类型名
+            // step2: 各数据库方言的适配处理、处理类型名
             for (TableEntity entity : tableEntities) {
+                fillTableEntity(entity, conn);
                 entity.fillFieldsCalcValue();
             }
 

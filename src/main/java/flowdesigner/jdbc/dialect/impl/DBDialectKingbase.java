@@ -30,6 +30,7 @@ import java.util.List;
  */
 public class DBDialectKingbase extends DBDialect {
     public List<TableEntity> getAllTables(Connection conn) throws SQLException {
+        List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         DatabaseMetaData meta = conn.getMetaData();
 
         String schemaPattern = getSchemaPattern(conn);
@@ -37,7 +38,6 @@ public class DBDialectKingbase extends DBDialect {
         String catalog = conn.getCatalog();
 
         ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[]{"TABLE"});
-        List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
             /**

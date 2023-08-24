@@ -152,7 +152,7 @@ public class DBDialectSQLServer extends DBDialect {
             String columnDefaultValue = nrs.getString("column_default_value");
             String columnComment = nrs.getString("column_comment");
             ColumnField field = tableEntity.lookupField(columnName);
-            if(field != null){
+            if(field != null) {
                 String defName = columnComment;
                 String comment = "";
 
