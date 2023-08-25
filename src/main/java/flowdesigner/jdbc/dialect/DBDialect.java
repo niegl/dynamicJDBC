@@ -87,22 +87,46 @@ public class DBDialect {
 
 
     /**
-     * 将resultset,主键的resultset装到一个二元组中，并返回
+     * 获取指定表的主键
      * @param conn
-     * @param tableEntity
+     * @param tableSchema
+     * @param tableName
      * @return
      * @throws SQLException
      */
-    public Pair<ResultSet,ResultSet> getColumnAndPrimaryKeyResultSetPair(Connection conn, TableEntity tableEntity) throws SQLException {
+    public TablePrimaryKey getPrimaryKey(Connection conn, String tableSchema,String tableName) throws SQLException {
+        if (tableSchema == null || tableName == null) {
+            throw new RuntimeException("[parameter] tableSchema|tableName should not be null.");
+        }
+
+        TablePrimaryKey primaryKey = new TablePrimaryKey();
+
+        String catalog = getCatalogPattern(conn, tableSchema);
+        String schema = getSchemaPattern(conn, tableSchema);
+
         DatabaseMetaData connMetaData = conn.getMetaData();
-        String tableCat = tableEntity.getTABLE_CAT();
-        String tableSchem = tableEntity.getTABLE_SCHEM();//getSchemaPattern(conn);
-        String tableName = tableEntity.getTABLE_NAME();
+        ResultSet rs = connMetaData.getPrimaryKeys(catalog, schema, tableName);
+        try {
+            while (rs.next()) {
+                String COLUMN_NAME = rs.getString("COLUMN_NAME");
+                short KEY_SEQ = rs.getShort("KEY_SEQ");
+                String PK_NAME = rs.getString("PK_NAME");
 
-        ResultSet rs = connMetaData.getColumns(tableCat, tableSchem, tableName, "%");
-        ResultSet pkRs = connMetaData.getPrimaryKeys(tableCat, tableSchem, tableName);
+                if (PK_NAME != null) {
+                    primaryKey.setPk_name(PK_NAME);
+                }
 
-        return Pair.of(rs,pkRs);
+                TablePrimaryKeyColumnField columnField = new TablePrimaryKeyColumnField();
+                columnField.setCOLUMN_NAME(COLUMN_NAME);
+                columnField.setKEY_SEQ(KEY_SEQ);
+                primaryKey.getColumns().add(columnField);
+            }
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
+        }
+
+        return primaryKey;
     }
 
     /**
@@ -359,46 +383,49 @@ public class DBDialect {
         DatabaseMetaData dbMeta = conn.getMetaData();
         ResultSet rs = dbMeta.getIndexInfo(cat,schem, table,false,false);
 
-        while (rs.next()) {
-            String tableName = rs.getString("TABLE_NAME");
-            String indexName = rs.getString("INDEX_NAME");
-            String indexQualifier = rs.getString("INDEX_QUALIFIER");
-            String columnName = rs.getString("COLUMN_NAME");
-            String nonUnique = rs.getString("NON_UNIQUE");
-            String ascOrDesc = rs.getString("ASC_OR_DESC");
+        try {
+            while (rs.next()) {
+                String tableName = rs.getString("TABLE_NAME");
+                String indexName = rs.getString("INDEX_NAME");
+                String indexQualifier = rs.getString("INDEX_QUALIFIER");
+                String columnName = rs.getString("COLUMN_NAME");
+                String nonUnique = rs.getString("NON_UNIQUE");
+                String ascOrDesc = rs.getString("ASC_OR_DESC");
 
-            if(!table.equalsIgnoreCase(tableName)) {
-                continue;
-            }
-            if(StringKit.isBlank(indexName)) {
-                continue;
-            }
-            if(StringKit.isBlank(columnName)) {
-                continue;
-            }
+                if(!table.equalsIgnoreCase(tableName)) {
+                    continue;
+                }
+                if(StringKit.isBlank(indexName)) {
+                    continue;
+                }
+                if(StringKit.isBlank(columnName)) {
+                    continue;
+                }
 
-            TableIndex index = tableEntity.lookupIndex(indexName);
-            if(index == null) {
-                index = new TableIndex();
-                index.setDefKey(indexName);
-                index.setUnique(!"1".equalsIgnoreCase(nonUnique));
-                index.setIndexQualifier(indexQualifier);
-                tableEntity.getIndexes().add(index);
-            }
+                TableIndex index = tableEntity.lookupIndex(indexName);
+                if(index == null) {
+                    index = new TableIndex();
+                    index.setDefKey(indexName);
+                    index.setUnique(!"1".equalsIgnoreCase(nonUnique));
+                    index.setIndexQualifier(indexQualifier);
+                    tableEntity.getIndexes().add(index);
+                }
 
-            TableIndexColumnField ticf = index.lookupField(columnName);
-            if(ticf != null){
-                continue;
-            }
-            ticf = new TableIndexColumnField();
-            ticf.setFieldDefKey(columnName);
-            ticf.setAscOrDesc(ascOrDesc);
-            index.getFields().add(ticf);
+                TableIndexColumnField ticf = index.lookupField(columnName);
+                if(ticf != null){
+                    continue;
+                }
+                ticf = new TableIndexColumnField();
+                ticf.setFieldDefKey(columnName);
+                ticf.setAscOrDesc(ascOrDesc);
+                index.getFields().add(ticf);
 
+            }
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
         }
 
-        JdbcKit.close(rs.getStatement());
-        JdbcKit.close(rs);
     }
 
     /**
@@ -417,21 +444,27 @@ public class DBDialect {
 
         ResultSet rs = meta.getSchemas(catalog, schemaPattern);
         List<SchemaEntity> schemaEntities = new ArrayList<>();
-        while (rs.next()) {
-            String tableSchem = rs.getString("TABLE_SCHEM");
-            /**
-             *  SQL Server系统保留表
-             *  trace_xe_action_map,trace_xe_event_map
-             */
-            if (!tableSchem.equalsIgnoreCase("PDMAN_DB_VERSION")
-                    && !tableSchem.equalsIgnoreCase("trace_xe_action_map")
-                    && !tableSchem.equalsIgnoreCase("trace_xe_event_map")){
-                SchemaEntity entity = createSchemaEntity(conn,rs);
-                if(entity != null){
-                    schemaEntities.add(entity);
+        try {
+            while (rs.next()) {
+                String tableSchem = rs.getString("TABLE_SCHEM");
+                /**
+                 *  SQL Server系统保留表
+                 *  trace_xe_action_map,trace_xe_event_map
+                 */
+                if (!tableSchem.equalsIgnoreCase("PDMAN_DB_VERSION")
+                        && !tableSchem.equalsIgnoreCase("trace_xe_action_map")
+                        && !tableSchem.equalsIgnoreCase("trace_xe_event_map")){
+                    SchemaEntity entity = createSchemaEntity(conn,rs);
+                    if(entity != null){
+                        schemaEntities.add(entity);
+                    }
                 }
             }
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
         }
+
         return schemaEntities;
     }
 
@@ -440,24 +473,30 @@ public class DBDialect {
 
         ResultSet rs = meta.getCatalogs();
         List<SchemaEntity> schemaEntities = new ArrayList<>();
-        while (rs.next()) {
-            String TABLE_CAT = rs.getString("TABLE_CAT");
-            /**
-             *  SQL Server系统保留表
-             *  trace_xe_action_map,trace_xe_event_map
-             */
-            if (!TABLE_CAT.equalsIgnoreCase("information_schema")
-                    && !TABLE_CAT.equalsIgnoreCase("performance_schema")
-                    && !TABLE_CAT.equalsIgnoreCase("mysql")
-                    && !TABLE_CAT.equalsIgnoreCase("sys")
-            ){
-                SchemaEntity entity = new SchemaEntity();
-                entity.setTABLE_CAT(TABLE_CAT);
-                // 对于mysql类数据库来说，CAT和SCHEMA相等---待测试其他库
-                entity.setTABLE_SCHEM(TABLE_CAT);
-                schemaEntities.add(entity);
+        try {
+            while (rs.next()) {
+                String TABLE_CAT = rs.getString("TABLE_CAT");
+                /**
+                 *  SQL Server系统保留表
+                 *  trace_xe_action_map,trace_xe_event_map
+                 */
+                if (!TABLE_CAT.equalsIgnoreCase("information_schema")
+                        && !TABLE_CAT.equalsIgnoreCase("performance_schema")
+                        && !TABLE_CAT.equalsIgnoreCase("mysql")
+                        && !TABLE_CAT.equalsIgnoreCase("sys")
+                ){
+                    SchemaEntity entity = new SchemaEntity();
+                    entity.setTABLE_CAT(TABLE_CAT);
+                    // 对于mysql类数据库来说，CAT和SCHEMA相等---待测试其他库
+                    entity.setTABLE_SCHEM(TABLE_CAT);
+                    schemaEntities.add(entity);
+                }
             }
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
         }
+
         return schemaEntities;
     }
 
@@ -477,23 +516,28 @@ public class DBDialect {
         // 提高单次获取数据条数，减少请求次数、网络传输，提高效率
         rs.setFetchSize(200);
 
-
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
-        while (rs.next()) {
-            String tableName = rs.getString(3);
-            /**
-             *  SQL Server系统保留表
-             *  trace_xe_action_map,trace_xe_event_map
-             */
-            if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
-                    && !tableName.equalsIgnoreCase("trace_xe_action_map")
-                    && !tableName.equalsIgnoreCase("trace_xe_event_map")){
-                TableEntity entity = createTableEntity(conn,rs);
-                if(entity != null){
-                    tableEntities.add(entity);
+        try {
+            while (rs.next()) {
+                String tableName = rs.getString(3);
+                /**
+                 *  SQL Server系统保留表
+                 *  trace_xe_action_map,trace_xe_event_map
+                 */
+                if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
+                        && !tableName.equalsIgnoreCase("trace_xe_action_map")
+                        && !tableName.equalsIgnoreCase("trace_xe_event_map")) {
+                    TableEntity entity = createTableEntity(conn, rs);
+                    if (entity != null) {
+                        tableEntities.add(entity);
+                    }
                 }
             }
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
         }
+
         return tableEntities;
     }
 
@@ -579,7 +623,9 @@ public class DBDialect {
 
             return tableEntities;
         } finally {
+            JdbcKit.close(rs.getStatement());
             JdbcKit.close(rs);
+            JdbcKit.close(rsCols.getStatement());
             JdbcKit.close(rsCols);
         }
     }
@@ -607,7 +653,14 @@ public class DBDialect {
         DatabaseMetaData meta = conn.getMetaData();
 
         ResultSet rs = meta.getImportedKeys(catalog, schema, table);
-        return getFkColumnFields(rs);
+        try {
+            List<FKColumnField> fkColumnFields = getFkColumnFields(rs);
+            return fkColumnFields;
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
+        }
+
     }
 
     public List<FKColumnField> getFKReference(Connection conn, String schemaPattern, String table) throws SQLException {
@@ -617,7 +670,13 @@ public class DBDialect {
 
         DatabaseMetaData meta = conn.getMetaData();
         ResultSet rs = meta.getExportedKeys(catalog, schema, table);
-        return getFkColumnFields(rs);
+        try {
+            return getFkColumnFields(rs);
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
+        }
+
     }
 
     @NotNull
@@ -674,23 +733,29 @@ public class DBDialect {
         ResultSet rs = meta.getCrossReference(catalog, schemaPattern, tableNamePattern
                 , foreignCatalog,foreignSchema,foreignTable);
         List<FKColumnField> tableEntities = new ArrayList<>();
-        while (rs.next()) {
-            FKColumnField fkColumnField = new FKColumnField();
-            String PKTABLE_CAT = rs.getString("PKTABLE_CAT");
-            String PKTABLE_SCHEM = rs.getString("PKTABLE_SCHEM");
-            String PKTABLE_NAME = rs.getString("PKTABLE_NAME");
-            String PKCOLUMN_NAME = rs.getString("PKCOLUMN_NAME");
-            String FKCOLUMN_NAME = rs.getString("FKCOLUMN_NAME");
-            String FK_NAME = rs.getString("FK_NAME");
-            fkColumnField.setPKTABLE_CAT(PKTABLE_CAT);
-            fkColumnField.setPKTABLE_SCHEM(PKTABLE_SCHEM);
-            fkColumnField.setPKTABLE_NAME(PKTABLE_NAME);
-            fkColumnField.setPKCOLUMN_NAME(PKCOLUMN_NAME);
-            fkColumnField.setFKCOLUMN_NAME(FKCOLUMN_NAME);
-            fkColumnField.setFK_NAME(FK_NAME);
+        try {
+            while (rs.next()) {
+                FKColumnField fkColumnField = new FKColumnField();
+                String PKTABLE_CAT = rs.getString("PKTABLE_CAT");
+                String PKTABLE_SCHEM = rs.getString("PKTABLE_SCHEM");
+                String PKTABLE_NAME = rs.getString("PKTABLE_NAME");
+                String PKCOLUMN_NAME = rs.getString("PKCOLUMN_NAME");
+                String FKCOLUMN_NAME = rs.getString("FKCOLUMN_NAME");
+                String FK_NAME = rs.getString("FK_NAME");
+                fkColumnField.setPKTABLE_CAT(PKTABLE_CAT);
+                fkColumnField.setPKTABLE_SCHEM(PKTABLE_SCHEM);
+                fkColumnField.setPKTABLE_NAME(PKTABLE_NAME);
+                fkColumnField.setPKCOLUMN_NAME(PKCOLUMN_NAME);
+                fkColumnField.setFKCOLUMN_NAME(FKCOLUMN_NAME);
+                fkColumnField.setFK_NAME(FK_NAME);
 
-            tableEntities.add(fkColumnField);
+                tableEntities.add(fkColumnField);
+            }
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
         }
+
         return tableEntities;
     }
 
@@ -705,12 +770,18 @@ public class DBDialect {
         ResultSet typeInfo = meta.getTypeInfo();
 
         List<DataTypeEntity> infoEntities = new ArrayList<>();
-        while (typeInfo.next()) {
-            String TYPE_NAME = typeInfo.getString("TYPE_NAME");
-            int DATA_TYPE = typeInfo.getInt("DATA_TYPE");
-            DataTypeEntity typeInfoEntity = new DataTypeEntity(TYPE_NAME,DATA_TYPE);
-            infoEntities.add(typeInfoEntity);
+        try {
+            while (typeInfo.next()) {
+                String TYPE_NAME = typeInfo.getString("TYPE_NAME");
+                int DATA_TYPE = typeInfo.getInt("DATA_TYPE");
+                DataTypeEntity typeInfoEntity = new DataTypeEntity(TYPE_NAME, DATA_TYPE);
+                infoEntities.add(typeInfoEntity);
+            }
+        } finally {
+            JdbcKit.close(typeInfo.getStatement());
+            JdbcKit.close(typeInfo);
         }
+
         return infoEntities;
     }
 
@@ -720,17 +791,22 @@ public class DBDialect {
         String catalog = getCatalogPattern(conn, null);
 
         DatabaseMetaData meta = conn.getMetaData();
-        ResultSet functions1 = meta.getFunctions(catalog, schemaPattern, "%");
-        while (functions1.next()) {
-            String FUNCTION_NAME = functions1.getString("FUNCTION_NAME");
-            functions.add(FUNCTION_NAME);
-        }
-        Collections.addAll(functions,meta.getTimeDateFunctions().split(","));
-        Collections.addAll(functions,meta.getStringFunctions().split(","));
-        Collections.addAll(functions,meta.getNumericFunctions().split(","));
-        Collections.addAll(functions,meta.getSystemFunctions().split(","));
+        ResultSet rs = meta.getFunctions(catalog, schemaPattern, "%");
+        try {
+            while (rs.next()) {
+                String FUNCTION_NAME = rs.getString("FUNCTION_NAME");
+                functions.add(FUNCTION_NAME);
+            }
+            Collections.addAll(functions, meta.getTimeDateFunctions().split(","));
+            Collections.addAll(functions, meta.getStringFunctions().split(","));
+            Collections.addAll(functions, meta.getNumericFunctions().split(","));
+            Collections.addAll(functions, meta.getSystemFunctions().split(","));
 
-        functions.removeIf(String::isEmpty);
+            functions.removeIf(String::isEmpty);
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
+        }
 
         return functions;
     }

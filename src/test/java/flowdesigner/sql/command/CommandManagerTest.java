@@ -438,27 +438,12 @@ class CommandManagerTest {
 
     @Test
     void testPrimaryKeys() throws SQLException {
-        DatabaseMetaData meta = connection.getMetaData();
-        ResultSet rsCols = meta.getColumns(null, "std_pcode", null, "%");
-        ResultSet rsPK = meta.getPrimaryKeys(null, null, null);
-
-        // 测试数据
-        while(rsCols.next()){
-            String TABLE_CAT = rsCols.getString("TABLE_CAT");
-            String TABLE_SCHEM = rsCols.getString("TABLE_SCHEM");
-            String TABLE_NAME = rsCols.getString("TABLE_NAME");
-            String columnName = rsCols.getString("COLUMN_NAME");
-            System.out.println("TABLE_CAT: " + TABLE_CAT + ", TABLE_SCHEM: " + TABLE_SCHEM + ",TABLE_NAME: " + TABLE_NAME+ ",columnName: " + columnName);
-        }
-
-        System.out.println("-----------------------输出PK--------------------------------------");
-        while(rsPK.next()) {
-            String TABLE_CAT = rsPK.getString("TABLE_CAT");
-            String TABLE_SCHEM = rsPK.getString("TABLE_SCHEM");
-            String TABLE_NAME = rsPK.getString("TABLE_NAME");
-            String columnName = rsPK.getString("COLUMN_NAME");
-            System.out.println("TABLE_CAT: " + TABLE_CAT + ", TABLE_SCHEM: " + TABLE_SCHEM + ",columnName: " + columnName);
-        }
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetPrimaryKeys,new HashMap<String,String>(){{
+            put("schemaPattern","bmnc_pcode");
+            put("table","t99_stat_index_cd");
+        }});
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
 
     }
 

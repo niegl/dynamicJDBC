@@ -120,21 +120,26 @@ public class DBDialectSQLServer extends DBDialect {
     public void fillTableEntityNoColumn(TableEntity tableEntity, Connection conn, ResultSet rs) throws SQLException {
         super.fillTableEntityNoColumn(tableEntity,conn,rs);
         ResultSet nrs = getResultSet(conn,tableEntity.getTABLE_NAME());
-        if(nrs.next()){
-            String remarks = nrs.getString("table_comment");
+        try {
+            if (nrs.next()) {
+                String remarks = nrs.getString("table_comment");
 //            String defName = remarks;
 //            String comment = "";
 
-            //如果remark中有分号等分割符，则默认之后的就是注释说明文字
+                //如果remark中有分号等分割符，则默认之后的就是注释说明文字
 //            if(StringKit.isNotBlank(remarks)){
 //                Pair<String, String> pair = ConnParseKit.parseNameAndComment(remarks);
 //                defName = pair.getLeft();
 //                comment = pair.getRight();
 //            }
 //            tableEntity.setTABLE_NAME(defName);
-            tableEntity.setREMARKS(remarks);
+                tableEntity.setREMARKS(remarks);
+            }
+        } finally {
+            JdbcKit.close(nrs.getStatement());
+            JdbcKit.close(nrs);
         }
-        JdbcKit.close(nrs);
+
     }
 
     @Override
@@ -142,34 +147,37 @@ public class DBDialectSQLServer extends DBDialect {
         super.fillTableEntity(tableEntity, conn);
 
         ResultSet nrs = getResultSet(conn,tableEntity.getTABLE_NAME());
-        while(nrs.next()){
-            String columnName = nrs.getString("column_name");
-            String columnIsPrimaryKey = nrs.getString("column_is_primary_key");
-            String columnDataType = nrs.getString("column_data_type");
-            String columnDataLength = nrs.getString("column_data_length");
-            String columnDataScale = nrs.getString("column_data_scale");
-            String columnDataIsRequired = nrs.getString("column_data_is_required");
-            String columnDefaultValue = nrs.getString("column_default_value");
-            String columnComment = nrs.getString("column_comment");
-            ColumnField field = tableEntity.lookupField(columnName);
-            if(field != null) {
-                String defName = columnComment;
-                String comment = "";
+        try {
+            while (nrs.next()) {
+                String columnName = nrs.getString("column_name");
+                String columnIsPrimaryKey = nrs.getString("column_is_primary_key");
+                String columnDataType = nrs.getString("column_data_type");
+                String columnDataLength = nrs.getString("column_data_length");
+                String columnDataScale = nrs.getString("column_data_scale");
+                String columnDataIsRequired = nrs.getString("column_data_is_required");
+                String columnDefaultValue = nrs.getString("column_default_value");
+                String columnComment = nrs.getString("column_comment");
+                ColumnField field = tableEntity.lookupField(columnName);
+                if (field != null) {
+                    String defName = columnComment;
+                    String comment = "";
 
-                //如果remark中有分号等分割符，则默认之后的就是注释说明文字
-                if(StringKit.isNotBlank(columnComment)){
-                    Pair<String, String> pair = ConnParseKit.parseNameAndComment(columnComment);
-                    defName = pair.getLeft();
-                    comment = pair.getRight();
+                    //如果remark中有分号等分割符，则默认之后的就是注释说明文字
+                    if (StringKit.isNotBlank(columnComment)) {
+                        Pair<String, String> pair = ConnParseKit.parseNameAndComment(columnComment);
+                        defName = pair.getLeft();
+                        comment = pair.getRight();
+                    }
+                    field.setDefName(defName);
+                    field.setComment(comment);
+                    field.setDefaultValue(columnDefaultValue);
                 }
-                field.setDefName(defName);
-                field.setComment(comment);
-                field.setDefaultValue(columnDefaultValue);
-            }
 
+            }
+        } finally {
+            JdbcKit.close(nrs);
         }
 
-        JdbcKit.close(nrs);
     }
 
 

@@ -24,10 +24,11 @@ public class CommandManager {
         put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);                    //逆向解析，获取数据库清单
         put(CMD_DBReverseGetAllTablesList, DBReverseGetAllTableListImpl.class);         //逆向解析，获取表清单功能. 支持表和视图
         put(CMD_DBReverseGetTableDDL, DBReverseGetTableDDLImpl.class);                  //逆向解析，获取指定数据表DDL
-        put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);    //
-        put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);        //
         put(CMD_DBReverseGetFunctionsImpl, DBReverseGetFunctionsImpl.class);            //
         put(CMD_ParseDDLToTableImpl, DBParseDDLToTableImpl.class);                      //逆向解析，获取指定数据表DDL
+        put(CMD_DBReverseGetPrimaryKeys, DBReverseGetPrimaryKeyImpl.class);
+        put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);    //
+        put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);        //
     }};
 
     /**

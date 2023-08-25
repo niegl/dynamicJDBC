@@ -3,8 +3,6 @@ package flowdesigner.jdbc.command;
 public enum CommandKey {
     /**
      * 批量操作
-     */
-    /**
      * 获取数据库数据类型
      */
     CMD_DBReverseGetTypeInfo,
@@ -21,6 +19,11 @@ public enum CommandKey {
      */
     CMD_DBReverseGetTableDDL,
 
+    /**
+     * 非批量操作
+     * 获取指定表的主键
+     */
+    CMD_DBReverseGetPrimaryKeys,
     CMD_ParseDDLToTableImpl,
     CMD_DBReverseGetFKColumnFieldImpl,
     CMD_DBReverseGetFKReferenceImpl,

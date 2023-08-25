@@ -17,6 +17,7 @@ package flowdesigner.jdbc.dialect.impl;
 
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.dialect.DBDialect;
+import flowdesigner.util.raw.kit.JdbcKit;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -38,29 +39,35 @@ public class DBDialectKingbase extends DBDialect {
         String catalog = conn.getCatalog();
 
         ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[]{"TABLE"});
-        while (rs.next()) {
-            String tableName = rs.getString("TABLE_NAME");
-            /**
-             *  SQL Server系统保留表
-             *  trace_xe_action_map,trace_xe_event_map
-             */
-            if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
-                    && !tableName.equalsIgnoreCase("sysmac_compartment")
-                    && !tableName.equalsIgnoreCase("sysmac_label")
-                    && !tableName.equalsIgnoreCase("sysmac_level")
-                    && !tableName.equalsIgnoreCase("sysmac_obj")
-                    && !tableName.equalsIgnoreCase("sysmac_policy")
-                    && !tableName.equalsIgnoreCase("sysmac_policy_enforcement")
-                    && !tableName.equalsIgnoreCase("sysmac_user")
-                    && !tableName.equalsIgnoreCase("dual")){
-                TableEntity entity = createTableEntity(conn,rs);
-                if(entity != null){
-                    tableEntities.add(entity);
+        try {
+            while (rs.next()) {
+                String tableName = rs.getString("TABLE_NAME");
+                /**
+                 *  SQL Server系统保留表
+                 *  trace_xe_action_map,trace_xe_event_map
+                 */
+                if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
+                        && !tableName.equalsIgnoreCase("sysmac_compartment")
+                        && !tableName.equalsIgnoreCase("sysmac_label")
+                        && !tableName.equalsIgnoreCase("sysmac_level")
+                        && !tableName.equalsIgnoreCase("sysmac_obj")
+                        && !tableName.equalsIgnoreCase("sysmac_policy")
+                        && !tableName.equalsIgnoreCase("sysmac_policy_enforcement")
+                        && !tableName.equalsIgnoreCase("sysmac_user")
+                        && !tableName.equalsIgnoreCase("dual")) {
+                    TableEntity entity = createTableEntity(conn, rs);
+                    if (entity != null) {
+                        tableEntities.add(entity);
+                    }
+                } else {
+                    continue;
                 }
-            }else{
-                continue;
             }
+        } finally {
+            JdbcKit.close(rs.getStatement());
+            JdbcKit.close(rs);
         }
+
         return tableEntities;
     }
 }
