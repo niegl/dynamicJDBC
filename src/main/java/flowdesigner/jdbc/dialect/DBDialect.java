@@ -702,8 +702,9 @@ public class DBDialect {
      */
     public List<DataTypeEntity> getDataType(Connection conn) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
-        List<DataTypeEntity> infoEntities = new ArrayList<>();
         ResultSet typeInfo = meta.getTypeInfo();
+
+        List<DataTypeEntity> infoEntities = new ArrayList<>();
         while (typeInfo.next()) {
             String TYPE_NAME = typeInfo.getString("TYPE_NAME");
             int DATA_TYPE = typeInfo.getInt("DATA_TYPE");

@@ -462,4 +462,14 @@ class CommandManagerTest {
 
     }
 
+    @Test
+    void testTypeInfo() throws SQLException {
+        ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
+            put("dbType","hive");
+        }});
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
+
+    }
+
 }
