@@ -40,39 +40,10 @@ public class DBDialectDM extends DBDialect {
         return schemaPattern;
     }
 
-    /**
-     * 取所有的数据表清单
-     * @param conn
-     * @return
-     */
-    public List<TableEntity> getAllTables(Connection conn) throws SQLException {
-        DatabaseMetaData meta = conn.getMetaData();
-
-//        String schemaPattern = null;
-        String schemaPattern = getSchemaPattern(conn);
-        String tableNamePattern = getTableNamePattern(conn);
-        String catalog = conn.getCatalog();
-
-        ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[]{"TABLE"});
-        List<TableEntity> tableEntities = new ArrayList<TableEntity>();
-        try {
-            while (rs.next()) {
-                String tableName = rs.getString("TABLE_NAME");
-                if (tableName.startsWith("#")) {
-                    continue;
-                }
-                if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")) {
-                    TableEntity entity = createTableEntity(conn, rs);
-                    if (entity != null) {
-                        tableEntities.add(entity);
-                    }
-                }
-            }
-        } finally {
-            JdbcKit.close(rs.getStatement());
-            JdbcKit.close(rs);
-        }
-
-        return tableEntities;
+    @Override
+    protected boolean isValidTable(String tableName) {
+        return !tableName.startsWith("#") &&
+                !tableName.equalsIgnoreCase("PDMAN_DB_VERSION");
     }
+
 }

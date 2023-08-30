@@ -90,31 +90,22 @@ public class DBDialectSQLServer extends DBDialect {
             "\ta.id,\n" +
             "\ta.colorder;";
 
+    @Override
     public String getTableNamePattern(Connection conn) throws SQLException {
         return "%";
     }
 
-    /**
-     * 将resultset,主键的resultset装到一个二元组中，并返回
-     * @param conn
-     * @param tableName
-     * @return
-     * @throws SQLException
-     */
-    public Pair getColumnAndPrimaryKeyResultSetPair(Connection conn, String tableName) throws SQLException {
-        DatabaseMetaData connMetaData = conn.getMetaData();
-        String schema = getSchemaPattern(conn);
-
-//        ResultSet rs = connMetaData.getColumns(conn.getCatalog(), schema,tableName, "%");
-//        ResultSet pkRs = connMetaData.getPrimaryKeys(conn.getCatalog(),schema,tableName);
-        ResultSet rs = connMetaData.getColumns(null,null,tableName,null);
-        ResultSet pkRs = connMetaData.getPrimaryKeys(null,null,tableName);
-
-        Pair<ResultSet,ResultSet> pair = Pair.of(rs,pkRs);
-
-        return pair;
+    protected boolean isValidTable(String tableName) {
+        return !tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
+                && !tableName.equalsIgnoreCase("trace_xe_action_map")
+                && !tableName.equalsIgnoreCase("trace_xe_event_map")
+                && !tableName.equalsIgnoreCase("spt_monitor")
+                && !tableName.equalsIgnoreCase("spt_fallback_usg")
+                && !tableName.equalsIgnoreCase("spt_fallback_dev")
+                && !tableName.equalsIgnoreCase("spt_fallback_db")
+                && !tableName.equalsIgnoreCase("MSreplication_options")
+                ;
     }
-
 
     @Override
     public void fillTableEntityNoColumn(TableEntity tableEntity, Connection conn, ResultSet rs) throws SQLException {

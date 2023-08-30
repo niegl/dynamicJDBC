@@ -19,9 +19,9 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!--日志输出文件名-->
-            <fileNamePattern>${LOG_HOME}/info-%d-%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/info-%d{yyyy-MM}-%i.log</fileNamePattern>
             <!--日志文件保留天数-->
-            <maxHistory>60</maxHistory>
+            <maxHistory>30</maxHistory>
             <!--单文件大小-->
             <maxFileSize>50MB</maxFileSize>
             <!--用来指定日志文件的大小上限，到了这个值，就会删除旧的日志-->
@@ -42,9 +42,9 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!--日志输出文件名-->
-            <fileNamePattern>${LOG_HOME}/error-%d-%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/error-%d{yyyy-MM}-%i.log</fileNamePattern>
             <!--日志文件保留天数-->
-            <maxHistory>60</maxHistory>
+            <maxHistory>30</maxHistory>
             <!--单文件大小-->
             <maxFileSize>50MB</maxFileSize>
             <!--用来指定日志文件的大小上限，到了这个值，就会删除旧的日志-->
@@ -54,7 +54,7 @@
     </appender>
     <root level="info">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="FILEINFO"/>
+<!--        <appender-ref ref="FILEINFO"/>-->
         <appender-ref ref="FILEERROR"/>
     </root>
     <property name="LOG_HOME" value="./log"/>

@@ -96,7 +96,7 @@ public class DBDialect {
      */
     public TablePrimaryKey getPrimaryKey(Connection conn, String tableSchema,String tableName) throws SQLException {
         if (tableSchema == null || tableName == null) {
-            throw new RuntimeException("[parameter] tableSchema|tableName should not be null.");
+            throw new RuntimeException("[parameter] tableSchema|table should not be null.");
         }
 
         TablePrimaryKey primaryKey = new TablePrimaryKey();
@@ -179,9 +179,9 @@ public class DBDialect {
      * @throws SQLException
      */
     protected void fillTableEntityNoColumn(TableEntity tableEntity, Connection connection, ResultSet rs) throws SQLException {
-        String tableCat = rs.getString(1);
-        String tableSchem = rs.getString(2);
-        String tableName = rs.getString(3);
+        String tableCat = rs.getString("TABLE_CAT");
+        String tableSchem = rs.getString("TABLE_SCHEM");
+        String tableName = rs.getString("TABLE_NAME");
         String TABLE_TYPE = rs.getString(4);
         String remarks = StringKit.trim(rs.getString(5));
 //        String defName = remarks;
@@ -506,11 +506,16 @@ public class DBDialect {
      * @return
      */
     public List<TableEntity> getAllTables(Connection conn, String schemaPattern, String[] types) throws SQLException {
+
+        String tableNamePattern = getTableNamePattern(conn);
+        return getAllTables(conn, schemaPattern, tableNamePattern, types);
+    }
+
+    private List<TableEntity> getAllTables(Connection conn, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
 
         String catalog = getCatalogPattern(conn, schemaPattern);
         String schema = getSchemaPattern(conn, schemaPattern);
-        String tableNamePattern = getTableNamePattern(conn);
 
         ResultSet rs = meta.getTables(catalog, schema, tableNamePattern, types);
         // 提高单次获取数据条数，减少请求次数、网络传输，提高效率
@@ -520,13 +525,8 @@ public class DBDialect {
         try {
             while (rs.next()) {
                 String tableName = rs.getString(3);
-                /**
-                 *  SQL Server系统保留表
-                 *  trace_xe_action_map,trace_xe_event_map
-                 */
-                if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
-                        && !tableName.equalsIgnoreCase("trace_xe_action_map")
-                        && !tableName.equalsIgnoreCase("trace_xe_event_map")) {
+
+                if (isValidTable(tableName)) {
                     TableEntity entity = createTableEntity(conn, rs);
                     if (entity != null) {
                         tableEntities.add(entity);
@@ -542,6 +542,16 @@ public class DBDialect {
     }
 
     /**
+     * 是否是有效表：在获取表及表结构的时候，除去系统表
+     * @param tableName 用于测试的表名
+     * @return
+     *  false：系统表；true：非系统表
+     */
+    protected boolean isValidTable(String tableName) {
+        return true;
+    }
+
+    /**
      * 根据表名，创建数据表实体的字段及索引
      * @param conn
      * @param meta
@@ -551,23 +561,16 @@ public class DBDialect {
      */
     public List<TableEntity> getTableEntities(Connection conn, DatabaseMetaData meta, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<>();
-        ResultSet rs = null;
         ResultSet rsCols = null;
+
         try {
             String schemaPattern1 = getSchemaPattern(conn, schemaPattern);
             String catalogPattern = getCatalogPattern(conn, schemaPattern);
 
-            // step1: 通用jdbc处理
-            rs = meta.getTables(catalogPattern, schemaPattern1, tableNamePattern, types);
-            rs.setFetchSize(200);
-
-            while (rs.next()) {
-                TableEntity tableEntity = createTableEntity(conn, rs);
-                if (tableEntity != null) {
-                    tableEntities.add(tableEntity);
-                }
+            tableEntities = getAllTables(conn, schemaPattern, tableNamePattern, types);
+            if (tableEntities.isEmpty()) {
+                return tableEntities;
             }
-
             // 针对获取到多个表的情况，需要优化为一次性获取所有表的字段、主键、索引。然后在赋值到对应的 TableEntity，
             // 针对获取到多个表的情况，需要优化为一次性获取所有表的字段、主键、索引。然后在赋值到对应的 TableEntity。避免多次调用造成性能瓶颈。
             String table_cat_temp = "";
@@ -581,18 +584,22 @@ public class DBDialect {
                 String TABLE_SCHEM = rsCols.getString("TABLE_SCHEM");
                 String TABLE_NAME = rsCols.getString("TABLE_NAME");
 
-                if (TABLE_CAT == null) TABLE_CAT = "";
-                if (TABLE_SCHEM == null) TABLE_SCHEM = "";
+                // 由于getTables和getColumns返回的 TABLE_CAT/TABLE_SCHEM 存在值不同的情况（""和null），归一化
+                if(TABLE_CAT == null) TABLE_CAT = "";
+                if(TABLE_SCHEM == null) TABLE_SCHEM = "";
 
                 // 查找当前表--以便字段填充
-                if (!TABLE_CAT.equals(table_cat_temp) ||
-                        !TABLE_SCHEM.equals(table_schema_temp) ||
-                        !TABLE_NAME.equals(table_name_temp)) {
+                if (!Objects.equals(TABLE_CAT, table_cat_temp) || !Objects.equals(TABLE_SCHEM,table_schema_temp) || !Objects.equals(TABLE_NAME,table_name_temp)) {
                     boolean find = false;
                     for (TableEntity entity : tableEntities) {
-                        if (TABLE_CAT.equals(entity.getTABLE_CAT()) &&
-                                TABLE_SCHEM.equals(entity.getTABLE_SCHEM()) &&
-                                TABLE_NAME.equals(entity.getTABLE_NAME())) {
+                        String entityTABLECat = entity.getTABLE_CAT();
+                        String entityTABLESchem = entity.getTABLE_SCHEM();
+                        String entityTABLEName = entity.getTABLE_NAME();
+
+                        if(entityTABLECat == null) entityTABLECat = "";
+                        if(entityTABLESchem == null) entityTABLESchem = "";
+
+                        if (Objects.equals(TABLE_CAT, entityTABLECat) && Objects.equals(TABLE_SCHEM, entityTABLESchem) && Objects.equals(TABLE_NAME, entityTABLEName)) {
                             tableEntity = entity;
                             find = true;
                             break;
@@ -623,8 +630,6 @@ public class DBDialect {
 
             return tableEntities;
         } finally {
-            JdbcKit.close(rs.getStatement());
-            JdbcKit.close(rs);
             JdbcKit.close(rsCols.getStatement());
             JdbcKit.close(rsCols);
         }

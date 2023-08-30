@@ -33,8 +33,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class CommandManagerTest {
     Connection connection = null;
-    @BeforeEach
-    void setUp() {
+
+    void getHive() {
         DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
@@ -88,18 +88,74 @@ class CommandManagerTest {
         return connection;
     }
 
+    Connection getImpala() {
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\setup\\Cloudera_ImpalaJDBC41_2.5.38\\Cloudera_ImpalaJDBC41_2.5.38");
+        Properties properties = new Properties();
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","com.cloudera.impala.jdbc41.Driver");
+        properties.setProperty("url","jdbc:impala://10.247.53.17:21050");
+        dynamicDriver.set_propertyInfo(properties);
+
+        try {
+//            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+            System.out.println(dynamicDriver.get_errMessage());
+            e.printStackTrace();
+        }
+        assertNotNull(connection);
+        return connection;
+    }
+
+    Connection getSQLServer() {
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\net.sourceforge.jtds");
+        Properties properties = new Properties();
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","net.sourceforge.jtds.jdbc.Driver");
+        properties.setProperty("url","jdbc:jtds:sqlserver://localhost:1433");
+        properties.setProperty("username","SA");
+        properties.setProperty("password","P@ssw0rd01");
+        dynamicDriver.set_propertyInfo(properties);
+
+        try {
+//            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+            System.out.println(dynamicDriver.get_errMessage());
+            e.printStackTrace();
+        }
+        assertNotNull(connection);
+        return connection;
+    }
+
     @Test
     void testGetAllTables() throws SQLException {
+        connection = getSQLServer();
         DatabaseMetaData meta = connection.getMetaData();
         String catalog = connection.getCatalog();
-        String schema = connection.getSchema();
+//        String schema = connection.getSchema();
 
-        System.out.println(catalog + "," + schema);
+//        System.out.println(catalog + "," + schema);
 
         boolean supportsSchemasInTableDefinitions = connection.getMetaData().supportsSchemasInTableDefinitions();
         boolean supportsCatalogsInTableDefinitions = connection.getMetaData().supportsCatalogsInTableDefinitions();
         System.out.println(supportsCatalogsInTableDefinitions);
         System.out.println(supportsSchemasInTableDefinitions);
+        ResultSet catalogs = meta.getCatalogs();
+        while (catalogs.next()) {
+            String TABLE_CAT = catalogs.getString("TABLE_CAT");
+            System.out.println("," + TABLE_CAT + "," );
+        }
+        ResultSet schemas = meta.getSchemas(null, null);
+        while (schemas.next()) {
+            String TABLE_CATALOG = schemas.getString("TABLE_CATALOG");
+            String TABLE_CAT = schemas.getString("TABLE_SCHEM");
+            System.out.println(TABLE_CATALOG + "," + TABLE_CAT + "," );
+        }
         ResultSet rs = meta.getTables(null, null, null, new String[]{"TABLE"});
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
@@ -114,17 +170,18 @@ class CommandManagerTest {
 
     @Test
     void testGetAllView() throws SQLException {
+        connection = getSQLServer();
         DatabaseMetaData meta = connection.getMetaData();
         String catalog = connection.getCatalog();
-        String schema = connection.getSchema();
+//        String schema = connection.getSchema();
 
-        System.out.println(catalog + "," + schema);
+//        System.out.println(catalog + "," + schema);
 
         boolean supportsSchemasInTableDefinitions = connection.getMetaData().supportsSchemasInTableDefinitions();
         boolean supportsCatalogsInTableDefinitions = connection.getMetaData().supportsCatalogsInTableDefinitions();
         System.out.println(supportsCatalogsInTableDefinitions);
         System.out.println(supportsSchemasInTableDefinitions);
-        ResultSet rs = meta.getTables(null, null, null, new String[]{"TABLE","VIEW"});
+        ResultSet rs = meta.getTables("master", "dbo", null, new String[]{"TABLE","VIEW"});
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
@@ -239,6 +296,7 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandGetSchemas() throws SQLException {
+        connection = getSQLServer();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetSchemas,new HashMap<String,String>());
         String s = JSON.toJSONString(cc);
         System.out.println(s);
@@ -290,15 +348,20 @@ class CommandManagerTest {
     @Test
     void testExeCommandGetDDL() {
 
+        connection = getImpala();
+
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-            put("schemaPattern","bmnc_pcode");
+//            put("schemaPattern","bmnc_pcode");
+            put("catalogPattern","");
+            put("schemaPattern","dbo");
 //            put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
         }});
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(cc);
         System.out.println(s);
         System.out.println(end - start);
+
 
 //        ResultSet tables = connection.getMetaData().getTables(null, null, "NewTable", new String[]{"TABLE"});
 //        while (tables.next()) {
