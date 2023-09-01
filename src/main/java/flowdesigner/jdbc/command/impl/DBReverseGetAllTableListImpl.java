@@ -36,12 +36,20 @@ import java.util.Map;
 @Slf4j
 public class DBReverseGetAllTableListImpl implements Command<ExecResult<List<TableEntity>>> {
 
+    /**
+     * 获取指定catalog或schema下的表清单。注意catalog下存在多个schema的情况（三层结构）
+     * @param conn
+     * @param params
+     *  schemaPattern:可能为catalog或者schema，界面传递过来的没有区分
+     * @return 表清单
+     * @throws SQLException
+     */
     public ExecResult<List<TableEntity>> exec(Connection conn,Map<String, String> params) throws SQLException {
-        String schema = params.getOrDefault("schemaPattern",null);
+        String schemaPattern = params.getOrDefault("schemaPattern",null);
         String types = params.getOrDefault("types","TABLE");
 
         ExecResult<List<TableEntity>> ret = new ExecResult<>();
-        List<TableEntity> tableEntities = getTableEntities(conn, schema, types.split(","));
+        List<TableEntity> tableEntities = getAllTableList(conn, schemaPattern, types.split(","));
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(tableEntities);
 
@@ -52,10 +60,18 @@ public class DBReverseGetAllTableListImpl implements Command<ExecResult<List<Tab
      * 获取所有数据表列表
      * @return
      */
-    protected List<TableEntity> getTableEntities(Connection conn, String schemaPattern, String[] types) throws SQLException {
+    private List<TableEntity> getAllTableList(Connection conn, String schemaPattern, String[] types) throws SQLException {
         DbType dbType = DbTypeKit.getDbType(conn);
         DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
+        String catalog = null;
 
-        return dbDialect.getAllTables(conn, schemaPattern, types);
+        // 如果数据库支持catalog，那么实际传递过来的是catalog
+        boolean supportsCatalogs = conn.getMetaData().supportsCatalogsInTableDefinitions();
+        if (supportsCatalogs) {
+            catalog = schemaPattern;
+            schemaPattern = null;
+        }
+
+        return dbDialect.getAllTables(conn, catalog, schemaPattern, types);
     }
 }

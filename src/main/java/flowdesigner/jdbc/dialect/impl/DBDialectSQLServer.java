@@ -15,7 +15,9 @@
  */
 package flowdesigner.jdbc.dialect.impl;
 
+import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.command.model.ColumnField;
+import flowdesigner.jdbc.command.model.SchemaEntity;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.dialect.DBDialect;
 import flowdesigner.util.sql.ConnParseKit;
@@ -24,6 +26,8 @@ import flowdesigner.util.raw.kit.StringKit;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @desc : SQLServer数据库方言
@@ -91,8 +95,11 @@ public class DBDialectSQLServer extends DBDialect {
             "\ta.colorder;";
 
     @Override
-    public String getTableNamePattern(Connection conn) throws SQLException {
-        return "%";
+    public String getTableNamePattern(Connection conn, String tableNamePattern) throws SQLException {
+        if (StringKit.isBlank(tableNamePattern)) {
+            return "%";
+        }
+        return tableNamePattern;
     }
 
     protected boolean isValidTable(String tableName) {
@@ -105,6 +112,31 @@ public class DBDialectSQLServer extends DBDialect {
                 && !tableName.equalsIgnoreCase("spt_fallback_db")
                 && !tableName.equalsIgnoreCase("MSreplication_options")
                 ;
+    }
+
+    @Override
+    protected List<SchemaEntity> do_getAllSchemas(Connection conn, String catalog, String schemaPattern) throws SQLException {
+        return super.do_getAllSchemas(conn, catalog, schemaPattern);
+        // 以下代码在v1.01使用
+//        List<SchemaEntity> schemaEntities = new ArrayList<>();
+//        DatabaseMetaData meta = conn.getMetaData();
+//        ResultSet rs = null;
+//
+//        try {
+//            JdbcUtils.execute(conn,"use " + catalog);
+//            rs = meta.getSchemas();
+//            while (rs.next()) {
+//                SchemaEntity entity = createSchemaEntity(conn, rs);
+//                if(entity != null){
+//                    schemaEntities.add(entity);
+//                }
+//            }
+//        } finally {
+//            JdbcKit.close(rs.getStatement());
+//            JdbcKit.close(rs);
+//        }
+//
+//        return schemaEntities;
     }
 
     @Override

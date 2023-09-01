@@ -15,6 +15,7 @@ import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
 import flowdesigner.db.operators.SQLOperatorUtils;
+import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommandManagerTest {
     Connection connection = null;
 
-    void getHive() {
+    Connection getHive() {
         DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
@@ -62,6 +63,8 @@ class CommandManagerTest {
             String properties1 = druidDataSource.getProperties();
             System.out.println(properties1);
         }
+
+        return connection;
     }
 
     Connection getMySQL() {
@@ -133,6 +136,25 @@ class CommandManagerTest {
     }
 
     @Test
+    void testGetCatalog() throws SQLException {
+        connection = getSQLServer();
+
+        DatabaseMetaData meta = connection.getMetaData();
+        ResultSet catalog = meta.getCatalogs();
+        System.out.println("cat-----------------");
+        System.out.println(meta.supportsCatalogsInTableDefinitions());
+        while (catalog.next()) {
+            System.out.println(catalog.getString("TABLE_CAT"));
+        }
+        System.out.println("schema-----------------");
+        System.out.println(meta.supportsSchemasInTableDefinitions());
+        ResultSet schemas = meta.getSchemas();
+        while (schemas.next()) {
+            System.out.println(schemas.getString("TABLE_CATALOG") + "," + schemas.getString("TABLE_SCHEM"));
+        }
+    }
+
+    @Test
     void testGetAllTables() throws SQLException {
         connection = getSQLServer();
         DatabaseMetaData meta = connection.getMetaData();
@@ -150,7 +172,7 @@ class CommandManagerTest {
             String TABLE_CAT = catalogs.getString("TABLE_CAT");
             System.out.println("," + TABLE_CAT + "," );
         }
-        ResultSet schemas = meta.getSchemas(null, null);
+        ResultSet schemas = meta.getSchemas();
         while (schemas.next()) {
             String TABLE_CATALOG = schemas.getString("TABLE_CATALOG");
             String TABLE_CAT = schemas.getString("TABLE_SCHEM");
@@ -169,6 +191,30 @@ class CommandManagerTest {
     }
 
     @Test
+    void testGetDDL() throws SQLException {
+        connection = getHive();
+        DatabaseMetaData meta = connection.getMetaData();
+        String catalog = connection.getCatalog();
+        ResultSet rsCols = meta.getColumns(null, "bmnc_pcode", null, "%");
+        while(rsCols.next()) {
+            String TABLE_CAT = rsCols.getString("TABLE_CAT");
+            String TABLE_SCHEM = rsCols.getString("TABLE_SCHEM");
+            String TABLE_NAME = rsCols.getString("TABLE_NAME");
+            String colName = rsCols.getString("COLUMN_NAME");
+            String remarks = StringKit.trim(rsCols.getString("REMARKS"));
+            String typeName = rsCols.getString("TYPE_NAME");
+            int dataType = rsCols.getInt("DATA_TYPE");
+            int columnSize = rsCols.getInt("COLUMN_SIZE");
+            int decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
+            String defaultValue = rsCols.getString("COLUMN_DEF");
+            String isNullable = rsCols.getString("IS_NULLABLE");
+            System.out.println(TABLE_CAT + "." + TABLE_SCHEM);
+            System.out.println(TABLE_NAME + "." + colName + "," + remarks);
+
+        }
+    }
+
+    @Test
     void testGetAllView() throws SQLException {
         connection = getSQLServer();
         DatabaseMetaData meta = connection.getMetaData();
@@ -177,11 +223,17 @@ class CommandManagerTest {
 
 //        System.out.println(catalog + "," + schema);
 
-        boolean supportsSchemasInTableDefinitions = connection.getMetaData().supportsSchemasInTableDefinitions();
-        boolean supportsCatalogsInTableDefinitions = connection.getMetaData().supportsCatalogsInTableDefinitions();
+        boolean supportsSchemasInTableDefinitions = meta.supportsSchemasInTableDefinitions();
+        boolean supportsCatalogsInTableDefinitions = meta.supportsCatalogsInTableDefinitions();
         System.out.println(supportsCatalogsInTableDefinitions);
         System.out.println(supportsSchemasInTableDefinitions);
-        ResultSet rs = meta.getTables("master", "dbo", null, new String[]{"TABLE","VIEW"});
+
+        System.out.println(meta.getDatabaseMajorVersion());
+        System.out.println(meta.getDatabaseProductVersion());
+
+        System.out.println(meta.getDatabaseMajorVersion());
+        System.out.println(meta.getDatabaseMinorVersion());
+        ResultSet rs = meta.getTables("master", null, null, new String[]{"TABLE","VIEW"});
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
@@ -296,47 +348,20 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandGetSchemas() throws SQLException {
-        connection = getSQLServer();
+        connection = getHive();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetSchemas,new HashMap<String,String>());
         String s = JSON.toJSONString(cc);
         System.out.println(s);
-
-        DatabaseMetaData meta = connection.getMetaData();
-        ResultSet catalog = meta.getCatalogs();
-        while (catalog.next()) {
-            System.out.println(catalog.getString("TABLE_CAT"));
-        }
-
-        System.out.println(meta.supportsSchemasInTableDefinitions());//-------
-        System.out.println(meta.supportsSchemasInIndexDefinitions());
-        System.out.println(meta.supportsSchemasInDataManipulation());
-        System.out.println(meta.supportsSchemasInPrivilegeDefinitions());
-        System.out.println(meta.supportsSchemasInProcedureCalls());
-
-        ResultSet schemas = meta.getSchemas(null,null);
-        while (schemas.next()) {
-            String tableSchem = schemas.getString("TABLE_SCHEM");
-            /**
-             *  SQL Server系统保留表
-             *  trace_xe_action_map,trace_xe_event_map
-             */
-            if (!tableSchem.equalsIgnoreCase("PDMAN_DB_VERSION")
-                    && !tableSchem.equalsIgnoreCase("trace_xe_action_map")
-                    && !tableSchem.equalsIgnoreCase("trace_xe_event_map")){
-                System.out.println(tableSchem);
-            }else{
-                continue;
-            }
-        }
 
     }
 
     @Test
     void testExeCommandGetView() throws SQLException {
+        connection = getSQLServer();
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetAllTablesList,new HashMap<String,String>(){{
 //            put("schemaPattern","bmnc_view");
-//            put("schemaPattern","pmart");
+            put("schemaPattern","test");
         }});
         String s = JSON.toJSONString(cc);
         System.out.println(s);
@@ -348,13 +373,12 @@ class CommandManagerTest {
     @Test
     void testExeCommandGetDDL() {
 
-        connection = getImpala();
+        connection = getMySQL();
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
 //            put("schemaPattern","bmnc_pcode");
-            put("catalogPattern","");
-            put("schemaPattern","dbo");
+            put("schemaPattern","test");
 //            put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
         }});
         long end = Instant.now().toEpochMilli();
@@ -473,7 +497,7 @@ class CommandManagerTest {
 
     @Test
     void getSupportFunctionType() throws SQLException {
-        SQLOperatorUtils.getFunctionType(DbType.hive,"^=");
+        SQLOperatorUtils.getFunctionType(DbType.sqlserver,"^=");
     }
 
     @Test
@@ -512,8 +536,9 @@ class CommandManagerTest {
 
     @Test
     void testTypeInfo() throws SQLException {
-        ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
-            put("dbType","hive");
+        connection = getSQLServer();
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
+            put("dbType","sqlserver");
         }});
         String s = JSON.toJSONString(cc);
         System.out.println(s);

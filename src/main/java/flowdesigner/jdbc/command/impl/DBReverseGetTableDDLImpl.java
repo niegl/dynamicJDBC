@@ -22,6 +22,7 @@ import flowdesigner.jdbc.dialect.DBDialect;
 import flowdesigner.jdbc.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.util.DbTypeKit;
+import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
@@ -42,7 +43,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
         String[] tableList = tables.split(",");
 
         ExecResult<List<TableEntity>> ret = new ExecResult<>();
-        List<TableEntity> tableEntities = getTablesEntities(conn, schema, tableList, types.split(","));
+        List<TableEntity> tableEntities = getTableDDL(conn, schema, tableList, types.split(","));
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(tableEntities);
 
@@ -57,20 +58,33 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
      * @param tableNameList
      * @return
      */
-    protected List<TableEntity> getTablesEntities(Connection conn, String schemaPattern, String[] tableNameList, String[] types) throws SQLException {
+    private List<TableEntity> getTableDDL(Connection conn, String schemaPattern, String[] tableNameList, String[] types) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<>();
-
-        DatabaseMetaData meta = conn.getMetaData();
+        String catalog = null;
         DbType dbType = DbTypeKit.getDbType(conn);
         DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
+        DatabaseMetaData meta = conn.getMetaData();
+
+        // 如果数据库支持catalog，那么实际传递过来的是catalog
+        boolean supportsCatalogs = meta.supportsCatalogsInTableDefinitions();
+        if (supportsCatalogs) {
+            catalog = schemaPattern;
+            schemaPattern = null;
+        }
+
+        // getColumn()接口中，hive数据库必须指定具体的schema，否则会抛异常
+        if (dbType == DbType.hive) {
+            if (StringKit.isBlank(schemaPattern)) {
+                throw new RuntimeException("parameter [schemaPattern] can not be empty");
+            }
+        }
 
         if (1 == tableNameList.length && "".equals(tableNameList[0])) {
-            String tableNamePattern = dbDialect.getTableNamePattern(conn);
-            return dbDialect.getTableEntities(conn, meta, schemaPattern, tableNamePattern, types);
+            return dbDialect.getTableEntities(conn, catalog, schemaPattern, null, types);
         }
 
         for (String tableName : tableNameList) {
-            List<TableEntity> tableEntities1 = dbDialect.getTableEntities(conn, meta, schemaPattern, tableName, types);
+            List<TableEntity> tableEntities1 = dbDialect.getTableEntities(conn, catalog, schemaPattern, tableName, types);
             if (tableEntities1.isEmpty()) {
                 continue;
             }

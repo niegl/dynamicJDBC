@@ -33,10 +33,10 @@ import java.util.*;
 public class DBDialect {
 
     public String getCatalogPattern(Connection conn) throws SQLException{
-        boolean supportsCatalogsInTableDefinitions = conn.getMetaData().supportsCatalogsInTableDefinitions();
-        if (supportsCatalogsInTableDefinitions) {
-            return getCatalogPattern(conn, conn.getCatalog());
-        }
+//        boolean supportsCatalogsInTableDefinitions = conn.getMetaData().supportsCatalogsInTableDefinitions();
+//        if (supportsCatalogsInTableDefinitions) {
+//            return getCatalogPattern(conn, conn.getCatalog());
+//        }
         return null;
     };
 
@@ -81,28 +81,30 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public String getTableNamePattern(Connection conn) throws SQLException{
-        return null;
+    public String getTableNamePattern(Connection conn, String tableNamePattern) throws SQLException{
+        if (StringKit.isBlank(tableNamePattern)) {
+            return null;
+        }
+        return tableNamePattern;
     }
 
+    public String getTableNamePattern(Connection conn) throws SQLException{
+        return getTableNamePattern(conn,null);
+    }
 
     /**
      * 获取指定表的主键
      * @param conn
-     * @param tableSchema
+     * @param schema
      * @param tableName
      * @return
      * @throws SQLException
      */
-    public TablePrimaryKey getPrimaryKey(Connection conn, String tableSchema,String tableName) throws SQLException {
-        if (tableSchema == null || tableName == null) {
-            throw new RuntimeException("[parameter] tableSchema|table should not be null.");
-        }
-
+    public TablePrimaryKey getPrimaryKey(Connection conn, String catalog, String schema,String tableName) throws SQLException {
         TablePrimaryKey primaryKey = new TablePrimaryKey();
 
-        String catalog = getCatalogPattern(conn, tableSchema);
-        String schema = getSchemaPattern(conn, tableSchema);
+        catalog = getCatalogPattern(conn, catalog);
+        schema = getSchemaPattern(conn, schema);
 
         DatabaseMetaData connMetaData = conn.getMetaData();
         ResultSet rs = connMetaData.getPrimaryKeys(catalog, schema, tableName);
@@ -137,16 +139,18 @@ public class DBDialect {
      */
     public SchemaEntity createSchemaEntity(Connection connection, ResultSet rs) throws SQLException {
         SchemaEntity entity = null;
-
         String tableCat = rs.getString("TABLE_CATALOG");
         String tableSchema = rs.getString("TABLE_SCHEM");
-        String defKey = tableCat + "_" + tableSchema;
 
-        if (StringKit.isNotBlank(defKey)) {
+        if (StringKit.isNotBlank(tableSchema)) {
             entity = new SchemaEntity();
-            entity.setDefKey(defKey);
             entity.setTABLE_CAT(tableCat);
             entity.setTABLE_SCHEM(tableSchema);
+
+            if (!StringKit.isBlank(tableCat)) {
+                tableCat = tableCat + ".";
+            }
+            entity.setDefKey(tableCat + tableSchema);
         }
 
         return entity;
@@ -428,74 +432,102 @@ public class DBDialect {
 
     }
 
-    /**
-     * 获取所有的数据库
-     * @param conn
-     * @return 数据库列表
-     */
-    public List<SchemaEntity> getAllSchemas(Connection conn, String schemaPattern) throws SQLException {
+    protected List<SchemaEntity> do_getAllSchemas(Connection conn, String catalog, String schemaPattern) throws SQLException {
+        List<SchemaEntity> schemaEntities = new ArrayList<>();
         DatabaseMetaData meta = conn.getMetaData();
+        ResultSet rs = null;
 
-        if (StringKit.isBlank(schemaPattern)) {
-            schemaPattern = getSchemaPattern(conn, schemaPattern);
+        try {
+            rs = meta.getSchemas(catalog, schemaPattern);
+        } catch (java.lang.AbstractMethodError abstractMethodError) {
+            // 有些数据库，如SQLserver不支持getSchemas(catalog, schemaPattern)接口,尝试getSchemas() 接口
+            rs = meta.getSchemas();
         }
 
-        String catalog = conn.getCatalog();
+        if (null == rs) {
+            return schemaEntities;
+        }
 
-        ResultSet rs = meta.getSchemas(catalog, schemaPattern);
-        List<SchemaEntity> schemaEntities = new ArrayList<>();
         try {
             while (rs.next()) {
-                String tableSchem = rs.getString("TABLE_SCHEM");
-                /**
-                 *  SQL Server系统保留表
-                 *  trace_xe_action_map,trace_xe_event_map
-                 */
-                if (!tableSchem.equalsIgnoreCase("PDMAN_DB_VERSION")
-                        && !tableSchem.equalsIgnoreCase("trace_xe_action_map")
-                        && !tableSchem.equalsIgnoreCase("trace_xe_event_map")){
-                    SchemaEntity entity = createSchemaEntity(conn,rs);
-                    if(entity != null){
-                        schemaEntities.add(entity);
-                    }
+                SchemaEntity entity = createSchemaEntity(conn, rs);
+                if(entity != null){
+                    schemaEntities.add(entity);
                 }
             }
         } finally {
-            JdbcKit.close(rs.getStatement());
             JdbcKit.close(rs);
         }
 
         return schemaEntities;
     }
 
-    public List<SchemaEntity> getAllCatalogs(Connection conn) throws SQLException {
-        DatabaseMetaData meta = conn.getMetaData();
-
-        ResultSet rs = meta.getCatalogs();
+    /**
+     * 获取所有的数据库,区分catalog和schema.v1.01版本实现
+     * @param conn
+     * @return 数据库列表
+     */
+    public List<SchemaEntity> getAllSchemasWithCatalog(Connection conn, List<SchemaEntity> catalogEntities, String schemaPattern) throws SQLException {
         List<SchemaEntity> schemaEntities = new ArrayList<>();
+        String catalog = getCatalogPattern(conn);
+        schemaPattern = getSchemaPattern(conn, schemaPattern);
+
+        // 如果没有指定获取schema，那么获取全部的schema
+        if (catalogEntities.isEmpty()) {
+            List<SchemaEntity> entities = do_getAllSchemas(conn, catalog, schemaPattern);
+            schemaEntities.addAll(entities);
+        } else {
+            for(SchemaEntity entity: catalogEntities) {
+                List<SchemaEntity> entities = do_getAllSchemas(conn, entity.getTABLE_CAT(), schemaPattern);
+                schemaEntities.addAll(entities);
+            }
+        }
+
+        return schemaEntities;
+
+    }
+
+    /**
+     * 获取所有的数据库,不区分catalog和schema. v1.0版本
+     * @param conn
+     * @return 数据库列表
+     */
+    public List<SchemaEntity> getAllSchemas(Connection conn, String schemaPattern) throws SQLException {
+        List<SchemaEntity> schemaEntities;
+        String catalog = getCatalogPattern(conn);
+        schemaPattern = getSchemaPattern(conn, schemaPattern);
+
+        schemaEntities = do_getAllSchemas(conn, catalog, schemaPattern);
+
+        return schemaEntities;
+
+    }
+
+    protected void do_getAllCatalogs(Connection conn, List<SchemaEntity> schemaEntities) throws SQLException {
+        DatabaseMetaData meta = conn.getMetaData();
+        ResultSet rs = null;
+
         try {
+            rs = meta.getCatalogs();
             while (rs.next()) {
                 String TABLE_CAT = rs.getString("TABLE_CAT");
-                /**
-                 *  SQL Server系统保留表
-                 *  trace_xe_action_map,trace_xe_event_map
-                 */
-                if (!TABLE_CAT.equalsIgnoreCase("information_schema")
-                        && !TABLE_CAT.equalsIgnoreCase("performance_schema")
-                        && !TABLE_CAT.equalsIgnoreCase("mysql")
-                        && !TABLE_CAT.equalsIgnoreCase("sys")
-                ){
-                    SchemaEntity entity = new SchemaEntity();
-                    entity.setTABLE_CAT(TABLE_CAT);
-                    // 对于mysql类数据库来说，CAT和SCHEMA相等---待测试其他库
-                    entity.setTABLE_SCHEM(TABLE_CAT);
-                    schemaEntities.add(entity);
-                }
+                SchemaEntity entity = new SchemaEntity();
+                entity.setDefKey(TABLE_CAT);
+                entity.setTABLE_CAT(TABLE_CAT);
+                // 对于mysql类数据库来说，CAT和SCHEMA相等---待测试其他库
+                entity.setTABLE_SCHEM(TABLE_CAT);
+                schemaEntities.add(entity);
             }
+
         } finally {
-            JdbcKit.close(rs.getStatement());
             JdbcKit.close(rs);
         }
+    }
+
+    public List<SchemaEntity> getAllCatalogs(Connection conn) throws SQLException {
+
+        List<SchemaEntity> schemaEntities = new ArrayList<>();
+        do_getAllCatalogs(conn, schemaEntities);
 
         return schemaEntities;
     }
@@ -505,19 +537,21 @@ public class DBDialect {
      * @param conn
      * @return
      */
-    public List<TableEntity> getAllTables(Connection conn, String schemaPattern, String[] types) throws SQLException {
-
-        String tableNamePattern = getTableNamePattern(conn);
-        return getAllTables(conn, schemaPattern, tableNamePattern, types);
+    public List<TableEntity> getAllTables(Connection conn, String catalog, String schemaPattern, String[] types) throws SQLException {
+        return getAllTables(conn, catalog, schemaPattern, null, types);
     }
 
-    private List<TableEntity> getAllTables(Connection conn, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
+    public List<TableEntity> getAllTables(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
+        catalog = getCatalogPattern(conn, catalog);
+        schemaPattern = getSchemaPattern(conn, schemaPattern);
+        tableNamePattern = getTableNamePattern(conn, tableNamePattern);
+        return do_getAllTables(conn, catalog, schemaPattern, tableNamePattern, types);
+    }
+
+    private List<TableEntity> do_getAllTables(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
 
-        String catalog = getCatalogPattern(conn, schemaPattern);
-        String schema = getSchemaPattern(conn, schemaPattern);
-
-        ResultSet rs = meta.getTables(catalog, schema, tableNamePattern, types);
+        ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, types);
         // 提高单次获取数据条数，减少请求次数、网络传输，提高效率
         rs.setFetchSize(200);
 
@@ -554,20 +588,23 @@ public class DBDialect {
     /**
      * 根据表名，创建数据表实体的字段及索引
      * @param conn
-     * @param meta
      * @param tableNamePattern
      * @return
      * @throws SQLException
      */
-    public List<TableEntity> getTableEntities(Connection conn, DatabaseMetaData meta, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
+    public List<TableEntity> getTableEntities(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<>();
+        String catalogPattern1 = getCatalogPattern(conn, catalog);
+        String schemaPattern1 = getSchemaPattern(conn, schemaPattern);
+        String tableNamePattern1 = getTableNamePattern(conn, tableNamePattern);
+
+        DatabaseMetaData meta = conn.getMetaData();
+        boolean supportsCatalogs = meta.supportsCatalogsInTableDefinitions();
+        boolean supportsSchemas = meta.supportsSchemasInTableDefinitions();
         ResultSet rsCols = null;
 
         try {
-            String schemaPattern1 = getSchemaPattern(conn, schemaPattern);
-            String catalogPattern = getCatalogPattern(conn, schemaPattern);
-
-            tableEntities = getAllTables(conn, schemaPattern, tableNamePattern, types);
+            tableEntities = getAllTables(conn, catalog, schemaPattern, tableNamePattern, types);
             if (tableEntities.isEmpty()) {
                 return tableEntities;
             }
@@ -578,7 +615,7 @@ public class DBDialect {
             String table_name_temp = "";
             TableEntity tableEntity = null;
 
-            rsCols = meta.getColumns(catalogPattern, schemaPattern1, tableNamePattern, "%");
+            rsCols = meta.getColumns(catalogPattern1, schemaPattern1, tableNamePattern1, "%");
             while(rsCols.next()) {
                 String TABLE_CAT = rsCols.getString("TABLE_CAT");
                 String TABLE_SCHEM = rsCols.getString("TABLE_SCHEM");
@@ -608,6 +645,11 @@ public class DBDialect {
                     if (!find) {
                         continue;
                     }
+                    // 兼容catalog-》schema两层架构，考虑界面的显示将schema放置到表名前
+                    if (supportsCatalogs && supportsSchemas) {
+                        String newTableName = TABLE_SCHEM + "." + TABLE_NAME;
+                        tableEntity.setTABLE_NAME(newTableName);
+                    }
                 }
 
                 // 字段填充
@@ -629,8 +671,11 @@ public class DBDialect {
             }
 
             return tableEntities;
-        } finally {
-            JdbcKit.close(rsCols.getStatement());
+        } catch (SQLException exception) {
+            throw new SQLException("获取表DDL异常，error:" + exception.getMessage());
+        }
+        finally {
+            if (rsCols != null) JdbcKit.close(rsCols.getStatement());
             JdbcKit.close(rsCols);
         }
     }

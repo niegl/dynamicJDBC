@@ -61,7 +61,7 @@ public class DBReverseGetFKColumnFieldImpl implements Command<ExecResult<List<FK
      * foreignTable – the name of the table that imports the key; must match the table name as it is stored in the database
      * @return ResultSet - each row is a foreign key column description
      */
-    protected List<FKColumnField> getCrossReference(Connection conn,
+    private List<FKColumnField> getCrossReference(Connection conn,
                                                   String foreignCatalog, String foreignSchema, String foreignTable) throws SQLException {
         List<FKColumnField> tableEntities;
         try {

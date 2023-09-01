@@ -63,7 +63,7 @@ public class DBReverseGetTypeInfoImpl implements Command<ExecResult<List<DataTyp
      * 获取所有数据表列表
      * @return
      */
-    protected List<DataTypeEntity> getTypeInfo(Connection conn) throws SQLException {
+    private List<DataTypeEntity> getTypeInfo(Connection conn) throws SQLException {
         List<DataTypeEntity> infoEntities;
         try {
             DbType dbType = DbTypeKit.getDbType(conn);
