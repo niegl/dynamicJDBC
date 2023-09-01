@@ -115,7 +115,7 @@ public class DynamicDriver {
                 }
                 return connection;
             } catch (SQLException e) {
-                set_errMessage(e.getMessage());
+                set_errMessage(e.getCause().getMessage());
             }
         }
         return null;

@@ -120,6 +120,8 @@ class CommandManagerTest {
 //        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
         properties.setProperty("driverClassName","net.sourceforge.jtds.jdbc.Driver");
         properties.setProperty("url","jdbc:jtds:sqlserver://localhost:1433");
+        properties.setProperty("maxWait","3000");
+        properties.setProperty("druid.failFast","true");
         properties.setProperty("username","SA");
         properties.setProperty("password","P@ssw0rd01");
         dynamicDriver.set_propertyInfo(properties);
@@ -128,9 +130,10 @@ class CommandManagerTest {
 //            dynamicDriver.createDataSource();
             connection = dynamicDriver.getConnection();
         } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
+
             e.printStackTrace();
         }
+        System.out.println(dynamicDriver.get_errMessage());
         assertNotNull(connection);
         return connection;
     }
@@ -373,12 +376,12 @@ class CommandManagerTest {
     @Test
     void testExeCommandGetDDL() {
 
-        connection = getMySQL();
+        connection = getSQLServer();
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
 //            put("schemaPattern","bmnc_pcode");
-            put("schemaPattern","test");
+            put("schemaPattern","sys");            put("types","VIEW");
 //            put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
         }});
         long end = Instant.now().toEpochMilli();
