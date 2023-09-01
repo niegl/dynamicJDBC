@@ -198,6 +198,15 @@ public class DBDialect {
 //            comment = pair.getRight();
 //        }
 //        tableEntity.setDefKey(defKey);
+
+        // 兼容catalog-》schema两层架构，考虑界面的显示将schema放置到表名前
+        DatabaseMetaData metaData = connection.getMetaData();
+        boolean supportsCatalogs = metaData.supportsCatalogsInTableDefinitions();
+        boolean supportsSchemas = metaData.supportsSchemasInTableDefinitions();
+        if (supportsCatalogs && supportsSchemas) {
+            tableName = tableSchem + "." + tableName;
+        }
+
         tableEntity.setTABLE_CAT(tableCat);
         tableEntity.setTABLE_SCHEM(tableSchem);
         tableEntity.setTABLE_NAME(tableName);
@@ -514,8 +523,6 @@ public class DBDialect {
                 SchemaEntity entity = new SchemaEntity();
                 entity.setDefKey(TABLE_CAT);
                 entity.setTABLE_CAT(TABLE_CAT);
-                // 对于mysql类数据库来说，CAT和SCHEMA相等---待测试其他库
-                entity.setTABLE_SCHEM(TABLE_CAT);
                 schemaEntities.add(entity);
             }
 
@@ -541,7 +548,7 @@ public class DBDialect {
         return getAllTables(conn, catalog, schemaPattern, null, types);
     }
 
-    public List<TableEntity> getAllTables(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
+    protected List<TableEntity> getAllTables(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         catalog = getCatalogPattern(conn, catalog);
         schemaPattern = getSchemaPattern(conn, schemaPattern);
         tableNamePattern = getTableNamePattern(conn, tableNamePattern);
@@ -620,6 +627,10 @@ public class DBDialect {
                 String TABLE_CAT = rsCols.getString("TABLE_CAT");
                 String TABLE_SCHEM = rsCols.getString("TABLE_SCHEM");
                 String TABLE_NAME = rsCols.getString("TABLE_NAME");
+                // 兼容catalog-》schema两层架构，考虑界面的显示将schema放置到表名前
+                if (supportsCatalogs && supportsSchemas) {
+                    TABLE_NAME = TABLE_SCHEM + "." + TABLE_NAME;
+                }
 
                 // 由于getTables和getColumns返回的 TABLE_CAT/TABLE_SCHEM 存在值不同的情况（""和null），归一化
                 if(TABLE_CAT == null) TABLE_CAT = "";

@@ -15,7 +15,6 @@
  */
 package flowdesigner.jdbc.dialect.impl;
 
-import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.command.model.ColumnField;
 import flowdesigner.jdbc.command.model.SchemaEntity;
 import flowdesigner.jdbc.command.model.TableEntity;
@@ -32,7 +31,7 @@ import java.util.List;
 /**
  * @desc : SQLServer数据库方言
  */
-public class DBDialectSQLServer extends DBDialect {
+public class DBDialectSQLServer_jTDS extends DBDialect {
 
     private String querySQL = "SELECT\n" +
             "\ttable_code =\n" +
@@ -115,28 +114,16 @@ public class DBDialectSQLServer extends DBDialect {
     }
 
     @Override
-    protected List<SchemaEntity> do_getAllSchemas(Connection conn, String catalog, String schemaPattern) throws SQLException {
-        return super.do_getAllSchemas(conn, catalog, schemaPattern);
-        // 以下代码在v1.01使用
-//        List<SchemaEntity> schemaEntities = new ArrayList<>();
-//        DatabaseMetaData meta = conn.getMetaData();
-//        ResultSet rs = null;
-//
-//        try {
-//            JdbcUtils.execute(conn,"use " + catalog);
-//            rs = meta.getSchemas();
-//            while (rs.next()) {
-//                SchemaEntity entity = createSchemaEntity(conn, rs);
-//                if(entity != null){
-//                    schemaEntities.add(entity);
-//                }
-//            }
-//        } finally {
-//            JdbcKit.close(rs.getStatement());
-//            JdbcKit.close(rs);
-//        }
-//
-//        return schemaEntities;
+    public List<TableEntity> getAllTables(Connection conn, String catalog, String schemaPattern, String[] types) throws SQLException {
+        // SQLserver数据库默认只获取当前catalog下的表。要想获取全部表，需要制定catalog获取
+        ArrayList<TableEntity> tableEntities = new ArrayList<>();
+        List<SchemaEntity> allCatalogs = getAllCatalogs(conn);
+        for (SchemaEntity aCatalog: allCatalogs) {
+            String tableCat = aCatalog.getTABLE_CAT();
+            List<TableEntity> allTables = getAllTables(conn, tableCat, null, null, types);
+            tableEntities.addAll(allTables);
+        }
+        return tableEntities;
     }
 
     @Override

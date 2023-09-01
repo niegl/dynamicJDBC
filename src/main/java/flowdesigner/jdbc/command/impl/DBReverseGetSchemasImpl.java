@@ -7,7 +7,6 @@ import flowdesigner.jdbc.dialect.DBDialect;
 import flowdesigner.jdbc.dialect.DBDialectMatcher;
 import flowdesigner.jdbc.command.model.SchemaEntity;
 import flowdesigner.util.DbTypeKit;
-import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +24,7 @@ public class DBReverseGetSchemasImpl implements Command<ExecResult<List<SchemaEn
         String schemaPattern = params.getOrDefault("schemaPattern",null);
 
         ExecResult<List<SchemaEntity>> ret = new ExecResult<>();
-        List<SchemaEntity> schemaEntities = fetchSchemaEntities(conn, catalog, schemaPattern);
+        List<SchemaEntity> schemaEntities = getSchemas(conn, catalog, schemaPattern);
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(schemaEntities);
 
@@ -41,7 +40,7 @@ public class DBReverseGetSchemasImpl implements Command<ExecResult<List<SchemaEn
      * <li>两个都有</li>
      * @return List<SchemaEntity>
      */
-    private List<SchemaEntity> fetchSchemaEntities(Connection conn, @Nullable String catalog, @Nullable String schemaPattern) throws SQLException {
+    private List<SchemaEntity> getSchemas(Connection conn, @Nullable String catalog, @Nullable String schemaPattern) throws SQLException {
         List<SchemaEntity> schemaEntities = new ArrayList<>();
         try {
             DbType dbType = DbTypeKit.getDbType(conn);

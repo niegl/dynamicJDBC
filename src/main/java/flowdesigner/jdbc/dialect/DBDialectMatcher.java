@@ -33,7 +33,7 @@ public class DBDialectMatcher {
         put(DbType.postgresql, new DBDialectPostgreSQL());
         put(DbType.db2, new DBDialectDB2());
         put(DbType.dm, new DBDialectDM());
-        put(DbType.sqlserver, new DBDialectSQLServer());
+        put(DbType.jtds, new DBDialectSQLServer_jTDS());
         put(DbType.kingbase, new DBDialectKingbase());
         put(DbType.sqlite, new DBDialectSQLite());
     }};

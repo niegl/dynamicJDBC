@@ -351,7 +351,7 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandGetSchemas() throws SQLException {
-        connection = getHive();
+        connection = getSQLServer();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetSchemas,new HashMap<String,String>());
         String s = JSON.toJSONString(cc);
         System.out.println(s);
@@ -363,8 +363,7 @@ class CommandManagerTest {
         connection = getSQLServer();
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetAllTablesList,new HashMap<String,String>(){{
-//            put("schemaPattern","bmnc_view");
-            put("schemaPattern","test");
+            put("types","VIEW");
         }});
         String s = JSON.toJSONString(cc);
         System.out.println(s);
@@ -381,7 +380,7 @@ class CommandManagerTest {
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
 //            put("schemaPattern","bmnc_pcode");
-            put("schemaPattern","sys");            put("types","VIEW");
+            put("schemaPattern","test");
 //            put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
         }});
         long end = Instant.now().toEpochMilli();
