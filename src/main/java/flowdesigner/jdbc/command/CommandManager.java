@@ -27,7 +27,7 @@ public class CommandManager {
         put(CMD_DBReverseGetFunctionsImpl, DBReverseGetFunctionsImpl.class);            //
         put(CMD_ParseDDLToTableImpl, DBParseDDLToTableImpl.class);                      //逆向解析，获取指定数据表DDL
         put(CMD_DBReverseGetPrimaryKeys, DBReverseGetPrimaryKeyImpl.class);
-        put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);    //
+        put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKInfoImpl.class);    //
         put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);        //
     }};
 

@@ -114,7 +114,9 @@ class CommandManagerTest {
 
     Connection getSQLServer() {
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\net.sourceforge.jtds");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\net.sourceforge.jtds");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\Desktop\\1\\SQL Server (Old driver jTDS)\\1.3.1");
+
         Properties properties = new Properties();
 //        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
 //        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
@@ -433,9 +435,22 @@ class CommandManagerTest {
     @Test
     void testExeCommandGetImportedKeys() throws SQLException {
 
-
+        connection = getMySQL();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFKColumnFieldImpl,new HashMap<String,String>(){{
-            put("Table","NewTable");
+            put("Table","Orders");
+            put("schemaPattern","test");
+        }});
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
+    }
+
+    @Test
+    void testExeCommandgetPrimaryKey() throws SQLException {
+
+        connection = getMySQL();
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetPrimaryKeys,new HashMap<String,String>(){{
+            put("Table","Persons");
+            put("schemaPattern","test");
         }});
         String s = JSON.toJSONString(cc);
         System.out.println(s);

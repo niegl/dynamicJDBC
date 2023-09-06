@@ -20,7 +20,7 @@ public class DBReverseGetPrimaryKeyImpl implements Command<ExecResult<TablePrima
     @Override
     public ExecResult<TablePrimaryKey> exec(Connection connection, Map<String, String> params) throws SQLException {
         String schema = params.getOrDefault("schemaPattern",null);
-        String table = params.getOrDefault("table",null);
+        String table = params.getOrDefault("table",params.getOrDefault("Table", null));
 
         if (StringKit.isBlank(table)) {
             throw new InvalidParameterException("parameter [table] can not be empty!");

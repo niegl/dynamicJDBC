@@ -707,16 +707,15 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public List<FKColumnField> getFKColumnField(Connection conn, String schemaPattern, String table) throws SQLException {
-        String schema = getSchemaPattern(conn, schemaPattern);
-        String catalog = getCatalogPattern(conn, schemaPattern);
+    public List<FKColumnField> getImportedKeys(Connection conn, String catalog, String schema, String table) throws SQLException {
+        catalog = getCatalogPattern(conn, catalog);
+        schema = getSchemaPattern(conn, schema);
 
         DatabaseMetaData meta = conn.getMetaData();
 
         ResultSet rs = meta.getImportedKeys(catalog, schema, table);
         try {
-            List<FKColumnField> fkColumnFields = getFkColumnFields(rs);
-            return fkColumnFields;
+            return getFkColumnFields(rs);
         } finally {
             JdbcKit.close(rs.getStatement());
             JdbcKit.close(rs);
@@ -783,7 +782,7 @@ public class DBDialect {
      * @param foreignTable
      * @return
      */
-    public List<FKColumnField> getFKColumnField(Connection conn, String foreignCatalog,String foreignSchema, String foreignTable) throws SQLException {
+    public List<FKColumnField> getCrossReference(Connection conn, String foreignCatalog,String foreignSchema, String foreignTable) throws SQLException {
         DatabaseMetaData meta = conn.getMetaData();
 
 //        String schemaPattern = null;

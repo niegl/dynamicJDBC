@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.sql.DataSource;
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -94,7 +95,7 @@ public class DynamicDriver {
             }
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            set_errMessage(e.getCause().toString());
         }
     }
 
@@ -205,7 +206,8 @@ public class DynamicDriver {
                     }
                 }
             }
-        } catch (NoSuchMethodException | SecurityException | MalformedURLException | InvocationTargetException | IllegalAccessException | NoSuchFieldException e1) {
+        } catch (NoSuchMethodException | SecurityException | MalformedURLException | InvocationTargetException | IllegalAccessException | NoSuchFieldException |
+                 InaccessibleObjectException e1) {
             log.error(e1.getMessage());
             return false;
         } finally {
