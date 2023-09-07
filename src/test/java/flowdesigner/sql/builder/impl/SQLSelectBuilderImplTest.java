@@ -37,7 +37,7 @@ class SQLSelectBuilderImplTest {
         SQLStatement statement = SQLTest.parser("select A.a from tableA A join tableB B on 1=1 where tableB.a = 1 and tableB.b=2 and tableB.c=3", DbType.mysql);
 
         builderEx.select("a/b","b")
-                .from("tablea");
+                .from("tableB");
         builderEx.where("tableB.a = 1").whereAnd("tablea.b=2").whereAnd("tableB.c=3");
         // 测试别名更改后是否应用于前面的where
         builderEx.from("tableB","B");
@@ -307,6 +307,12 @@ class SQLSelectBuilderImplTest {
     }
 
     @Test
-    void testJoin() {
+    void testJoinWhere() {
+        builderEx.select("a/b","b")
+                .from("tablea");
+        builderEx.where("tableB.a = 1").whereAnd("tablea.b=2").whereAnd("tableB.c=3");
+        // 测试别名更改后是否应用于前面的where
+        builderEx.join("COMMA","tableB","B",null,null,null);
     }
+
 }

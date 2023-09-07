@@ -12,6 +12,7 @@ import com.alibaba.druid.sql.dialect.presto.ast.stmt.PrestoSelectStatement;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.sql.builder.SQLSelectBuilder;
+import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +48,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
     protected static HashMap<String,SQLJoinTableSource.JoinType> join_type_rel = new HashMap<String,SQLJoinTableSource.JoinType>();
     static {
         join_type_rel.put("INNER JOIN", SQLJoinTableSource.JoinType.INNER_JOIN);
+        join_type_rel.put("COMMA", SQLJoinTableSource.JoinType.COMMA);
         join_type_rel.put("CROSS JOIN", SQLJoinTableSource.JoinType.CROSS_JOIN);
         join_type_rel.put("LEFT JOIN", SQLJoinTableSource.JoinType.LEFT_OUTER_JOIN);
         join_type_rel.put("RIGHT JOIN", SQLJoinTableSource.JoinType.RIGHT_OUTER_JOIN);
@@ -172,6 +174,10 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         SQLSelectQueryBlock queryBlock = getQueryBlock();
         SQLExprTableSource from = new SQLExprTableSource(expr, alias);
         queryBlock.setFrom(from);
+
+        if (!StringKit.isBlank(alias)) {
+            updateAlias(expr, alias);
+        }
 
         return this;
     }
