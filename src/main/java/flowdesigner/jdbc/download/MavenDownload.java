@@ -79,12 +79,12 @@ public class MavenDownload {
     }
 
     private static void downloadRecursive(String url, String scope, String repository,
-                                          Dependency dependency1, List<String> locations) throws IOException {
+                                          Dependency dependency, List<String> locations) throws IOException {
         if (bStopDownload) {
             return;
         }
 
-        String jarFileString = download(url, scope, repository, dependency1.getGroupId(), dependency1.getArtifactId(), dependency1.getVersion());
+        String jarFileString = download(url, scope, repository, dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion());
         if (jarFileString == null) {
             return;
         }
@@ -97,13 +97,13 @@ public class MavenDownload {
 
         String absolutePath = jarFile.getAbsolutePath();
         String pomFileString = absolutePath.replace(".jar",".pom");
-        Collection<Dependency> dependencies = PomParser.getDependencies(url, scope, pomFileString, dependency1);
-        Collection<Dependency.Exclusion> exclusions = dependency1.getExclusions();
-        for (Dependency dependency : dependencies) {
-            String groupId1 = dependency.getGroupId();
-            String artifactId1 = dependency.getArtifactId();
-            String version1 = dependency.getVersion();
-            String scope1 = dependency.getScope();
+        Collection<Dependency> dependencies = PomParser.getDependencies(url, scope, pomFileString, dependency);
+        Collection<Dependency.Exclusion> exclusions = dependency.getExclusions();
+        for (Dependency dependency1 : dependencies) {
+            String groupId1 = dependency1.getGroupId();
+            String artifactId1 = dependency1.getArtifactId();
+            String version1 = dependency1.getVersion();
+            String scope1 = dependency1.getScope();
 
             boolean bSkip = false;
             for (Dependency.Exclusion exclusion: exclusions) {
@@ -120,7 +120,12 @@ public class MavenDownload {
                 continue;
             }
             // 对比dbeaver的Oracle下载，optional是需要下载的
-//            if (dependency.isOptional()) {
+            if (dependency.getGroupId().equals("mysql") &&dependency1.isOptional()) {
+                continue;
+            }
+
+            // 对比dbeaver的Oracle下载，optional是需要下载的
+//            if (dependency1.isOptional()) {
 //                continue;
 //            }
 
@@ -133,12 +138,13 @@ public class MavenDownload {
 //                }
 //                version1 = versions.get(versions.size()-1);
 //                if (!version1.isEmpty()) {
-//                    dependency.setVersion(version1);
+//                    dependency1.setVersion(version1);
 //                }
-                log.error("版本号不存在: " + dependency);
+                log.error("版本号不存在,跳过: " + dependency1);
+                continue;
             }
 
-            downloadRecursive(url, scope, repository, dependency, locations);
+            downloadRecursive(url, scope, repository, dependency1, locations);
         }
 
     }

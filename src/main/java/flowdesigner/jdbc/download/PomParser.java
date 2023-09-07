@@ -55,18 +55,18 @@ public class PomParser {
 
     }
 
-    public static List<Dependency> getDependencies(String url, String scope, @NotNull String document, Dependency pom) {
+    public static List<Dependency> getDependencies(String url, String scope, @NotNull String filePath, Dependency documentDependency) {
         ArrayList<Dependency> dependencies = new ArrayList<>();
 
-        File file = new File(document);
+        File file = new File(filePath);
         if (!file.exists()) {
             return dependencies;
         }
 
-        Document document1 = null;
+        Document document = null;
         try {
-            document1 = XmlParser.getDocument(document);
-            return getDependencies(url, scope, document1, pom);
+            document = XmlParser.getDocument(filePath);
+            return getDependencies(url, scope, document, documentDependency);
         } catch (ParserConfigurationException | IOException | SAXException e) {
             e.printStackTrace();
         }
@@ -75,7 +75,7 @@ public class PomParser {
 
     }
 
-    private static List<Dependency> getDependencies(String url, String scope, Document document, Dependency pom) {
+    private static List<Dependency> getDependencies(String url, String scope, Document document, Dependency documentDependency) {
         // 用于保存解析后的Dependency对象
         List<Dependency> dependencyList = new ArrayList<>();
         if (document == null) {
@@ -97,15 +97,15 @@ public class PomParser {
         }
 
         NodeList dependencyNodes = nodeDependencies.getChildNodes();
-
         // 遍历所有Node
         for (int i = 1; i < dependencyNodes.getLength(); i += 2) {
             // 获取第i个dependency结点
             Node node = dependencyNodes.item(i);
-            Dependency dependency = getDependency(node, properties, dependenciesInManagement, pom.getVersion());
-
-            if (dependency.getGroupId() != null) {
-                dependencyList.add(dependency);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Dependency dependency = getDependency(node, properties, dependenciesInManagement, documentDependency.getVersion());
+                if (dependency.getGroupId() != null) {
+                    dependencyList.add(dependency);
+                }
             }
         }
 
@@ -193,7 +193,7 @@ public class PomParser {
         // 处理没有指定version的情况
         if (dependency.getVersion() == null) {
             String managementVersion = null;
-            if (!dependenciesInManagement.isEmpty()) {
+            if (dependenciesInManagement != null && !dependenciesInManagement.isEmpty()) {
                 for (Dependency dependencyInParent : dependenciesInManagement) {
                     if (dependencyInParent.getGroupId().equals(dependency.getGroupId()) &&
                             dependencyInParent.getArtifactId().equals(dependency.getArtifactId())) {
@@ -240,8 +240,10 @@ public class PomParser {
         for (int i = 1; i < dependencyNodeList.getLength(); i += 2) {
             // 获取第i个dependency结点
             Node dependencyNode = dependencyNodeList.item(i);
-            Dependency dependency = getDependency(dependencyNode, properties, null, project_version);
-            dependencies.add(dependency);
+            if (dependencyNode.getNodeType() == Node.ELEMENT_NODE) {
+                Dependency dependency = getDependency(dependencyNode, properties, null, project_version);
+                dependencies.add(dependency);
+            }
         }
 
         return dependencies;

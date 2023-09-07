@@ -27,8 +27,8 @@ class MavenDownloadTest {
     @Test
     void downloadRecursive() throws IOException, ParserConfigurationException, SAXException {
         Collection<String> strings;
-//        strings = MavenDownload.downloadRecursive("https://repo1.maven.org/maven2/", "", "C:/test/",
-//                "mysql", "mysql-connector-java", "8.0.29");
+        strings = MavenDownload.downloadRecursive("https://repo1.maven.org/maven2/", "", "C:\\Users\\nieguangling\\Desktop\\1/Mysql/8.0.29/",
+                "mysql", "mysql-connector-java", "8.0.29");
 //        System.out.println(strings);
 
 //        strings = MavenDownload.downloadRecursive("https://repo1.maven.org/maven2/", "", "C:/test/",
@@ -43,8 +43,8 @@ class MavenDownloadTest {
 //                "com.oracle.database.jdbc","ojdbc8",  "12.2.0.1");
 //        System.out.println(strings);
 
-        strings = MavenDownload.downloadRecursive("https://repo1.maven.org/maven2/", "", "C:/test/",
-                "org.postgresql","postgresql",  "42.5.2");
+//        strings = MavenDownload.downloadRecursive("https://repo1.maven.org/maven2/", "", "C:/test/",
+//                "org.postgresql","postgresql",  "42.5.2");
         System.out.println(strings);
     }
 
