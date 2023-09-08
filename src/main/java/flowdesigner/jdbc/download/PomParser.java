@@ -1,6 +1,7 @@
 package flowdesigner.jdbc.download;
 
 import flowdesigner.util.parser.XmlParser;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 public class PomParser {
     private static final String _packaging = "packaging";
 
@@ -68,7 +70,7 @@ public class PomParser {
             document = XmlParser.getDocument(filePath);
             return getDependencies(url, scope, document, documentDependency);
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            e.printStackTrace();
+            log.error(e.toString());
         }
 
         return dependencies;
@@ -87,7 +89,7 @@ public class PomParser {
         try {
             getPropertiesAndDependencyManagement(url, scope, document, properties, dependenciesInManagement);
         } catch (IOException e) {
-            e.printStackTrace();
+            ;
         }
 
         // 找到正确的dependences
@@ -314,7 +316,7 @@ public class PomParser {
             Document documentParent = XmlParser.getDocument(ins);
             getPropertiesAndDependencyManagement(url, scope, documentParent, propertiesMap, dependenciesInManagement);
         } catch (IOException | ParserConfigurationException | SAXException e) {
-            e.printStackTrace();
+            log.error(e.toString());
         }
 
     }

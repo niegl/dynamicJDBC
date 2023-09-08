@@ -573,39 +573,33 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
             return this;
         }
 
-        try {
-            String upperCase_join = joinType.toUpperCase();
-            boolean b = join_type_rel.containsKey(upperCase_join);
-            if (!b) {
-                return this;
-            }
-
-            SQLJoinTableSource.JoinType SQLJoinType = join_type_rel.get(upperCase_join);
-//            String joinType1 = joinType.replaceAll(" ", "_").toUpperCase();
-//            SQLJoinTableSource.JoinType SQLJoinType = SQLJoinTableSource.JoinType.valueOf(joinType1);
-            joinTableSource.setJoinType(SQLJoinType);
-
-            SQLExpr exprTable = SQLUtils.toSQLExpr(table, dbType);
-            SQLExprTableSource right = new SQLExprTableSource(exprTable, alias);
-            joinTableSource.setRight(right);
-
-            if (conditionOperator != null) {
-                if (conditionOperator.equalsIgnoreCase("=")) {
-                    SQLBinaryOpExpr binaryOpExpr = new SQLBinaryOpExpr(dbType);
-                    binaryOpExpr.setLeft(new SQLIdentifierExpr(conditionLeft));
-                    binaryOpExpr.setRight(new SQLIdentifierExpr(conditionRight));
-                    binaryOpExpr.setOperator(SQLBinaryOperator.Equality);
-                    joinTableSource.setCondition(binaryOpExpr);
-                }
-            }
-
-            SQLSelectQueryBlock queryBlock = getQueryBlock();
-            queryBlock.setFrom(joinTableSource);
-
-            updateAlias(exprTable, alias);
-        } catch (IllegalArgumentException exception) {
-            log.error(exception.toString());
+        String upperCase_join = joinType.toUpperCase();
+        boolean b = join_type_rel.containsKey(upperCase_join);
+        if (!b) {
+            return this;
         }
+
+        SQLJoinTableSource.JoinType SQLJoinType = join_type_rel.get(upperCase_join);
+        joinTableSource.setJoinType(SQLJoinType);
+
+        SQLExpr exprTable = SQLUtils.toSQLExpr(table, dbType);
+        SQLExprTableSource right = new SQLExprTableSource(exprTable, alias);
+        joinTableSource.setRight(right);
+
+        if (conditionOperator != null) {
+            if (conditionOperator.equalsIgnoreCase("=")) {
+                SQLBinaryOpExpr binaryOpExpr = new SQLBinaryOpExpr(dbType);
+                binaryOpExpr.setLeft(new SQLIdentifierExpr(conditionLeft));
+                binaryOpExpr.setRight(new SQLIdentifierExpr(conditionRight));
+                binaryOpExpr.setOperator(SQLBinaryOperator.Equality);
+                joinTableSource.setCondition(binaryOpExpr);
+            }
+        }
+
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        queryBlock.setFrom(joinTableSource);
+
+        updateAlias(exprTable, alias);
 
         return this;
     }
@@ -634,8 +628,8 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         SQLTableSource from = queryBlock.getFrom();
         SQLJoinTableSource joinTableSource = null;
 
-        if (from instanceof SQLExprTableSource || from instanceof SQLJoinTableSource) {
-            joinTableSource = (SQLJoinTableSource) from;
+        if (from instanceof SQLJoinTableSource sqlJoinTableSource) {
+            joinTableSource = sqlJoinTableSource;
         }
         if (joinTableSource != null) {
             SQLExpr left = joinTableSource.getCondition();
@@ -656,10 +650,6 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
             joinTableSource.setCondition(newCondition);
         }
     }
-
-//    public String toString() {
-//        return SQLUtils.toSQLString(stmt, dbType);
-//    }
 
     /**
      * 以下为MYSQL适配接口
