@@ -189,7 +189,12 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
     @Override
     public SQLSelectBuilder setDistionOption() {
         SQLSelectQueryBlock queryBlock = getQueryBlock();
-        queryBlock.setDistionOption(SQLSetQuantifier.DISTINCT);
+        boolean distinct = queryBlock.isDistinct();
+        if (!distinct) {
+            queryBlock.setDistinct();
+        } else {
+            queryBlock.setDistionOption(0);
+        }
 
         return this;
     }

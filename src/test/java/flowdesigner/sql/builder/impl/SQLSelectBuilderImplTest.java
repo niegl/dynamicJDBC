@@ -315,4 +315,13 @@ class SQLSelectBuilderImplTest {
         builderEx.join("COMMA","tableB","B",null,null,null);
     }
 
+    @Test
+    void setDistionOption() {
+        builderEx.setDistionOption();
+        builderEx.select("a/b","b")
+                .from("tablea");
+        System.out.println(builderEx);
+        builderEx.setDistionOption();
+        System.out.println(builderEx);
+    }
 }

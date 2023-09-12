@@ -78,6 +78,7 @@ class CommandManagerTest {
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
+        properties.setProperty("druid.failFast","true");
         dynamicDriver.set_propertyInfo(properties);
 
         try {
