@@ -601,7 +601,7 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public List<TableEntity> getTableEntities(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types) {
+    public List<TableEntity> getTableEntities(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types, TableEntity controlEntity) {
         List<TableEntity> tableEntities = new ArrayList<>();
         ResultSet rsCols = null;
 
@@ -614,7 +614,11 @@ public class DBDialect {
             boolean supportsCatalogs = meta.supportsCatalogsInTableDefinitions();
             boolean supportsSchemas = meta.supportsSchemasInTableDefinitions();
 
-            tableEntities = getAllTables(conn, catalog, schemaPattern, tableNamePattern, types);
+            if (controlEntity != null) {
+                tableEntities.add(controlEntity);
+            } else {
+                tableEntities = getAllTables(conn, catalog, schemaPattern, tableNamePattern, types);
+            }
             if (tableEntities.isEmpty()) {
                 return tableEntities;
             }

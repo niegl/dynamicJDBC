@@ -2,6 +2,7 @@ package flowdesigner.jdbc.driver;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.alibaba.druid.pool.GetConnectionTimeoutException;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.JdbcConstantKey;
 import lombok.Getter;
@@ -14,7 +15,6 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.jetbrains.annotations.NotNull;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
@@ -103,6 +103,8 @@ public class DynamicDriver {
      * 获取连接
      */
     public Connection getConnection() throws SQLException {
+        String errString = "java.net.ConnectException: Connection timed out: connect";
+
         if (_ds == null) {
             createDataSource();
         }
@@ -116,7 +118,11 @@ public class DynamicDriver {
                 }
                 return connection;
             } catch (SQLException e) {
-                set_errMessage(e.getCause().getMessage());
+                Throwable cause = e.getCause();
+                if (cause != null) {
+                    errString = cause.getMessage();
+                }
+                set_errMessage(errString);
             }
         }
         return null;
