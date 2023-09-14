@@ -574,6 +574,8 @@ public class DBDialect {
                     }
                 }
             }
+        } catch (SQLException e) {
+            throw new SQLException("getTables error: " + e.getMessage());
         } finally {
             JdbcKit.close(rs.getStatement());
             JdbcKit.close(rs);
@@ -599,23 +601,24 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public List<TableEntity> getTableEntities(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
+    public List<TableEntity> getTableEntities(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types) {
         List<TableEntity> tableEntities = new ArrayList<>();
-        String catalogPattern1 = getCatalogPattern(conn, catalog);
-        String schemaPattern1 = getSchemaPattern(conn, schemaPattern);
-        String tableNamePattern1 = getTableNamePattern(conn, tableNamePattern);
-
-        DatabaseMetaData meta = conn.getMetaData();
-        boolean supportsCatalogs = meta.supportsCatalogsInTableDefinitions();
-        boolean supportsSchemas = meta.supportsSchemasInTableDefinitions();
         ResultSet rsCols = null;
 
         try {
+            String catalogPattern1 = getCatalogPattern(conn, catalog);
+            String schemaPattern1 = getSchemaPattern(conn, schemaPattern);
+            String tableNamePattern1 = getTableNamePattern(conn, tableNamePattern);
+
+            DatabaseMetaData meta = conn.getMetaData();
+            boolean supportsCatalogs = meta.supportsCatalogsInTableDefinitions();
+            boolean supportsSchemas = meta.supportsSchemasInTableDefinitions();
+
             tableEntities = getAllTables(conn, catalog, schemaPattern, tableNamePattern, types);
             if (tableEntities.isEmpty()) {
                 return tableEntities;
             }
-            // 针对获取到多个表的情况，需要优化为一次性获取所有表的字段、主键、索引。然后在赋值到对应的 TableEntity，
+
             // 针对获取到多个表的情况，需要优化为一次性获取所有表的字段、主键、索引。然后在赋值到对应的 TableEntity。避免多次调用造成性能瓶颈。
             String table_cat_temp = "";
             String table_schema_temp = "";
@@ -682,11 +685,13 @@ public class DBDialect {
             }
 
             return tableEntities;
-        } catch (SQLException exception) {
-            throw new SQLException("获取表DDL异常，error:" + exception.getMessage());
+        }
+        catch (SQLException exception) {
+//            // 如果在统一获取表的过程中遇到个别表导致异常，如MetaException(message:java.lang.ClassNotFoundException Class  not found)。那么需要一个一个获取
+//            log.error("fetch ddl error, return false to try again if this time get ddl as a whole:" + exception.getMessage());
+            return tableEntities;
         }
         finally {
-            if (rsCols != null) JdbcKit.close(rsCols.getStatement());
             JdbcKit.close(rsCols);
         }
     }

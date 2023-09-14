@@ -40,7 +40,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
         String tables = params.getOrDefault("tables","");
         String types = params.getOrDefault("types","TABLE");
 
-        String[] tableList = tables.split(",");
+        List<String> tableList = Arrays.stream(tables.split(",")).toList();
 
         ExecResult<List<TableEntity>> ret = new ExecResult<>();
         List<TableEntity> tableEntities = getTableDDL(conn, schema, tableList, types.split(","));
@@ -58,7 +58,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
      * @param tableNameList
      * @return
      */
-    private List<TableEntity> getTableDDL(Connection conn, String schemaPattern, String[] tableNameList, String[] types) throws SQLException {
+    private List<TableEntity> getTableDDL(Connection conn, String schemaPattern, List<String> tableNameList, String[] types) throws SQLException {
         List<TableEntity> tableEntities = new ArrayList<>();
         String catalog = null;
         DbType dbType = DbTypeKit.getDbType(conn);
@@ -67,6 +67,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
 
         // 如果数据库支持catalog，那么实际传递过来的是catalog
         boolean supportsCatalogs = meta.supportsCatalogsInTableDefinitions();
+        boolean supportsSchemas = meta.supportsSchemasInTableDefinitions();
         if (supportsCatalogs) {
             catalog = schemaPattern;
             schemaPattern = null;
@@ -78,18 +79,34 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
                 throw new RuntimeException("parameter [schemaPattern] can not be empty");
             }
         }
+        ArrayList<String> nameList = new ArrayList<>(tableNameList);
+        if (1 == nameList.size() && "".equals(nameList.get(0))) {
+            nameList.clear();
+            tableEntities = dbDialect.getTableEntities(conn, catalog, schemaPattern, null, types );
 
-        if (1 == tableNameList.length && "".equals(tableNameList[0])) {
-            return dbDialect.getTableEntities(conn, catalog, schemaPattern, null, types);
-        }
-
-        for (String tableName : tableNameList) {
-            List<TableEntity> tableEntities1 = dbDialect.getTableEntities(conn, catalog, schemaPattern, tableName, types);
-            if (tableEntities1.isEmpty()) {
-                continue;
+            for (TableEntity entity : tableEntities) {
+                if (entity.getFields().isEmpty()) {
+                    String name = entity.getTABLE_NAME();
+                    if (supportsCatalogs && supportsSchemas) {
+                        name = name.split("\\.")[1];
+                    }
+                    nameList.add(name);
+                }
             }
-            tableEntities.addAll(tableEntities1);
         }
+
+        if (!nameList.isEmpty()) {
+            tableEntities.clear();
+            for (String tableName : nameList) {
+                List<TableEntity> fetchEntities = dbDialect.getTableEntities(conn, catalog, schemaPattern, tableName, types);
+                if (fetchEntities.isEmpty()) {
+                    continue;
+                }
+                tableEntities.addAll(fetchEntities);
+
+            }
+        }
+
 
         return tableEntities;
     }

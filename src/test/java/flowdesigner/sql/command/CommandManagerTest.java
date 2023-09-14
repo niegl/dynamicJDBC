@@ -378,12 +378,12 @@ class CommandManagerTest {
     @Test
     void testExeCommandGetDDL() {
 
-        connection = getSQLServer();
+        connection = getHive();
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-//            put("schemaPattern","bmnc_pcode");
-            put("schemaPattern","test");
+            put("schemaPattern","bmnc_pdata");
+//            put("schemaPattern","test");
 //            put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
         }});
         long end = Instant.now().toEpochMilli();
