@@ -1711,6 +1711,15 @@ public class SQLTest {
     }
 
     @org.junit.jupiter.api.Test
+    void testWhereWithFunction() throws SQLSyntaxErrorException {
+        String sql = "SELECT stn.stat_station_id, stn.stat_station_nme\n" +
+                "FROM bmnc_pcode.t99_stat_station_cd_his stn\n" +
+                "WHERE stn.merged_ind IN (1, 3)\n" +
+                "\tAND unix_timestamp(to_date(t99_stat_station_cd_his.open_tm), 'yyyy-MM-dd') - unix_timestamp(to_date(now()), 'yyyy-MM-dd') <= 0\n";
+        parser(sql, "hive");
+    }
+
+    @org.junit.jupiter.api.Test
     void test_insert_update() throws SQLSyntaxErrorException {
         String sql = "INSERT \n" +
                 "    INTO tbl_name\n" +

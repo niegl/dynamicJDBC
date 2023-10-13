@@ -199,9 +199,20 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         return this;
     }
 
+    @Override
+    public void updateAlias(String table, String alias) {
+        if (table == null) {
+            return;
+        }
+
+        SQLExpr toSQLExpr = SQLUtils.toSQLExpr(table, dbType);
+        updateAlias(toSQLExpr, alias);
+    }
+
     /**
      *  设置别名后对where中的条件进行别名的替换
       */
+
     private void updateAlias(SQLExpr exprTable, String alias) {
 
         if (alias == null) {
@@ -227,17 +238,6 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
 
     }
 
-    @Nullable
-    private String getTableName(SQLExpr exprTable) {
-        String name = null;
-        if (exprTable instanceof SQLIdentifierExpr identifierExpr) {
-            name = identifierExpr.getName();
-        } else if (exprTable instanceof SQLPropertyExpr propertyExpr) {
-            name = propertyExpr.getName();
-        }
-        return name;
-    }
-
     private SQLPropertyExpr getWhereCondition(SQLBinaryOpExpr binaryOpExpr, String name) {
         SQLExpr left = binaryOpExpr.getLeft();
         SQLExpr right = binaryOpExpr.getRight();
@@ -249,6 +249,89 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         }
         if (right instanceof SQLPropertyExpr propertyExpr) {
             if (propertyExpr.getOwnerName().equals(name)) {
+                return propertyExpr;
+            }
+        }
+
+        // 查找 stn.merged_ind IN (1,3) 中的 stn.merged_ind
+        if (left instanceof SQLInListExpr inListExpr) {
+            SQLExpr expr = inListExpr.getExpr();
+            List<SQLExpr> targetList = inListExpr.getTargetList();
+
+            if (expr instanceof SQLPropertyExpr propertyExpr) {
+                if (propertyExpr.getOwnerName().equals(name)) {
+                    return propertyExpr;
+                }
+            }
+            for (SQLExpr target: targetList) {
+                if (target instanceof SQLPropertyExpr propertyExpr) {
+                    if (propertyExpr.getOwnerName().equals(name)) {
+                        return propertyExpr;
+                    }
+                }
+            }
+
+            SQLPropertyExpr propertyExpr = null;
+            if (expr instanceof SQLBinaryOpExpr binaryOpExpr1) {
+                propertyExpr = getWhereCondition(binaryOpExpr1, name);
+                if (propertyExpr != null) {
+                    return propertyExpr;
+                }
+            }
+            for (SQLExpr target: targetList) {
+                if (target instanceof SQLBinaryOpExpr binaryOpExpr1) {
+                    propertyExpr = getWhereCondition(binaryOpExpr1, name);
+                    if (propertyExpr != null) {
+                        return propertyExpr;
+                    }
+                }
+            }
+        }
+
+        if (right instanceof SQLInListExpr inListExpr) {
+            SQLExpr expr = inListExpr.getExpr();
+            List<SQLExpr> targetList = inListExpr.getTargetList();
+
+            if (expr instanceof SQLPropertyExpr propertyExpr) {
+                if (propertyExpr.getOwnerName().equals(name)) {
+                    return propertyExpr;
+                }
+            }
+            for (SQLExpr target: targetList) {
+                if (target instanceof SQLPropertyExpr propertyExpr) {
+                    if (propertyExpr.getOwnerName().equals(name)) {
+                        return propertyExpr;
+                    }
+                }
+            }
+
+            SQLPropertyExpr propertyExpr = null;
+            if (expr instanceof SQLBinaryOpExpr binaryOpExpr1) {
+                propertyExpr = getWhereCondition(binaryOpExpr1, name);
+                if (propertyExpr != null) {
+                    return propertyExpr;
+                }
+            }
+            for (SQLExpr target: targetList) {
+                if (target instanceof SQLBinaryOpExpr binaryOpExpr1) {
+                    propertyExpr = getWhereCondition(binaryOpExpr1, name);
+                    if (propertyExpr != null) {
+                        return propertyExpr;
+                    }
+                }
+            }
+        }
+
+        // 查找 函数中的 SQLPropertyExpr
+        if (left instanceof SQLMethodInvokeExpr methodInvokeExpr) {
+            SQLPropertyExpr propertyExpr = getProperty(methodInvokeExpr, name);
+            if (propertyExpr != null) {
+                return propertyExpr;
+            }
+        }
+        if (right instanceof SQLMethodInvokeExpr methodInvokeExpr) {
+            SQLPropertyExpr propertyExpr = getProperty(methodInvokeExpr, name);
+            if (propertyExpr != null) {
                 return propertyExpr;
             }
         }

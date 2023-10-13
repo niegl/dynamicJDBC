@@ -324,4 +324,15 @@ class SQLSelectBuilderImplTest {
         builderEx.setDistionOption();
         System.out.println(builderEx);
     }
+
+    @Test
+    void updateAlias() {
+        builderEx = SQLBuilderFactory.createSelectSQLBuilder( DbType.hive);
+        builderEx.select("a","b")
+                .from("t99_stat_station_cd_his","stn")
+                .where("t99_stat_station_cd_his.merged_ind IN (1, 3)")
+                .whereAnd("unix_timestamp(to_date(t99_stat_station_cd_his.open_tm), 'yyyy-MM-dd') - unix_timestamp(to_date(now()), 'yyyy-MM-dd') <= 0")
+                .updateAlias("t99_stat_station_cd_his","stn");
+                ;
+    }
 }
