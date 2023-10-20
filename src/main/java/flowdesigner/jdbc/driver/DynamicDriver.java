@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.InvalidPathException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -94,6 +95,8 @@ public class DynamicDriver {
                 _ds = (DruidDataSource) DruidDataSourceFactory.createDataSource(_propertyInfo);
             }
 
+        } catch (InvalidPathException e) {
+            set_errMessage(e.toString());
         } catch (Exception e) {
             set_errMessage(e.getCause().toString());
         }
