@@ -1734,6 +1734,13 @@ public class SQLTest {
         parser(sql, DbType.mysql);
     }
 
+    @org.junit.jupiter.api.Test
+    void test_parse_join_functions() throws SQLSyntaxErrorException {
+        String sql = "SELECT * FROM BMNC_PMARTVW.T98_DEC_PASGR_PERIOD_ST  t1\n" +
+                "INNER JOIN BMNC_PCODEVW.T99_STAT_LINE_RELA_CD_HIS B \n" +
+                "ON  isnull( t1 .LINE_ID ) ";
+        parser(sql, DbType.mysql);
+    }
 
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         return parser(sql,DbType.of(dbType));

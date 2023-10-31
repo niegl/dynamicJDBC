@@ -64,6 +64,10 @@ public interface SQLSelectBuilder extends SQLBuilder {
 
     SQLSelectBuilder joinOr(String conditionLeft, String conditionRight, String conditionOperator);
 
+    SQLSelectBuilder joinAnd(String right);
+
+    SQLSelectBuilder joinOr(String right);
+
     void setBigResult(boolean bigResult);
 
     void setBufferResult(boolean bufferResult);

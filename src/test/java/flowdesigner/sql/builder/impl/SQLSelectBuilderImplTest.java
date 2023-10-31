@@ -214,8 +214,8 @@ class SQLSelectBuilderImplTest {
         builderEx.where("t01_pty_area_h.area_typ_cd = '00'")
                 .whereAnd("t02_fac_point_pty_rel_h.fac_point_pty_rel_ctgy_cd = '06'")
                 .whereAnd("t01_pty_area_h.area != 0");
-        builderEx.join("left join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
-        builderEx.join("right join","pdata.t02_fac_point_pty_rel_h","c","a.househld_pty_id","c.fac_point_id","=");
+        builderEx.join("INNER join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
+        builderEx.join("INNER join","pdata.t02_fac_point_pty_rel_h","c","a.househld_pty_id","c.fac_point_id","=");
         builderEx.join("inner join","pdata.t01_househld_pty","c","a.househld_pty_id","d.househld_pty_id","=");
 
         SQLTest.parser(builderEx.toString(),dbType);
@@ -280,6 +280,16 @@ class SQLSelectBuilderImplTest {
         }
 
         return arguments.stream();
+    }
+
+    @Test
+    void join_single_right() throws SQLSyntaxErrorException {
+        builderEx = SQLBuilderFactory.createSelectSQLBuilder( DbType.hive);
+        builderEx.select("househld_pty_id","stat_mon")
+                .from("pmart.t98_station_engcspt_stat_month","a");
+        builderEx.join("INNER join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
+        builderEx.joinAnd("isnull(pdata.t02_fac_point_pty_rel_ha.househld_pty_id)");
+        builderEx.joinOr("(t1 .LINE_ID=B.STD_LINE_ID AND  t1 .STAT_DT>=To_DATE(OPEN_TM) AND  t1 .STAT_DT<To_DATE(CLOSE_TM))");
     }
 
     @ParameterizedTest

@@ -15,7 +15,6 @@ import flowdesigner.sql.builder.SQLSelectBuilder;
 import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -704,14 +703,50 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         return this;
     }
 
+    @Override
+    public SQLSelectBuilder joinAnd(String right) {
+        joinRest(SQLBinaryOperator.BooleanAnd, new SQLIdentifierExpr(right));
+        return this;
+    }
+
+    @Override
+    public SQLSelectBuilder joinOr(String right) {
+        joinRest(SQLBinaryOperator.BooleanOr, new SQLIdentifierExpr(right));
+        return this;
+    }
     /**
-     * 添加 A JOIN B on A.a = B.b And 后面部分
+     * 添加 A JOIN B on A.a = B.b And 后面部分为BinaryOperator的情况
      * @param AndOr
      * @param conditionLeft
      * @param conditionRight
      * @param conditionOperator
      */
     private void joinRest(SQLBinaryOperator AndOr, String conditionLeft, String conditionRight, String conditionOperator) {
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        SQLBinaryOpExpr right = new SQLBinaryOpExpr(queryBlock.getDbType());
+        right.setLeft(new SQLIdentifierExpr(conditionLeft));
+        right.setRight(new SQLIdentifierExpr(conditionRight));
+
+        SQLBinaryOperator binaryOperator = null;
+        for (SQLBinaryOperator operator: SQLBinaryOperator.values()) {
+            if (operator.getName().equalsIgnoreCase(conditionOperator)) {
+                binaryOperator = operator;
+            }
+        }
+        if (binaryOperator == null) return;
+
+        right.setOperator(binaryOperator);
+
+        joinRest(AndOr, right);
+
+    }
+
+    /**
+     *
+     * @param AndOr AND or OR
+     * @param right A JOIN B ON ... AND xxx 中的 xxx部分（有可能是 a = b等二进制操作，也可能是逻辑函数）
+     */
+    private void joinRest(SQLBinaryOperator AndOr, SQLExpr right) {
         SQLSelectQueryBlock queryBlock = getQueryBlock();
         SQLTableSource from = queryBlock.getFrom();
         SQLJoinTableSource joinTableSource = null;
@@ -721,19 +756,6 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         }
         if (joinTableSource != null) {
             SQLExpr left = joinTableSource.getCondition();
-            SQLBinaryOpExpr right = new SQLBinaryOpExpr(queryBlock.getDbType());
-            right.setLeft(new SQLIdentifierExpr(conditionLeft));
-            right.setRight(new SQLIdentifierExpr(conditionRight));
-
-            SQLBinaryOperator binaryOperator = null;
-            for (SQLBinaryOperator operator: SQLBinaryOperator.values()) {
-                if (operator.getName().equalsIgnoreCase(conditionOperator)) {
-                    binaryOperator = operator;
-                }
-            }
-            if (binaryOperator == null) return;
-
-            right.setOperator(binaryOperator);
             SQLBinaryOpExpr newCondition = new SQLBinaryOpExpr(left, AndOr, right, dbType);
             joinTableSource.setCondition(newCondition);
         }
