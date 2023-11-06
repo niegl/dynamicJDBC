@@ -363,10 +363,11 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandGetView() throws SQLException {
-        connection = getSQLServer();
+        connection = getHive();
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetAllTablesList,new HashMap<String,String>(){{
-            put("types","VIEW");
+            put("types","TABLE,VIEW");
+            put("schemaPattern","bmnc_pcodevw");
         }});
         String s = JSON.toJSONString(cc);
         System.out.println(s);
