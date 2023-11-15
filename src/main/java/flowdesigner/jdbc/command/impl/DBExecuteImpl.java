@@ -278,6 +278,7 @@ public class DBExecuteImpl {
     public QueryData queryNext(int num) {
 
         List<String> header = new ArrayList<>();
+        List<String> type = new ArrayList<>();
         List<List<Object>> rows = new ArrayList<>();
 
         try {
@@ -287,7 +288,9 @@ public class DBExecuteImpl {
             ResultSetMetaData rsMeta = rs.getMetaData();
             for(int size = rsMeta.getColumnCount(); i < size; ++i) {
                 String columName = rsMeta.getColumnLabel(i + 1);
+                String columTypeName = rsMeta.getColumnTypeName(i + 1);
                 header.add(columName);
+                type.add(columTypeName);
             }
 
             // 获取数据
@@ -312,7 +315,7 @@ public class DBExecuteImpl {
             log.error(e.getMessage());
         }
 
-        return new QueryData(header, rows);
+        return new QueryData(header, type, rows);
     }
 
     public void release() {
@@ -371,13 +374,16 @@ public class DBExecuteImpl {
      * 用于将查询出来的数据进行header和data数据分离保存
      */
     public static class QueryData {
-        public QueryData(List<String> head, List<List<Object>> data) {
+        public QueryData(List<String> head, List<String> type,List<List<Object>> data) {
             this.head = head;
+            this.type = type;
             this.data = data;
         }
 
         @Getter
         List<String> head = new ArrayList<>();
+        @Getter
+        List<String> type = new ArrayList<>();
         @Getter
         List<List<Object>> data = new ArrayList<>();
     }

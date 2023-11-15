@@ -27,7 +27,7 @@ class DBExecuteImplTest {
                 dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
                 Properties properties = new Properties();
                 properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-                properties.setProperty("url","jdbc:hive2://10.248.190.13:10000/default");
+                properties.setProperty("url","jdbc:hive2://10.247.53.17:10000/default");
                 dynamicDriver.set_propertyInfo(properties);
             }
             case mysql -> {
@@ -54,8 +54,11 @@ class DBExecuteImplTest {
 
     @Test
     void execSelect() throws SQLException {
-        exec(DbType.hive,"SELECT dimension_id, dimension_category, dimension_name, dimension_des, table_id, field_id, field_name, dimension_value_name, dimension_value_no\n" +
-                "FROM test.table1;");
+        exec(DbType.hive,"SELECT pkey, point_name, point_value, datetime, recovertime\n" +
+                "\t, description, alarm_level, alarm_type, professional, alarm_status\n" +
+                "\t, affirm_status, affirm_user, affirm_datetime, alarm_comment, rec_seq\n" +
+                "\t, data_dt\n" +
+                "FROM bmnc_sdata.ams_alarm");
     }
 
     @Test
