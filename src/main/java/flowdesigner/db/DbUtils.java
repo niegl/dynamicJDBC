@@ -138,129 +138,14 @@ public class DbUtils {
     public static String getContextSetGrammar(DbType dbType) {
         String grammar = "SET ?= ?;";
 
-        switch (dbType) {
-
-            case other -> {
-            }
-            case jtds -> {
-            }
-            case hsql -> {
-            }
-            case db2 -> {
-            }
-            case postgresql -> {
-            }
-            case sqlserver -> {
-            }
-            case oracle -> {
-                grammar = " ?:= ?;";
-            }
-            case mysql -> {
-                grammar = "SET @?= ?;";
-            }
-            case mariadb -> {
-            }
-            case derby -> {
-            }
-            case hive -> {
-                grammar = "SET ?= ?;";
-            }
-            case h2 -> {
-            }
-            case dm -> {
-            }
-            case kingbase -> {
-            }
-            case gbase -> {
-            }
-            case oceanbase -> {
-            }
-            case informix -> {
-            }
-            case odps -> {
-            }
-            case teradata -> {
-            }
-            case phoenix -> {
-            }
-            case edb -> {
-            }
-            case kylin -> {
-            }
-            case sqlite -> {
-            }
-            case ads -> {
-            }
-            case presto -> {
-            }
-            case elastic_search -> {
-            }
-            case hbase -> {
-            }
-            case drds -> {
-            }
-            case clickhouse -> {
-            }
-            case blink -> {
-            }
-            case antspark -> {
-            }
-            case oceanbase_oracle -> {
-            }
-            case polardb -> {
-            }
-            case ali_oracle -> {
-            }
-            case mock -> {
-            }
-            case sybase -> {
-            }
-            case highgo -> {
-            }
-            case greenplum -> {
-            }
-            case gaussdb -> {
-            }
-            case trino -> {
-            }
-            case oscar -> {
-            }
-            case tidb -> {
-            }
-            case tydb -> {
-            }
-            case ingres -> {
-            }
-            case cloudscape -> {
-            }
-            case timesten -> {
-            }
-            case as400 -> {
-            }
-            case sapdb -> {
-            }
-            case kdb -> {
-            }
-            case log4jdbc -> {
-            }
-            case xugu -> {
-            }
-            case firebirdsql -> {
-            }
-            case JSQLConnect -> {
-            }
-            case JTurbo -> {
-            }
-            case interbase -> {
-            }
-            case pointbase -> {
-            }
-            case edbc -> {
-            }
-            case mimer -> {
-            }
-            // apache spark "SET ?= ?;"
-        }
+//        switch (dbType) {
+//            case oracle -> {
+//                grammar = " ?:= ?;";
+//            }
+//            case mysql -> {
+//                grammar = "SET @?= ?;";
+//            }
+//        }
 
         return grammar;
     }
@@ -364,7 +249,7 @@ public class DbUtils {
             String signature = segments.get(1).trim();
             String description = segments.size() == 3? segments.get(2).trim():"" ;
 
-            functionInfos.add(new FunctionInfo(name, subCatalog, signature));
+            functionInfos.add(new FunctionInfo(name, subCatalog, signature,description));
         }
 
         return functionInfos;
@@ -439,11 +324,16 @@ public class DbUtils {
         String name;
         String type;
         String signature;
+        String description;
 
         public FunctionInfo(String name, String type, String signature) {
+            this(name, type, signature, "");
+        }
+        public FunctionInfo(String name, String type, String signature, String description) {
             this.name = name;
             this.type = type;
             this.signature = signature;
+            this.description = description;
         }
     }
 
