@@ -259,29 +259,33 @@ public class DbUtils {
             }
             case mimer -> {
             }
+            // apache spark "SET ?= ?;"
         }
 
         return grammar;
     }
 
     /**
-     * 环境变量的使用语法
+     * Dynamic Parameter Bindings
+     * You can use dynamic parameters and variables in your SQL queries. The parameter format is :name.
+     * Also, variables syntax could be used as ${varname}. When you execute a query that contains dynamic parameters,
+     * DBeaver displays a dialog box in which you can fill the parameter values.
      * @param dbType 数据库类型
      * @return 语法格式，变量用?代替
      */
     public static String getContextUseGrammar(DbType dbType) {
         String grammar = "${?}";
 
-        switch (dbType) {
-            case mysql -> grammar = "@?";
-            /**
-             * There are three namespaces for variables – hiveconf, system, and env.
-             * (Custom variables can also be created in a separate namespace with the define or hivevar option in Hive 0.8.0 and later releases.)
-             * hiveconf 是默认的namespace
-             */
-            case hive -> grammar = "${hiveconf:?}";
-
-        }
+//        switch (dbType) {
+//            case mysql -> grammar = "@?";
+//            /**
+//             * There are three namespaces for variables – hiveconf, system, and env.
+//             * (Custom variables can also be created in a separate namespace with the define or hivevar option in Hive 0.8.0 and later releases.)
+//             * hiveconf 是默认的namespace
+//             */
+//            case hive -> grammar = "${hiveconf:?}";
+//
+//        }
 
         return  grammar;
     }

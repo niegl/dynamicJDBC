@@ -41,9 +41,12 @@ public class DBExecuteImpl {
     private ResultSet rs;
 
     static {
-        String dlljvmpath = System.getProperty("dlljvmpath");
-        System.load(dlljvmpath);
-        log.info("load dll success, path:" + dlljvmpath);
+        try {
+            String dlljvmpath = System.getProperty("dlljvmpath");
+            System.load(dlljvmpath);
+        } catch (Exception e) {
+            log.info("failed to load jvm dll:" + e.getMessage());
+        }
     }
 
     // 执行查询完成后回调
@@ -261,7 +264,7 @@ public class DBExecuteImpl {
                 case MULTI :
                 case WITH :
                     int affected = JdbcUtils.executeUpdate(conn, sql, Collections.emptyList());
-                    runningStatus.setResult(affected);
+                    runningStatus.setResult("Updated Rows:" + affected);
                     break;
                 case SET_UNKNOWN :
                     break;
