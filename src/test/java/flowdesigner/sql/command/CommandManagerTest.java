@@ -436,6 +436,24 @@ class CommandManagerTest {
     }
 
     @Test
+    void testExeCommandParseSelect() throws SQLException {
+
+        long start = Instant.now().toEpochMilli();
+        ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{
+            put("ddl","SELECT l.stat_line_nme, sum(a.pasgr_quatity) AS sum_pasgr_quatity\n" +
+                    "FROM bmnc_pmart.t98_pasgr_qtty_date_st a\n" +
+                    "\tINNER JOIN bmnc_pcode.t99_stat_line_cd_his l ON a.line_id = l.stat_line_id\n" +
+                    "WHERE a.stat_period_cd = '10'\n" +
+                    "GROUP BY sum(a.pasgr_quatity), l.stat_line_nme");
+            put("dbType","hive");
+        }});
+        long end = Instant.now().toEpochMilli();
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
+        System.out.println(end - start);
+    }
+
+    @Test
     void testExeCommandGetImportedKeys() throws SQLException {
 
         connection = getMySQL();

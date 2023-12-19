@@ -1742,6 +1742,18 @@ public class SQLTest {
         parser(sql, DbType.mysql);
     }
 
+    @org.junit.jupiter.api.Test
+    void test_case_statement() throws SQLSyntaxErrorException {
+        String sql = "    CASE v\n" +
+                "      WHEN 2 THEN SELECT v;\n" +
+                "      WHEN 3 THEN SELECT 0;\n" +
+                "      ELSE\n" +
+                "        BEGIN\n" +
+                "        END;\n" +
+                "    END CASE;";
+        parser(sql, DbType.mysql);
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         return parser(sql,DbType.of(dbType));
     }
@@ -1749,25 +1761,25 @@ public class SQLTest {
     public static SQLStatement parser(String sql, DbType dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {
-            final StringBuilder out = new StringBuilder();
-            SQLASTOutputVisitor visitor = switch (dbType) {
-                case postgresql -> new PGOutputVisitor(out);
-                case oscar ->  new OscarOutputVisitor(out);
-                default -> new SQLASTOutputVisitor(out);
-            };
-//            visitor.setDesensitize(true);
-            visitor.setParameterizedQuesUnMergeInList(true);
-            statement.accept(visitor);
-
-//            SchemaStatVisitor visitor = new SchemaStatVisitor();
+//            final StringBuilder out = new StringBuilder();
+//            SQLASTOutputVisitor visitor = switch (dbType) {
+//                case postgresql -> new PGOutputVisitor(out);
+//                case oscar ->  new OscarOutputVisitor(out);
+//                default -> new SQLASTOutputVisitor(out);
+//            };
+////            visitor.setDesensitize(true);
+//            visitor.setParameterizedQuesUnMergeInList(true);
 //            statement.accept(visitor);
 //
-//            SQLSelectStatement statement1 = (SQLSelectStatement) statement;
-//            SQLSelectQueryBlock queryBlock = statement1.getSelect().getQueryBlock();
-//            SQLTableSource from = queryBlock.getFrom();
-//
-//            System.out.println(visitor.getTables());
-//            System.out.println(visitor.getOriginalTables());
+////            SchemaStatVisitor visitor = new SchemaStatVisitor();
+////            statement.accept(visitor);
+////
+////            SQLSelectStatement statement1 = (SQLSelectStatement) statement;
+////            SQLSelectQueryBlock queryBlock = statement1.getSelect().getQueryBlock();
+////            SQLTableSource from = queryBlock.getFrom();
+////
+////            System.out.println(visitor.getTables());
+////            System.out.println(visitor.getOriginalTables());
 
             System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
         });
