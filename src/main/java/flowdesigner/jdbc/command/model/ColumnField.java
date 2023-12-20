@@ -16,6 +16,7 @@
 package flowdesigner.jdbc.command.model;
 
 import lombok.Data;
+import java.sql.Types;
 
 @Data
 public class ColumnField {
@@ -44,8 +45,19 @@ public class ColumnField {
     public void fillConvertNames() {
         //处理类型名
         StringBuffer buffer = new StringBuffer(typeName);
-        if(len != null && len > 0){
-            buffer.append("(").append(len);
+
+        Integer column_len = len;
+        // process String
+        if (Types.VARCHAR == dataType && column_len == Integer.MAX_VALUE) {
+            column_len = 0;
+        }
+        if (is_numeric_data() || is_datetime_data()) {
+            column_len = 0;
+        }
+
+        if(column_len != null && column_len > 0) {
+
+            buffer.append("(").append(column_len);
             if(scale != null && scale > 0){
                 buffer.append(",").append(scale);
             }
@@ -62,6 +74,16 @@ public class ColumnField {
         if(autoIncrement == Boolean.TRUE){
             autoIncrementName = "√";
         }
+    }
+
+    private boolean is_numeric_data() {
+        return Types.NUMERIC == dataType;
+    }
+
+    private boolean is_datetime_data() {
+        return Types.DATE == dataType
+                || Types.TIME == dataType
+                || Types.TIMESTAMP == dataType;
     }
 
     public void setDataType(int dataType) {

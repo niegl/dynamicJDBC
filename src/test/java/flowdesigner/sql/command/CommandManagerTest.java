@@ -28,7 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
-
+import java.sql.Types;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -383,10 +383,10 @@ class CommandManagerTest {
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-            put("schemaPattern","bmnc_pmartvw");
-            put("types","VIEW");
+            put("schemaPattern","bmnc_pcode");
+            put("types","TABLE");
 //            put("schemaPattern","test");
-            put("tables","em_t98_dec_pasgr_period_st,em_t98_od_route_dd,em_t98_sect_fcrate_period_st,em_t98_tran_qtty_period_st,t20_subway_nearby_bus_info_st,t9899_fif_period_index_cd,t98_abn_trip_st_rpt,t98_acc_fin_report_st,t98_adjust_mean_d_stat,t98_area_od_pasgr_date_st,t98_area_run_distance_st,t98_avg_full_carry_period_st,t98_bosom_imbalance_coef_st,t98_dec_forecast_entry_exit_st,t98_dec_forecast_sect_fcr_st,t98_dec_forecast_transfer_st,t98_max_sect_fcrate_st,t98_pasgr_date_st,t98_sect_fcrate_period_st");
+            put("tables","t99_calendar_calendar");
         }});
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(cc);
