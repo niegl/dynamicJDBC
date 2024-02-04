@@ -7,6 +7,7 @@ import com.alibaba.druid.sql.builder.SQLDeleteBuilder;
 import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
 import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
+import com.alibaba.druid.sql.parser.SQLParserFeature;
 import flowdesigner.sql.builder.impl.*;
 import flowdesigner.sql.dialect.antspark.AntSparkCreateTableBuilderImpl;
 import flowdesigner.sql.dialect.blink.BlinkCreateTableBuilderImpl;
@@ -46,7 +47,7 @@ public class SQLBuilderFactory {
     public static SQLSelectBuilder createSelectSQLBuilder(String sql, DbType dbType) {
         SQLSelectStatement statement = null;
         if (sql != null && !sql.isEmpty()) {
-            statement = (SQLSelectStatement) SQLUtils.parseSingleStatement(sql, dbType, null);
+            statement = (SQLSelectStatement) SQLUtils.parseSingleStatement(sql, dbType, new SQLParserFeature[0]);
         }
 
         return switch (dbType) {

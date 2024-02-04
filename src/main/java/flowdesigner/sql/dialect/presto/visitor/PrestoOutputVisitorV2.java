@@ -4,11 +4,11 @@ import com.alibaba.druid.sql.ast.statement.SQLAlterTableAddColumn;
 import com.alibaba.druid.sql.dialect.presto.visitor.PrestoOutputVisitor;
 
 public class PrestoOutputVisitorV2 extends PrestoOutputVisitor {
-    public PrestoOutputVisitorV2(Appendable appender) {
+    public PrestoOutputVisitorV2(StringBuilder appender) {
         super(appender);
     }
 
-    public PrestoOutputVisitorV2(Appendable appender, boolean parameterized) {
+    public PrestoOutputVisitorV2(StringBuilder appender, boolean parameterized) {
         super(appender, parameterized);
     }
 

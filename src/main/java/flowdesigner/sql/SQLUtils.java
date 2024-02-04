@@ -79,11 +79,11 @@ public class SQLUtils {
     }
 
     public static String toSQLString(SQLObject sqlObject, DbType dbType) {
-        return toSQLString(sqlObject, dbType, null, null);
+        return toSQLString(sqlObject, dbType, null, new VisitorFeature[0]);
     }
 
     public static String toSQLString(SQLObject sqlObject, DbType dbType, FormatOption option) {
-        return toSQLString(sqlObject, dbType, option, null);
+        return toSQLString(sqlObject, dbType, option, new VisitorFeature[0]);
     }
 
     public static String toSQLString(SQLObject sqlObject,
@@ -117,11 +117,11 @@ public class SQLUtils {
         return sql;
     }
 
-    public static SQLASTOutputVisitor createOutputVisitor(Appendable out, DbType dbType) {
+    public static SQLASTOutputVisitor createOutputVisitor(StringBuilder out, DbType dbType) {
         return createFormatOutputVisitor(out, null, dbType);
     }
 
-    public static SQLASTOutputVisitor createFormatOutputVisitor(Appendable out,
+    public static SQLASTOutputVisitor createFormatOutputVisitor(StringBuilder out,
                                                                 List<SQLStatement> statementList,
                                                                 DbType dbType) {
         if (dbType == null) {
