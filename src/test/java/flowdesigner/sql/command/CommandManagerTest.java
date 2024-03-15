@@ -383,10 +383,10 @@ class CommandManagerTest {
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-            put("schemaPattern","bmnc_pcode");
+            put("schemaPattern","bmws_pcode");
             put("types","TABLE");
 //            put("schemaPattern","test");
-            put("tables","t99_calendar_calendar");
+            put("tables","t99_stat_index_cd");
         }});
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(cc);
