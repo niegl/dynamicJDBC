@@ -15,6 +15,7 @@
  */
 package flowdesigner.jdbc.dialect;
 
+import com.alibaba.druid.DbType;
 import flowdesigner.jdbc.command.model.*;
 import flowdesigner.util.raw.kit.JdbcKit;
 import flowdesigner.util.raw.kit.StringKit;
@@ -601,7 +602,7 @@ public class DBDialect {
      * @return
      * @throws SQLException
      */
-    public List<TableEntity> getTableEntities(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types, TableEntity controlEntity) {
+    public List<TableEntity> getTableEntities(Connection conn, String catalog, String schemaPattern, String tableNamePattern, String[] types, TableEntity controlEntity, DbType dbType) {
         List<TableEntity> tableEntities = new ArrayList<>();
         ResultSet rsCols = null;
 
@@ -673,6 +674,7 @@ public class DBDialect {
                 // 字段填充
                 if (tableEntity != null) {
                     ColumnField field = new ColumnField();
+                    field.setDbType(dbType);
                     fillColumnField(field, null, rsCols, null);
                     tableEntity.getFields().add(field);
                 }

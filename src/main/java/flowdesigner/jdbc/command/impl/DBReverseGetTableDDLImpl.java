@@ -84,7 +84,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
         // 默认一次性整体获取
         List<TableEntity> allFetchEntities = new ArrayList<>();
         if (1 == nameList.size() && "".equals(nameList.get(0))) {
-            allFetchEntities = dbDialect.getTableEntities(conn, catalog, schemaPattern, null, types, null );
+            allFetchEntities = dbDialect.getTableEntities(conn, catalog, schemaPattern, null, types, null ,dbType);
             // 如果获取成功了，直接返回:有一个表中有字段就认为成功
             Iterator<TableEntity> iterator = allFetchEntities.iterator();
             if(iterator.hasNext()) {
@@ -101,7 +101,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
             if (supportsCatalogs && supportsSchemas) {
                 tableName = tableName.split("\\.")[1];
             }
-            List<TableEntity> fetchEntities = dbDialect.getTableEntities(conn, catalog, schemaPattern, tableName, types, entity);
+            List<TableEntity> fetchEntities = dbDialect.getTableEntities(conn, catalog, schemaPattern, tableName, types, entity ,dbType);
             if (!fetchEntities.isEmpty()) {
                 tableEntities.addAll(fetchEntities);
             }
@@ -112,7 +112,7 @@ public class DBReverseGetTableDDLImpl implements Command<ExecResult<List<TableEn
 
         if (!nameList.isEmpty()) {
             for (String tableName : nameList) {
-                List<TableEntity> fetchEntities = dbDialect.getTableEntities(conn, catalog, schemaPattern, tableName, types, null);
+                List<TableEntity> fetchEntities = dbDialect.getTableEntities(conn, catalog, schemaPattern, tableName, types, null ,dbType);
                 if (!fetchEntities.isEmpty()) {
                     tableEntities.addAll(fetchEntities);
                 }
