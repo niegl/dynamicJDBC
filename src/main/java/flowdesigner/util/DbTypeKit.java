@@ -52,7 +52,7 @@ public abstract class DbTypeKit {
             DatabaseMetaData metaData = connection.getMetaData();
             url = metaData.getURL();
         } catch (SQLException e) {
-            log.error(e.getMessage());
+            log.error("getURL:" + e.getMessage());
         }
 
         if (url == null) {

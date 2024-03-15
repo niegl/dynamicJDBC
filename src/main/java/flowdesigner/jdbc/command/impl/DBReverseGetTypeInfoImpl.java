@@ -1,6 +1,7 @@
 package flowdesigner.jdbc.command.impl;
 
 import com.alibaba.druid.DbType;
+import flowdesigner.db.DbUtils;
 import flowdesigner.jdbc.command.Command;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.dialect.DBDialect;
@@ -17,18 +18,41 @@ import java.util.*;
 @Slf4j
 public class DBReverseGetTypeInfoImpl implements Command<ExecResult<List<DataTypeEntity>>> {
 
+    /**
+     * 获取数据库数据类型清单
+     * @param conn 数据库连接实例，可以为null。当为null时返回配置的数据库类型
+     * @param params dbType：数据库类型名称
+     * @return 返回连接的数据库类型。当连接为空或异常时返回配置的数据库类型
+     * @throws SQLException
+     */
     public ExecResult<List<DataTypeEntity>> exec(Connection conn, Map<String, String> params) throws SQLException {
         ExecResult<List<DataTypeEntity>> ret = new ExecResult<>();
-
         List<DataTypeEntity> tableEntities = null;
-        if (conn == null) {
-            String dbType = params.get("dbType");
-            if (dbType != null) {
-                tableEntities = TypeInfoConstant.get_items().getOrDefault(dbType,new ArrayList<>());
+
+        // 如果已连接数据库，那么获取在线数据类型
+        if (conn != null) {
+            try {
+                tableEntities = getTypeInfo(conn);
+            } catch (SQLException ignored) {
             }
-        } else {
-            tableEntities = getTypeInfo(conn);
         }
+
+        // 如果在线获取异常 或 离线状态，获取配置的数据类型
+        if (tableEntities == null) {
+            String dbType = params.getOrDefault("dbType", null);
+            if (dbType == null) {
+                throw new RuntimeException("[parameter] dbType should not be null.");
+            }
+
+            Set<String> dbTypes = DbUtils.getDbTypes(DbType.of(dbType));
+            tableEntities = new ArrayList<>();
+            for (String TYPE_NAME : dbTypes) {
+                Integer DATA_TYPE = type_int_map.getOrDefault(TYPE_NAME, 1111);
+                DataTypeEntity typeInfoEntity = new DataTypeEntity(TYPE_NAME,DATA_TYPE);
+                tableEntities.add(typeInfoEntity);
+            }
+        }
+
         ret.setStatus(ExecResult.SUCCESS);
         ret.setBody(tableEntities);
 
@@ -39,90 +63,91 @@ public class DBReverseGetTypeInfoImpl implements Command<ExecResult<List<DataTyp
      * 获取所有数据表列表
      * @return
      */
-    protected List<DataTypeEntity> getTypeInfo(Connection conn) throws SQLException {
+    private List<DataTypeEntity> getTypeInfo(Connection conn) throws SQLException {
         List<DataTypeEntity> infoEntities;
         try {
             DbType dbType = DbTypeKit.getDbType(conn);
             DBDialect dbDialect = DBDialectMatcher.getDBDialect(dbType);
             infoEntities = dbDialect.getDataType(conn);
         } catch (SQLException e) {
-            log.error("读取表清单出错", e);
+            log.error("读取数据库类型出错", e);
             throw new RuntimeException(e);
         }
 
         return infoEntities;
     }
 
-    private static class TypeInfoConstant {
-        @Getter
-        private static final Map<String, List<DataTypeEntity>> _items = new HashMap<String, List<DataTypeEntity>>(){{
-            put("hive", Arrays.asList(
-                    DataTypeEntity.of("VOID",0),
-                    DataTypeEntity.of("BOOLEAN",16),
-                    DataTypeEntity.of("TINYINT",-6),
-                    DataTypeEntity.of("SMALLINT",5),
-                    DataTypeEntity.of("INT",4),
-                    DataTypeEntity.of("BIGINT",-5),
-                    DataTypeEntity.of("FLOAT",6),
-                    DataTypeEntity.of("DOUBLE",8),
-                    DataTypeEntity.of("STRING",12),
-                    DataTypeEntity.of("CHAR",1),
-                    DataTypeEntity.of("VARCHAR",12),
-                    DataTypeEntity.of("DATE",91),
-                    DataTypeEntity.of("TIMESTAMP",93),
-                    DataTypeEntity.of("INTERVAL_YEAR_MONTH",1111),
-                    DataTypeEntity.of("INTERVAL_DAY_TIME",1111),
-                    DataTypeEntity.of("BINARY",-2),
-                    DataTypeEntity.of("DECIMAL",3),
-                    DataTypeEntity.of("ARRAY",2003),
-                    DataTypeEntity.of("MAP",2000),
-                    DataTypeEntity.of("STRUCT",2002),
-                    DataTypeEntity.of("UNIONTYPE",1111),
-                    DataTypeEntity.of("USER_DEFINED",1111)));
-            put("mysql", Arrays.asList(
-                    DataTypeEntity.of("BIT",-7),
-                    DataTypeEntity.of("BOOL",16),
-                    DataTypeEntity.of("TINYINT",-6),
-                    DataTypeEntity.of("TINYINT UNSIGNED",-6),
-                    DataTypeEntity.of("BIGINT",-5),
-                    DataTypeEntity.of("BIGINT UNSIGNED",-5),
-                    DataTypeEntity.of("LONG VARBINARY",-4),
-                    DataTypeEntity.of("MEDIUMBLOB",-4),
-                    DataTypeEntity.of("LONGBLOB",-4),
-                    DataTypeEntity.of("BLOB",-4),
-                    DataTypeEntity.of("VARBINARY",-3),
-                    DataTypeEntity.of("TINYBLOB",-3),
-                    DataTypeEntity.of("BINARY",-2),
-                    DataTypeEntity.of("LONG VARCHAR",-1),
-                    DataTypeEntity.of("MEDIUMTEXT",-1),
-                    DataTypeEntity.of("LONGTEXT",-1),
-                    DataTypeEntity.of("TEXT",-1),
-                    DataTypeEntity.of("CHAR",1),
-                    DataTypeEntity.of("ENUM",1),
-                    DataTypeEntity.of("SET",1),
-                    DataTypeEntity.of("DECIMAL",3),
-                    DataTypeEntity.of("NUMERIC",3),
-                    DataTypeEntity.of("INTEGER",4),
-                    DataTypeEntity.of("INTEGER UNSIGNED",4),
-                    DataTypeEntity.of("INT",4),
-                    DataTypeEntity.of("INT UNSIGNED",4),
-                    DataTypeEntity.of("MEDIUMINT",4),
-                    DataTypeEntity.of("MEDIUMINT UNSIGNED",4),
-                    DataTypeEntity.of("SMALLINT",5),
-                    DataTypeEntity.of("SMALLINT UNSIGNED",5),
-                    DataTypeEntity.of("FLOAT",7),
-                    DataTypeEntity.of("DOUBLE",8),
-                    DataTypeEntity.of("DOUBLE PRECISION",8),
-                    DataTypeEntity.of("REAL",8),
-                    DataTypeEntity.of("VARCHAR",12),
-                    DataTypeEntity.of("TINYTEXT",12),
-                    DataTypeEntity.of("DATE",91),
-                    DataTypeEntity.of("YEAR",91),
-                    DataTypeEntity.of("TIME",92),
-                    DataTypeEntity.of("DATETIME",93),
-                    DataTypeEntity.of("TIMESTAMP",93)));
-        }};
-    }
+
+    private static final Map<String, Integer> type_int_map = Collections.unmodifiableMap(new HashMap<>() {{
+        // java.sql.Types 中的类型定义
+        put("BIT", -7);
+        put("TINYINT", -6);
+        put("SMALLINT", 5);
+        put("BIGINT", -5);
+        put("FLOAT", 6);
+        put("REAL", 7);
+        put("DOUBLE", 8);
+        put("NUMERIC", 2);
+        put("DECIMAL", 3);
+        put("CHAR", 1);
+        put("VARCHAR", 12);
+        put("LONG VARCHAR", -1);
+        put("DATE", 91);
+        put("TIME", 92);
+        put("TIMESTAMP", 93);
+        put("BINARY", -2);
+        put("VARBINARY", -3);
+        put("LONG VARBINARY", -4);
+        put("NULL", 0);
+        put("VOID", 0);
+        put("OTHER", 1111);
+        put("JAVA_OBJECT", 2000);
+        put("DISTINCT", 2001);
+        put("STRUCT", 2002);
+        put("ARRAY", 2003);
+        put("BLOB", 2004);
+        put("CLOB", 2005);
+        put("REF", 2006);
+        put("DATALINK", 70);
+        put("BOOLEAN", 16);
+        put("ROWID", -8);
+        put("NCHAR", -15);
+        put("NVARCHAR", -9);
+        put("LONGNVARCHAR", -16);
+        put("NCLOB", 2011);
+        put("SQLXML", 2009);
+        put("REF_CURSOR", 2012);
+        put("TIME_WITH_TIMEZONE", 2013);
+        put("TIMESTAMP_WITH_TIMEZONE", 2014);
+
+        // 各数据库中特有的数据类型对应的int值
+        put("INT", 4);
+        put("STRING", 12);
+        put("INTERVAL_YEAR_MONTH", 1111);
+        put("INTERVAL_DAY_TIME", 1111);
+        put("MAP", 2000);
+        put("UNIONTYPE", 1111);
+        put("BOOL", 16);
+        put("TINYINT UNSIGNED", -6);
+        put("BIGINT UNSIGNED", -5);
+        put("MEDIUMBLOB", -4);
+        put("LONGBLOB", -4);
+        put("TINYBLOB", -3);
+        put("MEDIUMTEXT", -1);
+        put("LONGTEXT", -1);
+        put("TEXT", -1);
+        put("ENUM", 1);
+        put("SET", 1);
+        put("INTEGER UNSIGNED", 4);
+        put("INT UNSIGNED", 4);
+        put("MEDIUMINT", 4);
+        put("MEDIUMINT UNSIGNED", 4);
+        put("SMALLINT UNSIGNED", 5);
+        put("DOUBLE PRECISION", 8);
+        put("TINYTEXT", 12);
+        put("YEAR", 91);
+        put("DATETIME", 93);
+    }});
 
 
 }

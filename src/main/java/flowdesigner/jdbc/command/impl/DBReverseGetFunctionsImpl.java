@@ -49,7 +49,7 @@ public class DBReverseGetFunctionsImpl implements Command<ExecResult<Set<String>
      * 获取所有函数
      * @return
      */
-    protected Set<String> fetchFunctions(Connection conn) throws SQLException {
+    private Set<String> fetchFunctions(Connection conn) throws SQLException {
         Set<String> functions;
         try {
             DbType dbType = DbTypeKit.getDbType(conn);

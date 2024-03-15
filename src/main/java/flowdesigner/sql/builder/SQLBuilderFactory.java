@@ -7,6 +7,7 @@ import com.alibaba.druid.sql.builder.SQLDeleteBuilder;
 import com.alibaba.druid.sql.builder.SQLUpdateBuilder;
 import com.alibaba.druid.sql.builder.impl.SQLDeleteBuilderImpl;
 import com.alibaba.druid.sql.builder.impl.SQLUpdateBuilderImpl;
+import com.alibaba.druid.sql.parser.SQLParserFeature;
 import flowdesigner.sql.builder.impl.*;
 import flowdesigner.sql.dialect.antspark.AntSparkCreateTableBuilderImpl;
 import flowdesigner.sql.dialect.blink.BlinkCreateTableBuilderImpl;
@@ -18,12 +19,11 @@ import flowdesigner.sql.dialect.hive.HiveCreateTableBuilderImpl;
 import flowdesigner.sql.dialect.hive.HiveInsertBuilderImpl;
 import flowdesigner.sql.dialect.mysql.builder.*;
 import flowdesigner.sql.dialect.odps.OdpsCreateTableBuilderImpl;
-import flowdesigner.sql.dialect.oracle.OracleAlterTableBuilderImpl;
-import flowdesigner.sql.dialect.oracle.OracleCreateTableBuilderImpl;
-import flowdesigner.sql.dialect.oracle.OracleInsertBuilderImpl;
-import flowdesigner.sql.dialect.oracle.OracleSelectBuilderImpl;
-import flowdesigner.sql.dialect.pg.PGInsertBuilderImpl;
-import flowdesigner.sql.dialect.pg.PGSelectBuilderImpl;
+import flowdesigner.sql.dialect.oracle.*;
+import flowdesigner.sql.dialect.oscar.builder.OscarDropDatabaseBuilderImpl;
+import flowdesigner.sql.dialect.pg.builder.PGDropDatabaseBuilderImpl;
+import flowdesigner.sql.dialect.pg.builder.PGInsertBuilderImpl;
+import flowdesigner.sql.dialect.pg.builder.PGSelectBuilderImpl;
 import flowdesigner.sql.dialect.sqlserver.SQLServerInsertBuilderImpl;
 
 public class SQLBuilderFactory {
@@ -47,7 +47,7 @@ public class SQLBuilderFactory {
     public static SQLSelectBuilder createSelectSQLBuilder(String sql, DbType dbType) {
         SQLSelectStatement statement = null;
         if (sql != null && !sql.isEmpty()) {
-            statement = (SQLSelectStatement) SQLUtils.parseSingleStatement(sql, dbType, null);
+            statement = (SQLSelectStatement) SQLUtils.parseSingleStatement(sql, dbType, new SQLParserFeature[0]);
         }
 
         return switch (dbType) {
@@ -111,6 +111,14 @@ public class SQLBuilderFactory {
         };
     }
 
+    public static SQLDropDatabaseBuilder createSQLDropDatabaseBuilder(DbType dbType) {
+        return switch (dbType) {
+            case postgresql -> new PGDropDatabaseBuilderImpl(dbType);
+            case oscar -> new OscarDropDatabaseBuilderImpl(dbType);
+            case oracle , oceanbase_oracle -> new SQLDropUserBuilderImpl(dbType);
+            default -> new SQLDropDatabaseBuilderImpl(dbType);
+        };
+    }
     public static SQLDropTableBuilder createDropTableBuilder(DbType dbType) {
         return new SQLDropTableBuilderImpl(dbType);
     }

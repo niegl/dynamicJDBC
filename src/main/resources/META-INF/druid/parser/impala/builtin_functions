@@ -1,0 +1,353 @@
+[SQL Operators]
+[-->Arithmetic Operators]
++	:A + B	:Gives the result of adding A and B. The type of the result is the same as the common parent(in the type hierarchy) of the types of the operands. For example since every integer is a float, therefore float is a containing type of integer so the + operator on a float and an int will result in a float.
+-	:A - B	:Gives the result of subtracting B from A. The type of the result is the same as the common parent(in the type hierarchy) of the types of the operands.
+*	:A * B	:Gives the result of multiplying A and B. The type of the result is the same as the common parent(in the type hierarchy) of the types of the operands. Note that if the multiplication causing overflow, you will have to cast one of the operators to a type higher in the type hierarchy.
+/	:A / B	:Gives the result of dividing A by B. The result is a double type in most cases. When A and B are both integers, the result is a double type except when the hive.compat configuration parameter is set to "0.13" or "latest" in which case the result is a decimal type.
+%	:A % B	:Gives the reminder resulting from dividing A by B. The type of the result is the same as the common parent(in the type hierarchy) of the types of the operands.
+&	:A & B	:Gives the result of bitwise AND of A and B. The type of the result is the same as the common parent(in the type hierarchy) of the types of the operands.
+|	:A | B	:Gives the result of bitwise OR of A and B. The type of the result is the same as the common parent(in the type hierarchy) of the types of the operands.
+^	:A ^ B	:Gives the result of bitwise XOR of A and B. The type of the result is the same as the common parent(in the type hierarchy) of the types of the operands.
+~	:~A		:Gives the result of bitwise NOT of A. The type of the result is the same as the type of A.
+DIV :A DIV B	: Integer division. Arguments are not promoted to a floating-point type, and any fractional result is discarded.
+[-->BETWEEN Operator]
+BETWEEN_AND :expression BETWEEN lower_bound AND upper_bound	    :In a WHERE clause, compares an expression to both a lower and upper bound. The comparison is successful is the expression is greater than or equal to the lower bound, and less than or equal to the upper bound. If the bound values are switched, so the lower bound is greater than the upper bound, does not match any values.
+NOT_BETWEEN_AND :expression NOT BETWEEN lower_bound AND upper_bound	    :NULL if A, B or C is NULL, TRUE if A is greater than or equal to B AND A less than or equal to C, otherwise FALSE. This can be inverted by using the NOT keyword. (As of version 0.9.0.)
+[-->Comparison Operators]
+=   :A = B		:TRUE if expression A is equal to expression B otherwise FALSE.
+!=  :A != B		:Synonym for the <> operator.
+<>  :A <> B		:NULL if A or B is NULL, TRUE if expression A is NOT equal to expression B, otherwise FALSE.
+<   :A < B		:NULL if A or B is NULL, TRUE if expression A is less than expression B, otherwise FALSE.
+<=  :A <= B		:NULL if A or B is NULL, TRUE if expression A is less than or equal to expression B, otherwise FALSE.
+>   :A > B		:NULL if A or B is NULL, TRUE if expression A is greater than expression B, otherwise FALSE.
+>=  :A >= B		:NULL if A or B is NULL, TRUE if expression A is greater than or equal to expression B, otherwise FALSE.
+[-->EXISTS Operator]
+EXISTS (subquery)		            :EXISTS (subquery)	:TRUE if the the subquery returns at least one row. Supported as of Hive 0.13.
+NOT EXISTS (subquery)		        :NOT EXISTS (subquery)	:TRUE if the the subquery returns at least one row. Supported as of Hive 0.13.
+[-->ILIKE Operator]
+ILIKE       :string_expression ILIKE wildcard_expression        :A case-insensitive comparison operator for STRING data, with basic wildcard capability using _ to match a single character and % to match multiple characters. The argument expression must match the entire string value. Typically, it is more efficient to put any % wildcard match at the end of the string.
+NOT ILIKE   :string_expression NOT ILIKE wildcard_expression    :A case-insensitive comparison operator for STRING data, with basic wildcard capability using _ to match a single character and % to match multiple characters. The argument expression must match the entire string value. Typically, it is more efficient to put any % wildcard match at the end of the string.
+[-->IN Operator]
+IN      :expression IN (expression [, expression])          :The IN operator compares an argument value to a set of values, and returns TRUE if the argument matches any value in the set. The NOT IN operator reverses the comparison, and checks if the argument value is not part of a set of values.
+IN      :expression IN (subquery)                           :The IN operator compares an argument value to a set of values, and returns TRUE if the argument matches any value in the set. The NOT IN operator reverses the comparison, and checks if the argument value is not part of a set of values.
+NOT IN  :expression NOT IN (expression [, expression])      :The IN operator compares an argument value to a set of values, and returns TRUE if the argument matches any value in the set. The NOT IN operator reverses the comparison, and checks if the argument value is not part of a set of values.
+NOT IN  :expression NOT IN (subquery)                       :The IN operator compares an argument value to a set of values, and returns TRUE if the argument matches any value in the set. The NOT IN operator reverses the comparison, and checks if the argument value is not part of a set of values.
+[-->IREGEXP Operator]
+IREGEXP :string_expression IREGEXP regular_expression       :Tests whether a value matches a regular expression, using case-insensitive string comparisons. Uses the POSIX regular expression syntax where ^ and $ match the beginning and end of the string, . represents any single character, * represents a sequence of zero or more items, + represents a sequence of one or more items, ? produces a non-greedy match, and so on.
+[-->IS DISTINCT FROM Operator]
+IS DISTINCT FROM        :expression1 IS DISTINCT FROM expression2       :The IS DISTINCT FROM operator, and its converse the IS NOT DISTINCT FROM operator, test whether or not values are identical. IS NOT DISTINCT FROM is similar to the = operator, and IS DISTINCT FROM is similar to the != operator, except that NULL values are treated as identical. Therefore, IS NOT DISTINCT FROM returns true rather than NULL, and IS DISTINCT FROM returns false rather than NULL, when comparing two NULL values. If one of the values being compared is NULL and the other is not, IS DISTINCT FROM returns true and IS NOT DISTINCT FROM returns false, again instead of returning NULL in both cases.
+IS NOT DISTINCT FROM    :expression1 IS NOT DISTINCT FROM expression2   :The IS DISTINCT FROM operator, and its converse the IS NOT DISTINCT FROM operator, test whether or not values are identical. IS NOT DISTINCT FROM is similar to the = operator, and IS DISTINCT FROM is similar to the != operator, except that NULL values are treated as identical. Therefore, IS NOT DISTINCT FROM returns true rather than NULL, and IS DISTINCT FROM returns false rather than NULL, when comparing two NULL values. If one of the values being compared is NULL and the other is not, IS DISTINCT FROM returns true and IS NOT DISTINCT FROM returns false, again instead of returning NULL in both cases.
+[-->IS NULL Operator]
+IS NULL          :expression IS NULL            :The IS NULL operator, and its converse the IS NOT NULL operator, test whether a specified value is NULL. Because using NULL with any of the other comparison operators such as = or != also returns NULL rather than TRUE or FALSE, you use a special-purpose comparison operator to check for this special condition.
+IS NOT NULL      :expression IS NOT NULL        :The IS NULL operator, and its converse the IS NOT NULL operator, test whether a specified value is NULL. Because using NULL with any of the other comparison operators such as = or != also returns NULL rather than TRUE or FALSE, you use a special-purpose comparison operator to check for this special condition.
+IS UNKNOWN       :expression IS UNKNOWN         :The IS NULL operator, and its converse the IS NOT NULL operator, test whether a specified value is NULL. Because using NULL with any of the other comparison operators such as = or != also returns NULL rather than TRUE or FALSE, you use a special-purpose comparison operator to check for this special condition.
+IS NOT UNKNOWN   :expression IS NOT UNKNOWN     :The IS NULL operator, and its converse the IS NOT NULL operator, test whether a specified value is NULL. Because using NULL with any of the other comparison operators such as = or != also returns NULL rather than TRUE or FALSE, you use a special-purpose comparison operator to check for this special condition.
+[-->IS TRUE Operator]
+IS TRUE           :expression IS TRUE         :This variation of the IS operator tests for truth or falsity, with right-hand arguments [NOT] TRUE, [NOT] FALSE, and [NOT] UNKNOWN.
+IS NOT TRUE       :expression IS NOT TRUE     :This variation of the IS operator tests for truth or falsity, with right-hand arguments [NOT] TRUE, [NOT] FALSE, and [NOT] UNKNOWN.
+IS FALSE          :expression IS FALSE        :This variation of the IS operator tests for truth or falsity, with right-hand arguments [NOT] TRUE, [NOT] FALSE, and [NOT] UNKNOWN.
+IS NOT FALSE      :expression IS NOT FALSE    :This variation of the IS operator tests for truth or falsity, with right-hand arguments [NOT] TRUE, [NOT] FALSE, and [NOT] UNKNOWN.
+[-->LIKE Operator]
+LIKE        :string_expression LIKE wildcard_expression         :A comparison operator for STRING data, with basic wildcard capability using the underscore (_) to match a single character and the percent sign (%) to match multiple characters. The argument expression must match the entire string value. Typically, it is more efficient to put any % wildcard match at the end of the string.
+NOT LIKE    :string_expression NOT LIKE wildcard_expression     :A comparison operator for STRING data, with basic wildcard capability using the underscore (_) to match a single character and the percent sign (%) to match multiple characters. The argument expression must match the entire string value. Typically, it is more efficient to put any % wildcard match at the end of the string.
+[-->Logical Operators]
+AND	    :A AND B	:TRUE if both A and B are TRUE, otherwise FALSE. NULL if A or B is NULL.
+OR 	    :A OR B		:TRUE if either A or B or both are TRUE, FALSE OR NULL is NULL, otherwise FALSE.
+NOT A	:NOT ?		:TRUE if A is FALSE or NULL if A is NULL. Otherwise FALSE.
+[-->REGEXP Operator]
+REGEXP      :A REGEXP B					    :Same as RLIKE.
+[-->RLIKE Operator]
+RLIKE       :A RLIKE B					    :NULL if A or B is NULL, TRUE if any (possibly empty) substring of A matches the Java regular expression B, otherwise FALSE. For example, 'foobar' RLIKE 'foo' evaluates to TRUE and so does 'foobar' RLIKE '^f.*r$'.
+[Mathematical Functions]
+abs		:abs(?)	:Returns the absolute value.
+acos		:acos(?)	:Returns the arccosine of a if -1<=a<=1 or NULL otherwise. Decimal version added in Hive 0.13.0.
+asin		:asin(?)	:Returns the arc sin of a if -1<=a<=1 or NULL otherwise. Decimal version added in Hive 0.13.0.
+atan		:atan(?)	:Returns the arctangent of a. Decimal version added in Hive 0.13.0.
+bin		:bin(?)		    :Returns the number in binary format (see http://dev.mysql.com/doc/refman/5.0/en/string-functions.html#function_bin).
+CEIL(DOUBLE a)          :CEIL(DOUBLE a)          :Returns the smallest integer that is greater than or equal to the argument.
+CEIL(DECIMAL(p,s) a)    :CEIL(DECIMAL(p,s) a)    :Returns the smallest integer that is greater than or equal to the argument.
+CEILING(DOUBLE a)       :CEILING(DOUBLE a)       :Returns the smallest integer that is greater than or equal to the argument.
+CEILING(DECIMAL(p,s) a) :CEILING(DECIMAL(p,s) a) :Returns the smallest integer that is greater than or equal to the argument.
+conv		:conv(?, INT from_base, INT to_base)	:Converts a number from a given base to another (see http://dev.mysql.com/doc/refman/5.0/en/mathematical-functions.html#function_conv).
+cos		    :cos(?)		:Returns the cosine of a (a is in radians). Decimal version added in Hive 0.13.0.
+COSH        :COSH(?)    :Returns the hyperbolic cosine of the argument.
+COT         :COT(?)     :Purpose: Returns the cotangent of the argument.
+degrees	:degrees(?)	    :Converts value of a from radians to degrees. Decimal version added in Hive 0.13.0.
+e			:e()		:Returns the value of e.
+exp		    :exp(?)	    :Returns ea where e is the base of the natural logarithm. Decimal version added in Hive 0.13.0.
+dexp		:dexp(?)	:Returns ea where e is the base of the natural logarithm. Decimal version added in Hive 0.13.0.
+factorial	:factorial(?)	:Returns the factorial of a (as of Hive 1.2.0). Valid a is [0..20].
+floor		:floor(?)	:Returns the maximum BIGINT value that is equal to or less than a.
+FLOOR       :FLOOR(?)                :Returns the largest integer that is less than or equal to the argument.
+FLOOR       :FLOOR(DECIMAL(p,s) a)   :Returns the largest integer that is less than or equal to the argument.
+DFLOOR      :DFLOOR(?)               :Returns the largest integer that is less than or equal to the argument.
+DFLOOR      :DFLOOR(DECIMAL(p,s) a)  :Returns the largest integer that is less than or equal to the argument.
+FMOD        :FMOD(DOUBLE a, DOUBLE b)       :Returns the modulus of a floating-point number.
+FMOD        :FMOD(FLOAT a, FLOAT b)         :Returns the modulus of a floating-point number.
+FNV_HASH    :FNV_HASH(type v)       :Returns a consistent 64-bit value derived from the input argument, for convenience of implementing hashing logic in an application.
+greatest				    :greatest(T v1, T v2, ...)				:Returns the greatest value of the list of values (as of Hive 1.1.0). Fixed to return NULL when one or more arguments are NULL, and strict type restriction relaxed, consistent with ">" operator (as of Hive 2.0.0).
+hex		:hex(?)		        :If the argument is an INT or binary, hex returns the number as a STRING in hexadecimal format. Otherwise if the number is a STRING, it converts each character into its hexadecimal representation and returns the resulting STRING. (See http://dev.mysql.com/doc/refman/5.0/en/string-functions.html#function_hex, BINARY version as of Hive 0.12.0.)
+IS_INF  :IS_INF(DOUBLE a)   :Tests whether a value is equal to the special value "inf", signifying infinity.
+IS_NAN  :IS_NAN(DOUBLE a)   :Tests whether a value is equal to the special value "NaN", signifying "not a number".
+least					:least(T v1, T v2, ...)		:Returns the least value of the list of values (as of Hive 1.1.0). Fixed to return NULL when one or more arguments are NULL, and strict type restriction relaxed, consistent with "<" operator (as of Hive 2.0.0).
+ln		:ln(?)	:Returns the natural logarithm of the argument a. Decimal version added in Hive 0.13.0.
+log		:log(DOUBLE base, DOUBLE a)	:Returns the base-base logarithm of the argument a. Decimal versions added in Hive 0.13.0.
+log10		:log10(?)	:Returns the base-10 logarithm of the argument a. Decimal version added in Hive 0.13.0.
+log2		:log2(?)	:Returns the base-2 logarithm of the argument a. Decimal version added in Hive 0.13.0.
+MAX_INT     :MAX_INT()           :Returns the largest value of the associated integral type.
+MAX_TINYINT :MAX_TINYINT()       :Returns the largest value of the associated integral type.
+MAX_SMALLINT:MAX_SMALLINT()      :Returns the largest value of the associated integral type.
+MAX_BIGINT  :MAX_BIGINT()        :Returns the largest value of the associated integral type.
+MIN_INT     :MIN_INT()           :Returns the smallest value of the associated integral type.
+MIN_TINYINT :MIN_TINYINT()       :Returns the smallest value of the associated integral type.
+MIN_SMALLINT:MIN_SMALLINT()      :Returns the smallest value of the associated integral type.
+MIN_BIGINT  :MIN_BIGINT()        :Returns the smallest value of the associated integral type.
+MOD         :MOD(numeric_type a, same_type b)    :Purpose: Returns the modulus of a number. Equivalent to the % arithmetic operator. Works with any size integer type, any size floating-point type, and DECIMAL with any precision and scale.
+MURMUR_HASH :MURMUR_HASH(type v) :Purpose: Returns a consistent 64-bit value derived from the input argument, for convenience of implementing MurmurHash2 non-cryptographic hash function.
+negative	:negative(?)	:Returns -a.
+pi		    :pi()		:Returns the value of pi.
+PMOD        :PMOD(BIGINT a, BIGINT b)    :Returns the positive modulus of a number. Primarily for HiveQL compatibility.
+PMOD        :PMOD(DOUBLE a, DOUBLE b)    :Returns the positive modulus of a number. Primarily for HiveQL compatibility.
+positive	:positive(?)	:Returns a.
+pow		:pow(DOUBLE a, DOUBLE p)	:Returns ap.
+power		:power(DOUBLE a, DOUBLE p)	:Returns ap.
+dpow		:dpow(DOUBLE a, DOUBLE p)	:Returns ap.
+fpow		:fpow(DOUBLE a, DOUBLE p)	:Returns ap.
+PRECISION   :PRECISION(?)   :Computes the precision (number of decimal digits) needed to represent the type of the argument expression as a DECIMAL value.
+QUOTIENT    :QUOTIENT(BIGINT numerator, BIGINT denominator) :Returns the first argument divided by the second argument, discarding any fractional part. Avoids promoting integer arguments to DOUBLE as happens with the / SQL operator. Also includes an overload that accepts DOUBLE arguments, discards the fractional part of each argument value before dividing, and again returns BIGINT. With integer arguments, this function works the same as the DIV operator.
+QUOTIENT    :QUOTIENT(DOUBLE numerator, DOUBLE denominator) :Returns the first argument divided by the second argument, discarding any fractional part. Avoids promoting integer arguments to DOUBLE as happens with the / SQL operator. Also includes an overload that accepts DOUBLE arguments, discards the fractional part of each argument value before dividing, and again returns BIGINT. With integer arguments, this function works the same as the DIV operator.
+radians	:radians(?)	:Converts value of a from degrees to radians. Decimal version added in Hive 0.13.0.
+rand		:rand()		:Returns a random number (that changes from row to row) that is distributed uniformly from 0 to 1. Specifying the seed will make sure the generated random number sequence is deterministic.
+rand(seed)	:rand(BIGINT  seed)	:Returns a random number (that changes from row to row) that is distributed uniformly from 0 to 1. Specifying the seed will make sure the generated random number sequence is deterministic.
+randome		:randome()		:Returns a random number (that changes from row to row) that is distributed uniformly from 0 to 1. Specifying the seed will make sure the generated random number sequence is deterministic.
+randome(seed)	:randome(BIGINT  seed)	:Returns a random number (that changes from row to row) that is distributed uniformly from 0 to 1. Specifying the seed will make sure the generated random number sequence is deterministic.
+round   	:round(?)	:Returns the rounded BIGINT value of a.
+round   	:round(DOUBLE a, INT d)	:Returns a rounded to d decimal places.
+round   	:ROUND(DECIMAL a, int_type d):Returns a rounded to d decimal places.
+dround   	:dround(?)	:Returns the drounded BIGINT value of a.
+dround   	:dround(DOUBLE a, INT d)	:Returns a drounded to d decimal places.
+DROUND      :DROUND(DECIMAL(p,s) a, int_type d)  :Returns a drounded to d decimal places.
+SCALE       :SCALE(numeric_expression)   :Computes the scale (number of decimal digits to the right of the decimal point) needed to represent the type of the argument expression as a DECIMAL value.
+sign		:sign(?)	:Returns the sign of a as '1.0' (if a is positive) or '-1.0' (if a is negative), '0.0' otherwise. The decimal version returns INT instead of DOUBLE. Decimal version added in Hive 0.13.0.
+sin		    :sin(?)		:Returns the sine of a (a is in radians). Decimal version added in Hive 0.13.0.
+SINH        :SINH(DOUBLE a)  :Returns the hyperbolic sine of the argument.
+sqrt		:sqrt(?)	:Returns the square root of a. Decimal version added in Hive 0.13.0.
+dsqrt		:dsqrt(?)	:Returns the dsquare root of a. Decimal version added in Hive 0.13.0.
+tan		    :tan(?)		    :Returns the tangent of a (a is in radians). Decimal version added in Hive 0.13.0.
+TANH        :TANH(DOUBLE a)  : Returns the hyperbolic tangent of the argument.
+TRUNCATE    :TRUNCATE(DOUBLE_or_DECIMAL a[, digits_to_leave])   :Removes some or all fractional digits from a numeric value.
+DTRUNC      :DTRUNC(DOUBLE_or_DECIMAL a[, digits_to_leave])     :Removes some or all fractional digits from a numeric value.
+TRUNC       :TRUNC(DOUBLE_or_DECIMAL a[, digits_to_leave])      :Removes some or all fractional digits from a numeric value.
+unhex		:unhex(?)	:Inverse of hex. Interprets each pair of characters as a hexadecimal number and converts to the byte representation of the number. (BINARY version as of Hive 0.12.0, used to return a string.)
+width_bucket			:WIDTH_BUCKET(DECIMAL expr, DECIMAL min_value, DECIMAL max_value, INT num_buckets)	:Returns an integer between 0 and num_buckets+1 by mapping expr into the ith equally sized bucket. Buckets are made by dividing [min_value, max_value] into equally sized regions. If expr < min_value, return 1, if expr > max_value return num_buckets+1. See https://docs.oracle.com/cd/B19306_01/server.102/b14200/functions214.htm (as of Hive 3.0.0)
+[Type Conversion Functions]
+cast            :cast(? AS type FORMAT pattern)     :Converts the results of the expression expr to <type>. For example, cast('1' as BIGINT) will convert the string '1' to its integral representation. A null is returned if the conversion does not succeed. If cast(expr as boolean) Hive returns true for a non-empty string.
+cast            :cast(? AS type)                    :Converts the results of the expression expr to <type>. For example, cast('1' as BIGINT) will convert the string '1' to its integral representation. A null is returned if the conversion does not succeed. If cast(expr as boolean) Hive returns true for a non-empty string.
+TYPEOF          :TYPEOF(?)                          :Returns the name of the data type corresponding to expression. For types with extra attributes, such as length for CHAR and VARCHAR, or precision and scale for DECIMAL, includes the full specification of the type.
+[Date and Time Functions]
+ADD_MONTHS          :ADD_MONTHS(TIMESTAMP / DATE date, INT months)      :Adds months to date and returns the new date value.
+ADD_MONTHS          :ADD_MONTHS(TIMESTAMP / DATE date, BIGINT months)   :Adds months to date and returns the new date value.
+ADDDATE             :ADDDATE(TIMESTAMP / DATE date, INT / BIGINT days)  :Adds days to date and returns the new date value.
+CURRENT_DATE        :CURRENT_DATE()         :Returns the current date.
+CURRENT_TIMESTAMP   :CURRENT_TIMESTAMP()    :Alias for the NOW() function.
+DATE_ADD        :DATE_ADD(TIMESTAMP / DATE date, INT / BIGINT days)      :Adds a specified number of days to the date argument.
+DATE_ADD        :DATE_ADD(TIMESTAMP / DATE date, interval_expression)    :Adds a specified number of days to the date argument.
+DATE_CMP        :DATE_CMP(DATE date1, DATE date2)                    : Compares date1 and date2 return :0 if the dates are identical.1 if date1 > date2.-1 if date1 < date2.NULL if date1 or date2 is NULL.
+DATE_PART       :DATE_PART(STRING part, TIMESTAMP / DATE date)      :Similar to EXTRACT(), with the argument order reversed. Supports the same date and time units as EXTRACT(). For compatibility with SQL code containing vendor extensions.
+DATE_SUB        :DATE_SUB(TIMESTAMP startdate, INT days)             : Subtracts a specified number of days from a TIMESTAMP value. With an INTERVAL expression as the second argument, you can calculate a delta value using other units such as weeks, years, hours, seconds, and so on
+DATE_SUB        :DATE_SUB(TIMESTAMP startdate, interval_expression)  : Subtracts a specified number of days from a TIMESTAMP value. With an INTERVAL expression as the second argument, you can calculate a delta value using other units such as weeks, years, hours, seconds, and so on
+DATE_TRUNC      :DATE_TRUNC(STRING unit, TIMESTAMP / DATE ts)      : Returns the ts value truncated to the specified unit.
+DATEDIFF        :DATEDIFF(TIMESTAMP / DATE enddate, TIMESTAMP / DATE startdate): Returns the number of days from startdate to enddate.
+DAY             :DAY(TIMESTAMP / DATE date)         : Returns the day value from the date argument. The value represents the day of the month, therefore is in the range 1-31, or less for months without 31 days.
+DAY             :DAYOFMONTH(TIMESTAMP / DATE date)  : Returns the day value from the date argument. The value represents the day of the month, therefore is in the range 1-31, or less for months without 31 days.
+DAYNAME         :DAYNAME(TIMESTAMP / DATE date)     : Returns the day name of the date argument. The range of return values is 'Sunday' to 'Saturday'. Used in report-generating queries, as an alternative to calling DAYOFWEEK() and turning that numeric return value into a string using a CASE expression.
+DAYOFWEEK       :DAYOFWEEK(TIMESTAMP / DATE date)   : Returns the day field of the date arguement, corresponding to the day of the week. The range of return values is 1 (Sunday) to 7 (Saturday).
+DAYOFYEAR       :DAYOFYEAR(TIMESTAMP / DATE date)   : Returns the day field from the date argument, corresponding to the day of the year. The range of return values is 1 (January 1) to 366 (December 31 of a leap year).
+DAYS_ADD       :DAYS_ADD(TIMESTAMP / DATE date, INT / BIGINT days)  : Returns the value with the number of days added to date.
+DAYS_SUB       :DAYS_SUB(TIMESTAMP / DATE date, INT / BIGINT days)  : Returns the value with the number of days subtracted from date.
+EXTRACT       :EXTRACT(TIMESTAMP / DATE ts, STRING unit)    : Returns one of the numeric date or time fields, specified by unit, from ts.
+EXTRACT       :EXTRACT(unit FROM TIMESTAMP / DATE ts)       : Returns one of the numeric date or time fields, specified by unit, from ts.
+FROM_TIMESTAMP      :FROM_TIMESTAMP(TIMESTAMP datetime, STRING pattern): Converts a TIMESTAMP value into a string representing the same value.
+FROM_TIMESTAMP      :FROM_TIMESTAMP(STRING datetime, STRING pattern)   : Converts a TIMESTAMP value into a string representing the same value.
+FROM_UNIXTIME       :FROM_UNIXTIME(BIGINT unixtime [, STRING pattern])  : Converts the number of seconds from the Unix epoch to the specified time into a string in the local time zone.
+FROM_UTC_TIMESTAMP       :FROM_UTC_TIMESTAMP(TIMESTAMP ts, STRING timezone): Converts a specified UTC timestamp value into the appropriate value for a specified time zone.
+HOUR       :HOUR(TIMESTAMP ts): Returns the hour field from a TIMESTAMP field.
+HOURS_ADD       :HOURS_ADD(TIMESTAMP date, INT hours)   : Returns the specified date and time plus some number of hours.
+HOURS_ADD       :HOURS_ADD(TIMESTAMP date, BIGINT hours): Returns the specified date and time plus some number of hours.
+HOURS_SUB       :HOURS_SUB(TIMESTAMP date, INT hours)   : Returns the specified date and time minus some number of hours.
+HOURS_SUB       :HOURS_SUB(TIMESTAMP date, BIGINT hours): Returns the specified date and time minus some number of hours.
+INT_MONTHS_BETWEEN       :INT_MONTHS_BETWEEN(TIMESTAMP / DATE enddate, TIMESTAMP / DATE startdate): Returns the number of months from startdate to enddate, representing only the full months that passed.
+LAST_DAY        :LAST_DAY(TIMESTAMP / DATE ts)      : Returns the beginning of the last calendar day in the same month of ts.
+MICROSECONDS_ADD        :MICROSECONDS_ADD(TIMESTAMP date, INT microseconds)      : Returns the specified date and time plus some number of microseconds.
+MICROSECONDS_ADD        :MICROSECONDS_ADD(TIMESTAMP date, BIGINT microseconds)   : Returns the specified date and time plus some number of microseconds.
+MICROSECONDS_SUB        :MICROSECONDS_SUB(TIMESTAMP date, INT microseconds)      : Returns the specified date and time minus some number of microseconds.
+MICROSECONDS_SUB        :MICROSECONDS_SUB(TIMESTAMP date, BIGINT microseconds)   : Returns the specified date and time minus some number of microseconds.
+MILLISECOND             :MILLISECOND(TIMESTAMP ts)  : Returns the millisecond portion of a TIMESTAMP value.
+MILLISECONDS_ADD        :MILLISECONDS_ADD(TIMESTAMP date, INT milliseconds)      : Returns the specified date and time plus some number of milliseconds.
+MILLISECONDS_ADD        :MILLISECONDS_ADD(TIMESTAMP date, BIGINT milliseconds)   : Returns the specified date and time plus some number of milliseconds.
+MILLISECONDS_SUB        :MILLISECONDS_SUB(TIMESTAMP date, INT milliseconds)      : Returns the specified date and time minus some number of milliseconds.
+MILLISECONDS_SUB        :MILLISECONDS_SUB(TIMESTAMP date, BIGINT milliseconds)   : Returns the specified date and time minus some number of milliseconds.
+MINUTE                  :MINUTE(TIMESTAMP date): Returns the minute field from a TIMESTAMP value.
+MINUTES_ADD             :MINUTES_ADD(TIMESTAMP date, INT minutes): Returns the specified date and time plus some number of minutes.
+MINUTES_ADD             :MINUTES_ADD(TIMESTAMP date, BIGINT minutes): Returns the specified date and time plus some number of minutes.
+MINUTES_SUB             :MINUTES_SUB(TIMESTAMP date, INT minutes), MINUTES_SUB(TIMESTAMP date, BIGINT minutes): Returns the specified date and time minus some number of minutes.
+MONTH                   :MONTH(TIMESTAMP / DATE date): Returns the month field, represented as an integer, from the date argument.
+MONTHNAME         :MONTHNAME(TIMESTAMP / DATE date) : Returns the month name of the date argument.
+MONTHS_ADD        :MONTHS_ADD(TIMESTAMP / DATE date, INT / BIGINT months) : Returns the value with the number of months added to date.
+MONTHS_BETWEEN          :MONTHS_BETWEEN(TIMESTAMP / DATE enddate, TIMESTAMP / DATE startdate) : Returns the number of months from startdate to enddate.
+MONTHS_SUB              :MONTHS_SUB(TIMESTAMP / DATE date, INT / BIGINT months) : Returns the value with the number of months subtracted from date.
+NANOSECONDS_ADD         :NANOSECONDS_ADD(TIMESTAMP date, INT nanoseconds) : Returns the specified date and time plus some number of nanoseconds.
+NANOSECONDS_SUB         :NANOSECONDS_SUB(TIMESTAMP date, INT nanoseconds) : Returns the specified date and time minus some number of nanoseconds.
+NANOSECONDS_ADD         :NANOSECONDS_ADD(TIMESTAMP date, BIGINT nanoseconds) : Returns the specified date and time plus some number of nanoseconds.
+NANOSECONDS_SUB         :NANOSECONDS_SUB(TIMESTAMP date, BIGINT nanoseconds) : Returns the specified date and time minus some number of nanoseconds.
+NEXT_DAY                :NEXT_DAY(TIMESTAMP / DATE date, STRING weekday) : Returns the date of the weekday that follows the specified date.
+NOW                     :NOW() : Returns the current date and time (in the local time zone) as a TIMESTAMP value.
+QUARTER                 :QUARTER(TIMESTAMP / DATE date) : Returns the quarter in the input date argument as an integer value, 1, 2, 3, or 4, where 1 represents January 1 through March 31.
+SECOND                  :SECOND(TIMESTAMP date) : Returns the second field from a TIMESTAMP value.
+SECONDS_ADD             :SECONDS_ADD(TIMESTAMP date, INT seconds) : Returns the specified date and time plus some number of seconds.
+SECONDS_SUB             :SECONDS_SUB(TIMESTAMP date, INT seconds) : Returns the specified date and time minus some number of seconds.
+SECONDS_ADD             :SECONDS_ADD(TIMESTAMP date, BIGINT seconds) : Returns the specified date and time plus some number of seconds.
+SECONDS_SUB             :SECONDS_SUB(TIMESTAMP date, BIGINT seconds) : Returns the specified date and time minus some number of seconds.
+SUBDATE                 :SUBDATE(TIMESTAMP / DATE date, INT / BIGINT days) : Subtracts days from date and returns the new date value.
+TIMEOFDAY               :TIMEOFDAY() : Returns a string representation of the current date and time, according to the time of the local system, including any time zone designation.
+TIMESTAMP_CMP           :TIMESTAMP_CMP(TIMESTAMP t1, TIMESTAMP t2) : Tests if one TIMESTAMP value is newer than, older than, or identical to another TIMESTAMP
+TO_DATE                 :TO_DATE(TIMESTAMP ts) : Returns a string representation of the date field from the ts argument.
+TO_TIMESTAMP            :TO_TIMESTAMP(BIGINT unixtime): Converts an integer or string representing a date/time value into the corresponding TIMESTAMP value.
+TO_TIMESTAMP            :TO_TIMESTAMP(STRING date, STRING pattern) : Converts an integer or string representing a date/time value into the corresponding TIMESTAMP value.
+TO_UTC_TIMESTAMP        :TO_UTC_TIMESTAMP(TIMESTAMP ts, STRING timezone) : Converts a specified timestamp value in a specified time zone into the corresponding value for the UTC time zone.
+TRUNC                   :TRUNC(TIMESTAMP / DATE ts, STRING unit) : Returns the ts truncated to the unit specified.
+UNIX_TIMESTAMP          :UNIX_TIMESTAMP(): Returns a Unix time, which is a number of seconds elapsed since '1970-01-01 00:00:00' UTC. If called with no argument, the current date and time is converted to its Unix time. If called with arguments, the first argument represented as the TIMESTAMP or STRING is converted to its Unix time.
+UNIX_TIMESTAMP          :UNIX_TIMESTAMP(STRING datetime): Returns a Unix time, which is a number of seconds elapsed since '1970-01-01 00:00:00' UTC. If called with no argument, the current date and time is converted to its Unix time. If called with arguments, the first argument represented as the TIMESTAMP or STRING is converted to its Unix time.
+UNIX_TIMESTAMP          :UNIX_TIMESTAMP(STRING datetime, STRING pattern) : Returns a Unix time, which is a number of seconds elapsed since '1970-01-01 00:00:00' UTC. If called with no argument, the current date and time is converted to its Unix time. If called with arguments, the first argument represented as the TIMESTAMP or STRING is converted to its Unix time.
+UNIX_TIMESTAMP          :UNIX_TIMESTAMP(TIMESTAMP datetime) : Returns a Unix time, which is a number of seconds elapsed since '1970-01-01 00:00:00' UTC. If called with no argument, the current date and time is converted to its Unix time. If called with arguments, the first argument represented as the TIMESTAMP or STRING is converted to its Unix time.
+UTC_TIMESTAMP           :UTC_TIMESTAMP() : Returns a TIMESTAMP corresponding to the current date and time in the UTC time zone.
+WEEK                    :WEEK(TIMESTAMP / DATE date) : Returns the corresponding week (1-53) from the date argument.
+WEEK                    :WEEKOFYEAR(TIMESTAMP / DATE date) : Returns the corresponding week (1-53) from the date argument.
+WEEKS_ADD               :WEEKS_ADD(TIMESTAMP / DATE date, INT / BIGINT weeks) : Returns the value with the number of weeks added to date.
+WEEKS_SUB               :WEEKS_SUB(TIMESTAMP / DATE date, INT / BIGINT weeks) : Returns the value with the number of weeks subtracted from date.
+YEAR                    :YEAR(TIMESTAMP / DATE date) : Returns the year field from the date argument.
+YEARS_ADD               :YEARS_ADD(TIMESTAMP / DATE date, INT / BIGINT years) : Returns the value with the number of years added to date.
+YEARS_SUB               :YEARS_SUB(TIMESTAMP / DATE date, INT / BIGINT years) : Returns the value with the number of years subtracted from date.
+[Conditional Functions]
+CASE            :CASE a WHEN b THEN c [WHEN d THEN e]... [ELSE f] END : Compares an expression to one or more possible values, and returns a corresponding result when a match is found.
+CASE            :CASE WHEN a THEN b [WHEN c THEN d]... [ELSE e] END : Tests whether any of a sequence of expressions is TRUE, and returns a corresponding result for the first true expression.
+COALESCE        :COALESCE(type v1, type v2, ...) : Returns the first specified argument that is not NULL, or NULL if all arguments are NULL.
+DECODE          :DECODE(type expression, type search1, type result1 [, type search2, type result2 ...] [, type default] ) : Compares the first argument, expression, to the search expressions using the IS NOT DISTINCT operator, and returns:
+IF              :IF(BOOLEAN condition, type ifTrue, type ifFalseOrNull) : Tests an expression and returns a corresponding result depending on whether the result is TRUE, FALSE, or NULL.
+IFNULL          :IFNULL(type a, type ifNull) : Alias for the ISNULL() function, with the same behavior. To simplify porting SQL with vendor extensions to Impala.
+ISFALSE         :ISFALSE(BOOLEAN expression) : Returns TRUE if the expression is FALSE. Returns FALSE if the expression is TRUE or NULL.
+ISNOTFALSE      :ISNOTFALSE(BOOLEAN expression) : Tests if a Boolean expression is not FALSE (that is, either TRUE or NULL). Returns TRUE if so. If the argument is NULL, returns TRUE.
+ISNOTTRUE       :ISNOTTRUE(BOOLEAN expression) : Tests if a Boolean expression is not TRUE (that is, either FALSE or NULL). Returns TRUE if so. If the argument is NULL, returns TRUE.
+ISNULL          :ISNULL(type a, type ifNull) : Tests if an expression is NULL, and returns the expression result value if not. If the first argument is NULL, returns the second argument.
+ISTRUE          :ISTRUE(BOOLEAN expression) : Returns TRUE if the expression is TRUE. Returns FALSE if the expression is FALSE or NULL.
+NONNULLVALUE    :NONNULLVALUE(type expression) : Returns TRUE if the expression is non-null and returns FALSE if the expression is NULL.
+NULLIF          :NULLIF(type expr1, type expr2) : Returns NULL if the two specified arguments are equal. If the specified arguments are not equal, returns the value of expr1. The data types of the expressions must be compatible, according to the conversion rules from Data Types. You cannot use an expression that evaluates to NULL for expr1; that way, you can distinguish a return value of NULL from an argument value of NULL, which would never match expr2.
+NULLIFZERO      :NULLIFZERO(type numeric_expr) : Returns NULL if the numeric expression evaluates to 0, otherwise returns the result of the expression.
+NULLVALUE       :NULLVALUE(type expression) : Returns TRUE if the expression is NULL, and returns FALSE otherwise.
+NVL             :NVL(type a, type ifNull) : Alias for the ISNULL() function. Returns the first argument if the first argument is not NULL. Returns the second argument if the first argument is NULL.
+NVL2            :NVL2(type a, type ifNotNull, type ifNull) : Returns the second argument, ifNotNull, if the first argument is not NULL. Returns the third argument, ifNull, if the first argument is NULL.
+ZEROIFNULL      :ZEROIFNULL(type numeric_expr) : Returns 0 if the numeric expression evaluates to NULL, otherwise returns the result of the expression.
+[String Functions]
+ASCII                          :ASCII(STRING str) : Returns the numeric ASCII code of the first character of the argument.
+BASE64DECODE                   :BASE64DECODE(STRING str) :
+BASE64ENCODE                   :BASE64ENCODE(STRING str) :
+BTRIM                          :BTRIM(STRING a) : Removes all instances of one or more characters from the start and end of a STRING value. By default, removes only spaces. If a non-NULL optional second argument is specified, the function removes all occurrences of characters in that second argument from the beginning and end of the string.
+BTRIM                          :BTRIM(STRING a, STRING chars_to_trim) : Removes all instances of one or more characters from the start and end of a STRING value. By default, removes only spaces. If a non-NULL optional second argument is specified, the function removes all occurrences of characters in that second argument from the beginning and end of the string.
+BYTES                          :BYTES : Returns the number of bytes contained in the specified byte string.
+CHAR_LENGTH                    :CHAR_LENGTH(STRING a) : Returns the length in characters of the argument string, including any trailing spaces that pad a CHAR value.
+CHAR_LENGTH                    :CHARACTER_LENGTH(STRING a) : Returns the length in characters of the argument string, including any trailing spaces that pad a CHAR value.
+CHR                            :CHR(INT character_code) : Returns a character specified by a decimal code point value. The interpretation and display of the resulting character depends on your system locale. Because consistent processing of Impala string values is only guaranteed for values within the ASCII range, only use this function for values corresponding to ASCII characters. In particular, parameter values greater than 255 return an empty string.
+CONCAT                         :CONCAT(STRING a, STRING b...) : Returns a single string representing all the argument values joined together. If any argument is NULL, it returns NULL.
+CONCAT_WS                      :CONCAT_WS(STRING sep, STRING a, STRING b...) : Returns a single string representing the second and following argument values joined together, delimited by a specified separator.
+FIND_IN_SET                    :FIND_IN_SET(STRING str, STRING strList) : Returns the position (starting from 1) of the first occurrence of a specified string within a comma-separated string. Returns NULL if either argument is NULL, 0 if the search string is not found, or 0 if the search string contains a comma.
+GROUP_CONCAT                   :GROUP_CONCAT(STRING s [, STRING sep]) : Returns a single string representing the argument value concatenated together for each row of the result set. If the optional separator string is specified, the separator is added between each pair of concatenated values.
+INITCAP                        :INITCAP(STRING str) : Returns the input string with the first letter of each word capitalized and all other letters in lowercase.
+INSTR                          :INSTR(STRING str, STRING substr [, BIGINT position [, BIGINT occurrence ] ]) : Returns the position (starting from 1) of the first occurrence of a substr within a longer string.
+JARO_DISTANCE                  :JARO_DISTANCE(STRING str1, STRING str2) : Returns the Jaro distance between two input strings. The Jaro distance is a measure of similarity between two strings and is the complementary of JARO_SIMILARITY(), i.e. (1 - JARO_SIMILARITY()).
+JARO_DST                       :JARO_DST(STRING str1, STRING str2) : Returns the Jaro distance between two input strings. The Jaro distance is a measure of similarity between two strings and is the complementary of JARO_SIMILARITY(), i.e. (1 - JARO_SIMILARITY()).
+JARO_SIMILARITY                :JARO_SIMILARITY(STRING str1, STRING str2) : Returns the Jaro similarity of two strings. The higher the Jaro similarity for two strings is, the more similar the strings are.
+JARO_SIMILARITY                :JARO_SIM(STRING str1, STRING str2) : Returns the Jaro similarity of two strings. The higher the Jaro similarity for two strings is, the more similar the strings are.
+JARO_WINKLER_DISTANCE          :JARO_WINKLER_DISTANCE(STRING str1, STRING str2[, DOUBLE scaling_factor, DOUBLE boost_threshold]): Returns the Jaro-Winkler distance of two input strings. It is the complementary of JARO_WINKLER_SIMILARITY(), i.e. 1 - JARO_WINKLER_SIMILARITY().
+JARO_WINKLER_DISTANCE          :JW_DST(STRING str1, STRING str2[, DOUBLE scaling_factor, DOUBLE boost_threshold]) : Returns the Jaro-Winkler distance of two input strings. It is the complementary of JARO_WINKLER_SIMILARITY(), i.e. 1 - JARO_WINKLER_SIMILARITY().
+JARO_WINKLER_SIMILARITY        :JARO_WINKLER_SIMILARITY(STRING str1, STRING str2[, DOUBLE scaling_factor, DOUBLE boost_threshold]) : Returns the Jaro-Winkler Similarity between two input strings. The Jaro-Winkler similarity uses a prefix weight, specified by scaling factor, which gives more favorable ratings to strings that match from the beginning for a set prefix length, up to a maximum of four characters.
+JARO_WINKLER_SIMILARITY        :JARO_SIM(STRING str1, STRING str2[, DOUBLE scaling_factor, DOUBLE boost_threshold]) : Returns the Jaro-Winkler Similarity between two input strings. The Jaro-Winkler similarity uses a prefix weight, specified by scaling factor, which gives more favorable ratings to strings that match from the beginning for a set prefix length, up to a maximum of four characters.
+LENGTH                         :LENGTH(STRING a) : Returns the length in characters of the argument string, ignoring any trailing spaces in CHAR values.
+LEVENSHTEIN                    :LEVENSHTEIN(STRING str1, STRING str2): Returns the Levenshtein distance between two input strings. The Levenshtein distance between two strings is the minimum number of single-character edits required to transform one string to other. The function indicates how different the input strings are.
+LEVENSHTEIN                    :LE_DST(STRING str1, STRING str2) : Returns the Levenshtein distance between two input strings. The Levenshtein distance between two strings is the minimum number of single-character edits required to transform one string to other. The function indicates how different the input strings are.
+LOCATE                         :LOCATE(STRING substr, STRING str[, INT pos]) : Returns the position (starting from 1) of the first occurrence of a substring within a longer string, optionally after a particular position.
+LOWER                          :LOWER(STRING a), LCASE(STRING a) : Returns the argument string converted to all-lowercase.
+LPAD                           :LPAD(STRING str, INT len, STRING pad) : Returns a string of a specified length, based on the first argument string. If the specified string is too short, it is padded on the left with a repeating sequence of the characters from the pad string. If the specified string is too long, it is truncated on the right.
+LTRIM                          :LTRIM(STRING a [, STRING chars_to_trim]) : Returns the argument string with all occurrences of characters specified by the second argument removed from the left side. Removes spaces if the second argument is not specified.
+PARSE_URL                      :PARSE_URL(STRING urlString, STRING partToExtract [, STRING keyToExtract]) : Returns the portion of a URL corresponding to a specified part. The part argument can be 'PROTOCOL', 'HOST', 'PATH', 'REF', 'AUTHORITY', 'FILE', 'USERINFO', or 'QUERY'. Uppercase is required for these literal values. When requesting the QUERY portion of the URL, you can optionally specify a key to retrieve just the associated value from the key-value pairs in the query string.
+REGEXP_ESCAPE                  :REGEXP_ESCAPE(STRING source) : The REGEXP_ESCAPE() function returns a string escaped for the special character in RE2 library so that the special characters are interpreted literally rather than as special characters. The following special characters are escaped by the function:
+REGEXP_EXTRACT                 :REGEXP_EXTRACT(STRING subject, STRING pattern, INT index) : Returns the specified () group from a string based on a regular expression pattern. Group 0 refers to the entire extracted string, while group 1, 2, and so on refers to the first, second, and so on (...) portion.
+REGEXP_LIKE                    :REGEXP_LIKE(STRING source, STRING pattern[, STRING options]) : Returns true or false to indicate whether the source string contains anywhere inside it the regular expression given by the pattern. The optional third argument consists of letter flags that change how the match is performed, such as i for case-insensitive matching.
+REGEXP_REPLACE                 :REGEXP_REPLACE(STRING initial, STRING pattern, STRING replacement) : Returns the initial argument with the regular expression pattern replaced by the final argument string.
+REPEAT                         :REPEAT(STRING str, INT n) : Returns the argument string repeated a specified number of times.
+REPLACE                        :REPLACE(STRING initial, STRING target, STRING replacement) : Returns the initial argument with all occurrences of the target string replaced by the replacement string.
+REVERSE                        :REVERSE(STRING a) : Returns the argument string with characters in reversed order.
+RPAD                           :RPAD(STRING str, INT len, STRING pad) : Returns a string of a specified length, based on the first argument string. If the specified string is too short, it is padded on the right with a repeating sequence of the characters from the pad string. If the specified string is too long, it is truncated on the right.
+RTRIM                          :RTRIM(STRING a [, STRING chars_to_trim]) : Returns the argument string with all occurrences of characters specified by the second argument removed from the right side. Removes spaces if the second argument is not specified.
+SPACE                          :SPACE(INT n) : Returns a concatenated string of the specified number of spaces. Shorthand for REPEAT(' ',n).
+SPLIT_PART                     :SPLIT_PART(STRING source, STRING delimiter, BIGINT index) : Returns the requested indexth part of the input source string split by the delimiter.
+STRLEFT                        :STRLEFT(STRING a, INT num_chars) : Returns the leftmost characters of the string. Shorthand for a call to SUBSTR() with 2 arguments.
+STRRIGHT                       :STRRIGHT(STRING a, INT num_chars) : Returns the rightmost characters of the string. Shorthand for a call to SUBSTR() with 2 arguments.
+SUBSTR                         :SUBSTR(STRING a, INT start [, INT len]), SUBSTRING(STRING a, INT start [, INT len]) : Returns the portion of the string starting at a specified point, optionally with a specified maximum length. The characters in the string are indexed starting at 1.
+TRANSLATE                      :TRANSLATE(STRING input, STRING from, STRING to) : Returns the input string with each character in the from argument replaced with the corresponding character in the to argument. The characters are matched in the order they appear in from and to.
+TRIM                           :TRIM(STRING a) : Returns the input string with both leading and trailing spaces removed. The same as passing the string through both LTRIM() and RTRIM().
+UPPER                          :UPPER(STRING a) : Returns the argument string converted to all-uppercase.
+UPPER                          :UCASE(STRING a) : Returns the argument string converted to all-uppercase.
+[Aggregate Functions]
+APPX_MEDIAN     :APPX_MEDIAN([DISTINCT | ALL] expression):An aggregate function that returns a value that is approximately the median (midpoint) of values in the set of input values.
+AVG             :AVG([DISTINCT | ALL] expression) [OVER (analytic_clause)]:An aggregate function that returns the average value from a set of numbers or TIMESTAMP values. Its single argument can be numeric column, or the numeric result of a function or expression applied to the column value. Rows with a NULL value for the specified column are ignored. If the table is empty, or all the values supplied to AVG are NULL, AVG returns NULL.
+COUNT           :COUNT([DISTINCT | ALL] expression) [OVER (analytic_clause)]:An aggregate function that returns the number of rows, or the number of non-NULL rows.
+GROUP_CONCAT    :GROUP_CONCAT([ALL | DISTINCT] expression [, separator]):An aggregate function that returns a single string representing the argument value concatenated together for each row of the result set. If the optional separator string is specified, the separator is added between each pair of concatenated values. The default separator is a comma followed by a space.
+MAX             :MAX([DISTINCT | ALL] expression) [OVER (analytic_clause)]:An aggregate function that returns the maximum value from a set of numbers. Opposite of the MIN function. Its single argument can be numeric column, or the numeric result of a function or expression applied to the column value. Rows with a NULL value for the specified column are ignored. If the table is empty, or all the values supplied to MAX are NULL, MAX returns NULL.
+MIN             :MIN([DISTINCT | ALL] expression) [OVER (analytic_clause)]:An aggregate function that returns the minimum value from a set of numbers. Opposite of the MAX function. Its single argument can be numeric column, or the numeric result of a function or expression applied to the column value. Rows with a NULL value for the specified column are ignored. If the table is empty, or all the values supplied to MIN are NULL, MIN returns NULL.
+NDV             :NDV([DISTINCT | ALL] expression [,scale]):An aggregate function that returns an approximate value similar to the result of COUNT(DISTINCT col), the "number of distinct values". It is much faster than the combination of COUNT and DISTINCT, and uses a constant amount of memory and thus is less memory-intensive for columns with high cardinality.
+STDDEV          :STDDEV([DISTINCT | ALL] expression)    :An aggregate function that standard deviation of a set of numbers.
+STDDEV_SAMP     :STDDEV_SAMP([DISTINCT | ALL] expression)   :An aggregate function that standard deviation of a set of numbers.
+STDDEV_POP      :STDDEV_POP([DISTINCT | ALL] expression)    :An aggregate function that standard deviation of a set of numbers.
+SUM             :SUM([DISTINCT | ALL] expression) [OVER (analytic_clause)]:An aggregate function that returns the sum of a set of numbers. Its single argument can be numeric column, or the numeric result of a function or expression applied to the column value. Rows with a NULL value for the specified column are ignored. If the table is empty, or all the values supplied to MIN are NULL, SUM returns NULL.
+VARIANCE        :VARIANCE([DISTINCT | ALL] expression)  :An aggregate function that returns the variance of a set of numbers. This is a mathematical property that signifies how far the values spread apart from the mean. The return value can be zero (if the input is a single value, or a set of identical values), or a positive number otherwise.
+VAR             :VAR[IANCE]_SAMP([DISTINCT | ALL] expression)    :An aggregate function that returns the variance of a set of numbers. This is a mathematical property that signifies how far the values spread apart from the mean. The return value can be zero (if the input is a single value, or a set of identical values), or a positive number otherwise.
+VAR             :VAR[IANCE]_POP([DISTINCT | ALL] expression) :An aggregate function that returns the variance of a set of numbers. This is a mathematical property that signifies how far the values spread apart from the mean. The return value can be zero (if the input is a single value, or a set of identical values), or a positive number otherwise.
+[Analytic Functions]
+OVER Clause         : OVER([partition_by_clause] [order_by_clause [window_clause]])   :The OVER clause is required for calls to pure analytic functions such as LEAD(), RANK(), and FIRST_VALUE(). When you include an OVER clause with calls to aggregate functions such as MAX(), COUNT(), or SUM(), they operate as analytic functions.
+partition_by_clause : PARTITION BY expr [, expr ...] :The PARTITION BY clause acts much like the GROUP BY clause in the outermost block of a query. It divides the rows into groups containing identical values in one or more columns. These logical groups are known as partitions. Throughout the discussion of analytic functions, "partitions" refers to the groups produced by the PARTITION BY clause, not to partitioned tables. However, note the following limitation that applies specifically to analytic function calls involving partitioned tables.
+order_by_clause     : ORDER BY expr  [ASC | DESC] [NULLS FIRST | NULLS LAST] [, expr [ASC | DESC] [NULLS FIRST | NULLS LAST] ...]   :The ORDER BY clause works much like the ORDER BY clause in the outermost block of a query. It defines the order in which rows are evaluated for the entire input set, or for each group produced by a PARTITION BY clause. You can order by one or multiple expressions, and for each expression optionally choose ascending or descending order and whether nulls come first or last in the sort order. Because this ORDER BY clause only defines the order in which rows are evaluated, if you want the results to be output in a specific order, also include an ORDER BY clause in the outer block of the query.
+window_clause   : ROWS BETWEEN [ { m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | { UNBOUNDED | n } FOLLOWING] ]    :The window clause is only allowed in combination with an ORDER BY clause. If the ORDER BY clause is specified but the window clause is not, the default window is RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
+window_clause   : RANGE BETWEEN [ {m | UNBOUNDED } PRECEDING | CURRENT ROW] [ AND [CURRENT ROW | { UNBOUNDED | n } FOLLOWING] ]    :The window clause is only allowed in combination with an ORDER BY clause. If the ORDER BY clause is specified but the window clause is not, the default window is RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
+CUME_DIST       :CUME_DIST (expr) OVER ([partition_by_clause] order_by_clause):Returns the cumulative distribution of a value. The value for each row in the result set is greater than 0 and less than or equal to 1.
+DENSE_RANK      :DENSE_RANK() OVER([partition_by_clause] order_by_clause)    :Returns an ascending sequence of integers, starting with 1.
+FIRST_VALUE     :FIRST_VALUE(expr) OVER([partition_by_clause] order_by_clause [window_clause]):Returns the expression value from the first row in the window. The return value is NULL if the input expression is NULL.
+LAG             :LAG (expr [, offset] [, default]) OVER ([partition_by_clause] order_by_clause):This function returns the value of an expression using column values from a preceding row. You specify an integer offset, which designates a row position some number of rows previous to the current row. Any column references in the expression argument refer to column values from that prior row. Typically, the table contains a time sequence or numeric sequence column that clearly distinguishes the ordering of the rows.
+LAST_VALUE      :LAST_VALUE(expr) OVER([partition_by_clause] order_by_clause [window_clause])    :Returns the expression value from the last row in the window. This same value is repeated for all result rows for the group. The return value is NULL if the input expression is NULL.
+LEAD            :LEAD (expr [, offset] [, default]) OVER ([partition_by_clause] order_by_clause)  :This function returns the value of an expression using column values from a following row. You specify an integer offset, which designates a row position some number of rows after to the current row. Any column references in the expression argument refer to column values from that later row. Typically, the table contains a time sequence or numeric sequence column that clearly distinguishes the ordering of the rows.
+NTILE           :NTILE (expr [, offset ...] OVER ([partition_by_clause] order_by_clause) :Returns the "bucket number" associated with each row, between 1 and the value of an expression. For example, creating 100 buckets puts the lowest 1% of values in the first bucket, while creating 10 buckets puts the lowest 10% of values in the first bucket. Each partition can have a different number of buckets.
+PERCENT_RANK    :PERCENT_RANK (expr) OVER ([partition_by_clause] order_by_clause)    :Calculates the rank, expressed as a percentage, of each row within a group of rows. If rank is the value for that same row from the RANK() function (from 1 to the total number of rows in the partition group), then the PERCENT_RANK() value is calculated as (rank - 1) / (rows_in_group - 1) . If there is only a single item in the partition group, its PERCENT_RANK() value is 0.
+RANK            :RANK() OVER([partition_by_clause] order_by_clause)  :Returns an ascending sequence of integers, starting with 1. The output sequence produces duplicate integers for duplicate values of the ORDER BY expressions. After generating duplicate output values for the "tied" input values, the function increments the sequence by the number of tied values. Therefore, the sequence contains both duplicates and gaps when the input contains duplicates. Starts the sequence over for each group produced by the PARTITIONED BY clause.
+ROW_NUMBER      :ROW_NUMBER() OVER([partition_by_clause] order_by_clause)    :Returns an ascending sequence of integers, starting with 1. Starts the sequence over for each group produced by the PARTITIONED BY clause. The output sequence includes different values for duplicate input values. Therefore, the sequence never contains any duplicates or gaps, regardless of duplicate input values.
+[Bit Functions]
+BITAND             :BITAND(integer_type a, same_type b) : Returns an integer value representing the bits that are set to 1 in both of the arguments. If the arguments are of different sizes, the smaller is promoted to the type of the larger.
+BITNOT             :BITNOT(integer_type a) : Inverts all the bits of the input argument.
+BITOR              :BITOR(integer_type a, same_type b) : Returns an integer value representing the bits that are set to 1 in either of the arguments. If the arguments are of different sizes, the smaller is promoted to the type of the larger.
+BITXOR             :BITXOR(integer_type a, same_type b) : Returns an integer value representing the bits that are set to 1 in one but not both of the arguments. If the arguments are of different sizes, the smaller is promoted to the type of the larger.
+COUNTSET           :COUNTSET(integer_type a [, INT zero_or_one]) : By default, returns the number of 1 bits in the specified integer value. If the optional second argument is set to zero, it returns the number of 0 bits instead.
+GETBIT             :GETBIT(integer_type a, INT position) : Returns a 0 or 1 representing the bit at a specified position. The positions are numbered right to left, starting at zero. The position argument cannot be negative.
+ROTATELEFT         :ROTATELEFT(integer_type a, INT positions) : Rotates an integer value left by a specified number of bits. As the most significant bit is taken out of the original value, if it is a 1 bit, it is "rotated" back to the least significant bit. Therefore, the final value has the same number of 1 bits as the original value, just in different positions. In computer science terms, this operation is a "circular shift".
+ROTATERIGHT        :ROTATERIGHT(integer_type a, INT positions) : Rotates an integer value right by a specified number of bits. As the least significant bit is taken out of the original value, if it is a 1 bit, it is "rotated" back to the most significant bit. Therefore, the final value has the same number of 1 bits as the original value, just in different positions. In computer science terms, this operation is a "circular shift".
+SETBIT             :SETBIT(integer_type a, INT position [, INT zero_or_one]) : By default, changes a bit at a specified position to a 1, if it is not already. If the optional third argument is set to zero, the specified bit is set to 0 instead.
+SHIFTLEFT          :SHIFTLEFT(integer_type a, INT positions) : Shifts an integer value left by a specified number of bits. As the most significant bit is taken out of the original value, it is discarded and the least significant bit becomes 0. In computer science terms, this operation is a "logical shift".
+SHIFTRIGHT         :SHIFTRIGHT(integer_type a, INT positions) : Shifts an integer value right by a specified number of bits. As the least significant bit is taken out of the original value, it is discarded and the most significant bit becomes 0. In computer science terms, this operation is a "logical shift".
+[Miscellaneous Functions]
+CURRENT_DATABASE        :CURRENT_DATABASE() : Returns the database that the session is currently using, either default if no database has been selected, or whatever database the session switched to through a USE statement or the impalad -d option.
+EFFECTIVE_USER          :EFFECTIVE_USER() : Typically returns the same value as USER(). If delegation is enabled, it returns the ID of the delegated user.
+GET_JSON_OBJECT         :GET_JSON_OBJECT(STRING json_str, STRING selector) : Extracts JSON object from the json_str based on the selector JSON path and returns the string of the extracted JSON object.
+LOGGED_IN_USER          :LOGGED_IN_USER() : Typically returns the same value as USER(). If delegation is enabled, it returns the ID of the delegated user.
+PID                     :PID() : Returns the process ID of the impalad daemon that the session is connected to. You can use it during low-level debugging, to issue Linux commands that trace, show the arguments, and so on the impalad process.
+SLEEP                   :SLEEP(INT ms) : Pauses the query for a specified number of milliseconds. For slowing down queries with small result sets enough to monitor runtime execution, memory usage, or other factors that otherwise would be difficult to capture during the brief interval of query execution. When used in the SELECT list, it is called once for each row in the result set; adjust the number of milliseconds accordingly. For example, a query SELECT *, SLEEP(5) FROM table_with_1000_rows would take at least 5 seconds to complete (5 milliseconds * 1000 rows in result set). To avoid an excessive number of concurrent queries, use this function for troubleshooting on test and development systems, not for production queries.
+USER                    :USER() : Returns the username of the Linux user who is connected to the impalad daemon. Typically called a single time, in a query without any FROM clause, to understand how authorization settings apply in a security context; once you know the logged-in username, you can check which groups that user belongs to, and from the list of groups you can check which roles are available to those groups through the authorization policy file.
+UUID                    :UUID() : Returns a universal unique identifier, a 128-bit value encoded as a string with groups of hexadecimal digits separated by dashes.
+VERSION                 :VERSION() : Returns information such as the precise version number and build date for the impalad daemon that you are currently connected to. Typically used to confirm that you are connected to the expected level of Impala to use a particular feature, or to connect to several nodes and confirm they are all running the same level of impalad.
+COORDINATOR             :COORDINATOR() : Returns the name of the host which is running the impalad daemon that is acting as the coordinator for the current query.

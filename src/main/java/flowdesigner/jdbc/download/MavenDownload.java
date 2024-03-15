@@ -1,6 +1,7 @@
 package flowdesigner.jdbc.download;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
+
 @Slf4j
 public class MavenDownload {
 
@@ -28,7 +30,7 @@ public class MavenDownload {
     private static volatile boolean bStopDownload = false;
 
     /**
-     * 从网络下载指定驱动jar文件
+     * 从网络下载指定驱动pom、jar文件
      * @param url 网络地址
      * @param scope 网络地址范围，完整URL为：url/scope/groupId/artifactId/version/***.jar
      * @param repository 本地存储库
@@ -62,40 +64,46 @@ public class MavenDownload {
                                            String groupId, String artifactId, String version) {
         ArrayList<String> locations = new ArrayList<>();
         try {
-            bStopDownload = false;
-            downloadRecursive(url, scope, repository, new Dependency(groupId, artifactId, version), locations);
+            if (url.endsWith(".jar")) {
+                String download = NetDownload.downloadByNIO2(url, repository, FilenameUtils.getName(url));
+                locations.add(download);
+            } else {
+                bStopDownload = false;
+                downloadRecursive(url, scope, repository, new Dependency(groupId, artifactId, version), locations);
+            }
         } catch (IOException e) {
             log.error(e.getMessage());
         }
+
         return locations;
     }
 
     private static void downloadRecursive(String url, String scope, String repository,
-                                          Dependency pom, List<String> locations) throws IOException {
+                                          Dependency dependency, List<String> locations) throws IOException {
         if (bStopDownload) {
             return;
         }
 
-        String jar = download(url, scope, repository, pom.getGroupId(), pom.getArtifactId(), pom.getVersion());
-        if (jar == null) {
+        String jarFileString = download(url, scope, repository, dependency.getGroupId(), dependency.getArtifactId(), dependency.getVersion());
+        if (jarFileString == null) {
             return;
         }
-        File jarFile = new File(jar);
+        File jarFile = new File(jarFileString);
         if (!jarFile.exists()) {
             return;
         }
 
-        locations.add(jar);
+        locations.add(jarFileString);
 
         String absolutePath = jarFile.getAbsolutePath();
-        String pomNext = absolutePath.replace(".jar",".pom");
-        Collection<Dependency> dependencies = PomParser.getDependencies(pomNext, pom);
-        Collection<Dependency.Exclusion> exclusions = pom.getExclusions();
-        for (Dependency dependency : dependencies) {
-            String groupId1 = dependency.getGroupId();
-            String artifactId1 = dependency.getArtifactId();
-            String version1 = dependency.getVersion();
-            String scope1 = dependency.getScope();
+        String pomFileString = absolutePath.replace(".jar",".pom");
+        Collection<Dependency> dependencies = PomParser.getDependencies(url, scope, pomFileString, dependency);
+        Collection<Dependency.Exclusion> exclusions = dependency.getExclusions();
+        for (Dependency dependency1 : dependencies) {
+            String groupId1 = dependency1.getGroupId();
+            String artifactId1 = dependency1.getArtifactId();
+            String version1 = dependency1.getVersion();
+            String scope1 = dependency1.getScope();
 
             boolean bSkip = false;
             for (Dependency.Exclusion exclusion: exclusions) {
@@ -111,24 +119,32 @@ public class MavenDownload {
             if (scope1 != null && (scope1.equals("test")||scope1.equals("provided")||scope1.equals("system"))) {
                 continue;
             }
-            if (dependency.isOptional()) {
+            // 对比dbeaver的Oracle下载，optional是需要下载的
+            if (dependency.getGroupId().equals("mysql") &&dependency1.isOptional()) {
                 continue;
             }
 
+            // 对比dbeaver的Oracle下载，optional是需要下载的
+//            if (dependency1.isOptional()) {
+//                continue;
+//            }
+
             // 如果版本为空，那么默认下载最新的版本
-            if (version1 == null || version1.isEmpty()) {
-                List<String> versions = getVersions(url, scope, groupId1, artifactId1);
-                if (versions.isEmpty()) {
-                    log.warn(groupId1 + ":" + artifactId1 + " version is empty, skip download");
-                    continue;
-                }
-                version1 = versions.get(versions.size()-1);
-                if (!version1.isEmpty()) {
-                    dependency.setVersion(version1);
-                }
+            if (version1 == null) {
+//                List<String> versions = getVersions(url, scope, groupId1, artifactId1);
+//                if (versions.isEmpty()) {
+//                    log.warn(groupId1 + ":" + artifactId1 + " version is empty, skip download");
+//                    continue;
+//                }
+//                version1 = versions.get(versions.size()-1);
+//                if (!version1.isEmpty()) {
+//                    dependency1.setVersion(version1);
+//                }
+                log.error("版本号不存在,跳过: " + dependency1);
+                continue;
             }
 
-            downloadRecursive(url, scope, repository, dependency, locations);
+            downloadRecursive(url, scope, repository, dependency1, locations);
         }
 
     }
@@ -176,7 +192,7 @@ public class MavenDownload {
         return versions;
     }
 
-    private static String downloadPom(String url, String scope, @NotNull Dependency dependency,
+    public static String downloadPom(String url, String scope, @NotNull Dependency dependency,
                                       String repository) throws IOException {
 
         StringBuilder netPath = dependency.toNetPath(url, scope);

@@ -4,11 +4,11 @@ import com.alibaba.druid.sql.ast.statement.SQLAlterTableAddColumn;
 import com.alibaba.druid.sql.dialect.db2.visitor.DB2OutputVisitor;
 
 public class DB2OutputVisitorV2 extends DB2OutputVisitor {
-    public DB2OutputVisitorV2(Appendable appender) {
+    public DB2OutputVisitorV2(StringBuilder appender) {
         super(appender);
     }
 
-    public DB2OutputVisitorV2(Appendable appender, boolean parameterized) {
+    public DB2OutputVisitorV2(StringBuilder appender, boolean parameterized) {
         super(appender, parameterized);
     }
 

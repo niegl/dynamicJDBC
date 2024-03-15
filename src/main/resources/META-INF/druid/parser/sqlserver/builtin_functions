@@ -1,82 +1,347 @@
-ASCII
-CHAR
-CHARINDEX
-CONCAT
-CONCAT_WS
-DATALENGTH
-DIFFERENCE
-FORMAT
-LEFT
-LEN
-LOWER
-LTRIM
-NCHAR
-PATINDEX
-QUOTENAME
-REPLACE
-REPLICATE
-REVERSE
-RIGHT
-RTRIM
-SOUNDEX
-SPACE
-STR
-STUFF
-SUBSTRING
-TRANSLATE
-TRIM
-UNICODE
-UPPER
-ABS
-ACOS
-ASIN
-ATAN
-ATN2
-AVG
-CEILING
-COUNT
-COS
-COT
-DEGREES
-EXP
-FLOOR
-LOG
-LOG10
-MAX
-MIN
-PI
-POWER
-RADIANS
-RAND
-ROUND
-SIGN
-SIN
-SQRT
-SQUARE
-SUM
-TAN
-CURRENT_TIMESTAMP
-DATEADD
-DATEDIFF
-DATEFROMPARTS
-DATENAME
-DATEPART
-DAY
-GETDATE
-GETUTCDATE
-ISDATE
-MONTH
-SYSDATETIME
-YEAR
-CAST
-COALESCE
-CONVERT
-CURRENT_USER
-IIF
-ISNULL
-ISNUMERIC
-NULLIF
-SESSION_USER
-SESSIONPROPERTY
-SYSTEM_USER
-USER_NAME
+[AggregateFunctions]
+APPROX_COUNT_DISTINCT               :APPROX_COUNT_DISTINCT ( ? )      :This function returns the approximate number of unique non-null values in a group.
+APPROX_PERCENTILE_CONT              :APPROX_PERCENTILE_CONT (numeric_literal) WITHIN GROUP (ORDER BY order_by_expression [ASC|DESC])     :This function returns an approximate interpolated value from the set of values in a group based on percentile value and sort specification. Since this is an approximate function, the output would be within rank based error bound with certain confidence. The percentile value returned by this function is based on a continuous distribution of the column values and the result would be interpolated. Due to this, the output might not be one of values in the data set. One of the common use cases for this function is to avoid the data outliers. This function can be used as an alternative to PERCENTILE_CONT for large datasets where negligible error with faster response is acceptable as compared to accurate percentile value with slow response time.
+APPROX_PERCENTILE_DISC              :APPROX_PERCENTILE_DISC (numeric_literal) WITHIN GROUP (ORDER BY order_by_expression [ASC|DESC]    :This function returns the value from the set of values in a group based on the provided percentile and sort specification. Since this is an approximate function, the output would be within rank based error bound with certain confidence. As this approximate percentile is based on a discrete distribution of the column values, the output value would be equal to one of the specific values in the column. This function can be used as an alternative to PERCENTILE_DISC for large datasets where negligible error with faster response is acceptable as compared to accurate percentile value with slow response time.
+AVG                                 :AVG ( [ ALL | DISTINCT ] ? )  [ OVER ( [ partition_by_clause ] order_by_clause ) ]    :This function returns an approximate interpolated value from the set of values in a group based on percentile value and sort specification. Since this is an approximate function, the output would be within rank based error bound with certain confidence. The percentile value returned by this function is based on a continuous distribution of the column values and the result would be interpolated. Due to this, the output might not be one of values in the data set. One of the common use cases for this function is to avoid the data outliers. This function can be used as an alternative to PERCENTILE_CONT for large datasets where negligible error with faster response is acceptable as compared to accurate percentile value with slow response time.
+CHECKSUM_AGG                        :CHECKSUM_AGG ( [ ALL | DISTINCT ] ? )    :This function returns the checksum of the values in a group. CHECKSUM_AGG ignores null values. The OVER clause can follow CHECKSUM_AGG.
+COUNT                               :COUNT ( { [ [ ALL | DISTINCT ] ? ] | * } )    :This function returns the number of items found in a group. COUNT operates like the COUNT_BIG function. These functions differ only in the data types of their return values. COUNT always returns an int data type value. COUNT_BIG always returns a bigint data type value.
+COUNT                               :COUNT ( [ ALL ]  { ? | * } ) OVER ( [ <partition_by_clause> ] )    :This function returns the number of items found in a group. COUNT operates like the COUNT_BIG function. These functions differ only in the data types of their return values. COUNT always returns an int data type value. COUNT_BIG always returns a bigint data type value.
+COUNT_BIG                           :COUNT_BIG ( { [ [ ALL | DISTINCT ] ? ] | * } )      :This function returns the number of items found in a group. COUNT_BIG operates like the COUNT function. These functions differ only in the data types of their return values. COUNT_BIG always returns a bigint data type value. COUNT always returns an int data type value.
+COUNT_BIG                           :COUNT_BIG ( [ ALL ] { ? | * } ) OVER ( [ <partition_by_clause> ] )      :This function returns the number of items found in a group. COUNT_BIG operates like the COUNT function. These functions differ only in the data types of their return values. COUNT_BIG always returns a bigint data type value. COUNT always returns an int data type value.
+GROUPING                            :GROUPING ( <column_expression> )      :Indicates whether a specified column expression in a GROUP BY list is aggregated or not. GROUPING returns 1 for aggregated or 0 for not aggregated in the result set. GROUPING can be used only in the SELECT <select> list, HAVING, and ORDER BY clauses when GROUP BY is specified.
+GROUPING_ID                         :GROUPING_ID ( <column_expression>[ ,...n ] )      :Is a function that computes the level of grouping. GROUPING_ID can be used only in the SELECT <select> list, HAVING, or ORDER BY clauses when GROUP BY is specified.
+MAX                                 :MAX( [ ALL | DISTINCT ] ? )    :Returns the maximum value in the expression.
+MAX                                 :MAX ([ ALL ] ?) OVER ( <partition_by_clause> [ <order_by_clause> ] )     :Returns the maximum value in the expression.
+MIN                                 :MIN ( [ ALL | DISTINCT ] ? )      :Returns the minimum value in the expression. May be followed by the OVER clause.
+MIN                                 :MIN ( [ ALL ] ? ) OVER ( [ <partition_by_clause> ] [ <order_by_clause> ] )      :Returns the minimum value in the expression. May be followed by the OVER clause.
+STDEV                               :STDEV ( [ ALL | DISTINCT ] ? )    :Returns the statistical standard deviation of all values in the specified expression.
+STDEV                               :STDEV ([ ALL ] ?) OVER ( [ partition_by_clause ] order_by_clause)      :Returns the statistical standard deviation of all values in the specified expression.
+STDEVP                              :STDEVP ( [ ALL | DISTINCT ] ? )    :Returns the statistical standard deviation for the population for all values in the specified expression.
+STDEVP                              :STDEVP ([ ALL ] ?) OVER ( [ partition_by_clause ] order_by_clause)      :Returns the statistical standard deviation for the population for all values in the specified expression.
+SUM                                 :SUM ( [ ALL | DISTINCT ] ? )    :Returns the sum of all the values, or only the DISTINCT values, in the expression. SUM can be used with numeric columns only. Null values are ignored.
+SUM                                 :SUM ([ ALL ] ?) OVER ( [ partition_by_clause ] order_by_clause)      :Returns the sum of all the values, or only the DISTINCT values, in the expression. SUM can be used with numeric columns only. Null values are ignored.
+VAR                                 :VAR ( [ ALL | DISTINCT ] ? )     :Returns the statistical variance of all values in the specified expression. May be followed by the OVER clause.
+VAR                                 :VAR ([ ALL ] ?) OVER ( [ partition_by_clause ] order_by_clause)      :Returns the statistical variance of all values in the specified expression. May be followed by the OVER clause.
+VARP                                :VARP ( [ ALL | DISTINCT ] expression )     :Returns the statistical variance for the population for all values in the specified expression.
+VARP                                :VARP ([ ALL ] expression) OVER ( [ partition_by_clause ] order_by_clause)    :Returns the statistical variance for the population for all values in the specified expression.
+[Analytic functions]
+CUME_DIST                           :CUME_DIST( ) OVER ( [ partition_by_clause ] order_by_clause )    :For SQL Server, this function calculates the cumulative distribution of a value within a group of values. In other words, CUME_DIST calculates the relative position of a specified value in a group of values. Assuming ascending ordering, the CUME_DIST of a value in row r is defined as the number of rows with values less than or equal to that value in row r, divided by the number of rows evaluated in the partition or query result set. CUME_DIST is similar to the PERCENT_RANK function.
+FIRST_VALUE                         :FIRST_VALUE ( [scalar_expression ] )  [ IGNORE NULLS | RESPECT NULLS ] OVER ( [ partition_by_clause ] order_by_clause [ rows_range_clause ] )   :Returns the first value in an ordered set of values.
+LAG                                 :LAG (scalar_expression [,offset] [,default])  OVER ( [ partition_by_clause ] order_by_clause )     :Accesses data from a previous row in the same result set without the use of a self-join starting with SQL Server 2012 (11.x). LAG provides access to a row at a given physical offset that comes before the current row. Use this analytic function in a SELECT statement to compare values in the current row with values in a previous row.
+LAST_VALUE                          :LAST_VALUE ( [ scalar_expression ] )  [ IGNORE NULLS | RESPECT NULLS ] OVER ( [ partition_by_clause ] order_by_clause [ rows_range_clause ] )   :Returns the last value in an ordered set of values.
+LEAD                                :LEAD ( scalar_expression [ ,offset ] , [ default ] ) OVER ( [ partition_by_clause ] order_by_clause )    :Accesses data from a subsequent row in the same result set without the use of a self-join starting with SQL Server 2012 (11.x). LEAD provides access to a row at a given physical offset that follows the current row. Use this analytic function in a SELECT statement to compare values in the current row with values in a following row.
+PERCENTILE_CONT                     :PERCENTILE_CONT ( numeric_literal )  WITHIN GROUP ( ORDER BY order_by_expression [ ASC | DESC ] )  OVER ( [ <partition_by_clause> ] )    :Calculates a percentile based on a continuous distribution of the column value in SQL Server. The result is interpolated and might not be equal to any of the specific values in the column.
+PERCENTILE_DISC                     :PERCENTILE_DISC ( numeric_literal ) WITHIN GROUP ( ORDER BY order_by_expression [ ASC | DESC ] )  OVER ( [ <partition_by_clause> ] )     :Computes a specific percentile for sorted values in an entire rowset or within a rowset's distinct partitions in SQL Server. For a given percentile value P, PERCENTILE_DISC sorts the expression values in the ORDER BY clause. It then returns the value with the smallest CUME_DIST value given (with respect to the same sort specification) that is greater than or equal to P. For example, PERCENTILE_DISC (0.5) will compute the 50th percentile (that is, the median) of an expression. PERCENTILE_DISC calculates the percentile based on a discrete distribution of the column values. The result is equal to a specific column value.
+PERCENT_RANK                        :PERCENT_RANK( )  OVER ( [ partition_by_clause ] order_by_clause )     :Calculates the relative rank of a row within a group of rows in SQL Server. Use PERCENT_RANK to evaluate the relative standing of a value within a query result set or partition. PERCENT_RANK is similar to the CUME_DIST function.
+[Collation Functions]
+COLLATIONPROPERTY                   :COLLATIONPROPERTY( collation_name , property )    :This function returns the requested property of a specified collation.
+TERTIARY_WEIGHTS                    :TERTIARY_WEIGHTS( non_Unicode_character_string_expression )     :For each character in a non-Unicode string expression - defined with a SQL tertiary collation - this function returns a binary string of weights.
+[Configuration Functions]
+@@DATEFIRST                         :@@DATEFIRST         :This function returns the current value of SET DATEFIRST, for a specific session.
+@@DBTS                              :@@DBTS              :This function returns the value of the current timestamp data type for the current database. The current database will have a guaranteed unique timestamp value.
+@@LANGID                            :@@LANGID            :Returns the local language identifier (ID) of the language that is currently being used.
+@@LANGUAGE                          :@@LANGUAGE          :Returns the name of the language currently being used.
+@@LOCK_TIMEOUT                      :@@LOCK_TIMEOUT      :Returns the current lock time-out setting in milliseconds for the current session.
+@@MAX_CONNECTIONS                   :@@MAX_CONNECTIONS   :Returns the maximum number of simultaneous user connections allowed on an instance of SQL Server. The number returned is not necessarily the number currently configured.
+@@MAX_PRECISION                     :@@MAX_PRECISION     :Returns the precision level used by decimal and numeric data types as currently set in the server.
+@@NESTLEVEL                         :@@NESTLEVEL         :Returns the nesting level of the current stored procedure execution (initially 0) on the local server.
+@@OPTIONS                           :@@OPTIONS           :Returns information about the current SET options.
+@@REMSERVER                         :@@REMSERVER         :Returns the name of the remote SQL Server database server as it appears in the login record.
+@@SERVERNAME                        :@@SERVERNAME        :Returns the name of the local server that is running SQL Server.
+@@SERVICENAME                       :@@SERVICENAME       :Returns the name of the registry key under which SQL Server is running. @@SERVICENAME returns 'MSSQLSERVER' if the current instance is the default instance; this function returns the instance name if the current instance is a named instance.
+@@SPID                              :@@SPID              :Returns the session ID of the current user process.
+@@TEXTSIZE                          :@@TEXTSIZE          :Returns the current value of the TEXTSIZE option.
+@@VERSION                           :@@VERSION           :Returns system and build information for the current installation of SQL Server.
+[Conversion Functions]
+CONVERT                             :CONVERT ( data_type [ ( length ) ] , expression [ , style ] )   :These functions convert an expression of one data type to another.
+CAST                                :CAST ( expression AS data_type [ ( length ) ] )   :These functions convert an expression of one data type to another.
+PARSE                               :PARSE ( string_value AS data_type [ USING culture ] )     :Returns the result of an expression, translated to the requested data type in SQL Server.
+TRY_CAST                            :TRY_CAST ( expression AS data_type [ ( length ) ] )     :Returns a value cast to the specified data type if the cast succeeds; otherwise, returns null.
+TRY_CONVERT                         :TRY_CONVERT ( data_type [ ( length ) ], expression [, style ] )   :Returns a value cast to the specified data type if the cast succeeds; otherwise, returns null.
+TRY_PARSE                           :TRY_PARSE ( string_value AS data_type [ USING culture ] )     :Returns the result of an expression, translated to the requested data type, or null if the cast fails in SQL Server. Use TRY_PARSE only for converting from string to date/time and number types.
+[Cryptographic functions]
+[-->Symmetric encryption and decryption]
+ENCRYPTBYKEY                            :EncryptByKey ( key_GUID , { 'cleartext' | @cleartext }  [, { add_authenticator | @add_authenticator } , { authenticator | @authenticator } ] )  :Encrypts data by using a symmetric key.
+DECRYPTBYKEY                            :DecryptByKey ( { 'ciphertext' | @ciphertext } [ , add_authenticator, { authenticator | @authenticator } ] )     :This function uses a symmetric key to decrypt data.
+ENCRYPTBYPASSPHRASE                     :EncryptByPassPhrase ( { 'passphrase' | @passphrase } , { 'cleartext' | @cleartext }  [ , { add_authenticator | @add_authenticator }  , { authenticator | @authenticator } ] )     :Encrypt data with a passphrase using the TRIPLE DES algorithm with a 128 key bit length.
+DECRYPTBYPASSPHRASE                     :DecryptByPassPhrase ( { 'passphrase' | @passphrase }   , { 'ciphertext' | @ciphertext }  [ , { add_authenticator | @add_authenticator }  , { authenticator | @authenticator } ] )   :This function decrypts data originally encrypted with a passphrase.
+KEY_ID                                  :Key_ID ( 'Key_Name' )     :Returns the ID of a symmetric key in the current database.
+KEY_GUID                                :Key_GUID( 'Key_Name' )     :Returns the GUID of a symmetric key in the database.
+DECRYPTBYKEYAUTOASYMKEY                 :DecryptByKeyAutoAsymKey ( akey_ID , akey_password , { 'ciphertext' | @ciphertext }  [ , { add_authenticator | @add_authenticator }   [ , { authenticator | @authenticator } ] ] )     :This function decrypts encrypted data. To do this, it first decrypts a symmetric key with a separate asymmetric key, and then decrypts the encrypted data with the symmetric key extracted in the first "step".
+KEY_NAME                                :KEY_NAME ( ciphertext | key_guid )    :Returns the name of the symmetric key from either a symmetric key GUID or cipher text.
+SYMKEYPROPERTY                          :SYMKEYPROPERTY ( Key_ID , 'algorithm_desc' | 'string_sid' | 'sid' )     :Returns the algorithm of a symmetric key created from an EKM module.
+[-->Asymmetric encryption and decryption]
+ENCRYPTBYASYMKEY                        :EncryptByAsymKey ( Asym_Key_ID , { 'plaintext' | @plaintext } )     :This function encrypts data with an asymmetric key.
+DECRYPTBYASYMKEY                        :DecryptByAsymKey (Asym_Key_ID , { 'ciphertext' | @ciphertext }  [ , 'Asym_Key_Password' ] )    :This function uses an asymmetric key to decrypt encrypted data.
+ENCRYPTBYCERT                           :EncryptByCert ( certificate_ID , { 'cleartext' | @cleartext } )     :Encrypts data with the public key of a certificate.
+DECRYPTBYCERT                           :DecryptByCert ( certificate_ID , { 'ciphertext' | @ciphertext }   [ , { 'cert_password' | @cert_password } ] )     :This function uses the private key of a certificate to decrypt encrypted data.
+ASYMKEYPROPERTY                         :ASYMKEYPROPERTY (Key_ID , 'algorithm_desc' | 'string_sid' | 'sid')     :This function returns the properties of an asymmetric key.
+ASYMKEY_ID                              :ASYMKEY_ID ( 'Asym_Key_Name' )     :Returns the ID of an asymmetric key.
+[-->Signing and signature verification]
+SIGNBYASYMKEY                           :SignByAsymKey( Asym_Key_ID , @plaintext [ , 'password' ] )    :Signs plaintext with an asymmetric key
+VERIFYSIGNEDBYASYMKEY                   :VerifySignedByAsymKey( Asym_Key_ID , clear_text , signature )   :Tests whether digitally signed data has been changed since it was signed.
+SIGNBYCERT                              :SignByCert ( certificate_ID , @cleartext [ , 'password' ] )     :Signs text with a certificate and returns the signature.
+VERIFYSIGNEDBYCERT                      :VerifySignedByCert( Cert_ID , signed_data , signature )   :Tests whether digitally signed data has been changed since it was signed.
+IS_OBJECTSIGNED                         :IS_OBJECTSIGNED ('OBJECT', @object_id, @class, @thumbprint)      :Indicates whether an object is signed by a specified certificate or asymmetric key.
+[-->Symmetric decryption, with automatic key handling]
+DECRYPTBYKEYAUTOCERT            :DecryptByKeyAutoCert ( cert_ID , cert_password , { 'ciphertext' | @ciphertext }  [ , { add_authenticator | @add_authenticator } [ , { authenticator | @authenticator } ] ] ) :This function decrypts data with a symmetric key. That symmetric key automatically decrypts with a certificate.
+[-->Encryption hashing]
+HASHBYTES        :HASHBYTES ( 'MD2 | MD4 | MD5 | SHA | SHA1 | SHA2_256 | SHA2_512', { @input | 'input' } ) :Returns the MD2, MD4, MD5, SHA, SHA1, or SHA2 hash of its input in SQL Server.
+[-->Certificate copying]
+CERTENCODED    :CERTENCODED ( cert_id ) :This function returns the public portion of a certificate in binary format. This function takes a certificate ID as an argument, and returns the encoded certificate. To create a new certificate, pass the binary result to CREATE CERTIFICATE ... WITH BINARY.
+[Cursor Functions]
+@@CURSOR_ROWS               :@@CURSOR_ROWS    :This returns the number of qualifying rows currently in the last cursor opened on the connection. To improve performance, SQL Server can populate large keyset and static cursors asynchronously. @@CURSOR_ROWS can be called to determine that the number of the rows that qualify for a cursor are retrieved at the time of the @@CURSOR_ROWS call.
+@@FETCH_STATUS              :@@FETCH_STATUS   :This function returns the status of the last cursor FETCH statement issued against any cursor currently opened by the connection.
+CURSOR_STATUS               :CURSOR_STATUS({ 'local' , 'cursor_name' }| { 'global' , 'cursor_name' }| { 'variable' , 'cursor_variable' })  :For a given parameter, CURSOR_STATUS shows whether or not a cursor declaration has returned a cursor and result set.
+[Data Type Functions]
+DATALENGTH                  :DATALENGTH ( expression )      :This function returns the number of bytes used to represent any expression.
+IDENT_SEED                  :IDENT_SEED ( 'table_or_view' )    :Returns the original seed value specified when creating an identity column in a table or a view. Changing the current value of an identity column by using DBCC CHECKIDENT doesn't change the value returned by this function.
+IDENT_CURRENT               :IDENT_CURRENT( 'table_or_view' )     :Returns the last identity value generated for a specified table or view. The last identity value generated can be for any session and any scope.
+IDENTITY                    :IDENTITY (data_type [ , seed , increment ] ) AS column_name   :Is used only in a SELECT statement with an INTO table clause to insert an identity column into a new table. Although similar, the IDENTITY function is not the IDENTITY property that is used with CREATE TABLE and ALTER TABLE.
+IDENT_INCR                  :IDENT_INCR ( 'table_or_view' )     :Returns the increment value specified when creating a table or view's identity column.
+SQL_VARIANT_PROPERTY        :SQL_VARIANT_PROPERTY ( expression , property )     :Returns the base data type and other information about a sql_variant value.
+[Date and time functions]
+[-->Functions that return system date and time values]
+SYSDATETIME			:SYSDATETIME ( )					:Returns a datetime2(7) value containing the date and time of the computer on which the instance of SQL Server runs. The returned value doesn't include the time zone offset.
+SYSDATETIMEOFFSET	:SYSDATETIMEOFFSET ( )	    :Returns a datetimeoffset(7) value containing the date and time of the computer on which the instance of SQL Server runs. The returned value includes the time zone offset.
+SYSUTCDATETIME		:SYSUTCDATETIME ( )			:Returns a datetime2(7) value containing the date and time of the computer on which the instance of SQL Server is running. The function returns the date and time values as UTC time (Coordinated Universal Time).
+CURRENT_TIMESTAMP	:CURRENT_TIMESTAMP	:Returns a datetime value containing the date and time of the computer on which the instance of SQL Server runs. The returned value doesn't include the time zone offset.
+GETDATE				:GETDATE ( )		:Returns a datetime value containing the date and time of the computer on which the instance of SQL Server runs. The returned value doesn't include the time zone offset.
+GETUTCDATE			:GETUTCDATE ( )		:Returns a datetime value containing the date and time of the computer on which the instance of SQL Server runs. The function returns the date and time values as UTC time (Coordinated Universal Time).
+[-->Functions that return date and time parts]
+DATE_BUCKET	:DATE_BUCKET ( datepart, number, date, origin )		:Returns a value corresponding to the start of each date-time bucket from the timestamp defined by the origin parameter, or the default origin value of 1900-01-01 00:00:00.000 if the origin parameter isn't specified.
+DATENAME	:DATENAME ( datepart, date )						:Returns a character string representing the specified datepart of the specified date.
+DATEPART	:DATEPART ( datepart, date )						:Returns an integer representing the specified datepart of the specified date.
+DATETRUNC	:DATETRUNC ( datepart, date )						:Returns an input date truncated to a specified datepart.
+DAY			:DAY ( date )										:Returns an integer representing the day part of the specified date.
+MONTH		:MONTH ( date )										:Returns an integer representing the month part of a specified date.
+YEAR		:YEAR ( date )										:Returns an integer representing the year part of a specified date.
+[-->Functions that return date and time values from their parts]
+DATEFROMPARTS				:DATEFROMPARTS ( year, month, day )																						:Returns a date value for the specified year, month, and day.
+DATETIME2FROMPARTS			:DATETIME2FROMPARTS ( year, month, day, hour, minute, seconds, fractions, precision)									:Returns a datetime2 value for the specified date and time, with the specified precision.
+DATETIMEFROMPARTS			:DATETIMEFROMPARTS ( year, month, day, hour, minute, seconds, milliseconds)												:Returns a datetime value for the specified date and time.
+DATETIMEOFFSETFROMPARTS		:DATETIMEOFFSETFROMPARTS ( year, month, day, hour, minute, seconds, fractions, hour_offset, minute_offset, precision)	:Returns a datetimeoffset value for the specified date and time, with the specified offsets and precision.
+SMALLDATETIMEFROMPARTS		:SMALLDATETIMEFROMPARTS ( year, month, day, hour, minute )																:Returns a smalldatetime value for the specified date and time.
+TIMEFROMPARTS				:TIMEFROMPARTS ( hour, minute, seconds, fractions, precision )															:Returns a time value for the specified time, with the specified precision.
+[-->Functions that return date and time difference values]
+DATEDIFF	    :DATEDIFF ( datepart, startdate, enddate )	        :Returns the number of date or time datepart boundaries, crossed between two specified dates.
+DATEDIFF_BIG	:DATEDIFF_BIG ( datepart, startdate, enddate )	    :Returns the number of date or time datepart boundaries, crossed between two specified dates.
+[-->Functions that modify date and time values]
+DATEADD				:DATEADD (datepart, number, date )			:Returns a new datetime value by adding an interval to the specified datepart of the specified date.
+EOMONTH				:EOMONTH ( start_date [, month_to_add ] )	:Returns the last day of the month containing the specified date, with an optional offset.
+SWITCHOFFSET		:SWITCHOFFSET (DATETIMEOFFSET, time_zone)	:SWITCHOFFSET changes the time zone offset of a DATETIMEOFFSET value, and preserves the UTC value.
+TODATETIMEOFFSET	:TODATETIMEOFFSET (expression, time_zone)	:TODATETIMEOFFSET transforms a datetime2 value into a datetimeoffset value. TODATETIMEOFFSET interprets the datetime2 value in local time, for the specified time_zone.
+[-->Functions that set or return session format functions]
+@@DATEFIRST	        :@@DATEFIRST	                                        :Returns the current value, for the session, of SET DATEFIRST.
+SET DATEFIRST	    :SET DATEFIRST { number | @number_var }	                :Sets the first day of the week to a number from 1 through 7.
+SET DATEFORMAT	    :SET DATEFORMAT { format | @format_var }	            :Sets the order of the dateparts (month/day/year) for entering datetime or smalldatetime data.
+@@LANGUAGE	        :@@LANGUAGE	                                            :Returns the name of the language in current used. @@LANGUAGE isn't a date or time function. However, the language setting can affect the output of date functions.
+SET LANGUAGE	    :SET LANGUAGE { [ N ] 'language' | @language_var }	    :Sets the language environment for the session and system messages. SET LANGUAGE isn't a date or time function. However, the language setting affects the output of date functions.
+sp_helplanguage	    :sp_helplanguage [ [ @language = ] 'language' ]	        :Returns information about date formats of all supported languages. sp_helplanguage isn't a date or time stored procedure. However, the language setting affects the output of date functions.
+[-->Functions that validate date and time values]
+ISDATE	    :ISDATE ( expression )	    :Determines whether a datetime or smalldatetime input expression has a valid date or time value.
+[Graph Functions]
+EDGE_ID_FROM_PARTS	        :EDGE_ID_FROM_PARTS ( object_id, graph_id )   :Construct an edge_id from object_id and graph_id
+GRAPH_ID_FROM_EDGE_ID	    :GRAPH_ID_FROM_EDGE_ID ( edge_id )   :Extract the graph_id from a edge_id
+GRAPH_ID_FROM_NODE_ID	    :GRAPH_ID_FROM_NODE_ID ( node_id )   :Extract the graph_id from a node_id
+NODE_ID_FROM_PARTS	        :NODE_ID_FROM_PARTS ( object_id, graph_id )   :Construct a node_id from an object_id and a graph_id
+OBJECT_ID_FROM_EDGE_ID	    :OBJECT_ID_FROM_EDGE_ID ( edge_id )   :Extract the object_id from an edge_id
+OBJECT_ID_FROM_NODE_ID	    :OBJECT_ID_FROM_NODE_ID ( node_id )   :Extract the object_id from a node_id
+[JSON Functions]
+ISJSON	            :ISJSON ( expression [, json_type_constraint] )  	            :Tests whether a string contains valid JSON.
+JSON_VALUE	        :JSON_VALUE ( expression , path )  	        :Extracts a scalar value from a JSON string.
+JSON_QUERY	        :JSON_QUERY ( expression [ , path ] )  	        :Extracts an object or an array from a JSON string.
+JSON_MODIFY	        :JSON_MODIFY ( expression , path , newValue )  	    :Updates the value of a property in a JSON string and returns the updated JSON string.
+JSON_PATH_EXISTS	:JSON_PATH_EXISTS( value_expression, sql_json_path )   :Tests whether a specified SQL/JSON path exists in the input JSON string.
+[Mathematical Functions]
+ABS                     :ABS ( numeric_expression )                             :A mathematical function that returns the absolute (positive) value of the specified numeric expression. (ABS changes negative values to positive values. ABS has no effect on zero or positive values.)
+ACOS                    :ACOS ( float_expression )                              :A function that returns the angle, in radians, whose cosine is the specified float expression. This is also called arccosine.
+ASIN                    :ASIN ( float_expression )                              :A function that returns the angle, in radians, whose sine is the specified float expression. This is also called arcsine.
+ATAN                    :ATAN ( float_expression )                              :A function that returns the angle, in radians, whose tangent is a specified float expression. This is also called arctangent.
+ATN2                    :ATN2 ( float_expression , float_expression )           :Returns the angle, in radians, between the positive x-axis and the ray from the origin to the point (y, x), where x and y are the values of the two specified float expressions.
+CEILING                 :CEILING ( numeric_expression )                         :This function returns the smallest integer greater than, or equal to, the specified numeric expression.
+COS                     :COS ( float_expression )                               :A mathematical function that returns the trigonometric cosine of the specified angle - measured in radians - in the specified expression.
+COT                     :COT ( float_expression )                               :A mathematical function that returns the trigonometric cotangent of the specified angle - in radians - in the specified float expression.
+DEGREES                 :DEGREES ( numeric_expression )                         :This function returns the corresponding angle, in degrees, for an angle specified in radians.
+EXP                     :EXP ( float_expression )                               :Returns the exponential value of the specified float expression.
+FLOOR                   :FLOOR ( numeric_expression )                           :Returns the largest integer less than or equal to the specified numeric expression.
+LOG                     :LOG ( float_expression [, base ] )                     :Returns the natural logarithm of the specified float expression in SQL Server.
+LOG10                   :LOG10 ( float_expression )                             :Returns the base-10 logarithm of the specified float expression.
+PI                      :PI ( )                                                 :Returns the constant value of PI.
+POWER                   :POWER ( float_expression , y )                         :Returns the value of the specified expression to the specified power.
+RADIANS                 :RADIANS ( numeric_expression )                         :Returns radians when a numeric expression, in degrees, is entered.
+RAND                    :RAND ( [ seed ] )                                      :Returns a pseudo-random float value from 0 through 1, exclusive.
+ROUND                   :ROUND ( numeric_expression , length [ ,function ] )    :Returns a numeric value, rounded to the specified length or precision.
+SIGN                    :SIGN ( numeric_expression )                            :Returns the positive (+1), zero (0), or negative (-1) sign of the specified expression.
+SIN                     :SIN ( float_expression )                               :Returns the trigonometric sine of the specified angle, in radians, and in an approximate numeric, float, expression.
+SQRT                    :SQRT ( float_expression )                              :Returns the square root of the specified float value.
+SQUARE                  :SQUARE ( float_expression )                            :Returns the square of the specified float value.
+TAN                     :TAN ( float_expression )                               :Returns the tangent of the input expression.
+[Logical Functions]
+CHOOSE      :CHOOSE ( index, val_1, val_2 [, val_n ] )              :Returns the item at the specified index from a list of values in SQL Server.
+IIF         :IIF( boolean_expression, true_value, false_value )     :Returns one of two values, depending on whether the Boolean expression evaluates to true or false in SQL Server.
+[Metadata Functions]
+@@PROCID                           :@@PROCID            :Returns the object identifier (ID) of the current Transact-SQL module. A Transact-SQL module can be a stored procedure, user-defined function, or trigger. @@PROCID cannot be specified in CLR modules or the in-process data access provider.
+APP_NAME                           :APP_NAME  ( )       :This function returns the application name for the current session, if the application sets that name value.
+APPLOCK_MODE                       :APPLOCK_MODE( 'database_principal' , 'resource_name' , 'lock_owner' )    :This function returns the lock mode held by the lock owner on a particular application resource. As an application lock function, APPLOCK_MODE operates on the current database. The database is the scope of the application locks.
+APPLOCK_TEST                       :APPLOCK_TEST ( 'database_principal' , 'resource_name' , 'lock_mode' , 'lock_owner' )     :This function returns information as to whether or not a lock can be granted on a particular application resource, for a specified lock owner, without acquisition of the lock. As an application lock function, APPLOCK_TEST operates on the current database. The database is the scope of the application locks.
+ASSEMBLYPROPERTY                   :ASSEMBLYPROPERTY('assembly_name', 'property_name')          :This function returns information about a property of an assembly.
+COL_LENGTH                         :COL_LENGTH ( 'table' , 'column' )                           :This function returns the defined length of a column, in bytes.
+COL_NAME                           :COL_NAME ( table_id , column_id )                           :This function returns the name of a table column, based on the table identification number and column identification number values of that table column.
+COLUMNPROPERTY                     :COLUMNPROPERTY ( id , column , property )                   :This function returns column or parameter information.
+DATABASE_PRINCIPAL_ID              :DATABASE_PRINCIPAL_ID ( 'principal_name' )                  :This function returns the ID number of a principal in the current database. See Principals (Database Engine) for more information about principals.
+DATABASEPROPERTYEX                 :DATABASEPROPERTYEX ( database , property )                  :For a specified database in SQL Server, this function returns the current setting of the specified database option or property.
+DB_ID                               :DB_ID ( [ 'database_name' ] )                              :This function returns the database identification (ID) number of a specified database.
+DB_NAME                             :DB_NAME ( [ database_id ] )                                :This function returns the name of a specified database.
+FILE_ID                             :FILE_ID ( file_name )                                      :For the given logical name for a component file of the current database, this function returns the file identification (ID) number.
+FILE_IDEX                          :FILE_IDEX ( file_name )                                     :This function returns the file identification (ID) number for the specified logical name of a data, log, or full-text file of the current database.
+FILE_NAME                          :FILE_NAME ( file_id )                                       :This function returns the logical file name for a given file identification (ID) number.
+FILEGROUP_ID                       :FILEGROUP_ID ( 'filegroup_name' )                           :This function returns the filegroup identification (ID) number for a specified filegroup name.
+FILEGROUP_NAME                     :FILEGROUP_NAME ( filegroup_id )                             :This function returns the filegroup name for the specified filegroup identification (ID) number.
+FILEGROUPPROPERTY                  :FILEGROUPPROPERTY ( filegroup_name, property )              :This function returns the filegroup property value for a specified name and filegroup value.
+FILEPROPERTY                       :FILEPROPERTY ( file_name , property )                       :Returns the specified file name property value when a file name in the current database and a property name are specified. Returns NULL for files that are not in the current database.
+FULLTEXTCATALOGPROPERTY            :FULLTEXTCATALOGPROPERTY ('catalog_name' ,'property')        :Returns information about full-text catalog properties in SQL Server.
+FULLTEXTSERVICEPROPERTY            :FULLTEXTSERVICEPROPERTY ('property')                        :Returns information related to the properties of the Full-Text Engine. These properties can be set and retrieved by using sp_fulltext_service.
+INDEX_COL                          :INDEX_COL ( '[ database_name . [ schema_name ] .| schema_name ] table_or_view_name', index_id , key_id )    :Returns the indexed column name. Returns NULL for XML indexes.
+INDEXKEY_PROPERTY                  :INDEXKEY_PROPERTY ( object_ID ,index_ID ,key_ID ,property )                                                 :Returns information about the index key. Returns NULL for XML indexes.
+INDEXPROPERTY                      :INDEXPROPERTY ( object_ID , index_or_statistics_name , property )                                           :Returns the named index or statistics property value of a specified table identification number, index or statistics name, and property name. Returns NULL for XML indexes.
+NEXT VALUE FOR                     :NEXT VALUE FOR [ database_name . ] [ schema_name . ]  sequence_name [ OVER (<over_order_by_clause>) ]       :Generates a sequence number from the specified sequence object.
+OBJECT_DEFINITION                  :OBJECT_DEFINITION ( object_id )                                                                             :Returns the Transact-SQL source text of the definition of a specified object.
+OBJECT_ID                          :OBJECT_ID ( '[ database_name . [ schema_name ] . | schema_name . ] object_name' [ ,'object_type' ] )        :Returns the database object identification number of a schema-scoped object.
+OBJECT_NAME                        :OBJECT_NAME ( object_id [, database_id ] )              :Returns the database object name for schema-scoped objects. For a list of schema-scoped objects, see sys.objects (Transact-SQL).
+OBJECT_SCHEMA_NAME                 :OBJECT_SCHEMA_NAME ( object_id [, database_id ] )       :Returns the database schema name for schema-scoped objects. For a list of schema-scoped objects, see sys.objects (Transact-SQL).
+OBJECTPROPERTY                     :OBJECTPROPERTY ( id , property )                        :Returns information about schema-scoped objects in the current database. For a list of schema-scoped objects, see sys.objects (Transact-SQL). This function cannot be used for objects that are not schema-scoped, such as data definition language (DDL) triggers and event notifications.
+OBJECTPROPERTYEX                   :OBJECTPROPERTYEX ( id , property )                      :Returns information about schema-scoped objects in the current database. For a list of these objects, see sys.objects (Transact-SQL). OBJECTPROPERTYEX cannot be used for objects that are not schema-scoped, such as data definition language (DDL) triggers and event notifications.
+ORIGINAL_DB_NAME                   :ORIGINAL_DB_NAME ()                                     :Returns the database name specified by the user in the database connection string. This database is specified by using the sqlcmd-d option (USE database). It can also be specified with the Open Database Connectivity (ODBC) data source expression (initial catalog =databasename).
+PARSENAME                          :PARSENAME ('object_name' , object_piece )               :Returns the specified part of an object name. The parts of an object that can be retrieved are the object name, schema name, database name, and server name.
+SCHEMA_ID                          :SCHEMA_ID ( [ schema_name ] )                           :Returns the schema ID associated with a schema name.
+SCHEMA_NAME                        :SCHEMA_NAME ( [ schema_id ] )                           :Returns the schema name associated with a schema ID.
+SCOPE_IDENTITY                     :SCOPE_IDENTITY()                                        :Returns the last identity value inserted into an identity column in the same scope. A scope is a module: a stored procedure, trigger, function, or batch. Therefore, if two statements are in the same stored procedure, function, or batch, they are in the same scope.
+SERVERPROPERTY                     :SERVERPROPERTY ( 'propertyname' )                       :Returns property information about the server instance.
+STATS_DATE                         :STATS_DATE ( object_id , stats_id )                     :Returns the date of the most recent update for statistics on a table or indexed view.
+TYPE_ID                             :TYPE_ID ( [ schema_name ] type_name )                  :Returns the ID for a specified data type name.
+TYPE_NAME                          :TYPE_NAME ( type_id )                                   :Returns the unqualified type name of a specified type ID.
+TYPEPROPERTY                       :TYPEPROPERTY (type , property)                          :Returns information about a data type.
+VERSION                            :VERSION ( )                                             :Returns the version of Azure Synapse Analytics or Analytics Platform System (PDW) running on the appliance.
+[Ranking Functions]
+RANK            :RANK ( ) OVER ( [ partition_by_clause ] order_by_clause )     :Returns the rank of each row within the partition of a result set. The rank of a row is one plus the number of ranks that come before the row in question.
+NTILE           :NTILE (integer_expression) OVER ( [ <partition_by_clause> ] < order_by_clause > )    :Distributes the rows in an ordered partition into a specified number of groups. The groups are numbered, starting at one. For each row, NTILE returns the number of the group to which the row belongs.
+DENSE_RANK          :DENSE_RANK ( ) OVER ( [ <partition_by_clause> ] < order_by_clause > )     :This function returns the rank of each row within a result set partition, with no gaps in the ranking values. The rank of a specific row is one plus the number of distinct rank values that come before that specific row.
+ROW_NUMBER          :ROW_NUMBER ( ) OVER ( [ PARTITION BY value_expression , ... [ n ] ] order_by_clause )     :Numbers the output of a result set. More specifically, returns the sequential number of a row within a partition of a result set, starting at 1 for the first row in each partition.
+[Replication Functions]
+PUBLISHINGSERVERNAME()      :PUBLISHINGSERVERNAME()  :Returns the name of the originating Publisher for a published database participating in a database mirroring session. This function is executed at a Publisher instance of SQL Server on the publication database. Use it to determine the original Publisher of the published database.
+[Security Functions]
+CERTENCODED                       :CERTENCODED ( cert_id )    :This function returns the public portion of a certificate in binary format. This function takes a certificate ID as an argument, and returns the encoded certificate.
+PWDCOMPARE                        :PWDCOMPARE ( 'clear_text_password'  , password_hash   [ , version ] )     :Hashes a password and compares the hash to the hash of an existing password. PWDCOMPARE can be used to search for blank SQL Server login passwords or common weak passwords.
+CERTPRIVATEKEY                    :CERTPRIVATEKEY (  cert_ID   , ' encryption_password '   [ , ' decryption_password ' ]  )     :This function returns the private key of a certificate in binary format. This function takes three arguments.
+PWDENCRYPT                        :PWDENCRYPT ( 'password' )    :Returns the SQL Server password hash of the input value that uses the current version of the password hashing algorithm.
+CURRENT_USER                      :CURRENT_USER     :This function returns the name of the current user. This function is equivalent to USER_NAME().
+SCHEMA_ID                          :SCHEMA_ID ( [ schema_name ] )                           :Returns the schema ID associated with a schema name.
+SCHEMA_NAME                        :SCHEMA_NAME ( [ schema_id ] )                           :Returns the schema name associated with a schema ID.
+DATABASE_PRINCIPAL_ID              :DATABASE_PRINCIPAL_ID ( 'principal_name' )                  :This function returns the ID number of a principal in the current database. See Principals (Database Engine) for more information about principals.
+sys.fn_builtin_permissions        :sys.fn_builtin_permissions ( [ DEFAULT | NULL ]| empty_string | '<securable_class>' } )   :Returns a description of the built in permissions hierarchy of the server.
+SESSION_USER                      :SESSION_USER       :SESSION_USER returns the user name of the current context in the current database.
+sys.fn_get_audit_file             :fn_get_audit_file ( file_pattern ,{ default | initial_file_name | NULL } ,{ default | audit_record_offset | NULL } )     :Returns information from an audit file created by a server audit in SQL Server. For more information, see SQL Server Audit (Database Engine).
+SUSER_ID                          :SUSER_ID ( [ 'login' ] )      :Returns the login identification number of the user.
+sys.fn_my_permissions             :fn_my_permissions ( securable , 'securable_class' )     :Returns a list of the permissions effectively granted to the principal on a securable. A related function is HAS_PERMS_BY_NAME.
+SUSER_SID                         :SUSER_SID ( [ 'login' ] [ , Param2 ] )   :Returns the security identification number (SID) for the specified login name.
+HAS_PERMS_BY_NAME                 :HAS_PERMS_BY_NAME ( securable , securable_class , permission [ , sub-securable ] [ , sub-securable_class ] )   :
+SUSER_SNAME                       :SUSER_SNAME ( [ server_user_sid ] )   :Returns the login name associated with a security identification number (SID).
+IS_MEMBER                         :IS_MEMBER ( { 'group' | 'role' } )    :Indicates whether the current user is a member of the specified Microsoft Windows group or SQL Server database role. The IS_MEMBER function is not supported for Azure Active Directory Groups.
+SYSTEM_USER                       :SYSTEM_USER    :Allows a system-supplied value for the current login to be inserted into a table when no default value is specified.
+IS_ROLEMEMBER                     :IS_ROLEMEMBER ( 'role' [ , 'database_principal' ] )     :Indicates whether a specified database principal is a member of the specified database role.
+SUSER_NAME                        :SUSER_NAME ( [ server_user_id ] )   :Returns the login identification name of the user.
+IS_SRVROLEMEMBER                  :IS_SRVROLEMEMBER ( 'role' [ , 'login' ] )     :Indicates whether a SQL Server login is a member of the specified server role.
+USER_ID                           :USER_ID ( [ 'user' ] )     :Returns the identification number for a database user.
+LOGINPROPERTY                     :LOGINPROPERTY ( 'login_name' , 'property_name' )    :Returns information about login policy settings.
+USER_NAME                         :USER_NAME ( [ id ] )     :Returns a database user name from a specified identification number.
+ORIGINAL_LOGIN                    :ORIGINAL_LOGIN( )     :Returns the name of the login that connected to the instance of SQL Server. You can use this function to return the identity of the original login in sessions in which there are many explicit or implicit context switches.
+PERMISSIONS                       :PERMISSIONS ( [ objectid [ , 'column' ] ] )    :Returns a value containing a bitmap that indicates the statement, object, or column permissions of the current user.
+[String Functions]
+ASCII		    :ASCII ( character_expression ) 	:Returns the ASCII code value of the leftmost character of a character expression.
+CHAR           	:CHAR ( integer_expression )  	:Returns the single-byte character with the specified integer code, as defined by the character set and encoding of the default collation of the current database.
+CHARINDEX      	:CHARINDEX ( expressionToFind , expressionToSearch [ , start_location ] ) 	:This function searches for one character expression inside a second character expression, returning the starting position of the first expression if found.
+CONCAT         	:CONCAT ( string_value1, string_value2 [, string_valueN ] )  	:This function returns a string resulting from the concatenation, or joining, of two or more string values in an end-to-end manner. (To add a separating value during concatenation, see CONCAT_WS.)
+CONCAT_WS      	:CONCAT_WS ( separator, argument1, argument2 [, argumentN]... )	:This function returns a string resulting from the concatenation, or joining, of two or more string values in an end-to-end manner. It separates those concatenated string values with the delimiter specified in the first function argument. (CONCAT_WS indicates concatenate with separator.)
+DIFFERENCE     	:DIFFERENCE ( character_expression , character_expression )  	:This function returns an integer value measuring the difference between the SOUNDEX() values of two different character expressions.
+FORMAT         	:FORMAT( value, format [, culture ] ) 	:Returns a value formatted with the specified format and optional culture. Use the FORMAT function for locale-aware formatting of date/time and number values as strings. For general data type conversions, use CAST or CONVERT.
+LEFT           	:LEFT ( character_expression , integer_expression )  	:Returns the left part of a character string with the specified number of characters.
+LEN            	:LEN ( string_expression ) 	:Returns the number of characters of the specified string expression, excluding trailing spaces.
+LOWER          	:LOWER ( character_expression )  	:Returns a character expression after converting uppercase character data to lowercase.
+LTRIM          	:LTRIM ( character_expression )	:Returns a character string after truncating all leading spaces.
+NCHAR          	:NCHAR ( integer_expression )  	:Returns the Unicode character with the specified integer code, as defined by the Unicode standard.
+PATINDEX       	:PATINDEX ( '%pattern%' , expression )  	:Returns the starting position of the first occurrence of a pattern in a specified expression, or zero if the pattern is not found, on all valid text and character data types.
+QUOTENAME      	:QUOTENAME ( 'character_string' [ , 'quote_character' ] ) 	:Returns a Unicode string with the delimiters added to make the input string a valid SQL Server delimited identifier.
+REPLACE        	:REPLACE ( string_expression , string_pattern , string_replacement )  	:Replaces all occurrences of a specified string value with another string value.
+REPLICATE      	:REPLICATE ( string_expression , integer_expression )	:Repeats a string value a specified number of times.
+REVERSE        	:REVERSE ( string_expression ) 	:Returns the reverse order of a string value.
+RIGHT          	:RIGHT ( character_expression , integer_expression )  	:Returns the right part of a character string with the specified number of characters.
+RTRIM          	:RTRIM ( character_expression )	:Returns a character string after truncating all trailing spaces.
+SOUNDEX        	:SOUNDEX ( character_expression )  	:Returns a four-character (SOUNDEX) code to evaluate the similarity of two strings.
+SPACE          	:SPACE ( integer_expression )  	:Returns a string of repeated spaces.
+STR            	:STR ( float_expression [ , length [ , decimal ] ] ) 	:Returns character data converted from numeric data. The character data is right-justified, with a specified length and decimal precision.
+STRING_AGG     	:STRING_AGG ( expression, separator ) [ <order_clause> ]	:Concatenates the values of string expressions and places separator values between them. The separator isn't added at the end of string.
+STRING_ESCAPE  	:STRING_ESCAPE( text , type )  	:Escapes special characters in texts and returns text with escaped characters.
+STRING_SPLIT   	:STRING_SPLIT ( string , separator [ , enable_ordinal ] )  	:A table-valued function that splits a string into rows of substrings, based on a specified separator character.
+STUFF          	:STUFF ( character_expression , start , length , replace_with_expression )	:The STUFF function inserts a string into another string. It deletes a specified length of characters in the first string at the start position and then inserts the second string into the first string at the start position.
+SUBSTRING      	:SUBSTRING ( expression ,start , length ) 	:Returns part of a character, binary, text, or image expression in SQL Server.
+TRANSLATE      	:TRANSLATE ( inputString, characters, translations )	:Returns the string provided as a first argument, after some characters specified in the second argument are translated into a destination set of characters, specified in the third argument.
+TRIM           	:TRIM ( [ characters FROM ] string )	:Removes the space character char(32) or other specified characters from the start and end of a string.
+UNICODE        	:UNICODE ( 'ncharacter_expression' )  	:Returns the integer value, as defined by the Unicode standard, for the first character of the input expression.
+UPPER          	:UPPER ( character_expression )	:Returns a character expression with lowercase character data converted to uppercase.
+[System Functions]
+$PARTITION                                  :[ database_name. ] $PARTITION.partition_function_name(expression)     :Returns the partition number into which a set of partitioning column values would be mapped for any specified partition function.
+ERROR_PROCEDURE                             :ERROR_PROCEDURE ( )    :This function returns the name of the stored procedure or trigger where an error occurs, if that error caused the CATCH block of a TRY...CATCH construct to execute.
+@@ERROR                                     :@@ERROR     :Returns the error number for the last Transact-SQL statement executed.
+ERROR_SEVERITY                              :ERROR_SEVERITY ( )     :This function returns the severity value of the error where an error occurs, if that error caused the CATCH block of a TRY...CATCH construct to execute.
+@@IDENTITY                                  :@@IDENTITY     :Is a system function that returns the last-inserted identity value.
+ERROR_STATE                                 :ERROR_STATE ( )    :Returns the state number of the error that caused the CATCH block of a TRY...CATCH construct to be run.
+@@PACK_RECEIVED                             :@@PACK_RECEIVED     :Returns the number of input packets read from the network by SQL Server since it was last started.
+FORMATMESSAGE                               :FORMATMESSAGE ( { msg_number  | ' msg_string ' | @msg_variable} , [ param_value [ ,...n ] ] )     :Constructs a message from an existing message in sys.messages or from a provided string. The functionality of FORMATMESSAGE resembles that of the RAISERROR statement. However, RAISERROR prints the message immediately, while FORMATMESSAGE returns the formatted message for further processing.
+@@ROWCOUNT                                  :@@ROWCOUNT    :Returns the number of rows affected by the last statement. If the number of rows is more than 2 billion, use ROWCOUNT_BIG.
+GET_FILESTREAM_TRANSACTION_CONTEXT           :GET_FILESTREAM_TRANSACTION_CONTEXT ()   :Returns a token that represents the current transaction context of a session. The token is used by an application to bind FILESTREAM file-system streaming operations to the transaction. For a list of FILESTREAM topics, see Binary Large Object (Blob) Data (SQL Server).
+@@TRANCOUNT                                  :@@TRANCOUNT  :Returns the number of BEGIN TRANSACTION statements that have occurred on the current connection.
+GETANSINULL                                  :GETANSINULL ( [ 'database' ] )   :Returns the default nullability for the database for this session.
+BINARY_CHECKSUM                              :BINARY_CHECKSUM ( * | expression [ ,...n ] )  :Returns the binary checksum value computed over a row of a table or over a list of expressions.
+HOST_ID                                      :HOST_ID ()    :Returns the workstation identification number. The workstation identification number is the process ID (PID) of the application on the client computer that is connecting to SQL Server.
+CHECKSUM                                     :CHECKSUM ( * | expression [ ,...n ] )  :The CHECKSUM function returns the checksum value computed over a table row, or over an expression list. Use CHECKSUM to build hash indexes.
+HOST_NAME                                    :HOST_NAME ()   :Returns the workstation name.
+COMPRESS                                     :COMPRESS ( expression )    :This function compresses the input expression, using the GZIP algorithm. The function returns a byte array of type varbinary(max).
+ISNULL                                       :ISNULL ( check_expression , replacement_value )  :Replaces NULL with the specified replacement value.
+CONNECTIONPROPERTY                           :CONNECTIONPROPERTY ( property )    :For a request that comes in to the server, this function returns information about the connection properties of the unique connection which supports that request.
+ISNUMERIC                                    :ISNUMERIC ( expression )   :Determines whether an expression is a valid numeric type.
+CONTEXT_INFO                                 :CONTEXT_INFO()    :This function returns the context_info value either set for the current session or batch, or derived through use of the SET CONTEXT_INFO statement.
+MIN_ACTIVE_ROWVERSION                        :MIN_ACTIVE_ROWVERSION ( )  :Returns the lowest active rowversion value in the current database. A rowversion value is active if it is used in a transaction that has not yet been committed. For more information, see rowversion (Transact-SQL).
+CURRENT_REQUEST_ID                           :CURRENT_REQUEST_ID()   :This function returns the ID of the current request within the current session.
+NEWID                                        :NEWID ( )    :Creates a unique value of type uniqueidentifier.
+CURRENT_TRANSACTION_ID                       :CURRENT_TRANSACTION_ID( )    :This function returns the transaction ID of the current transaction in the current session.
+NEWSEQUENTIALID                              :NEWSEQUENTIALID ( )    :Creates a GUID that is greater than any GUID previously generated by this function on a specified computer since Windows was started. After restarting Windows, the GUID can start again from a lower range, but is still globally unique. When a GUID column is used as a row identifier, using NEWSEQUENTIALID can be faster than using the NEWID function. This is because the NEWID function causes random activity and uses fewer cached data pages. Using NEWSEQUENTIALID also helps to completely fill the data and index pages.
+DECOMPRESS                                   :DECOMPRESS ( expression )  :This function will decompress an input expression value, using the GZIP algorithm. DECOMPRESS will return a byte array (VARBINARY(MAX) type).
+ROWCOUNT_BIG                                 :ROWCOUNT_BIG ( )    :Returns the number of rows affected by the last statement executed. This function operates like @@ROWCOUNT, except the return type of ROWCOUNT_BIG is bigint.
+ERROR_LINE                                   :ERROR_LINE ( )  :This function returns the line number of occurrence of an error that caused the CATCH block of a TRY...CATCH construct to execute.
+SESSION_CONTEXT                              :SESSION_CONTEXT(N'key')    :Returns the value of the specified key in the current session context.
+ERROR_MESSAGE                                :ERROR_MESSAGE ( )     :This function returns the message text of the error that caused the CATCH block of a TRY...CATCH construct to execute.
+SESSION_ID                                   :SESSION_ID ( )    :Returns the ID of the current Azure Synapse Analytics or Analytics Platform System (PDW) session.
+ERROR_NUMBER                                 :ERROR_NUMBER ( )    :This function returns the error number of the error that caused the CATCH block of a TRY...CATCH construct to execute.
+XACT_STATE                                   :XACT_STATE()   :Is a scalar function that reports the user transaction state of a current running request. XACT_STATE indicates whether the request has an active user transaction, and whether the transaction is capable of being committed.
+[System Statistical Functions]
+@@CONNECTIONS               :@@CONNECTIONS          :This function returns the number of attempted connections - both successful and unsuccessful - since SQL Server was last started.
+@@PACK_RECEIVED             :@@PACK_RECEIVED        :Returns the number of input packets read from the network by SQL Server since it was last started.
+@@CPU_BUSY                  :@@CPU_BUSY             :This function returns the amount of time that SQL Server has spent in active operation since its latest start.
+@@PACK_SENT                 :@@PACK_SENT            :Returns the number of output packets written to the network by SQL Server since it was last started.
+fn_virtualfilestats         :fn_virtualfilestats ( { database_id | NULL } , { file_id | NULL } )      :Returns I/O statistics for database files, including log files. In SQL Server, this information is also available from the sys.dm_io_virtual_file_stats dynamic management view.
+@@TIMETICKS                 :@@TIMETICKS            :Returns the number of microseconds per tick.
+@@IDLE                      :@@IDLE   :Returns the time that SQL Server has been idle since it was last started. The result is in CPU time increments, or "ticks," and is cumulative for all CPUs, so it may exceed the actual elapsed time. Multiply by @@TIMETICKS to convert to microseconds.
+@@TOTAL_ERRORS              :@@TOTAL_ERRORS         :Returns the number of disk write errors encountered by SQL Server since SQL Server last started.
+@@IO_BUSY                   :@@IO_BUSY              :Returns the time that SQL Server has spent performing input and output operations since SQL Server was last started. The result is in CPU time increments ("ticks"), and is cumulative for all CPUs, so it may exceed the actual elapsed time. Multiply by @@TIMETICKS to convert to microseconds.
+@@TOTAL_READ                :@@TOTAL_READ           :Returns the number of disk reads, not cache reads, by SQL Server since SQL Server was last started.
+@@PACKET_ERRORS             :@@PACKET_ERRORS        :Returns the number of network packet errors that have occurred on SQL Server connections since SQL Server was last started.
+@@TOTAL_WRITE               :@@TOTAL_WRITE          :Returns the number of disk writes by SQL Server since SQL Server was last started.
+[Text and Image Functions]
+TEXTPTR ( column )      :TEXTPTR ( ? )    :Returns the text-pointer value that corresponds to a text, ntext, or image column in varbinary format. The retrieved text pointer value can be used in READTEXT, WRITETEXT, and UPDATETEXT statements.
+TEXTVALID               :TEXTVALID ( 'table.column' ,text_ ptr )     :A text, ntext, or image function that checks whether a specific text pointer is valid.
+[Trigger Functions]
+COLUMNS_UPDATED         :COLUMNS_UPDATED ( )            :This function returns a varbinary bit pattern indicating the inserted or updated columns of a table or view. Use COLUMNS_UPDATED anywhere inside the body of a Transact-SQL INSERT or UPDATE trigger to test whether the trigger should execute certain actions.
+EVENTDATA               :EVENTDATA( )           :This function returns information about server or database events. When an event notification fires, and the specified service broker receives the results, EVENTDATA is called. A DDL or logon trigger also support internal use of EVENTDATA.
+TRIGGER_NESTLEVEL       :TRIGGER_NESTLEVEL ( [ object_id ] , [ 'trigger_type' ] , [ 'trigger_event_category' ] )             :Returns the number of triggers executed for the statement that fired the trigger. TRIGGER_NESTLEVEL is used in DML and DDL triggers to determine the current level of nesting.
+UPDATE()                :UPDATE ( ? )            :Returns a Boolean value that indicates whether an INSERT or UPDATE attempt was made on a specified column of a table or view. UPDATE() is used anywhere inside the body of a Transact-SQL INSERT or UPDATE trigger to test whether the trigger should execute certain actions.

@@ -5,15 +5,15 @@ import com.alibaba.druid.sql.ast.statement.SQLAlterTableAddColumn;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
 
 public class SQLASTOutputVisitorV2 extends SQLASTOutputVisitor {
-    public SQLASTOutputVisitorV2(Appendable appender) {
+    public SQLASTOutputVisitorV2(StringBuilder appender) {
         super(appender);
     }
 
-    public SQLASTOutputVisitorV2(Appendable appender, DbType dbType) {
+    public SQLASTOutputVisitorV2(StringBuilder appender, DbType dbType) {
         super(appender, dbType);
     }
 
-    public SQLASTOutputVisitorV2(Appendable appender, boolean parameterized) {
+    public SQLASTOutputVisitorV2(StringBuilder appender, boolean parameterized) {
         super(appender, parameterized);
     }
 

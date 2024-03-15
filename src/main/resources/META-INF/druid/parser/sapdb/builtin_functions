@@ -1,0 +1,186 @@
+[AggregateFunctions]
+AVG                            :AVG ( <numeric-expression > | DISTINCT< column-name >)    :Computes the average of a numeric expression for a set of rows, or computes the average of a set of unique values.
+CORR                           :CORR (<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]   :Returns the correlation coefficient of a set of number pairs.
+COVAR_POP                      :COVAR_POP (<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Returns the population covariance of a set of number pairs.
+COVAR_SAMP                     :COVAR_SAMP (<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Returns the sample covariance of a set of number pairs.
+COUNT                          :COUNT ( <* | ><expression | >DISTINCT< column-name> )    :Counts the number of rows in a group, depending on the specified parameters.
+EXP_WEIGHTED_AVG               :EXP_WEIGHTED_AVG (<expression>,< period-expression>) OVER (<window-spec>)    :Calculates an exponential weighted moving average.
+FIRST_VALUE                    :FIRST_VALUE (<expression> [IGNORE NULLS | RESPECT NULLS]) OVER (<window-spec>)    :Returns the first value from a set of values.
+LAST_VALUE                     :LAST_VALUE (<expression> [IGNORE NULLS | RESPECT NULLS]) OVER (<window-spec>)    :Returns the last value from a set of values.
+LIST                           :LIST([ALL | DISTINCT] <string-expresssion>[, <'delimiter-string'>] [ORDER BY <order-by-expression> [ ASC | DESC ], ... ] )    :Returns a delimited list of values for every row in a group.
+MAX                            :MAX ( <expression>| DISTINCT< column-name> )    :Returns the maximum <expression> value found in each group of rows.
+MEDIAN                         :MEDIAN([ALL | DISTINCT] <expression>) [OVER (<window-spec>)]    :Returns the median of an expression.
+MIN                            :MIN ( <expression>| DISTINCT< column-name> )    :Returns the minimum expression value found in each group of rows.
+REGR_AVGX                      :REGR_AVGX (<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Computes the average of the independent variable of the regression line.
+REGR_AVGY                      :REGR_AVGY(<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]     :Computes the average of the dependent variable of the regression line.
+REGR_COUNT                     :REGR_COUNT(<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Returns an integer that represents the number of non-NULL number pairs used to fit the regression line.
+REGR_INTERCEPT                 :REGR_INTERCEPT(<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]     :Computes the y-intercept of the linear regression line that best fits the dependent and independent variables.
+REGR_R2                        :REGR_R2(<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Computes the coefficient of determination (also referred to as R-squared or the goodness-of-fit statistic) for the regression line.
+REGR_SLOPE                     :REGR_SLOPE(<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Computes the slope of the linear regression line, fitted to non-NULL pairs.
+REGR_SXX                       :REGR_SXX(<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Computes the slope of the linear regression line, fitted to non-NULL pairs.
+REGR_SXY                       :REGR_SXY(<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Returns the sum of products of the dependent and independent variables. Use REGR_SXY to evaluate the statistical validity of a regression model.
+REGR_SYY                       :REGR_SYY(<dependent-expression>, <independent-expression>) [OVER (<window-spec>)]    :Returns values that can evaluate the statistical validity of a regression model.
+STDDEV                         :STDDEV( [ ALL ] <expression> )    :Returns the standard deviation of a set of numbers.
+STDDEV_POP                     :STDDEV_POP( [ ALL ] <expression> )    :Computes the standard deviation of a population consisting of a numeric-expression, as a DOUBLE.
+STDDEV_SAMP                    :STDDEV_SAMP( [ ALL ] <expression> )    :Computes the standard deviation of a sample consisting of a numeric-expression, as a DOUBLE.
+SUM                            :SUM ( <expression> | DISTINCT< column-name> )    :Returns the total of the specified expression for each group of rows.
+VAR_POP                        :VAR_POP( [ ALL ] <expression> )    :Computes the statistical variance of a population consisting of a numeric-expression, as a DOUBLE.
+VAR_SAMP                       :VAR_SAMP( [ ALL ] <expression> )    :Computes the statistical variance of a sample consisting of a numeric-expression, as a DOUBLE.
+VARIANCE                       :VARIANCE( [ ALL ] <expression> )    :Returns the variance of a set of numbers.
+WEIGHTED_AVG                   :WEIGHTED_AVG (<expression>) OVER (<window-spec>)    :Calculates an arithmetically (or linearly) weighted average.
+[Analytical Functions]
+DENSE_RANK              :DENSE_RANK () OVER ( ORDER BY <expression> [ ASC | DESC ] )   :Ranks items in a group.
+NTILE                   :NTILE () OVER ( ORDER BY <expression> [ ASC | DESC ] )   :Distributes query results into a specified number of buckets and assigns the bucket number to each row in the bucket.
+PERCENT_RANK            :PERCENT_RANK () OVER ( ORDER BY <expression> [ ASC | DESC ] )    :Computes the (fractional) position of one row returned from a query with respect to the other rows returned by the query, as defined by the ORDER BY clause.
+PERCENTILE_CONT         :PERCENTILE_CONT ( <expression1> ) WITHIN GROUP ( ORDER BY <expression2> [ ASC | DESC ] )   :Given a percentile, returns the value that corresponds to that percentile. Assumes a continuous distribution data model.
+PERCENTILE_DISC         :PERCENTILE_DISC ( <expression1> ) WITHIN GROUP ( ORDER BY <expression2> [ ASC | DESC ] )   :Given a percentile, returns the value that corresponds to that percentile. Assumes a discrete distribution data model.
+RANK                    :RANK () OVER ( [ PARTITION BY ] ORDER BY < expression> [ ASC | DESC ] )   :Ranks items in a group.
+ROW_NUMBER              :ROW_NUMBER() OVER ([PARTITION BY <window partition>] ORDER BY <window ordering>)   :A ranking function that returns a unique row number for each row in a window partition, restarting the row numbering at the start of every window partition.
+[Date and Time Functions]
+ISDATE                  :ISDATE ( <string> )   :Tests whether a string argument can be converted to a date.
+DATE                    :DATE ( <expression> )   :Converts the expression into a date, and removes any hours, minutes, or seconds.
+DATEADD                 :DATEADD ( <date-part>, <numeric-expression>, <date-expression> )   :Returns the date produced by adding the specified number of the specified date parts to a date.
+DATECEILING             :DATECEILING ( <date-part>, <datetime-expression> <[,multiple -expression]>)   :Calculates a new date, time, or datetime value by increasing the provided value up to the nearest larger value of the specified granularity.
+DATEDIFF                :DATEDIFF ( <date-part>, <date-expression1>, <date-expression2> )   :Returns the interval between two dates.
+DATEFLOOR               :DATEFLOOR ( <date-part>, <datetime-expression> <[,multiple-expression]>)   :Calculates a new date, time, or datetime value by reducing the provided value down to the nearest lower value of the specified multiple with the specified granularity.
+DATEFORMAT              :DATEFORMAT ( <datetime-expression>, <string-expression> )   :Returns a string representing a date expression in the specified format.
+DATENAME                :DATENAME ( <date-part>, <date-expression >)   :Returns the name of the specified part (such as the month “June”) of a date/time value, as a character string.
+DATEPART                :DATEPART ( <date-part>, <date-expression> )   :Returns an integer value for the specified part of a date/time value.
+DATEROUND               :DATEROUND (<date-part>, <datetime-expression> <[,multiple-expression]> )   :Calculates a new date, time, or datetime value by rounding the provided value up or down to the nearest multiple of the specified value with the specified granularity.
+DATETIME                :DATETIME ( <expression> )   :Converts an expression into a timestamp.
+DAY                     :DAY ( <date-expression> )   :Returns an integer from 1 to 31 corresponding to the day of the month of the date specified.
+DAYNAME                 :DAYNAME ( <date-expression> )   :Returns the name of the day of the week from the specified date.
+DAYS                    :DAYS ( <datetime-expression> )|   ( <datetime-expression>, <datetime-expression> )<>|( <datetime-expression>, <integer-expression> )   :Returns the number of days since an arbitrary starting date, returns the number of days between two specified dates, or adds the specified <integer-expression> number of days to a given date.
+DOW                     :DOW ( <date-expression> )   :Returns a number from 1 to 7 representing the day of the week of the specified date, with Sunday=1, Monday=2, and so on.
+GETDATE                 :GETDATE ()   :Returns the current date and time.
+HOUR                    :HOUR ( <datetime-expression> )   :Returns a number from 0 to 23 corresponding to the hour component of the specified date/time.
+HOURS                   :HOURS ( <datetime-expression>| <datetime-expression>, <datetime-expression>| <datetime-expression>, <integer-expression> )   :Returns the number of hours since an arbitrary starting date and time, the number of whole hours between two specified times, or adds the specified integer-expression number of hours to a time.
+MINUTE                  :MINUTE ( <datetime-expression> )   :Returns a number from 0 to 59 corresponding to the minute component of the specified date/time value.
+MINUTES                 :MINUTES ( <datetime-expression>| <datetime-expression>, <datetime-expression>| <datetime-expression>, <integer-expression> )   :Returns the number of minutes since an arbitrary date and time, the number of whole minutes between two specified times, or adds the specified integer-expression number of minutes to a time.
+MONTH                   :MONTH ( <date-expression> )  :Returns a number from 1 to 12 corresponding to the month of the given date.
+MONTHNAME               :MONTHNAME ( <date-expression> )  :Returns the name of the month from the specified date expression.
+MONTHS                  :MONTHS ( <date-expression>| <date-expression, datetime-expression>| <date-expression, integer-expression> )   :Returns the number of months since an arbitrary starting date/time or the number of months between two specified date/times, or adds the specified integer-expression number of months to a date/time.
+NOW                     :NOW ( * )   :Returns the current date and time. This is the historical syntax for CURRENT TIMESTAMP.
+QUARTER                 :QUARTER( <date-expression> )   :Returns a number indicating the quarter of the year from the supplied date expression.
+SECOND                  :SECOND ( <datetime-expression> )   :Returns a number from 0 to 59 corresponding to the second component of the given date/time value.
+SECONDS                 :SECONDS ( <datetime-expression>| <datetime-expression>, <datetime-expression>| <datetime-expression>, <integer-expression> )   :Returns the number of seconds since an arbitrary starting date and time, the number of seconds between two times, or adds an integer amount of seconds to a time.
+TODAY                   :TODAY ( * )   :Returns the current date. This is the historical syntax for CURRENT DATE.
+WEEKS                   :WEEKS ( <datetime-expression>| <datetime-expression, datetime-expression>| <datetime-expression, integer-expression> )   :Returns the number of weeks since an arbitrary starting date/time, returns the number of weeks between two specified date/times, or adds the specified integer-expression number of weeks to a date/time.
+YEAR                    :YEAR ( <datetime-expression> )   :Returns a 4-digit number corresponding to the year of the given date/time.
+YEARS                   :YEARS ( <datetime-expression>| <datetime-expression, datetime-expression>| <datetime-expression, integer-expression> )   :Returns a 4-digit number corresponding to the year of a given date/time, returns the number of years between two specified date/times, or adds the specified integer-expression number of years to a date/time.
+YMD                     :YMD ( <integer-expression1>, <integer-expression2>, <integer-expression3> )   :Returns a date value corresponding to the given year, month, and day of the month.
+[HTTP Functions]
+HTML_DECODE             :HTML_DECODE( <string> )   :Decodes special character entities that appear in HTML literal strings.
+HTML_ENCODE             :HTML_ENCODE( <string> )   :Encodes special characters within strings to be inserted into HTML documents.
+HTTP_DECODE             :HTTP_DECODE( <string> )   :Decodes HTTP encoded strings. This is also known as URL decoding.
+HTTP_ENCODE             :HTTP_ENCODE( <string> )   :Encodes strings for use with HTTP. This is also known as URL encoding.
+HTTP_HEADER             :HTTP_HEADER( <header-field-name> )   :Returns the value of an HTTP request header.
+HTTP_VARIABLE           :HTTP_VARIABLE( <var-name> [ , <instance> [ , <attribute> ] ] )   :Returns the value of an HTTP variable.
+NEXT_HTTP_HEADER        :NEXT_HTTP_HEADER( <header-name> )   :Returns the next HTTP header name.
+NEXT_HTTP_VARIABLE      :NEXT_HTTP_VARIABLE( <var-name>)   :Returns the next HTTP variable name.
+[Numeric Functions]
+ABS                     :ABS ( <numeric-expression> )   :Returns the absolute value of a numeric expression<.>
+ACOS                    :ACOS( <numeric-expression> )   :Returns the arc-cosine, in radians, of a numeric expression.
+ASIN                    :ASIN( <numeric-expression> )   :Returns the arc-sine, in radians, of a number.
+ATAN                    :ATAN( <numeric-expression> )   :Returns the arc-tangent, in radians, of a number.
+ATAN2                   :ATAN2 ( <numeric-expression1>, <numeric-expression2> )   :Returns the arc-tangent, in radians, of the ratio of two numbers.
+CEIL                    :CEIL ( <numeric-expression> )   :Returns the smallest integer greater than or equal to the specified expression.
+CEILING                 :CEILING ( <numeric-expression> )   :Returns the ceiling (smallest integer not less than) of a number.
+COS                     :COS ( <numeric-expression> )   :Returns the cosine of a number, expressed in radians.
+COT                     :COT ( <numeric-expression> )   :Returns the cotangent of a number, expressed in radians.
+DEGREES                 :DEGREES ( <numeric-expression> )   :Converts a number from radians to degrees.
+EXP                     :EXP ( <numeric-expression> )   :Returns the exponential function, e to the power of a number.
+FLOOR                   :FLOOR ( <numeric-expression> )   :Returns the floor of (largest integer not greater than) a number.
+LN                      :LN ( <numeric-expression> )   :Returns the natural logarithm of the specified expression.
+LOG                     :LOG ( <numeric-expression> )   :Returns the natural logarithm of a number.
+LOG10                   :LOG10 ( <numeric-expression> )   :Returns the base 10 logarithm of a number.
+MOD                     :MOD ( <dividend>, <divisor> )  :Returns the remainder when one whole number is divided by another.
+PI                      :PI ( * )                           :Returns the numeric value PI.
+POWER                   :POWER ( <numeric-expression1>, <numeric-expression2> )  :Calculates one number raised to the power of another.
+RADIANS                 :RADIANS ( <numeric-expression> )   :Converts a number from degrees to radians.
+RAND                    :RAND ( [< integer-expression> ] )   :Returns a DOUBLE precision, random number x, where 0 <= x <1, with an optional seed.
+REMAINDER               :REMAINDER ( <dividend>, <divisor> ))   :Returns the remainder when one whole number is divided by another.
+ROUND                   :ROUND ( <numeric-expression>, <integer-expression> )  :Rounds the <numeric-expression> to the specified <integer-expression> number of places after the decimal point.
+SIGN                    :SIGN ( <numeric-expression> )   :Returns the sign of a number.
+SIN                     :SIN ( <numeric-expression> )   :Returns the sine of a number, expressed in radians.
+SQRT                    :SQRT ( <numeric-expression> )   :Returns the square root of a number.
+SQUARE                  :SQUARE ( <numeric-expression> )   :Returns the square of the specified expression as a float.
+TAN                     :TAN ( <numeric-expression> )   :Returns the tangent of a number.
+TRUNCNUM                :TRUNCNUM ( <numeric-expression>, <integer-expression> )   :Truncates a number at a specified number of places after the decimal point.
+WIDTH_BUCKET            :WIDTH_BUCKET ( <expression>, <min_value>, <max_value>, <num_buckets> )  :For a given expression, the WIDTH_BUCKET function returns the bucket number that the result of this expression will be assigned after it is evaluated.
+[String Functions]
+ASCII                   :ASCII ( <string-expression> )  :Returns the integer ASCII value of the first byte in a string-expression.
+BIT_LENGTH              :BIT_LENGTH( <column-name> )   :Returns an unsigned 64-bit value containing the bit length of the column parameter.
+BYTE_LENGTH             :BYTE_LENGTH ( <string-expression> )   :Returns the number of bytes in a string.
+CHAR                    :CHAR ( <integer-expression> )   :Returns the character with the ASCII value of a number.
+CHAR_LENGTH             :CHAR_LENGTH ( <string-expression> )   :Returns the number of characters in a string.
+CHARINDEX               :CHARINDEX ( <string-expression1, string-expression2> )   :Returns the position of the first occurrence of a specified string in another string.
+DIFFERENCE              :DIFFERENCE ( <string-expression1>, <string-expression2> )   :Compares two strings, evaluates the similarity between them, and returns a value from 0 to 4.
+GRAPHICAL_PLAN          :GRAPHICAL_PLAN ( <string-expression> [, <statistics-level>[, <cursor-type>[, <update-status> ]]])   :Returns the graphical query plan to Interactive SQL in an XML format string.
+HTML_PLAN               :HTML_PLAN ( <string-expression> )   :Returns query plans in an HTML format string.
+INSERTSTR               :INSERTSTR ( <numeric-expression>, <string-expression1>, <string-expression2> )   :Inserts a string into another string at a specified position.
+LCASE                   :LCASE ( <string-expression> )   :Converts all characters in a string to lowercase.
+LEFT                    :LEFT ( <string-expression>, <numeric-expression> )   :Returns a specified number of characters from the beginning of a string.
+LEN                     :LEN ( <string_expr> )   :This function is the equivalent of CHAR_LENGTH (< string_expression >).
+LENGTH                  :LENGTH ( <string-expression> )   :Returns the number of characters in the specified string.
+LOCATE                  :LOCATE ( <string-expression1>, <string-expression2>[ , <numeric-expression> ] )   :Returns the position of one string within another.
+LOWER                   :LOWER ( <string-expression> )   :Converts all characters in a string to lowercase.
+LTRIM                   :LTRIM ( <string-expression> )   :Removes leading blanks from a string.
+PATINDEX                :PATINDEX ( '%<pattern>%', <string-expression> )   :Returns the starting position of the first occurrence of a specified pattern.
+REPEAT                  :REPEAT ( <string-expression>, <integer-expression> )   :Concatenates a string a specified number of times.
+REPLACE                 :REPLACE ( <original-string>, <search-string>, <replace-string >)   :Replaces all occurrences of a substring with another substring.
+REPLICATE               :REPLICATE ( <string-expression>, <integer-expression> )   :Concatenates a string a specified number of times.
+REVERSE                 :REVERSE (< expression> | <uchar_expr> )   :Takes one argument as an input of type BINARY or STRING and returns the specified string with characters listed in reverse order.
+RIGHT                   :RIGHT ( <string-expression>, <numeric-expression> )   :Returns the rightmost characters of a string.
+RTRIM                   :RTRIM ( <string-expression> )   :Returns a string with trailing blanks removed.
+SIMILAR                 :SIMILAR ( <string-expression1>, <string-expression2> )   :Returns an integer between 0 and 100 representing the similarity between two strings.
+SORTKEY                 :SORTKEY ( <string-expression> [, { <collation-id>| <collation-name> [(<collation-tailoring-string>)] } ])   :Generates values that can be used to sort character strings based on alternate collation rules.
+SOUNDEX                 :SOUNDEX ( <string-expression> )   :Returns a number representing the sound of a string.
+SPACE                   :SPACE ( <integer-expression> )   :Returns a specified number of spaces.
+STR                     :STR ( <numeric-expression >[ , <length >[ , <decimal> ] ] )   :Returns the string equivalent of a number.
+STR_REPLACE             :REPLACE ( <string_expr1>, <string_expr2>, <string_expr3> )   :Takes three arguments as input of type BINARY or STRING and replaces any instances of the second string expression (<string_expr2>) that occur within the first string expression (<string_expr1>) with a third expression (<string_expr3>).
+STRING                  :STRING ( <string-expression> [ , … ] )   :Concatenates one or more strings into one large string.
+STRTOUUID               :STRTOUUID ( <string-expression> )    :Converts a string value to a unique identifier (UUID or GUID) value.
+STUFF                   :STUFF ( <string-expression1>, <start>, <length>, <string-expression2 >)   :Deletes a number of characters from one string and replaces them with another string.
+SUBSTRING               :SUBSTRING ( <string-expression>, <start> [ , <length >] )   :Returns a substring of a string.
+SUBSTR                  :SUBSTR ( <string-expression>, <start> [ , <length >] )   :Returns a substring of a string.
+SUBSTRING64             :SUBSTRING64(...)   :The SUBSTRING64 function returns a variable-length character string of the large object column or variable parameter.
+UCASE                   :UCASE ( <string-expression> )   :Converts all characters in a string to uppercase.
+UPPER                   :UPPER ( <string-expression> )   :Converts all characters in a string to uppercase.
+UUIDTOSTR               :UUIDTOSTR ( <uuid-expression> )   :Converts a unique identifier value (UUID, also known as GUID) to a string value.
+[System Functions]
+CEIL                    :CEIL ( <numeric-expression> )   :Returns the smallest integer greater than or equal to the specified expression.
+COL_LENGTH              :COL_LENGTH ( <table-name>, <column-name> )   :Returns the defined length of a column.
+COL_NAME                :COL_NAME ( <table-id>, <column-id> [ , <database-id> ] )   :Returns the column name.
+CONNECTION_PROPERTY     :CONNECTION_PROPERTY ( { <integer-expression1> | <string-expression> }… [ , <integer-expression2> ] )   :Returns the value of a given connection property as a string.
+DATALENGTH              :DATALENGTH ( <expression> )   :Returns the length of the expression in bytes.
+DB_ID                   :DB_ID ( [ <database-name >] )  :Returns the database ID number.
+DB_NAME                 :DB_NAME ( [ <database-id> ] )   :Returns the database name.
+DB_PROPERTY             :DB_PROPERTY ( { <property-id> | <property-name> }[ , { <database-id> | <database-name> } ] )   :Returns the value of the given property.
+EVENT_CONDITION         :EVENT_CONDITION ( <condition-name> )   :Specifies when an event handler is triggered.
+EVENT_CONDITION_NAME    :EVENT_CONDITION_NAME ( <integer >)   :Can be used to list the possible parameters for EVENT_CONDITION.
+EVENT_PARAMETER         :EVENT_PARAMETER (  'ConnectionID'| 'User'| 'EventName'| 'Executions'| 'IQDBMainSpaceName'| 'NumActive'| 'TableName'| <condition-name> )   :Provides context information for event handlers.
+GROUP_MEMBER            :GROUP_MEMBER ( <group-name-string-expression>[ , <user-name-string-expression >] )   :Identifies whether the user belongs to the specified group.
+INDEX_COL               :INDEX_COL ( <table-name>, <index-id>, <key_#> [ , <user-id> ] )   :Returns the name of the indexed column.
+NEXT_CONNECTION         :NEXT_CONNECTION ( {<connection-id> }, {<database-id> } )   :Returns the next connection number, or the first connection if the parameter is NULL.
+NEXT_DATABASE           :NEXT_DATABASE ( { NULL | <database-id> } )  :Returns the next database ID number, or the first database if the parameter is NULL.
+OBJECT_ID               :OBJECT_ID (< object-name> )   :Returns the object ID.
+OBJECT_NAME             :OBJECT_NAME ( <object-id> [ , <database-id> ] )   :Returns the object name.
+PROPERTY                :PROPERTY ( { <property-id>  |  <property-name> } )   :Returns the value of the specified server-level property as a string.
+PROPERTY_DESCRIPTION    :PROPERTY_DESCRIPTION ( { <property-id> | <property-name> } )   :Returns a description of a property.
+PROPERTY_NAME           :PROPERTY_NAME ( <property-id> )   :Returns the name of the property with the supplied property number.
+PROPERTY_NUMBER         :PROPERTY_NUMBER ( <property-name> )   :Returns the property number of the property with the supplied property name.
+SUSER_ID                :SUSER_ID ( [ <user-name> ] )   :Returns an integer user identification number.
+SUSER_NAME              :SUSER_NAME ( [ <user-id> ] )   :Returns the user name.
+USER_ID                 :USER_ID ( [ <user-name> ] )   :Returns an integer user identification number.
+USER_NAME               :USER_NAME ( [ <user-id> ] )   :Returns the user name.
+[Miscellaneous Functions]
+ARGN                    :ARGN ( <integer-expression>, <expression> [ , …] )   :Returns a selected argument from a list of arguments.
+COALESCE                :COALESCE ( <expression>, <expression> [ , … ] )   :Returns the first non-NULL expression from a list.
+IFNULL                  :IFNULL ( <expression1>, <expression2> [ , <expression3> ] )   :Returns the first nonnull expression, or NULL.
+ISNULL                  :ISNULL ( <expression>, <expression> [ …, <expression> ] )   :Returns the value of the first non-NULL expression in the parameter list.
+ISNUMERIC               :ISNUMERIC ( <string> )   :Tests whether a string argument can be converted to a numeric.
+NEWID                   :NEWID ( )   :Generates a UUID (Universally Unique Identifier) value.
+NULLIF                  :NULLIF ( <expression1>, <expression2> )   :Provides an abbreviated CASE expression by comparing expressions.
+NUMBER                  :NUMBER ( * )   :Generates numbers starting at 1 for each successive row in the results of the query.
+ROWID                   :ROWID ( <table-name> ) …FROM <table-name>   :Returns the internal row ID value for each row of the table.

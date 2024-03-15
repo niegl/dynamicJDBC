@@ -1,57 +1,12 @@
-CDate
-Date
-DateAdd
-DateDiff
-DatePart
-Day
-Dateserial
-Hour
-IsDate
-Minute
-Month
-Now
-Second
-Time
-Weekday
-Year
-IsEmpty
-IsNull
-IsNumeric
-Abs
-Atn
-Cos
-Exp
-Fix
-Int
-Log
-Rnd
-Sgn
-Sin
-Sqr
-Tan
-Choose
-IIF
-Avg
-Count
-Max
-Min
-StDev
-StDevP
-Sum
-Var
-VarP
-Asc
-Chr
-Format
-InStr
-LCase
-Left
-Len
-LTrim
-Mid
-Right
-RTrim
-Space
-StrComp
-Trim
-UCase
+[AggregateFunctions]
+Avg     :Avg(expr)      :计算查询的指定字段中所包含的一组值的算术平均值。
+Count   :Count(expr)    :计算查询所返回的记录数
+First   :First(expr)    :返回在查询所返回的结果集中的第一个记录的字段值。
+Last    :Last(expr)     :返回在查询所返回的结果集中的最后一个记录的字段值。
+MAX     :MAX(expr)      :返回查询的指定字段中包含的一组值的最大值。
+MIN     :MIN(expr)      :返回查询的指定字段中包含的一组值的最小值。
+StDev   :StDev (expr)   :返回以包含在查询的指定字段内的一组值作为总体样本或总体样本抽样的标准偏差的估计值。
+StDevP  :StDevP (expr)  :返回以包含在查询的指定字段内的一组值作为总体样本或总体样本抽样的标准偏差的估计值。
+Sum     :Sum(expr)      :查询时返回指定字段中包含的一组值的总和。
+Var     :Var (expr)     :返回以包含在查询的指定字段内的一组值为总体样本或总体样本抽样的方差的估计值。
+VarP    :VarP (expr)    :返回以包含在查询的指定字段内的一组值为总体样本或总体样本抽样的方差的估计值。

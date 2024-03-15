@@ -9,11 +9,15 @@ import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.oracle.parser.OracleStatementParser;
 import com.alibaba.druid.sql.dialect.oracle.visitor.OracleExportParameterVisitor;
+import com.alibaba.druid.sql.dialect.oscar.visitor.OscarOutputVisitor;
+import com.alibaba.druid.sql.dialect.postgresql.visitor.PGASTVisitor;
+import com.alibaba.druid.sql.dialect.postgresql.visitor.PGOutputVisitor;
 import com.alibaba.druid.sql.parser.SQLParserFeature;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.SQLStatementParser;
 import com.alibaba.druid.sql.visitor.ExportParameterVisitor;
 import com.alibaba.druid.sql.visitor.SQLASTOutputVisitor;
+import com.alibaba.druid.sql.visitor.SchemaStatVisitor;
 import com.alibaba.druid.util.JdbcConstants;
 import org.junit.jupiter.api.Test;
 
@@ -155,6 +159,22 @@ public class SQLTest {
                 "(\n" +
                 "FOREIGN KEY (Id_P) REFERENCES Persons(Id_P)\n" +
                 ")";
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_drop_database_mysql() throws SQLSyntaxErrorException {
+        String dbType = "mysql";
+        String sql ="DROP DATABASE  IF EXISTS db_name";//DROP {DATABASE | SCHEMA} [IF EXISTS] db_name
+        SQLStatement statement = parser(sql, dbType);
+        System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_drop_database_oracle() throws SQLSyntaxErrorException {
+        String dbType = "oracle";
+        String sql ="drop user username";//DROP {DATABASE | SCHEMA} [IF EXISTS] db_name
         SQLStatement statement = parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
@@ -1617,6 +1637,7 @@ public class SQLTest {
         SQLStatement statement = parser(sql, dbType);
         System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
     }
+
     @Test
     void testExportParamized() {
         String sql = "select name,age from test_tab1 where name='name' and age = 11 and id in  ('A','B')";
@@ -1683,17 +1704,83 @@ public class SQLTest {
         parser(sql, "mysql");
     }
 
-    public static SQLStatement parser(String sql, DbType dbType) throws SQLSyntaxErrorException {
-        return parser(sql,dbType.toString());
+    @org.junit.jupiter.api.Test
+    void test1() throws SQLSyntaxErrorException {
+        String sql = "select distinct name,age from (select name,age from test_tab1 join std_pcode.t20_index_code) A join B";
+        parser(sql, "hive");
     }
+
+    @org.junit.jupiter.api.Test
+    void testWhereWithFunction() throws SQLSyntaxErrorException {
+        String sql = "SELECT stn.stat_station_id, stn.stat_station_nme\n" +
+                "FROM bmnc_pcode.t99_stat_station_cd_his stn\n" +
+                "WHERE stn.merged_ind IN (1, 3)\n" +
+                "\tAND unix_timestamp(to_date(t99_stat_station_cd_his.open_tm), 'yyyy-MM-dd') - unix_timestamp(to_date(now()), 'yyyy-MM-dd') <= 0\n";
+        parser(sql, "hive");
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_insert_update() throws SQLSyntaxErrorException {
+        String sql = "INSERT \n" +
+                "    INTO tbl_name\n" +
+                "    (col_name1 , col_name2)\n" +
+                "     VALUES (value_list1,value_list1)";
+        parser(sql, DbType.mysql);
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_show_database() throws SQLSyntaxErrorException {
+        String sql = "SHOW CREATE TABLE tbl_name";
+        parser(sql, DbType.mysql);
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_parse_join_functions() throws SQLSyntaxErrorException {
+        String sql = "SELECT * FROM BMNC_PMARTVW.T98_DEC_PASGR_PERIOD_ST  t1\n" +
+                "INNER JOIN BMNC_PCODEVW.T99_STAT_LINE_RELA_CD_HIS B \n" +
+                "ON  isnull( t1 .LINE_ID ) ";
+        parser(sql, DbType.mysql);
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_case_statement() throws SQLSyntaxErrorException {
+        String sql = "    CASE v\n" +
+                "      WHEN 2 THEN SELECT v;\n" +
+                "      WHEN 3 THEN SELECT 0;\n" +
+                "      ELSE\n" +
+                "        BEGIN\n" +
+                "        END;\n" +
+                "    END CASE;";
+        parser(sql, DbType.mysql);
+    }
+
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
+        return parser(sql,DbType.of(dbType));
+    }
+
+    public static SQLStatement parser(String sql, DbType dbType) throws SQLSyntaxErrorException {
         List<SQLStatement> list = SQLUtils.parseStatements(sql, dbType);
         list.forEach(statement -> {
 //            final StringBuilder out = new StringBuilder();
-//            SQLASTOutputVisitor visitor = new SQLASTOutputVisitor(out);
+//            SQLASTOutputVisitor visitor = switch (dbType) {
+//                case postgresql -> new PGOutputVisitor(out);
+//                case oscar ->  new OscarOutputVisitor(out);
+//                default -> new SQLASTOutputVisitor(out);
+//            };
 ////            visitor.setDesensitize(true);
 //            visitor.setParameterizedQuesUnMergeInList(true);
 //            statement.accept(visitor);
+//
+////            SchemaStatVisitor visitor = new SchemaStatVisitor();
+////            statement.accept(visitor);
+////
+////            SQLSelectStatement statement1 = (SQLSelectStatement) statement;
+////            SQLSelectQueryBlock queryBlock = statement1.getSelect().getQueryBlock();
+////            SQLTableSource from = queryBlock.getFrom();
+////
+////            System.out.println(visitor.getTables());
+////            System.out.println(visitor.getOriginalTables());
+
             System.out.println("解析后的SQL 为 : [" + statement.toString() +"]");
         });
         if (list.size() > 1) {

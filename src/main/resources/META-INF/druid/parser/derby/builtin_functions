@@ -1,136 +1,135 @@
-acos
-abs
-asin
-atan
-atan2
-avg
-bigint
-cast
-ceil
-ceiling
-char
-coalesce
-concatenation
-cos
-cosh
-cot
-count
-current_date
-current isolation
-current_role
-CURRENT SCHEMA
-CURRENT_TIME
-CURRENT_TIMESTAMP
-CURRENT_USER
-DATE
-DAY
-DEGREES
-DOUBLE
-EXP
-FLOOR
-HOUR
-IDENTITY_VAL_LOCAL
-INTEGER
-LCASE
-LOWER
-LENGTH
-LN
-LOG
-LOG10
-LOCATE
-LTRIM
-MAX
-MIN
-MINUTE
-MOD
-MONTH
-NULLIF
-PI
-RADIANS 
-RANDOM 
-RAND 
-ROW_NUMBER 
-RTRIM 
-SECOND 
-SESSION_USER 
-SIGN 
-SIN 
-SINH 
-SMALLINT 
-SQRT 
-SUBSTR 
-STDDEV_POP 
-STDDEV_SAMP 
-SUM 
-TAN 
-TANH 
-TIME 
-TIMESTAMP
-TRIM
-UCASE
-UPPER
-USER
-VAR_POP
-VAR_SAMP
-VARCHAR
-XMLEXISTS
-XMLPARSE
-XMLQUERY
-XMLSERIALIZE
-YEAR 
-SYSCS_UTIL.SYSCS_CHECK_TABLE
-SYSCS_UTIL.SYSCS_GET_DATABASE_NAME
-SYSCS_UTIL.SYSCS_GET_DATABASE_PROPERTY
-SYSCS_UTIL.SYSCS_GET_RUNTIMESTATISTICS
-SYSCS_UTIL.SYSCS_GET_USER_ACCESS
-SYSCS_UTIL.SYSCS_GET_XPLAIN_MODE
-SYSCS_UTIL.SYSCS_GET_XPLAIN_SCHEMA
-SYSCS_UTIL.SYSCS_PEEK_AT_IDENTITY
-SYSCS_UTIL.SYSCS_PEEK_AT_SEQUENCE
-SYSCS_UTIL.SYSCS_BACKUP_DATABASE
-SYSCS_UTIL.SYSCS_BACKUP_DATABASE_AND_ENABLE_LOG_ARCHIVE_MODE
-SYSCS_UTIL.SYSCS_BACKUP_DATABASE_AND_ENABLE_LOG_ARCHIVE_MODE_NOWAIT
-SYSCS_UTIL.SYSCS_BACKUP_DATABASE_NOWAIT
-SYSCS_UTIL.SYSCS_CHECKPOINT_DATABASE
-SYSCS_UTIL.SYSCS_COMPRESS_TABLE
-SYSCS_UTIL.SYSCS_CREATE_USER
-SYSCS_UTIL.SYSCS_DISABLE_LOG_ARCHIVE_MODE
-SYSCS_UTIL.SYSCS_DROP_STATISTICS
-SYSCS_UTIL.SYSCS_DROP_USER
-SYSCS_UTIL.SYSCS_EMPTY_STATEMENT_CACHE
-SYSCS_UTIL.SYSCS_EXPORT_QUERY
-SYSCS_UTIL.SYSCS_EXPORT_QUERY_LOBS_TO_EXTFILE
-SYSCS_UTIL.SYSCS_EXPORT_TABLE
-SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE
-SYSCS_UTIL.SYSCS_FREEZE_DATABASE
-SYSCS_UTIL.SYSCS_IMPORT_DATA
-SYSCS_UTIL.SYSCS_IMPORT_DATA_BULK
-SYSCS_UTIL.SYSCS_IMPORT_DATA_LOBS_FROM_EXTFILE
-SYSCS_UTIL.SYSCS_IMPORT_TABLE
-SYSCS_UTIL.SYSCS_IMPORT_TABLE_BULK
-SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE
-SYSCS_UTIL.SYSCS_INPLACE_COMPRESS_TABLE
-SYSCS_UTIL.SYSCS_INVALIDATE_STORED_STATEMENTS
-SYSCS_UTIL.SYSCS_MODIFY_PASSWORD
-SYSCS_UTIL.SYSCS_REGISTER_TOOL
-SYSCS_UTIL.SYSCS_RELOAD_SECURITY_POLICY
-SYSCS_UTIL.SYSCS_RESET_PASSWORD
-SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY
-SYSCS_UTIL.SYSCS_SET_RUNTIMESTATISTICS
-SYSCS_UTIL.SYSCS_SET_STATISTICS_TIMING
-SYSCS_UTIL.SYSCS_SET_USER_ACCESS
-SYSCS_UTIL.SYSCS_SET_XPLAIN_MODE
-SYSCS_UTIL.SYSCS_SET_XPLAIN_SCHEMA
-SYSCS_UTIL.SYSCS_UNFREEZE_DATABASE
-SYSCS_UTIL.SYSCS_UPDATE_STATISTICS
-SQLJ.INSTALL_JAR
-SQLJ.REMOVE_JAR
-SQLJ.REPLACE_JAR
-SYSCS_DIAG.CONTAINED_ROLES
-SYSCS_DIAG.ERROR_LOG_READER
-SYSCS_DIAG.ERROR_MESSAGES
-SYSCS_DIAG.LOCK_TABLE
-SYSCS_DIAG.SPACE_TABLE
-SYSCS_DIAG.STATEMENT_CACHE
-SYSCS_DIAG.STATEMENT_DURATION
-SYSCS_DIAG.TRANSACTION_TABLE
+[Built-in functions]
+ABS                         :ABS ( numericExpression ) :The ABS or ABSVAL function returns the absolute value of a numeric expression.
+ABSVAL                      :ABSVAL ( numericExpression ) :The ABS or ABSVAL function returns the absolute value of a numeric expression.
+ACOS                        :ACOS( number ) :The ACOS function returns the arc cosine of a specified number.
+ASIN                        :ASIN( number ) :The ASIN function returns the arc sine of a specified number.
+ATAN                        :ATAN( number ) :The ATAN function returns the arc tangent of a specified number.
+ATAN2                       :ATAN2 ( y, x ) :The ATAN2 function returns the arctangent, in radians, of the quotient of the two arguments.
+BIGINT                      :BIGINT ( characterExpression | numericExpression ) :The BIGINT function returns a 64-bit integer representation of a number or character string in the form of an integer constant.
+CAST                        :CAST ( [ expression | NULL | ? ]AS dataType ) :The CAST function converts a value from one data type to another and provides a data type to a dynamic parameter (?) or a NULL value.
+CEIL                        :CEIL ( number ) :The CEIL or CEILING function rounds the specified number up, and returns the smallest number that is greater than or equal to the specified number.
+CEILING                     :CEILING ( number ) :The CEIL or CEILING function rounds the specified number up, and returns the smallest number that is greater than or equal to the specified number.
+CHAR                        :CHAR ( characterExpression [ , integer ] ) :The CHAR function returns a fixed-length character string representation.
+CHAR                        :CHAR ( integerExpression|datetimeExpression|decimalExpression|floatingPointExpression    )  :The CHAR function returns a fixed-length character string representation.
+COALESCE                    :COALESCE ( expression, expression [ , expression ]* ) :The COALESCE function takes two or more compatible arguments and returns the first argument that is not null.
+Concatenation               :characterExpression || characterExpression  :The concatenation operator, ||, concatenates its right operand to the end of its left operand. It operates on character or bit expressions.
+COS                         :COS ( number ) :The COS function returns the cosine of a specified number.
+COSH                        :COSH( number ) :The COSH function returns the hyperbolic cosine of a specified number.
+COT                         :COT( number ) :The COT function returns the cotangent of a specified number.
+CURRENT_DATE                :CURRENT_DATE :The CURRENT_DATE function returns the current date; the value returned does not change if it is executed more than once in a single statement.
+CURRENT ISOLATION           :CURRENT ISOLATION :The CURRENT ISOLATION function returns the current isolation level as a CHAR(2) value of either "" (blank), "UR", "CS", "RS", or "RR".
+CURRENT_ROLE                :CURRENT_ROLE :The CURRENT_ROLE function returns the authorization identifier of the current role. If there is no current role, it returns NULL.
+CURRENT SCHEMA              :CURRENT SCHEMA :The CURRENT SCHEMA function returns the schema name used to qualify unqualified database object references.
+CURRENT_TIME                :CURRENT_TIME :The CURRENT_TIME function returns the current time; the value returned does not change if it is executed more than once in a single statement.
+CURRENT_TIMESTAMP           :CURRENT_TIMESTAMP :The CURRENT_TIMESTAMP function returns the current timestamp; the value returned does not change if it is executed more than once in a single statement.
+CURRENT_USER                :CURRENT_USER :When used outside stored routines, the CURRENT_USER, USER, and SESSION_USER functions all return the authorization identifier of the user that created the SQL session.
+DATE                        :DATE ( expression ) :The DATE function returns a date from a value.
+DAY                         :DAY ( expression ) :The DAY function returns the day part of a value.
+DEGREES                     :DEGREES ( number ) :The DEGREES function converts a specified number from radians to degrees.
+DOUBLE                      :DOUBLE [ PRECISION ] ( numericExpression ):The DOUBLE function returns a floating-point number corresponding to a number or a character string.
+EXP                         :EXP ( number ):The EXP function returns e raised to the power of the specified number.
+FLOOR                       :FLOOR ( number ) :The FLOOR function rounds the specified number down, and returns the largest number that is less than or equal to the specified number.
+HOUR                        :HOUR ( expression ) :The HOUR function returns the hour part of a value.
+IDENTITY_VAL_LOCAL          :IDENTITY_VAL_LOCAL ( ) :The IDENTITY_VAL_LOCAL function is a non-deterministic function that returns the most recently assigned value of an identity column for a connection, where the assignment occurred as a result of a single row INSERT statement using a VALUES clause or a single row UPDATE statement.
+INTEGER                     :INT[EGER] ( numericExpression | characterExpression )  :The INTEGER function returns an integer representation of a number or character string in the form of an integer constant.
+LCASE                        :LCASE ( characterExpression ) :The LCASE or LOWER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to lowercase.
+LOWER                        :LOWER ( characterExpression ) :The LCASE or LOWER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to lowercase.
+LENGTH                      :LENGTH ( characterExpression | bitExpression ) :The LENGTH function is applied to either a character string expression or a bit string expression and returns the number of characters in the result.
+LN                           :LN ( number ) :The LN and LOG functions return the natural logarithm (base e) of the specified number.
+LOG                          :LOG ( number ) :The LN and LOG functions return the natural logarithm (base e) of the specified number.
+LOG10                       :LOG10 ( number ) :The LOG10 function returns the base-10 logarithm of the specified number.
+LOCATE                      :LOCATE ( characterExpression, characterExpression [ , startPosition ] ) :The LOCATE function is used to search for a string within another string. If the desired string is found, LOCATE returns the index at which it is found. If the desired string is not found, LOCATE returns 0.
+LTRIM                       :LTRIM ( characterExpression ) :The LTRIM function removes blanks from the beginning of a character string expression.
+MINUTE                      :MINUTE ( expression ) :The MINUTE function returns the minute part of a value.
+MOD                         :MOD ( integerExpression, integerExpression ) :The MOD function returns the remainder (modulus) of argument 1 divided by argument 2. The result is negative only if argument 1 is negative.
+MONTH                       :MONTH ( expression ) :The MONTH function returns the month part of a value.
+NULLIF                      :NULLIF ( expression, expression ) :The NULLIF function can be used for conditional expressions in Derby.
+PI                          :PI ( ) :The PI function returns a value that is closer than any other value to pi.
+RADIANS                     :RADIANS ( number ) :The RADIANS function converts a specified number from degrees to radians.
+RANDOM                      :RANDOM ( ) :The RANDOM function returns a random number.
+RAND                        :RAND ( seed ) :The RAND function returns a random number given a seed number
+ROW_NUMBER                  :ROW_NUMBER ( ) OVER [ windowSpecification | windowName ] :The ROW_NUMBER function returns the row number over a named or unnamed window specification.
+RTRIM                       :RTRIM ( characterExpression ) :The RTRIM function removes blanks from the end of a character string expression.
+SECOND                      :SECOND ( expression ) :The SECOND function returns the seconds part of a value.
+SESSION_USER                :SESSION_USER :When used outside stored routines, the SESSION_USER, USER, and CURRENT_USER functions all return the authorization identifier of the user that created the SQL session.
+SIGN                        :SIGN ( number ) :The SIGN function returns the sign of the specified number.
+SIN                         :SIN ( number ) :The SIN function returns the sine of a specified number.
+SINH                        :SINH ( number ) :The SINH function returns the hyperbolic sine of a specified number.
+SMALLINT                    :SMALLINT ( numericExpression | characterExpression ) :The SMALLINT function returns a small integer representation of a number or character string in the form of a small integer constant.
+SQRT                        :SQRT( number ) :The SQRT function returns the square root of a floating-point number; only the built-in types REAL, FLOAT, and DOUBLE PRECISION are supported.
+SUBSTR                      :SUBSTR( characterExpression, startPosition [, lengthOfString ] ) :The SUBSTR function acts on a character string expression or a bit string expression.
+TAN                         :TAN ( number ):The TAN function returns the tangent of a specified number.
+TANH                        :TANH ( number ):The TANH function returns the hyperbolic tangent of a specified number.
+TIME                        :TIME ( expression ) :The TIME function returns a time from a value.
+TIMESTAMP                   :TIMESTAMP ( expression [ , expression ] ) :The TIMESTAMP function returns a timestamp from a value or a pair of values.
+TRIM                        :TRIM( [ trimOperands ] trimSource ) :The TRIM function takes a character expression and returns that expression with leading and/or trailing pad characters removed.
+UCASE                       :UCASE ( characterExpression ) :The UCASE or UPPER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to uppercase.
+UPPER                       :UPPER ( characterExpression ) :The UCASE or UPPER function takes a character expression as a parameter and returns a string in which all alphabetical characters have been converted to uppercase.
+USER                        :USER :When used outside stored routines, the USER, CURRENT_USER, and SESSION_USER functions all return the authorization identifier of the user that created the SQL session.
+VARCHAR                     :VARCHAR ( characterStringExpression|datetimeExpression  ) :The VARCHAR function returns a varying-length character string representation of a character string.
+XMLEXISTS                   :XMLEXISTS ( xqueryStringLiteral PASSING BY REF xmlValueExpression [ BY REF ] ) :XMLEXISTS is an SQL/XML operator that you can use to query XML values in SQL.
+XMLPARSE                    :XMLPARSE ( DOCUMENT stringValueExpression PRESERVE WHITESPACE ) :XMLPARSE is a SQL/XML operator that you use to parse a character string expression into a Derby XML value.
+XMLQUERY                    :XMLQUERY ( xqueryStringLiteral PASSING BY REF xmlValueExpression  [ RETURNING SEQUENCE [ BY REF ] ] EMPTY ON EMPTY) :XMLQUERY is a SQL/XML operator that you can use to query XML values in SQL.
+XMLSERIALIZE                :XMLSERIALIZE ( xmlValueExpression AS stringDataType ) :XMLSERIALIZE is a SQL/XML operator that you can use to convert an XML type to a character type. There is no other way to convert the type of a Derby XML value.
+YEAR                        :YEAR ( expression ) :The YEAR function returns the year part of a value.
+[Aggregates]
+AVG                      :AVG ( [ DISTINCT | ALL ] expression )     :AVG is an aggregate function that evaluates the average of an expression over a set of rows.
+COUNT                    :COUNT ( [ DISTINCT | ALL ] expression )   :COUNT is an aggregate function that counts the number of rows accessed in an expression. COUNT is allowed on all types of expressions.
+COUNT                    :COUNT(*)                                  :COUNT(*) is an aggregate function that counts the number of rows accessed. No NULLs or duplicates are eliminated. COUNT(*) does not operate on an expression.
+MAX                      :MAX ( [ DISTINCT | ALL ] expression )     :MAX is an aggregate function that evaluates the maximum of an expression over a set of rows.
+MIN                      :MIN ( [ DISTINCT | ALL ] expression )     :MIN is an aggregate function that evaluates the minimum of an expression over a set of rows.
+STDDEV_POP               :STDDEV_POP ( expression )                 :STDDEV_POP is an aggregate function that evaluates the standard deviation of an expression over a population.
+STDDEV_SAMP              :STDDEV_SAMP ( expression )                :STDDEV_SAMP is an aggregate function that evaluates the sample deviation of an expression over a set of rows.
+SUM                      :SUM ( [ DISTINCT | ALL ] expression )     :SUM is an aggregate function that evaluates the sum of the expression over a set of rows.
+VAR_POP                  :VAR_POP ( expression )                    :VAR_POP is an aggregate function that evaluates the population variance of an expression over a set of rows.
+VAR_SAMP                 :VAR_SAMP ( expression )                   :VAR_SAMP is an aggregate function that evaluates the sample variance of an expression over a set of rows.
+[Built-in system functions]
+SYSCS_UTIL.SYSCS_CHECK_TABLE                  :SYSCS_UTIL.SYSCS_CHECK_TABLE(IN SCHEMANAME VARCHAR(128), IN TABLENAME VARCHAR(128))  :The SYSCS_UTIL.SYSCS_CHECK_TABLE function checks the specified table, ensuring that all of its indexes are consistent with the base table.
+SYSCS_UTIL.SYSCS_GET_DATABASE_NAME            :VARCHAR(32672) SYSCS_UTIL.SYSCS_GET_DATABASE_NAME() :The SYSCS_UTIL.SYSCS_GET_DATABASE_NAME function returns the name of the database of the current connection.
+SYSCS_UTIL.SYSCS_GET_DATABASE_PROPERTY        :VARCHAR(32672) SYSCS_UTIL.SYSCS_GET_DATABASE_PROPERTY(IN KEY VARCHAR(128)) :The SYSCS_UTIL.SYSCS_GET_DATABASE_PROPERTY function fetches the value of the specified property of the database on the current connection.
+SYSCS_UTIL.SYSCS_GET_RUNTIMESTATISTICS        :VARCHAR(32672) SYSCS_UTIL.SYSCS_GET_RUNTIMESTATISTICS()  :The SYSCS_UTIL.SYSCS_GET_RUNTIMESTATISTICS function returns a VARCHAR(32672) value representing the query execution plan and runtime statistics for a java.sql.ResultSet.
+SYSCS_UTIL.SYSCS_GET_USER_ACCESS              :SYSCS_UTIL.SYSCS_GET_USER_ACCESS (USERNAME VARCHAR(128)) RETURNS VARCHAR(128) :The SYSCS_UTIL.SYSCS_GET_USER_ACCESS function returns the current connection access permission for the user specified.
+SYSCS_UTIL.SYSCS_GET_XPLAIN_MODE              :SYSCS_UTIL.SYSCS_GET_XPLAIN_MODE() RETURNS INTEGER :The SYSCS_UTIL.SYSCS_GET_XPLAIN_MODE function returns the current XPLAIN mode.
+SYSCS_UTIL.SYSCS_GET_XPLAIN_SCHEMA            :SYSCS_UTIL.SYSCS_GET_XPLAIN_SCHEMA () RETURNS VARCHAR :The SYSCS_UTIL.SYSCS_GET_XPLAIN_SCHEMA function returns the XPLAIN schema for the connection.
+SYSCS_UTIL.SYSCS_PEEK_AT_IDENTITY             :BIGINT SYSCS_UTIL.SYSCS_PEEK_AT_IDENTITY(IN SCHEMANAME VARCHAR(128),IN TABLENAME VARCHAR(128)) :The SYSCS_UTIL.SYSCS_PEEK_AT_IDENTITY function allows users to observe the next value which will be issued for an identity column.
+SYSCS_UTIL.SYSCS_PEEK_AT_SEQUENCE             :BIGINT SYSCS_UTIL.SYSCS_PEEK_AT_SEQUENCE(IN SCHEMANAME VARCHAR(128),IN SEQUENCENAME VARCHAR(128)) :The SYSCS_UTIL.SYSCS_PEEK_AT_SEQUENCE function allows users to observe the instantaneous current value of a sequence generator without having to query the SYSSEQUENCES system table.
+[Built-in system procedures]
+SYSCS_UTIL.SYSCS_BACKUP_DATABASE                                           :SYSCS_UTIL.SYSCS_BACKUP_DATABASE(IN BACKUPDIR VARCHAR()) :The SYSCS_UTIL.SYSCS_BACKUP_DATABASE backs up the database to a specified backup directory.
+SYSCS_UTIL.SYSCS_BACKUP_DATABASE_AND_ENABLE_LOG_ARCHIVE_MODE               :SYSCS_UTIL.SYSCS_BACKUP_DATABASE_AND_ENABLE_LOG_ARCHIVE_MODE  (IN BACKUPDIR VARCHAR(32672), IN SMALLINT DELETE_ARCHIVED_LOG_FILES)  :The SYSCS_UTIL.SYSCS_BACKUP_DATABASE_AND_ENABLE_LOG_ARCHIVE_MODE backs up the database to a specified backup directory and enables the database for log archive mode.
+SYSCS_UTIL.SYSCS_BACKUP_DATABASE_AND_ENABLE_LOG_ARCHIVE_MODE_NOWAIT        :SYSCS_UTIL.SYSCS_BACKUP_DATABASE_AND_ENABLE_LOG_ARCHIVE_MODE_NOWAIT (IN BACKUPDIR VARCHAR(32672), IN SMALLINT DELETE_ARCHIVED_LOG_FILES) :The SYSCS_UTIL.SYSCS_BACKUP_DATABASE_AND_ENABLE_LOG_ARCHIVE_MODE_NOWAIT backs up the database to a specified backup directory and enables the database for log archive mode.
+SYSCS_UTIL.SYSCS_BACKUP_DATABASE_NOWAIT                                    :SYSCS_UTIL.SYSCS_BACKUP_DATABASE_NOWAIT(IN BACKUPDIR VARCHAR()) :The SYSCS_UTIL.SYSCS_BACKUP_DATABASE_NOWAIT backs up the database to a specified backup directory.
+SYSCS_UTIL.SYSCS_CHECKPOINT_DATABASE                                       :SYSCS_UTIL.SYSCS_CHECKPOINT_DATABASE() :The SYSCS_UTIL.SYSCS_CHECKPOINT_DATABASE checkpoints the database by flushing all cached data to disk.
+SYSCS_UTIL.SYSCS_COMPRESS_TABLE                                            :SYSCS_UTIL.SYSCS_COMPRESS_TABLE (IN SCHEMANAME VARCHAR(128),  IN TABLENAME VARCHAR(128), IN SEQUENTIAL SMALLINT) :Use the SYSCS_UTIL.SYSCS_COMPRESS_TABLE to reclaim unused, allocated space in a table and its indexes.
+SYSCS_UTIL.SYSCS_CREATE_USER                                               :SYSCS_UTIL.SYSCS_CREATE_USER(IN USERNAME VARCHAR(128), IN PASSWORD VARCHAR(32672)) :The SYSCS_UTIL.SYSCS_CREATE_USER adds a new user account to a database.
+SYSCS_UTIL.SYSCS_DISABLE_LOG_ARCHIVE_MODE                                  :SYSCS_UTIL.SYSCS_DISABLE_LOG_ARCHIVE_MODE(IN SMALLINT DELETE_ARCHIVED_LOG_FILES)  :The SYSCS_UTIL.SYSCS_DISABLE_LOG_ARCHIVE_MODE disables the log archive mode and deletes any existing online archived log files if the DELETE_ARCHIVED_LOG_FILES input parameter is non-zero.
+SYSCS_UTIL.SYSCS_DROP_STATISTICS                                           :SYSCS_UTIL.SYSCS_DROP_STATISTICS(IN SCHEMANAME VARCHAR(128),  IN TABLENAME VARCHAR(128),  IN INDEXNAME VARCHAR(128)) :The SYSCS_UTIL.SYSCS_DROP_STATISTICS drops all existing cardinality statistics for the index that you specify or for all of the indexes on a table.
+SYSCS_UTIL.SYSCS_DROP_USER                                                 :SYSCS_UTIL.SYSCS_DROP_USER(IN USERNAME VARCHAR(128)) :The SYSCS_UTIL.SYSCS_DROP_USER removes a user account from a database.
+SYSCS_UTIL.SYSCS_EMPTY_STATEMENT_CACHE                                     :SYSCS_UTIL.SYSCS_EMPTY_STATEMENT_CACHE() :The SYSCS_UTIL.SYSCS_EMPTY_STATEMENT_CACHE stored procedure removes as many compiled statements (plans) as possible from the database-wide statement cache.
+SYSCS_UTIL.SYSCS_EXPORT_QUERY                                              :SYSCS_UTIL.SYSCS_EXPORT_QUERY(IN SELECTSTATEMENT VARCHAR(32672),IN FILENAME VARCHAR(32672), IN COLUMNDELIMITER CHAR(1), IN CHARACTERDELIMITER CHAR(1), IN CODESET VARCHAR(128))  :The SYSCS_UTIL.SYSCS_EXPORT_QUERY exports the results of a SELECT statement to an operating system file.
+SYSCS_UTIL.SYSCS_EXPORT_QUERY_LOBS_TO_EXTFILE                              :SYSCS_UTIL.SYSCS_EXPORT_QUERY_LOBS_TO_EXTFILE (IN SELECTSTATEMENT VARCHAR(32672),IN FILENAME VARCHAR(32672), IN COLUMNDELIMITER CHAR(1),IN CHARACTERDELIMITER CHAR(1), IN CODESET VARCHAR(128)IN LOBSFILENAME VARCHAR(32672) ) :Use the SYSCS_UTIL.SYSCS_EXPORT_QUERY_LOBS_TO_EXTFILE to export the result of a SELECT statement to a main export file, and place the LOB data into a separate export file. A reference to the location of the LOB data is placed in the LOB column in the main export file.
+SYSCS_UTIL.SYSCS_EXPORT_TABLE                                              :SYSCS_UTIL.SYSCS_EXPORT_TABLE (IN SCHEMANAME  VARCHAR(128),IN TABLENAME VARCHAR(128), IN FILENAME VARCHAR(32672),IN COLUMNDELIMITER CHAR(1), IN CHARACTERDELIMITER CHAR(1), IN CODESET VARCHAR(128))  :The SYSCS_UTIL.SYSCS_EXPORT_TABLE exports all of the data from a table to an operating system file.
+SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE                              :SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE ( IN SCHEMANAME VARCHAR(128), IN TABLENAME VARCHAR(128),  IN FILENAME VARCHAR(32672), IN COLUMNDELIMITER CHAR(1), IN CHARACTERDELIMITER CHAR(1), IN CODESET VARCHAR(128) IN LOBSFILENAME VARCHAR(32672))  :Use the SYSCS_UTIL.SYSCS_EXPORT_TABLE_LOBS_TO_EXTFILE to export all the data from a table, and place the LOB data into a separate export file. A reference to the location of the LOB data is placed in the LOB column in the main export file.
+SYSCS_UTIL.SYSCS_FREEZE_DATABASE                                           :SYSCS_UTIL.SYSCS_FREEZE_DATABASE() :The SYSCS_UTIL.SYSCS_FREEZE_DATABASE temporarily freezes the database for backup.
+SYSCS_UTIL.SYSCS_IMPORT_DATA                                               :SYSCS_UTIL.SYSCS_IMPORT_DATA (IN SCHEMANAME VARCHAR(128),IN TABLENAME VARCHAR(128), IN INSERTCOLUMNS VARCHAR(32672),IN COLUMNINDEXES VARCHAR(32672), IN FILENAME VARCHAR(32672),IN COLUMNDELIMITER CHAR(1), IN CHARACTERDELIMITER CHAR(1),IN CODESET VARCHAR(128), IN REPLACE SMALLINT) :The SYSCS_UTIL.SYSCS_IMPORT_DATA imports data to a subset of columns in a table. You choose the subset of columns by specifying insert columns. This procedure is also used to import a subset of column data from a file by specifying column indexes.
+SYSCS_UTIL.SYSCS_IMPORT_DATA_BULK                                          :SYSCS_UTIL.SYSCS_IMPORT_DATA_BULK (IN SCHEMANAME VARCHAR(128),IN TABLENAME VARCHAR(128), IN INSERTCOLUMNS VARCHAR(32672), IN COLUMNINDEXES VARCHAR(32672), IN FILENAME VARCHAR(32672), IN COLUMNDELIMITER CHAR(1), IN CHARACTERDELIMITER CHAR(1),IN CODESET VARCHAR(128), IN REPLACE SMALLINT,IN SKIP SMALLINT) :The SYSCS_UTIL.SYSCS_IMPORT_DATA_BULK supports all functionalities of SYSCS_UTIL.SYSCS_IMPORT_DATA with the additional feature to skip column headers in the input file and recognize columns in the input file by name that are parsed to the COLUMNINDEXES argument.
+SYSCS_UTIL.SYSCS_IMPORT_DATA_LOBS_FROM_EXTFILE                             :SYSCS_UTIL.SYSCS_IMPORT_DATA_LOBS_FROM_EXTFILE (IN SCHEMANAME VARCHAR(128), IN TABLENAME VARCHAR(128),  IN INSERTCOLUMNS VARCHAR(32672), IN COLUMNINDEXES VARCHAR(32672),IN FILENAME VARCHAR(32672), IN COLUMNDELIMITER CHAR(1), IN CHARACTERDELIMITER CHAR(1), IN CODESET VARCHAR(128), IN REPLACE SMALLINT) ) :Use the SYSCS_UTIL.SYSCS_IMPORT_DATA_LOBS_FROM_EXTFILE to import data to a subset of columns in a table, where the LOB data is stored in a separate file. The main import file contains all of the other data and a reference to the location of the LOB data.
+SYSCS_UTIL.SYSCS_IMPORT_TABLE                                              :SYSCS_UTIL.SYSCS_IMPORT_TABLE (IN SCHEMANAME VARCHAR(128), IN TABLENAME VARCHAR(128), IN FILENAME VARCHAR(32672), IN COLUMNDELIMITER CHAR(1), IN CHARACTERDELIMITER CHAR(1), IN CODESET VARCHAR(128), IN REPLACE SMALLINT):The SYSCS_UTIL.SYSCS_IMPORT_TABLE imports data from an input file into all of the columns of a table. If the table receiving the imported data already contains data, you can either replace or append to the existing data.
+SYSCS_UTIL.SYSCS_IMPORT_TABLE_BULK                                         :SYSCS_UTIL.SYSCS_IMPORT_TABLE_BULK (IN SCHEMANAME VARCHAR(128), IN TABLENAME VARCHAR(128), IN FILENAME VARCHAR(32672), IN COLUMNDELIMITER CHAR(1), IN CHARACTERDELIMITER CHAR(1), IN CODESET VARCHAR(128), IN REPLACE SMALLINT IN SKIP SMALLINT) :The SYSCS_UTIL.SYSCS_IMPORT_TABLE_BULK supports all functionalities of SYSCS_UTIL.SYSCS_IMPORT_TABLE with the additional feature to skip column headers in the input file.
+SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE                            :SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE (    IN SCHEMANAME VARCHAR(128),    IN TABLENAME VARCHAR(128),    IN FILENAME VARCHAR(32672),    IN COLUMNDELIMITER CHAR(1),    IN CHARACTERDELIMITER CHAR(1),    IN CODESET VARCHAR(128),    IN REPLACE SMALLINT)    ) :Use the SYSCS_UTIL.SYSCS_IMPORT_TABLE_LOBS_FROM_EXTFILE to import data to a table, where the LOB data is stored in a separate file. The main import file contains all of the other data and a reference to the location of the LOB data.
+SYSCS_UTIL.SYSCS_INPLACE_COMPRESS_TABLE                                    :SYSCS_UTIL.SYSCS_INPLACE_COMPRESS_TABLE( 		IN SCHEMANAME VARCHAR(128), 		IN TABLENAME VARCHAR(128), 		IN PURGE_ROWS SMALLINT, 		IN DEFRAGMENT_ROWS SMALLINT, 		IN TRUNCATE_END SMALLINT ) :Use the SYSCS_UTIL.SYSCS_INPLACE_COMPRESS_TABLE to reclaim unused, allocated space in a table and its indexes.
+SYSCS_UTIL.SYSCS_INVALIDATE_STORED_STATEMENTS                              :SYSCS_UTIL.SYSCS_INVALIDATE_STORED_STATEMENTS() :The SYSCS_UTIL.SYSCS_INVALIDATE_STORED_STATEMENTS invalidates all stored prepared statements (that is, all statements in the SYSSTATEMENTS system table).
+SYSCS_UTIL.SYSCS_MODIFY_PASSWORD                                           :SYSCS_UTIL.SYSCS_MODIFY_PASSWORD(IN PASSWORD VARCHAR(32672)) :The SYSCS_UTIL.SYSCS_MODIFY_PASSWORD is called by a user to change that user's own password.
+SYSCS_UTIL.SYSCS_REGISTER_TOOL                                             :SYSCS_UTIL.SYSCS_REGISTER_TOOL(IN TOOLNAME VARCHAR(128), IN REGISTER BOOLEAN, IN OPTIONALARGS VARCHAR(128) ... ) :The SYSCS_UTIL.SYSCS_REGISTER_TOOL loads and unloads optional tools packages.
+SYSCS_UTIL.SYSCS_RESET_PASSWORD                                            :SYSCS_UTIL.SYSCS_RESET_PASSWORD(IN USERNAME VARCHAR(128),IN PASSWORD VARCHAR(32672)) :The SYSCS_UTIL.SYSCS_RESET_PASSWORD resets a password that has expired or has been forgotten.
+SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY                                     :SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY(IN KEY VARCHAR(128),IN VALUE VARCHAR(32672)) :Use the SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY to set or delete the value of a property of the database on the current connection.
+SYSCS_UTIL.SYSCS_SET_RUNTIMESTATISTICS                                     :SYSCS_UTIL.SYSCS_SET_RUNTIMESTATISTICS(IN SMALLINT ENABLE) :The SYSCS_UTIL.SYSCS_SET_RUNTIMESTATISTICS turns a connection's runtime statistics on or off.
+SYSCS_UTIL.SYSCS_SET_STATISTICS_TIMING                                     :SYSCS_UTIL.SYSCS_SET_STATISTICS_TIMING(IN SMALLINT ENABLE) :Statistics timing is an attribute associated with a connection that you turn on and off by using the SYSCS_UTIL.SYSCS_SET_STATISTICS_TIMING.
+SYSCS_UTIL.SYSCS_SET_USER_ACCESS                                           :SYSCS_UTIL.SYSCS_SET_USER_ACCESS (USERNAME VARCHAR(128), CONNECTION_PERMISSION VARCHAR(128)) :The SYSCS_UTIL.SYSCS_SET_USER_ACCESS sets the connection access permission for the user specified.
+SYSCS_UTIL.SYSCS_SET_XPLAIN_MODE                                           :SYSCS_UTIL.SYSCS_SET_XPLAIN_MODE(IN SMALLINT NOEXECUTE) :When runtime statistics are being captured, you can control the mode of processing by using the SYSCS_UTIL.SYSCS_SET_XPLAIN_MODE procedure.
+SYSCS_UTIL.SYSCS_SET_XPLAIN_SCHEMA                                         :SYSCS_UTIL.SYSCS_SET_XPLAIN_SCHEMA(IN VARCHAR(128) SCHEMA_NAME) :The SYSCS_UTIL.SYSCS_SET_XPLAIN_SCHEMA allows you to request XPLAIN style processing of runtime statistics.
+SYSCS_UTIL.SYSCS_UNFREEZE_DATABASE                                         :SYSCS_UTIL.SYSCS_UNFREEZE_DATABASE() :The SYSCS_UTIL.SYSCS_UNFREEZE_DATABASE unfreezes a database after backup.
+SYSCS_UTIL.SYSCS_UPDATE_STATISTICS                                         :SYSCS_UTIL.SYSCS_UPDATE_STATISTICS(IN SCHEMANAME VARCHAR(128), IN TABLENAME VARCHAR(128), IN INDEXNAME VARCHAR(128)) :The SYSCS_UTIL.SYSCS_UPDATE_STATISTICS updates the cardinality statistics, or creates the statistics if they do not exist, for the index that you specify or for all of the indexes on a table.
+[System procedures for storing jar files in a database]
+SQLJ.INSTALL_JAR        :SQLJ.INSTALL_JAR(IN JAR_FILE_PATH_OR_URL VARCHAR(32672), IN QUALIFIED_JAR_NAME VARCHAR(32672),IN DEPLOY INTEGER):The SQLJ.INSTALL_JAR system procedure stores a jar file in a database.
+SQLJ.REMOVE_JAR         :SQLJ.REMOVE_JAR(IN QUALIFIED_JAR_NAME VARCHAR(32672),IN UNDEPLOY INTEGER):The SQLJ.REMOVE_JAR system procedure removes a jar file from a database.
+SQLJ.REPLACE_JAR        :SQLJ.REPLACE_JAR(IN JAR_FILE_PATH_OR_URL VARCHAR(32672), IN QUALIFIED_JAR_NAME VARCHAR(32672)):The SQLJ.REPLACE_JAR system procedure replaces a jar file in a database.

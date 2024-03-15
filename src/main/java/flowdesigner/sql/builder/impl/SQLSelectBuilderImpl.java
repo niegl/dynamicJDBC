@@ -2,10 +2,7 @@ package flowdesigner.sql.builder.impl;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
-import com.alibaba.druid.sql.ast.SQLExpr;
-import com.alibaba.druid.sql.ast.SQLLimit;
-import com.alibaba.druid.sql.ast.SQLOrderBy;
-import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.*;
 import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
@@ -14,13 +11,13 @@ import com.alibaba.druid.sql.dialect.postgresql.ast.stmt.PGSelectStatement;
 import com.alibaba.druid.sql.dialect.presto.ast.stmt.PrestoSelectStatement;
 import com.alibaba.druid.sql.parser.SQLParserUtils;
 import com.alibaba.druid.sql.parser.Token;
-import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.sql.builder.SQLSelectBuilder;
+import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -47,6 +44,16 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         supportMethods.add("join");
     }
 
+    protected static HashMap<String,SQLJoinTableSource.JoinType> join_type_rel = new HashMap<String,SQLJoinTableSource.JoinType>();
+    static {
+        join_type_rel.put("INNER JOIN", SQLJoinTableSource.JoinType.INNER_JOIN);
+        join_type_rel.put("COMMA", SQLJoinTableSource.JoinType.COMMA);
+        join_type_rel.put("CROSS JOIN", SQLJoinTableSource.JoinType.CROSS_JOIN);
+        join_type_rel.put("LEFT JOIN", SQLJoinTableSource.JoinType.LEFT_OUTER_JOIN);
+        join_type_rel.put("RIGHT JOIN", SQLJoinTableSource.JoinType.RIGHT_OUTER_JOIN);
+        join_type_rel.put("FULL JOIN", SQLJoinTableSource.JoinType.FULL_OUTER_JOIN);
+    }
+
     public SQLSelectBuilderImpl(DbType dbType) {
         this(new SQLExprBuilder(dbType), dbType);
     }
@@ -62,8 +69,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         } else if (stmtList.size() > 1) {
             throw new IllegalArgumentException("not support multi-statement :" + sql);
         } else {
-            SQLSelectStatement stmt = (SQLSelectStatement)stmtList.get(0);
-            this.stmt = stmt;
+            this.stmt = (SQLSelectStatement)stmtList.get(0);
         }
     }
 
@@ -168,12 +174,44 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         SQLExprTableSource from = new SQLExprTableSource(expr, alias);
         queryBlock.setFrom(from);
 
+        if (!StringKit.isBlank(alias)) {
+            updateAlias(expr, alias);
+        }
+
         return this;
+    }
+
+    /**
+     * select distinct
+     * @return
+     */
+    @Override
+    public SQLSelectBuilder setDistionOption() {
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        boolean distinct = queryBlock.isDistinct();
+        if (!distinct) {
+            queryBlock.setDistinct();
+        } else {
+            queryBlock.setDistionOption(0);
+        }
+
+        return this;
+    }
+
+    @Override
+    public void updateAlias(String table, String alias) {
+        if (table == null) {
+            return;
+        }
+
+        SQLExpr toSQLExpr = SQLUtils.toSQLExpr(table, dbType);
+        updateAlias(toSQLExpr, alias);
     }
 
     /**
      *  设置别名后对where中的条件进行别名的替换
       */
+
     private void updateAlias(SQLExpr exprTable, String alias) {
 
         if (alias == null) {
@@ -199,17 +237,6 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
 
     }
 
-    @Nullable
-    private String getTableName(SQLExpr exprTable) {
-        String name = null;
-        if (exprTable instanceof SQLIdentifierExpr identifierExpr) {
-            name = identifierExpr.getName();
-        } else if (exprTable instanceof SQLPropertyExpr propertyExpr) {
-            name = propertyExpr.getName();
-        }
-        return name;
-    }
-
     private SQLPropertyExpr getWhereCondition(SQLBinaryOpExpr binaryOpExpr, String name) {
         SQLExpr left = binaryOpExpr.getLeft();
         SQLExpr right = binaryOpExpr.getRight();
@@ -221,6 +248,89 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         }
         if (right instanceof SQLPropertyExpr propertyExpr) {
             if (propertyExpr.getOwnerName().equals(name)) {
+                return propertyExpr;
+            }
+        }
+
+        // 查找 stn.merged_ind IN (1,3) 中的 stn.merged_ind
+        if (left instanceof SQLInListExpr inListExpr) {
+            SQLExpr expr = inListExpr.getExpr();
+            List<SQLExpr> targetList = inListExpr.getTargetList();
+
+            if (expr instanceof SQLPropertyExpr propertyExpr) {
+                if (propertyExpr.getOwnerName().equals(name)) {
+                    return propertyExpr;
+                }
+            }
+            for (SQLExpr target: targetList) {
+                if (target instanceof SQLPropertyExpr propertyExpr) {
+                    if (propertyExpr.getOwnerName().equals(name)) {
+                        return propertyExpr;
+                    }
+                }
+            }
+
+            SQLPropertyExpr propertyExpr = null;
+            if (expr instanceof SQLBinaryOpExpr binaryOpExpr1) {
+                propertyExpr = getWhereCondition(binaryOpExpr1, name);
+                if (propertyExpr != null) {
+                    return propertyExpr;
+                }
+            }
+            for (SQLExpr target: targetList) {
+                if (target instanceof SQLBinaryOpExpr binaryOpExpr1) {
+                    propertyExpr = getWhereCondition(binaryOpExpr1, name);
+                    if (propertyExpr != null) {
+                        return propertyExpr;
+                    }
+                }
+            }
+        }
+
+        if (right instanceof SQLInListExpr inListExpr) {
+            SQLExpr expr = inListExpr.getExpr();
+            List<SQLExpr> targetList = inListExpr.getTargetList();
+
+            if (expr instanceof SQLPropertyExpr propertyExpr) {
+                if (propertyExpr.getOwnerName().equals(name)) {
+                    return propertyExpr;
+                }
+            }
+            for (SQLExpr target: targetList) {
+                if (target instanceof SQLPropertyExpr propertyExpr) {
+                    if (propertyExpr.getOwnerName().equals(name)) {
+                        return propertyExpr;
+                    }
+                }
+            }
+
+            SQLPropertyExpr propertyExpr = null;
+            if (expr instanceof SQLBinaryOpExpr binaryOpExpr1) {
+                propertyExpr = getWhereCondition(binaryOpExpr1, name);
+                if (propertyExpr != null) {
+                    return propertyExpr;
+                }
+            }
+            for (SQLExpr target: targetList) {
+                if (target instanceof SQLBinaryOpExpr binaryOpExpr1) {
+                    propertyExpr = getWhereCondition(binaryOpExpr1, name);
+                    if (propertyExpr != null) {
+                        return propertyExpr;
+                    }
+                }
+            }
+        }
+
+        // 查找 函数中的 SQLPropertyExpr
+        if (left instanceof SQLMethodInvokeExpr methodInvokeExpr) {
+            SQLPropertyExpr propertyExpr = getProperty(methodInvokeExpr, name);
+            if (propertyExpr != null) {
+                return propertyExpr;
+            }
+        }
+        if (right instanceof SQLMethodInvokeExpr methodInvokeExpr) {
+            SQLPropertyExpr propertyExpr = getProperty(methodInvokeExpr, name);
+            if (propertyExpr != null) {
                 return propertyExpr;
             }
         }
@@ -516,7 +626,6 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
      * @return
      */
     @Override
-    @AutoLog
     public SQLSelectBuilder join(String joinType, String table, String alias,
                                    String conditionLeft, String conditionRight, String conditionOperator) {
 
@@ -551,32 +660,33 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
             return this;
         }
 
-        try {
-            String joinType1 = joinType.replaceAll(" ", "_").toUpperCase();
-            SQLJoinTableSource.JoinType SQLJoinType = SQLJoinTableSource.JoinType.valueOf(joinType1);
-            joinTableSource.setJoinType(SQLJoinType);
-
-            SQLExpr exprTable = SQLUtils.toSQLExpr(table, dbType);
-            SQLExprTableSource right = new SQLExprTableSource(exprTable, alias);
-            joinTableSource.setRight(right);
-
-            if (conditionOperator != null) {
-                if (conditionOperator.equalsIgnoreCase("=")) {
-                    SQLBinaryOpExpr binaryOpExpr = new SQLBinaryOpExpr(dbType);
-                    binaryOpExpr.setLeft(new SQLIdentifierExpr(conditionLeft));
-                    binaryOpExpr.setRight(new SQLIdentifierExpr(conditionRight));
-                    binaryOpExpr.setOperator(SQLBinaryOperator.Equality);
-                    joinTableSource.setCondition(binaryOpExpr);
-                }
-            }
-
-            SQLSelectQueryBlock queryBlock = getQueryBlock();
-            queryBlock.setFrom(joinTableSource);
-
-            updateAlias(exprTable, alias);
-        } catch (IllegalArgumentException exception) {
-            log.error(exception.toString());
+        String upperCase_join = joinType.toUpperCase();
+        boolean b = join_type_rel.containsKey(upperCase_join);
+        if (!b) {
+            return this;
         }
+
+        SQLJoinTableSource.JoinType SQLJoinType = join_type_rel.get(upperCase_join);
+        joinTableSource.setJoinType(SQLJoinType);
+
+        SQLExpr exprTable = SQLUtils.toSQLExpr(table, dbType);
+        SQLExprTableSource right = new SQLExprTableSource(exprTable, alias);
+        joinTableSource.setRight(right);
+
+        if (conditionOperator != null) {
+            if (conditionOperator.equalsIgnoreCase("=")) {
+                SQLBinaryOpExpr binaryOpExpr = new SQLBinaryOpExpr(dbType);
+                binaryOpExpr.setLeft(new SQLIdentifierExpr(conditionLeft));
+                binaryOpExpr.setRight(new SQLIdentifierExpr(conditionRight));
+                binaryOpExpr.setOperator(SQLBinaryOperator.Equality);
+                joinTableSource.setCondition(binaryOpExpr);
+            }
+        }
+
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        queryBlock.setFrom(joinTableSource);
+
+        updateAlias(exprTable, alias);
 
         return this;
     }
@@ -593,8 +703,19 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
         return this;
     }
 
+    @Override
+    public SQLSelectBuilder joinAnd(String right) {
+        joinRest(SQLBinaryOperator.BooleanAnd, new SQLIdentifierExpr(right));
+        return this;
+    }
+
+    @Override
+    public SQLSelectBuilder joinOr(String right) {
+        joinRest(SQLBinaryOperator.BooleanOr, new SQLIdentifierExpr(right));
+        return this;
+    }
     /**
-     * 添加 A JOIN B on A.a = B.b And 后面部分
+     * 添加 A JOIN B on A.a = B.b And 后面部分为BinaryOperator的情况
      * @param AndOr
      * @param conditionLeft
      * @param conditionRight
@@ -602,35 +723,43 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
      */
     private void joinRest(SQLBinaryOperator AndOr, String conditionLeft, String conditionRight, String conditionOperator) {
         SQLSelectQueryBlock queryBlock = getQueryBlock();
+        SQLBinaryOpExpr right = new SQLBinaryOpExpr(queryBlock.getDbType());
+        right.setLeft(new SQLIdentifierExpr(conditionLeft));
+        right.setRight(new SQLIdentifierExpr(conditionRight));
+
+        SQLBinaryOperator binaryOperator = null;
+        for (SQLBinaryOperator operator: SQLBinaryOperator.values()) {
+            if (operator.getName().equalsIgnoreCase(conditionOperator)) {
+                binaryOperator = operator;
+            }
+        }
+        if (binaryOperator == null) return;
+
+        right.setOperator(binaryOperator);
+
+        joinRest(AndOr, right);
+
+    }
+
+    /**
+     *
+     * @param AndOr AND or OR
+     * @param right A JOIN B ON ... AND xxx 中的 xxx部分（有可能是 a = b等二进制操作，也可能是逻辑函数）
+     */
+    private void joinRest(SQLBinaryOperator AndOr, SQLExpr right) {
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
         SQLTableSource from = queryBlock.getFrom();
         SQLJoinTableSource joinTableSource = null;
 
-        if (from instanceof SQLExprTableSource || from instanceof SQLJoinTableSource) {
-            joinTableSource = (SQLJoinTableSource) from;
+        if (from instanceof SQLJoinTableSource sqlJoinTableSource) {
+            joinTableSource = sqlJoinTableSource;
         }
         if (joinTableSource != null) {
             SQLExpr left = joinTableSource.getCondition();
-            SQLBinaryOpExpr right = new SQLBinaryOpExpr(queryBlock.getDbType());
-            right.setLeft(new SQLIdentifierExpr(conditionLeft));
-            right.setRight(new SQLIdentifierExpr(conditionRight));
-
-            SQLBinaryOperator binaryOperator = null;
-            for (SQLBinaryOperator operator: SQLBinaryOperator.values()) {
-                if (operator.getName().equalsIgnoreCase(conditionOperator)) {
-                    binaryOperator = operator;
-                }
-            }
-            if (binaryOperator == null) return;
-
-            right.setOperator(binaryOperator);
             SQLBinaryOpExpr newCondition = new SQLBinaryOpExpr(left, AndOr, right, dbType);
             joinTableSource.setCondition(newCondition);
         }
     }
-
-//    public String toString() {
-//        return SQLUtils.toSQLString(stmt, dbType);
-//    }
 
     /**
      * 以下为MYSQL适配接口

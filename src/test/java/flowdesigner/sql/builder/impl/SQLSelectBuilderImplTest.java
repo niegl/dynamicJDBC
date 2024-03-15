@@ -37,7 +37,7 @@ class SQLSelectBuilderImplTest {
         SQLStatement statement = SQLTest.parser("select A.a from tableA A join tableB B on 1=1 where tableB.a = 1 and tableB.b=2 and tableB.c=3", DbType.mysql);
 
         builderEx.select("a/b","b")
-                .from("tablea");
+                .from("tableB");
         builderEx.where("tableB.a = 1").whereAnd("tablea.b=2").whereAnd("tableB.c=3");
         // 测试别名更改后是否应用于前面的where
         builderEx.from("tableB","B");
@@ -58,7 +58,13 @@ class SQLSelectBuilderImplTest {
         builder.join("COMMA","CT", null,null,null,null);
                 System.out.println(builder);
     }
+    @Test
+    void test_select_hive() {
+        SQLSelectBuilder builder = SQLBuilderFactory.createSelectSQLBuilder(DbType.hive);
+        builder.select("t3.gregorian_date");
 
+        System.out.println(builder);
+    }
     @Test
     void whereAnd() {
         SQLSelectBuilder builderEx = new SQLSelectBuilderImpl(DbType.mysql);
@@ -104,6 +110,24 @@ class SQLSelectBuilderImplTest {
 
     }
 
+    @Test
+    void testUnionWithWhere() throws SQLSyntaxErrorException {
+
+        SQLSelectBuilder builder2 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder2.select("c", "d")
+                .from("test.building_t" ,"tt")
+                .where("a != 1");
+
+        SQLSelectBuilder builder3 = SQLBuilderFactory.createSelectSQLBuilder(DbType.mysql);
+        builder3.select("e", "f")
+                .from("test.building_t2","tt")
+                .where("b != 1");
+
+        builder2.union(builder3, "DISTINCT");
+
+        SQLTest.parser(builder2.toString(),DbType.mysql);
+
+    }
 
     @Test
     void setBigResult() {
@@ -190,8 +214,8 @@ class SQLSelectBuilderImplTest {
         builderEx.where("t01_pty_area_h.area_typ_cd = '00'")
                 .whereAnd("t02_fac_point_pty_rel_h.fac_point_pty_rel_ctgy_cd = '06'")
                 .whereAnd("t01_pty_area_h.area != 0");
-        builderEx.join("inner join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
-        builderEx.join("inner join","pdata.t02_fac_point_pty_rel_h","c","a.househld_pty_id","c.fac_point_id","=");
+        builderEx.join("INNER join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
+        builderEx.join("INNER join","pdata.t02_fac_point_pty_rel_h","c","a.househld_pty_id","c.fac_point_id","=");
         builderEx.join("inner join","pdata.t01_househld_pty","c","a.househld_pty_id","d.househld_pty_id","=");
 
         SQLTest.parser(builderEx.toString(),dbType);
@@ -258,6 +282,16 @@ class SQLSelectBuilderImplTest {
         return arguments.stream();
     }
 
+    @Test
+    void join_single_right() throws SQLSyntaxErrorException {
+        builderEx = SQLBuilderFactory.createSelectSQLBuilder( DbType.hive);
+        builderEx.select("househld_pty_id","stat_mon")
+                .from("pmart.t98_station_engcspt_stat_month","a");
+        builderEx.join("INNER join","pdata.t01_pty_area_h","b","a.househld_pty_id","b.pty_id","=");
+        builderEx.joinAnd("isnull(pdata.t02_fac_point_pty_rel_ha.househld_pty_id)");
+        builderEx.joinOr("(t1 .LINE_ID=B.STD_LINE_ID AND  t1 .STAT_DT>=To_DATE(OPEN_TM) AND  t1 .STAT_DT<To_DATE(CLOSE_TM))");
+    }
+
     @ParameterizedTest
     @MethodSource()
     void where(DbType dbType, String expected) throws SQLSyntaxErrorException {
@@ -282,4 +316,33 @@ class SQLSelectBuilderImplTest {
         return arguments.stream();
     }
 
+    @Test
+    void testJoinWhere() {
+        builderEx.select("a/b","b")
+                .from("tablea");
+        builderEx.where("tableB.a = 1").whereAnd("tablea.b=2").whereAnd("tableB.c=3");
+        // 测试别名更改后是否应用于前面的where
+        builderEx.join("COMMA","tableB","B",null,null,null);
+    }
+
+    @Test
+    void setDistionOption() {
+        builderEx.setDistionOption();
+        builderEx.select("a/b","b")
+                .from("tablea");
+        System.out.println(builderEx);
+        builderEx.setDistionOption();
+        System.out.println(builderEx);
+    }
+
+    @Test
+    void updateAlias() {
+        builderEx = SQLBuilderFactory.createSelectSQLBuilder( DbType.hive);
+        builderEx.select("a","b")
+                .from("t99_stat_station_cd_his","stn")
+                .where("t99_stat_station_cd_his.merged_ind IN (1, 3)")
+                .whereAnd("unix_timestamp(to_date(t99_stat_station_cd_his.open_tm), 'yyyy-MM-dd') - unix_timestamp(to_date(now()), 'yyyy-MM-dd') <= 0")
+                .updateAlias("t99_stat_station_cd_his","stn");
+                ;
+    }
 }

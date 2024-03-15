@@ -7,12 +7,15 @@ import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
+import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableDropConstraint;
 import com.alibaba.druid.sql.ast.statement.SQLAlterTableStatement;
 import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.parser.Token;
 import flowdesigner.sql.SQLUtils;
 import flowdesigner.sql.builder.SQLBuilder;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
@@ -127,6 +130,47 @@ public abstract class SQLBuilderImpl implements SQLBuilder {
         }
 
         stmt.addItem(item);
+    }
+
+    /**
+     * 从表达式中获取特定表名称的Property，即 station.station_id样式的SQL，没有返回null
+     * @param methodInvokeExpr 表达式
+     * @param name 特定表名称
+     * @return
+     */
+    protected SQLPropertyExpr getProperty(SQLMethodInvokeExpr methodInvokeExpr, String name) {
+        SQLExpr expr = null;
+        List<SQLExpr> arguments = methodInvokeExpr.getArguments();
+
+        for (SQLExpr argument: arguments) {
+            if (argument instanceof SQLPropertyExpr propertyExpr) {
+                if (propertyExpr.getOwnerName().equals(name)) {
+                    return propertyExpr;
+                }
+            }
+        }
+        SQLPropertyExpr propertyExpr = null;
+        for (SQLExpr argument: arguments) {
+            if (argument instanceof SQLMethodInvokeExpr methodInvokeExpr1) {
+                propertyExpr = getProperty(methodInvokeExpr1, name);
+                if (propertyExpr != null) {
+                    return propertyExpr;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    protected String getTableName(SQLExpr exprTable) {
+        String name = null;
+        if (exprTable instanceof SQLIdentifierExpr identifierExpr) {
+            name = identifierExpr.getName();
+        } else if (exprTable instanceof SQLPropertyExpr propertyExpr) {
+            name = propertyExpr.getName();
+        }
+        return name;
     }
 
 }

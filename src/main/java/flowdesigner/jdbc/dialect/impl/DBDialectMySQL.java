@@ -43,7 +43,6 @@ public class DBDialectMySQL extends DBDialect {
      * @return
      */
     private static boolean isInteger(int dataType) {
-//        int[] array = {Types.NUMERIC, Types.DECIMAL, Types.TINYINT, Types.SMALLINT, Types.INTEGER, Types.BIGINT, Types.REAL, Types.FLOAT, Types.DOUBLE};
         int[] array = {Types.TINYINT, Types.SMALLINT, Types.INTEGER, Types.BIGINT};
         for(int item : array){
             if(item == dataType){

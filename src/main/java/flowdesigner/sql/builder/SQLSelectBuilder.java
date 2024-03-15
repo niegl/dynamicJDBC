@@ -27,6 +27,10 @@ public interface SQLSelectBuilder extends SQLBuilder {
 
     SQLSelectBuilder from(SQLExpr expr, String alias);
 
+    SQLSelectBuilder setDistionOption();
+
+    void updateAlias(String table, String alias);
+
     SQLSelectBuilder orderBy(String... columns);
 
     SQLSelectBuilder groupBy(String expr);
@@ -59,6 +63,10 @@ public interface SQLSelectBuilder extends SQLBuilder {
     SQLSelectBuilder joinAnd(String conditionLeft, String conditionRight, String conditionOperator);
 
     SQLSelectBuilder joinOr(String conditionLeft, String conditionRight, String conditionOperator);
+
+    SQLSelectBuilder joinAnd(String right);
+
+    SQLSelectBuilder joinOr(String right);
 
     void setBigResult(boolean bigResult);
 

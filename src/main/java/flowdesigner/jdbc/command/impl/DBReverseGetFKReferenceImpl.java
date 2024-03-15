@@ -37,7 +37,7 @@ public class DBReverseGetFKReferenceImpl implements Command<ExecResult<List<FKCo
         return ret;
     }
 
-    protected List<FKColumnField> getFKReference(Connection conn, String schemaPattern, String table) throws SQLException {
+    private List<FKColumnField> getFKReference(Connection conn, String schemaPattern, String table) throws SQLException {
         List<FKColumnField> tableEntities;
         try {
             DbType dbType = DbTypeKit.getDbType(conn);

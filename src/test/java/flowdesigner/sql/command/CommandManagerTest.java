@@ -15,6 +15,7 @@ import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
 import flowdesigner.db.operators.SQLOperatorUtils;
+import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,25 +28,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
-
+import java.sql.Types;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class CommandManagerTest {
     Connection connection = null;
-    @BeforeEach
-    void setUp() {
-//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
-        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
+
+    Connection getHive() {
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
-//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
-        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-        properties.setProperty("url","jdbc:mysql://localhost:3306");
+        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+        properties.setProperty("url","jdbc:hive2://10.247.53.17:10000");
+//        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
+//        properties.setProperty("url","jdbc:mysql://localhost:3306");
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
-        properties.setProperty("maxWait","3000");
-        properties.setProperty("connectTimeout","3000");
+        properties.setProperty("druid.failFast","true");
+//        properties.setProperty("connectTimeout","3000");
         dynamicDriver.set_propertyInfo(properties);
 
         try {
@@ -62,6 +63,8 @@ class CommandManagerTest {
             String properties1 = druidDataSource.getProperties();
             System.out.println(properties1);
         }
+
+        return connection;
     }
 
     Connection getMySQL() {
@@ -75,6 +78,7 @@ class CommandManagerTest {
         properties.setProperty("username","root");
         properties.setProperty("password","123456");
         properties.setProperty("maxWait","3000");
+        properties.setProperty("druid.failFast","true");
         dynamicDriver.set_propertyInfo(properties);
 
         try {
@@ -88,18 +92,98 @@ class CommandManagerTest {
         return connection;
     }
 
+    Connection getImpala() {
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\setup\\Cloudera_ImpalaJDBC41_2.5.38\\Cloudera_ImpalaJDBC41_2.5.38");
+        Properties properties = new Properties();
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","com.cloudera.impala.jdbc41.Driver");
+        properties.setProperty("url","jdbc:impala://10.247.53.17:21050");
+        dynamicDriver.set_propertyInfo(properties);
+
+        try {
+//            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+            System.out.println(dynamicDriver.get_errMessage());
+            e.printStackTrace();
+        }
+        assertNotNull(connection);
+        return connection;
+    }
+
+    Connection getSQLServer() {
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+//        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\net.sourceforge.jtds");
+        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\Desktop\\1\\SQL Server (Old driver jTDS)\\1.3.1");
+
+        Properties properties = new Properties();
+//        properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
+//        properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
+        properties.setProperty("driverClassName","net.sourceforge.jtds.jdbc.Driver");
+        properties.setProperty("url","jdbc:jtds:sqlserver://localhost:1433");
+        properties.setProperty("maxWait","3000");
+        properties.setProperty("druid.failFast","true");
+        properties.setProperty("username","SA");
+        properties.setProperty("password","P@ssw0rd01");
+        dynamicDriver.set_propertyInfo(properties);
+
+        try {
+//            dynamicDriver.createDataSource();
+            connection = dynamicDriver.getConnection();
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+        System.out.println(dynamicDriver.get_errMessage());
+        assertNotNull(connection);
+        return connection;
+    }
+
+    @Test
+    void testGetCatalog() throws SQLException {
+        connection = getSQLServer();
+
+        DatabaseMetaData meta = connection.getMetaData();
+        ResultSet catalog = meta.getCatalogs();
+        System.out.println("cat-----------------");
+        System.out.println(meta.supportsCatalogsInTableDefinitions());
+        while (catalog.next()) {
+            System.out.println(catalog.getString("TABLE_CAT"));
+        }
+        System.out.println("schema-----------------");
+        System.out.println(meta.supportsSchemasInTableDefinitions());
+        ResultSet schemas = meta.getSchemas();
+        while (schemas.next()) {
+            System.out.println(schemas.getString("TABLE_CATALOG") + "," + schemas.getString("TABLE_SCHEM"));
+        }
+    }
+
     @Test
     void testGetAllTables() throws SQLException {
+        connection = getSQLServer();
         DatabaseMetaData meta = connection.getMetaData();
         String catalog = connection.getCatalog();
-        String schema = connection.getSchema();
+//        String schema = connection.getSchema();
 
-        System.out.println(catalog + "," + schema);
+//        System.out.println(catalog + "," + schema);
 
         boolean supportsSchemasInTableDefinitions = connection.getMetaData().supportsSchemasInTableDefinitions();
         boolean supportsCatalogsInTableDefinitions = connection.getMetaData().supportsCatalogsInTableDefinitions();
         System.out.println(supportsCatalogsInTableDefinitions);
         System.out.println(supportsSchemasInTableDefinitions);
+        ResultSet catalogs = meta.getCatalogs();
+        while (catalogs.next()) {
+            String TABLE_CAT = catalogs.getString("TABLE_CAT");
+            System.out.println("," + TABLE_CAT + "," );
+        }
+        ResultSet schemas = meta.getSchemas();
+        while (schemas.next()) {
+            String TABLE_CATALOG = schemas.getString("TABLE_CATALOG");
+            String TABLE_CAT = schemas.getString("TABLE_SCHEM");
+            System.out.println(TABLE_CATALOG + "," + TABLE_CAT + "," );
+        }
         ResultSet rs = meta.getTables(null, null, null, new String[]{"TABLE"});
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
@@ -113,25 +197,57 @@ class CommandManagerTest {
     }
 
     @Test
-    void testGetAllView() throws SQLException {
+    void testGetDDL() throws SQLException {
+        connection = getHive();
         DatabaseMetaData meta = connection.getMetaData();
         String catalog = connection.getCatalog();
-        String schema = connection.getSchema();
+        ResultSet rsCols = meta.getColumns(null, "bmnc_pcode", null, "%");
+        while(rsCols.next()) {
+            String TABLE_CAT = rsCols.getString("TABLE_CAT");
+            String TABLE_SCHEM = rsCols.getString("TABLE_SCHEM");
+            String TABLE_NAME = rsCols.getString("TABLE_NAME");
+            String colName = rsCols.getString("COLUMN_NAME");
+            String remarks = StringKit.trim(rsCols.getString("REMARKS"));
+            String typeName = rsCols.getString("TYPE_NAME");
+            int dataType = rsCols.getInt("DATA_TYPE");
+            int columnSize = rsCols.getInt("COLUMN_SIZE");
+            int decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
+            String defaultValue = rsCols.getString("COLUMN_DEF");
+            String isNullable = rsCols.getString("IS_NULLABLE");
+            System.out.println(TABLE_CAT + "." + TABLE_SCHEM);
+            System.out.println(TABLE_NAME + "." + colName + "," + remarks);
 
-        System.out.println(catalog + "," + schema);
+        }
+    }
 
-        boolean supportsSchemasInTableDefinitions = connection.getMetaData().supportsSchemasInTableDefinitions();
-        boolean supportsCatalogsInTableDefinitions = connection.getMetaData().supportsCatalogsInTableDefinitions();
+    @Test
+    void testGetAllView() throws SQLException {
+        connection = getSQLServer();
+        DatabaseMetaData meta = connection.getMetaData();
+        String catalog = connection.getCatalog();
+//        String schema = connection.getSchema();
+
+//        System.out.println(catalog + "," + schema);
+
+        boolean supportsSchemasInTableDefinitions = meta.supportsSchemasInTableDefinitions();
+        boolean supportsCatalogsInTableDefinitions = meta.supportsCatalogsInTableDefinitions();
         System.out.println(supportsCatalogsInTableDefinitions);
         System.out.println(supportsSchemasInTableDefinitions);
-        ResultSet rs = meta.getTables(null, null, null, new String[]{"VIEW"});
+
+        System.out.println(meta.getDatabaseMajorVersion());
+        System.out.println(meta.getDatabaseProductVersion());
+
+        System.out.println(meta.getDatabaseMajorVersion());
+        System.out.println(meta.getDatabaseMinorVersion());
+        ResultSet rs = meta.getTables("master", null, null, new String[]{"TABLE","VIEW"});
         List<TableEntity> tableEntities = new ArrayList<TableEntity>();
         while (rs.next()) {
             String tableName = rs.getString("TABLE_NAME");
             String TABLE_CAT = rs.getString("TABLE_CAT");
             String TABLE_SCHEM = rs.getString("TABLE_SCHEM");
+            String TABLE_TYPE = rs.getString("TABLE_TYPE");
 
-            System.out.println(tableName + "," + TABLE_CAT + "," + TABLE_SCHEM);
+            System.out.println(tableName + "," + TABLE_CAT + "," + TABLE_SCHEM+ "," + TABLE_TYPE);
 
         }
     }
@@ -145,7 +261,7 @@ class CommandManagerTest {
     void testExecuteUpdate() throws SQLException {
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
+        var exec = dbExecute.exec(0,connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
 
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(exec);
@@ -156,7 +272,7 @@ class CommandManagerTest {
     void testExecuteSelect() throws SQLException, InterruptedException {
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(connection, "SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm FROM std_pcode.t99_cala_stat_index_mapping");
+        var exec = dbExecute.exec(0,connection, "SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm FROM std_pcode.t99_cala_stat_index_mapping");
 
         String s = JSON.toJSONString(exec);
         System.out.println(s);
@@ -238,46 +354,20 @@ class CommandManagerTest {
 
     @Test
     void testExeCommandGetSchemas() throws SQLException {
+        connection = getSQLServer();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetSchemas,new HashMap<String,String>());
         String s = JSON.toJSONString(cc);
         System.out.println(s);
-
-        DatabaseMetaData meta = connection.getMetaData();
-        ResultSet catalog = meta.getCatalogs();
-        while (catalog.next()) {
-            System.out.println(catalog.getString("TABLE_CAT"));
-        }
-
-        System.out.println(meta.supportsSchemasInTableDefinitions());//-------
-        System.out.println(meta.supportsSchemasInIndexDefinitions());
-        System.out.println(meta.supportsSchemasInDataManipulation());
-        System.out.println(meta.supportsSchemasInPrivilegeDefinitions());
-        System.out.println(meta.supportsSchemasInProcedureCalls());
-
-        ResultSet schemas = meta.getSchemas(null,null);
-        while (schemas.next()) {
-            String tableSchem = schemas.getString("TABLE_SCHEM");
-            /**
-             *  SQL Server系统保留表
-             *  trace_xe_action_map,trace_xe_event_map
-             */
-            if (!tableSchem.equalsIgnoreCase("PDMAN_DB_VERSION")
-                    && !tableSchem.equalsIgnoreCase("trace_xe_action_map")
-                    && !tableSchem.equalsIgnoreCase("trace_xe_event_map")){
-                System.out.println(tableSchem);
-            }else{
-                continue;
-            }
-        }
 
     }
 
     @Test
     void testExeCommandGetView() throws SQLException {
+        connection = getHive();
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetAllTablesList,new HashMap<String,String>(){{
-//            put("schemaPattern","bmnc_view");
-//            put("schemaPattern","pmart");
+            put("types","TABLE,VIEW");
+            put("schemaPattern","bmnc_pcodevw");
         }});
         String s = JSON.toJSONString(cc);
         System.out.println(s);
@@ -289,15 +379,20 @@ class CommandManagerTest {
     @Test
     void testExeCommandGetDDL() {
 
+        connection = getHive();
+
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-            put("schemaPattern","test");
-//            put("tables","t98_pasgr_line_rkm_pcnt_distribute_period_st");
+            put("schemaPattern","bmws_pcode");
+            put("types","TABLE");
+//            put("schemaPattern","test");
+            put("tables","t99_stat_index_cd");
         }});
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(cc);
         System.out.println(s);
         System.out.println(end - start);
+
 
 //        ResultSet tables = connection.getMetaData().getTables(null, null, "NewTable", new String[]{"TABLE"});
 //        while (tables.next()) {
@@ -306,7 +401,7 @@ class CommandManagerTest {
     }
 
     @Test
-    void testExeCommandParseDDL() throws SQLException {
+    void testExeCommandParseDDL() {
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{
@@ -341,11 +436,42 @@ class CommandManagerTest {
     }
 
     @Test
+    void testExeCommandParseSelect() throws SQLException {
+
+        long start = Instant.now().toEpochMilli();
+        ExecResult cc = CommandManager.exeCommand(null, CommandKey.CMD_ParseDDLToTableImpl,new HashMap<String,String>(){{
+            put("ddl","SELECT l.stat_line_nme, sum(a.pasgr_quatity) AS sum_pasgr_quatity\n" +
+                    "FROM bmnc_pmart.t98_pasgr_qtty_date_st a\n" +
+                    "\tINNER JOIN bmnc_pcode.t99_stat_line_cd_his l ON a.line_id = l.stat_line_id\n" +
+                    "WHERE a.stat_period_cd = '10'\n" +
+                    "GROUP BY sum(a.pasgr_quatity), l.stat_line_nme");
+            put("dbType","hive");
+        }});
+        long end = Instant.now().toEpochMilli();
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
+        System.out.println(end - start);
+    }
+
+    @Test
     void testExeCommandGetImportedKeys() throws SQLException {
 
-
+        connection = getMySQL();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetFKColumnFieldImpl,new HashMap<String,String>(){{
-            put("Table","NewTable");
+            put("Table","Orders");
+            put("schemaPattern","test");
+        }});
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
+    }
+
+    @Test
+    void testExeCommandgetPrimaryKey() throws SQLException {
+
+        connection = getMySQL();
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetPrimaryKeys,new HashMap<String,String>(){{
+            put("Table","Persons");
+            put("schemaPattern","test");
         }});
         String s = JSON.toJSONString(cc);
         System.out.println(s);
@@ -408,12 +534,8 @@ class CommandManagerTest {
     }
 
     @Test
-    void getSupportFunctionUsage() throws SQLException {
-        String usage = DbUtils.getFunctionDescription(connection,"acos");
-    }
-    @Test
     void getSupportFunctionType() throws SQLException {
-        SQLOperatorUtils.getFunctionType(DbType.hive,"^=");
+        SQLOperatorUtils.getFunctionType(DbType.sqlserver,"^=");
     }
 
     @Test
@@ -438,4 +560,27 @@ class CommandManagerTest {
         System.out.println(functions4);
         System.out.println(functions5);
     }
+
+    @Test
+    void testPrimaryKeys() throws SQLException {
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetPrimaryKeys,new HashMap<String,String>(){{
+            put("schemaPattern","bmnc_pcode");
+            put("table","t99_stat_index_cd");
+        }});
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
+
+    }
+
+    @Test
+    void testTypeInfo() throws SQLException {
+        connection = getSQLServer();
+        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
+            put("dbType","sqlserver");
+        }});
+        String s = JSON.toJSONString(cc);
+        System.out.println(s);
+
+    }
+
 }

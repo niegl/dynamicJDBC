@@ -1,175 +1,205 @@
-ABS      
-ACOS     
-ASIN     
-ATAN     
-ATAN2    
-CEIL     
-CEILING  
-COS      
-COSH     
-COT      
-DEGREES  
-EXP      
-FLOOR    
-GREATEST 
-GREAT    
-LEAST    
-LN       
-LOG      
-LOG10    
-MOD      
-PI       
-POWER    
-RADIANS  
-RAND     
-ROUND    
-SIGN     
-SIN      
-SINH     
-SQRT     
-TAN      
-TANH     
-TO_NUMBER
-TRUNC    
-TRUNCATE 
-TO_CHAR  
-BITAND   
-ASCII
-ASCIISTR
-BIT_LENGTH
-CHAR
-CHAR_LENGTH
-CHR
-CONCAT
-DIFFERENCE
-INITCAP
-INS
-INSERT
-INSTR
-INSTRB
-LCASE
-LEFT
-LEN
-LENGTH
-OCTET_LENGTH
-LOCATE
-LOWER
-LPAD
-LTRIM
-POSITION
-REPEAT
-REPLACE
-REPLICATE
-REVERSE
-RIGHT
-RIGHTSTR
-RPAD
-RTRIM
-SOUNDEX
-SPACE
-STRPOSDEC
-STRPOSDEC
-STRPOSINC
-STRPOSINC
-STUFF
-SUBSTR
-SUBSTRB
-TO_CHAR
-TRANSLATE
-TRIM
-UCASE
-UPPER
-REGEXP
-OVERLAY
-TEXT_EQUAL
-BLOB_EQUAL
-NLSSORT
-GREATEST
-GREAT
-TO_SINGLE_BYTE
-TO_MULTI_BYTE
-EMPTY_CLOB
-EMPTY_BLOB
-UNISTR
-ISNULL
-ADD_DAYS
-ADD_MONTHS
-ADD_WEEKS
-CURDATE
-CURTIME
-CURRENT_DATE
-CURRENT_TIME
-CURRENT_TIMESTAMP
-DATEADD
-DATEDIFF
-DATEPART
-DAY
-DAYNAME
-DAYOFMONTH
-DAYOFWEEK
-DAYOFYEAR
-DAYS_BETWEEN
-EXTRACT
-GETDATE
-GREATEST
-GREAT
-HOUR
-LAST_DAY
-LEAST
-MINUTE
-MONTH
-MONTHNAME
-MONTHS_BETWEEN
-NEXT_DAY
-NOW
-QUARTER
-SECOND
-ROUND
-TIMESTAMPADD
-TIMESTAMPDIFF
-SYSDATE
-TO_DATE
-TO_TIMESTAMP
-TO_TIMESTAMP_TZ
-FROM_TZ
-TRUNC
-WEEK
-WEEKDAY
-WEEKS_BETWEEN
-YEAR
-YEARS_BETWEEN
-LOCALTIME
-LOCALTIMESTAMP
-OVERLAPS
-TO_CHAR
-SYSTIMESTAMP
-NUMTODSINTERVAL
-NUMTOYMINTERVAL
-WEEK
-UNIX_TIMESTAMP
-FROM_UNIXTIME
-FROM_UNIXTIME
-SESSIONTIMEZONE
-DATE_FORMAT
-TIME_TO_SEC
-SEC_TO_TIME
-TO_DAYS
-COALESCE
-IFNULL
-ISNULL
-NULLIF
-NVL
-NULL_EQU
-CAST
-CONVERT
-HEXTORAW
-RAWTOHEX
-BINTOCHAR
-TO_BLOB
-DECODE
-ISDATE
-ISNUMERIC
-DM_HASH
-LNNVL
-LENGTHB
-FIELD
+[Numeric Functions]
+ABS                     :ABS(n)	            :求数值 n 的绝对值
+ACOS                    :ACOS(n)	        :求数值 n 的反余弦值
+ASIN                    :ASIN(n)	        :求数值 n 的反正弦值
+ATAN                    :ATAN(n)	        :求数值 n 的反正切值
+ATAN2                   :ATAN2(n1,n2)	    :求数值 n1/n2 的反正切值
+CEIL                    :CEIL(n)	        :求大于或等于数值 n 的最小整数
+CEILING                 :CEILING(n)	        :求大于或等于数值 n 的最小整数，等价于 CEIL(n)
+COS                     :COS(n)	            :求数值 n 的余弦值
+COSH                    :COSH(n)	        :求数值 n 的双曲余弦值
+COT                     :COT(n)	            :求数值 n 的余切值
+DEGREES                 :DEGREES(n)	        :求弧度 n 对应的角度值
+EXP                     :EXP(n)	            :求数值 n 的自然指数
+FLOOR                   :FLOOR(n)	        :求小于或等于数值 n 的最大整数
+GREATEST                :GREATEST(n {,n})	:求一个或多个数中最大的一个
+GREAT                   :GREAT (n1,n2)	    :求 n1、n2 两个数中最大的一个
+LEAST                   :LEAST(n {,n})	    :求一个或多个数中最小的一个
+LN                      :LN(n)	            :求数值 n 的自然对数
+LOG                     :LOG(n1[,n2])	    :求数值 n2 以 n1 为底数的对数
+LOG10                   :LOG10(n)	        :求数值 n 以 10 为底的对数
+MOD                     :MOD(m,n)	        :求数值 m 被数值 n 除的余数
+PI                      :PI()	            :得到常数 π
+POWER                   :POWER(n1,n2)	    :求数值 n2 以 n1 为基数的指数
+POWER2                  :POWER2(n1,n2)	    :求数值 n2 以 n1 为基数的指数
+RADIANS                 :RADIANS(n)	        :求角度 n 对应的弧度值
+RAND                    :RAND([n])	        :求一个 0 到 1 之间的随机浮点数
+ROUND                   :ROUND(n[,m])	    :求四舍五入值函数
+SIGN                    :SIGN(n)	        :判断数值的数学符号
+SIN                     :SIN(n)	            :求数值 n 的正弦值
+SINH                    :SINH(n)	        :求数值 n 的双曲正弦值
+SQRT                    :SQRT(n)	        :求数值 n 的平方根
+TAN                     :TAN(n)	            :求数值 n 的正切值
+TANH                    :TANH(n)	        :求数值 n 的双曲正切值
+TO_NUMBER               :TO_NUMBER (char [,fmt])	        :将 CHAR、VARCHAR、VARCHAR2 等类型的字符串转换为 DECIMAL 类型的数值
+TRUNC                   :TRUNC(n[,m])	                    :截取数值函数
+TRUNCATE                :TRUNCATE(n[,m])	                :截取数值函数，等价于 TRUNC(n[,m])
+TO_CHAR                 :TO_CHAR(n [, fmt [, 'nls' ] ])	    :将数值类型的数据转换为 VARCHAR 类型输出
+BITAND                  :BITAND(n1, n2)	                    :求两个数值型数值按位进行 AND 运算的结果
+NANVL                   :NANVL(n1, n2)	                    :有一个参数为空则返回空，否则返回 n1 的值
+REMAINDER               :REMAINDER(n1, n2)	                :计算 n1 除 n2 的余数，余数取绝对值更小的那一个
+TO_BINARY_FLOAT         :TO_BINARY_FLOAT(n)	                :将 number、real 或 double 类型数值转换成 binary float 类型
+TO_BINARY_DOUBLE        :TO_BINARY_DOUBLE(n)	            :将 number、real 或 float 类型数值转换成 binary double 类型
+[String Functions]
+ASCII                   :ASCII(char)	                    :返回字符对应的整数
+ASCIISTR                :ASCIISTR(char)	                    :将字符串 char 中，非 ASCII 的字符转成\XXXX(UTF-16)格式，ASCII 字符保持不变
+BIT_LENGTH              :BIT_LENGTH(char)	                :求字符串的位长度
+CHAR                    :CHAR(n)	                        :返回整数 n 对应的字符
+CHAR_LENGTH             :CHAR_LENGTH(char)	                :求字符串的串长度
+CHARACTER_LENGTH        :CHARACTER_LENGTH(char)	            :求字符串的串长度
+CHR                     :CHR(n)	                            :返回整数 n 对应的字符，等价于 CHAR(n)
+CONCAT                  :CONCAT(char1,char2,char3,…)	    :顺序联结多个字符串成为一个字符串
+DIFFERENCE              :DIFFERENCE(char1,char2)	        :比较两个字符串的 SOUNDEX 值之差异，返回两个 SOUNDEX 值串同一位置出现相同字符的个数。
+INITCAP                 :INITCAP(char)	                    :将字符串中单词的首字符转换成大写的字符
+INS                     :INS(char1,begin,n,char2)	        :删除在字符串 char1 中以 begin 参数所指位置开始的 n 个字符, 再把 char2 插入到 char1 串的 begin 所指位置
+INSERT                  :INSERT(char1,n1,n2,char2)  	    :将字符串 char1 从 n1 的位置开始删除 n2 个字符，并将 char2 插入到 char1 中 n1 的位置
+INSSTR                  :INSSTR(char1,n1,n2,char2)	        :将字符串 char1 从 n1 的位置开始删除 n2 个字符，并将 char2 插入到 char1 中 n1 的位置
+INSTR                   :INSTR(char1,char2[,n,[m]])	        :从输入字符串 char1 的第 n 个字符开始查找字符串 char2 的第 m 次出现的位置，以字符计算
+INSTRB                  :INSTRB(char1,char2[,n,[m]])	    :从 char1 的第 n 个字节开始查找字符串 char2 的第 m 次出现的位置，以字节计算
+LCASE                   :LCASE(char)	                    :将大写的字符串转换为小写的字符串
+LEFT                    :LEFT(char,n) 	                    :返回字符串最左边的 n 个字符组成的字符串
+LEFTSTR                 :LEFTSTR(char,n)	                :返回字符串最左边的 n 个字符组成的字符串
+LEN                     :LEN(char)	                        :返回给定字符串表达式的字符(而不是字节)个数（汉字为一个字符），其中不包含尾随空格
+LENGTH                  :LENGTH(clob)	                    :返回给定字符串表达式的字符(而不是字节)个数（汉字为一个字符），其中包含尾随空格
+OCTET_LENGTH            :OCTET_LENGTH(char)	                :返回输入字符串的字节数
+LOCATE                  :LOCATE(char1,char2[,n])	        :返回 char1 在 char2 中首次出现的位置
+LOWER                   :LOWER(char)	                    :将大写的字符串转换为小写的字符串
+LPAD                    :LPAD(char1,n,char2)	            :在输入字符串的左边填充上 char2 指定的字符，将其拉伸至 n 个字节长度
+LTRIM                   :LTRIM(str[,set])	                :删除字符串 str 左边起，出现在 set 中的任何字符，当遇到不在 set 中的第一个字符时返回结果
+POSITION                :POSITION(char1,/ IN char2)	        :求串 1 在串 2 中第一次出现的位置
+REPEAT                  :REPEAT(char,n)         	        :返回将字符串重复 n 次形成的字符串
+REPEATSTR               :REPEATSTR(char,n)	                :返回将字符串重复 n 次形成的字符串
+REPLACE                 :REPLACE(STR, search [,replace] )	:将输入字符串 STR 中所有出现的字符串 search 都替换成字符串 replace ,其中 STR 为 char、clob 或 text 类型
+REPLICATE               :REPLICATE(char,times)	            :把字符串 char 自己复制 times 份
+RIGHT                   :RIGHT              	            :返回字符串最右边 n 个字符组成的字符串
+RIGHTSTR                :RIGHTSTR(char,n)	                :返回字符串最右边 n 个字符组成的字符串
+RPAD                    :RPAD(char1,n,char2)	            :类似 LPAD 函数，只是向右拉伸该字符串使之达到 n 个字节长度
+RTRIM                   :RTRIM(str[,set])	                :删除字符串 str 右边起出现的 set 中的任何字符，当遇到不在 set 中的第一个字符时返回结果
+SOUNDEX                 :SOUNDEX(char)	                    :返回一个表示字符串发音的字符串
+SPACE                   :SPACE(n)	                        :返回一个包含 n 个空格的字符串
+STRPOSDEC               :STRPOSDEC(char)	                :把字符串 char 中最后一个字符的值减一
+STRPOSDEC               :STRPOSDEC(char,pos)	            :把字符串 char 中指定位置 pos 上的字符值减一
+STRPOSINC               :STRPOSINC(char)	                :把字符串 char 中最后一个字符的值加一
+STRPOSINC               :STRPOSINC(char,pos)	            :把字符串 char 中指定位置 pos 上的字符值加一
+STUFF                   :STUFF(char1,begin,n,char2)	        :删除在字符串 char1 中以 begin 参数所指位置开始的 n 个字符, 再把 char2 插入到 char1 串的 begin 所指位置
+SUBSTR                  :SUBSTR(char,m,n) 	                :返回 char 中从字符位置 m 开始的 n 个字符
+SUBSTRING               :SUBSTRING(char FROM m [FOR n])	    :返回 char 中从字符位置 m 开始的 n 个字符
+SUBSTRB                 :SUBSTRB(char,n,m)	                :SUBSTR 函数等价的单字节形式
+TO_CHAR                 :TO_CHAR(character)	                :将 VARCHAR、CLOB、TEXT 类型的数据转化为 VARCHAR 类型输出
+TRANSLATE               :TRANSLATE(char,from,to)	        :将所有出现在搜索字符集中的字符转换成字符集中的相应字符
+TRIM                    :TRIM([<<LEADING|TRAILING|BOTH> [char] | char> FROM] str)	:删去字符串 str 中由 char 指定的字符
+UCASE                   :UCASE(char)	                                    :将小写的字符串转换为大写的字符串
+UPPER                   :UPPER(char)	                                    :将小写的字符串转换为大写的字符串
+NLS_UPPER               :NLS_UPPER(char)	                                :将小写的字符串转换为大写的字符串
+REGEXP	                :REGEXP	                                            :根据符合 POSIX 标准的正则表达式进行字符串匹配
+OVERLAY                 :OVERLAY(char1 PLACING char2 FROM int [FOR int])	:字符串覆盖函数，用 char2 覆盖 char1 中指定的子串，返回修改后的 char1
+TEXT_EQUAL	            :TEXT_EQUAL	                                        :返回两个 LONGVARCHAR 类型的值的比较结果，相同返回 1，否则返回 0
+BLOB_EQUAL	            :BLOB_EQUAL	                                        :返回两个 LONGVARBINARY 类型的值的比较结果，相同返回 1，否则返回 0
+NLSSORT                 :NLSSORT(str1 [,nls_sort=str2])	                    :返回对自然语言排序的编码
+GREATEST                :GREATEST(char {,char})	                            :求一个或多个字符串中最大的字符串
+GREAT                   :GREAT (char1, char2)	                            :求 char 1、char 2 中最大的字符串
+to_single_byte          :to_single_byte (char)	                            :将多字节形式的字符（串）转换为对应的单字节形式
+to_multi_byte           :to_multi_byte (char)	                            :将单字节形式的字符（串）转换为对应的多字节形式
+EMPTY_CLOB              :EMPTY_CLOB ()	                                    :初始化 clob 字段
+EMPTY_BLOB              :EMPTY_BLOB ()	                                    :初始化 blob 字段
+UNISTR                  :UNISTR (char)	                                    :将字符串 char 中，ASCII 编码或 Unicode 编码（‘\XXXX’4 个 16 进制字符格式）转成本地字符。对于其他字符保持不变。
+ISNULL                  :ISNULL(char)	                                    :判断表达式是否为 NULL
+CONCAT_WS               :CONCAT_WS(delim, char1,char2,char3,…)	            :顺序联结多个字符串成为一个字符串，并用 delim 分割
+SUBSTRING_INDEX         :SUBSTRING_INDEX(char, delim, count)	            :按关键字截取字符串，截取到指定分隔符出现指定次数位置之前
+COMPOSE                 :COMPOSE(varchar str)	                            :在 UTF8 库下，将 str 以本地编码的形式返回
+[Time and Date Functions]
+ADD_DAYS                :ADD_DAYS(date,n)	            :返回日期加上 n 天后的新日期
+ADD_MONTHS              :ADD_MONTHS(date,n)	            :在输入日期上加上指定的几个月返回一个新日期
+ADD_WEEKS               :ADD_WEEKS(date,n)	            :返回日期加上 n 个星期后的新日期
+CURDATE                 :CURDATE()	                    :返回系统当前日期
+CURTIME                 :CURTIME(n)	                    :返回系统当前时间
+CURRENT_DATE            :CURRENT_DATE()	                :返回系统当前日期
+CURRENT_TIME            :CURRENT_TIME(n)	            :返回系统当前时间
+CURRENT_TIMESTAMP       :CURRENT_TIMESTAMP(n)	        :返回系统当前带会话时区信息的时间戳
+DATEADD                 :DATEADD(datepart,n,date)	    :向指定的日期加上一段时间
+DATEDIFF                :DATEDIFF(datepart,date1,date2)	:返回跨两个指定日期的日期和时间边界数
+DATEPART                :DATEPART(datepart,date)	    :返回代表日期的指定部分的整数
+DAY                     :DAY(date)	                    :返回日期中的天数
+DAYNAME                 :DAYNAME(date)	                :返回日期的星期名称
+DAYOFMONTH              :DAYOFMONTH(date)	            :返回日期为所在月份中的第几天
+DAYOFWEEK               :DAYOFWEEK(date)	            :返回日期为所在星期中的第几天
+DAYOFYEAR               :DAYOFYEAR(date)	            :返回日期为所在年中的第几天
+DAYS_BETWEEN            :DAYS_BETWEEN(date1,date2)	    :返回两个日期之间的天数
+EXTRACT                 :EXTRACT(时间字段 FROM date)	    :抽取日期时间或时间间隔类型中某一个字段的值
+GETDATE                 :GETDATE(n)	                    :返回系统当前时间戳
+GREATEST                :GREATEST(date {,date})	        :求一个或多个日期中的最大日期
+GREAT                   :GREAT (date1,date2)	        :求 date1、date2 中的最大日期
+HOUR                    :HOUR(time)	                    :返回时间中的小时分量
+LAST_DAY                :LAST_DAY(date)                 :返回输入日期所在月份最后一天的日期
+LEAST                   :LEAST(date {,date})	        :求一个或多个日期中的最小日期
+MINUTE                  :MINUTE(time)	                :返回时间中的分钟分量
+MONTH                   :MONTH(date)	                :返回日期中的月份分量
+MONTHNAME               :MONTHNAME(date)	            :返回日期中月分量的名称
+MONTHS_BETWEEN          :MONTHS_BETWEEN(date1,date2)	:返回两个日期之间的月份数
+NEXT_DAY                :NEXT_DAY(date1,char2)	        :返回输入日期指定若干天后的日期
+NOW                     :NOW(n)	                        :返回系统当前时间戳
+QUARTER                 :QUARTER(date)	                :返回日期在所处年中的季节数
+SECOND                  :SECOND(time)	                :返回时间中的秒分量
+ROUND                   :ROUND (date1[, fmt])	        :把日期四舍五入到最接近格式元素指定的形式
+TIMESTAMPADD            :TIMESTAMPADD(datepart,n,timestamp)	            :返回时间戳 timestamp 加上 n 个 datepart 指定的时间段的结果
+TIMESTAMPDIFF           :TIMESTAMPDIFF(datepart,timeStamp1,timestamp2)	:返回一个表明 timestamp2 与 timestamp1 之间的指定 datepart 类型时间间隔的整数
+SYSDATE                 :SYSDATE()	                                    :返回系统的当前日期
+TO_DATE                 :TO_DATE(CHAR[,fmt[,'nls']]) 	                :字符串转换为日期时间数据类型
+TO_TIMESTAMP            :TO_TIMESTAMP(CHAR[,fmt[,'nls']]) 	            :字符串转换为日期时间数据类型
+TO_TIMESTAMP_TZ         :TO_TIMESTAMP_TZ(CHAR[,fmt])	                :字符串转换为日期时间数据类型
+FROM_TZ                 :FROM_TZ(timestamp,timezone|tz_name])	        :将时间戳类型 timestamp 和时区类型 timezone（或时区名称 tz_name）转化为 timestamp with timezone 类型
+TZ_OFFSET               :TZ_OFFSET(timezone| [tz_name]) 	            :返回给定的时区或时区名和标准时区(UTC)的偏移量
+TRUNC                   :TRUNC(date[,fmt])	                            :把日期截断到最接近格式元素指定的形式
+WEEK                    :WEEK(date)	                                    :返回日期为所在年中的第几周
+WEEKDAY                 :WEEKDAY(date)	                                :返回当前日期的星期值
+WEEKS_BETWEEN           :WEEKS_BETWEEN(date1,date2)	                    :返回两个日期之间相差周数
+YEAR                    :YEAR(date)	                                    :返回日期的年分量
+YEARS_BETWEEN           :YEARS_BETWEEN(date1,date2)	                    :返回两个日期之间相差年数
+LOCALTIME               :LOCALTIME(n)	                                :返回系统当前时间
+LOCALTIMESTAMP          :LOCALTIMESTAMP(n)	                            :返回系统当前时间戳
+OVERLAPS	            :OVERLAPS	                                    :返回两个时间段是否存在重叠
+TO_CHAR                 :TO_CHAR(date[,fmt[,nls]])	                    :将日期数据类型 DATE 转换为一个在日期语法 fmt 中指定语法的 VARCHAR 类型字符串。
+SYSTIMESTAMP            :SYSTIMESTAMP(n)	                            :返回系统当前带数据库时区信息的时间戳
+NUMTODSINTERVAL         :NUMTODSINTERVAL(dec,interval_unit)	            :转换一个指定的 DEC 类型到 INTERVAL DAY TO SECOND
+NUMTOYMINTERVAL         :NUMTOYMINTERVAL (dec,interval_unit)	        :转换一个指定的 DEC 类型值到 INTERVAL YEAR TO MONTH
+WEEK                    :WEEK(date, mode)	                            :根据指定的 mode 计算日期为年中的第几周
+UNIX_TIMESTAMP          :UNIX_TIMESTAMP (datetime)	                    :返回自标准时区的'1970-01-01 00:00:00 +0:00'的到本地会话时区的指定时间的秒数差
+from_unixtime           :from_unixtime(unixtime)	                    :返回将自'1970-01-01 00:00:00'的秒数差转成本地会话时区的时间戳类型
+m_unixtime              :m_unixtime(unixtime, fmt)	                    :将自'1970-01-01 00:00:00'的秒数差转成本地会话时区的指定 fmt 格式的时间串
+SESSIONTIMEZONE	        :SESSIONTIMEZONE	            :返回当前会话的时区
+DBTIMEZONE	            :DBTIMEZONE	                    :返回当前数据库的时区
+DATE_FORMAT             :DATE_FORMAT(d, format)	        :以不同的格式显示日期/时间数据
+TIME_TO_SEC             :TIME_TO_SEC(d)	                :将时间换算成秒
+SEC_TO_TIME             :SEC_TO_TIME(sec)	            :将秒换算成时间
+TO_DAYS                 :TO_DAYS(timestamp)	            :转换成公元 0 年 1 月 1 日的天数差
+DATE_ADD                :DATE_ADD(datetime, interval)	:返回一个日期或时间值加上一个时间间隔的时间值
+DATE_SUB                :DATE_SUB(datetime, interval)	:返回一个日期或时间值减去一个时间间隔的时间值
+SYS_EXTRACT_UTC         :SYS_EXTRACT_UTC(d timestamp)	:将所给时区信息转换为 UTC 时区信息
+TO_DSINTERVAL           :TO_DSINTERVAL(d timestamp)	    :转换一个 timestamp 类型值到 INTERVAL DAY TO SECOND
+TO_YMINTERVAL           :TO_YMINTERVAL(d timestamp)	    :转换一个 timestamp 类型值到 INTERVAL YEAR TO MONTH
+[Null-Assert Functions]
+COALESCE                :COALESCE(n1,n2,…nx)	:返回第一个非空的值
+IFNULL                  :IFNULL(n1,n2)	        :当 n1 为非空时，返回 n1；若 n1 为空，则返回 n2
+ISNULL                  :ISNULL(n1,n2)	        :当 n1 为非空时，返回 n1；若 n1 为空，则返回 n2
+NULLIF                  :NULLIF(n1,n2)	        :如果 n1=n2 返回 NULL，否则返回 n1
+NVL                     :NVL(n1,n2)	            :返回第一个非空的值
+NULL_EQU	            :NULL_EQU	            :返回两个类型相同的值的比较
+[Type Conversion Functions]
+CAST             :CAST(value AS 类型说明)	                            :将 value 转换为指定的类型
+CONVERT          :CONVERT(类型说明,value)	                            :用于 INI 参数 ENABLE_CS_CVT=0 时，将 value 转换为指定的类型；
+CONVERT          :CONVERT(char, dest_char_set [,source_char_set ] )	    :用于 INI 参数 ENABLE_CS_CVT=1 时，将字符串从原串编码格式转换成目的编码格式
+HEXTORAW         :HEXTORAW(exp)	                                        :将 exp 转换为 BLOB 类型
+RAWTOHEX         :RAWTOHEX(exp)	                                        :将 exp 转换为 VARCHAR 类型
+BINTOCHAR        :BINTOCHAR(exp)	                                    :将 exp 转换为 CHAR
+TO_BLOB          :TO_BLOB(value)	                                    :将 value 转换为 blob
+UNHEX            :UNHEX(exp)	                                        :将十六进制的 exp 转换为格式字符串
+HEX              :HEX(exp)	                                            :将字符串的 exp 转换为十六进制字符串
+[Misc. Functions]
+DECODE           :DECODE(exp, search1, result1, … searchn, resultn [,default])	:查表译码
+ISDATE           :ISDATE(exp)	                                                :判断表达式是否为有效的日期
+ISNUMERIC        :ISNUMERIC(exp)	                                            :判断表达式是否为有效的数值
+DM_HASH          :DM_HASH (exp)	                                                :根据给定表达式生成 HASH 值
+LNNVL            :LNNVL(condition)	                                            :根据表达式计算结果返回布尔值
+LENGTHB          :LENGTHB(value)	                                            :返回 value 的字节数
+FIELD            :FIELD(value, e1, e2, e3, e4...en)	                            :返回 value 在列表 e1, e2, e3, e4...en 中的位置序号，不在输入列表时则返回 0
+ORA_HASH         :ORA_HASH(exp [,max_bucket [,seed_value]])	                    :为表达式 exp 生成 HASH 桶值

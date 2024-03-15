@@ -2,7 +2,6 @@ package flowdesigner.jdbc.command;
 
 import com.alibaba.druid.sql.parser.ParserException;
 import com.alibaba.fastjson2.JSON;
-import com.github.houbb.auto.log.annotation.AutoLog;
 import flowdesigner.jdbc.command.impl.*;
 import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +20,15 @@ import static flowdesigner.jdbc.command.CommandKey.*;
 public class CommandManager {
     /** 命令注册表*/
     private static final Map<CommandKey, Class<?>> commandRegister = new HashMap<CommandKey, Class<?>>() {{
-        put(CMD_DBReverseGetTypeInfo, DBReverseGetTypeInfoImpl.class);          //逆向解析，获取数据表清单
-        put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);            //逆向解析，获取数据表清单
-        put(CMD_DBReverseGetAllTablesList, DBReverseGetTablesImpl.class);       //逆向解析，获取数据表清单
-        put(CMD_DBReverseGetTableDDL, DBReverseGetTablesDDLImpl.class);          //逆向解析，获取指定数据表DDL
-        put(CMD_ParseDDLToTableImpl, DBParseDDLImpl.class);                     //逆向解析，获取指定数据表DDL
-        put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKColumnFieldImpl.class);    //正向执行，获取SQL语句执行结果
-        put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);        //正向执行，获取SQL语句执行结果
-        put(CMD_DBReverseGetFunctionsImpl, DBReverseGetFunctionsImpl.class);            //正向执行，获取SQL语句执行结果
+        put(CMD_DBReverseGetTypeInfo, DBReverseGetTypeInfoImpl.class);                  //逆向解析，获取数据库数据类型清单
+        put(CMD_DBReverseGetSchemas, DBReverseGetSchemasImpl.class);                    //逆向解析，获取数据库清单
+        put(CMD_DBReverseGetAllTablesList, DBReverseGetAllTableListImpl.class);         //逆向解析，获取表清单功能. 支持表和视图
+        put(CMD_DBReverseGetTableDDL, DBReverseGetTableDDLImpl.class);                  //逆向解析，获取指定数据表DDL
+        put(CMD_DBReverseGetFunctionsImpl, DBReverseGetFunctionsImpl.class);            //
+        put(CMD_ParseDDLToTableImpl, DBParseDDLToTableImpl.class);                      //逆向解析，获取指定数据表DDL
+        put(CMD_DBReverseGetPrimaryKeys, DBReverseGetPrimaryKeyImpl.class);
+        put(CMD_DBReverseGetFKColumnFieldImpl, DBReverseGetFKInfoImpl.class);    //
+        put(CMD_DBReverseGetFKReferenceImpl, DBReverseGetFKReferenceImpl.class);        //
     }};
 
     /**
@@ -42,6 +42,7 @@ public class CommandManager {
         ExecResult result = exeCommand(connection, cmdText, params);
         return JSON.toJSONString(result);
     }
+
     /***
      * 客户端调用命令的接口
      * @param connection jdbc连接
@@ -49,7 +50,6 @@ public class CommandManager {
      * @param params 命令参数，需要和具体命令相符合
      * @return
      */
-    @AutoLog
     public static ExecResult exeCommand(Connection connection, CommandKey commandKey, Map<String, String> params) {
         ExecResult ret = new ExecResult(ExecResult.FAILED, "未知异常");
         try {

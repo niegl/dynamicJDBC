@@ -1,292 +1,221 @@
-COLLATE
-DIV
-MOD
-&
-|
-~
-^
-<<
->>
-=
-<=>
-<>
-!=
->
->=
-<
-<=
-[NOT] IN
-[NOT] BETWEEN AND
-[NOT] LIKE
-IS [NOT] TRUE
-IS [NOT] FALSE
-IS [NOT] NULL
-NOT
-!
-AND
-&&
-OR
-||
-XOR
-:=
-||
-BINARY
-CASE
-ADDDATE
-CONVERT_TZ
-CURDATE
-CURRENT_DATE
-CURRENT_TIME
-CURRENT_TIMESTAMP
-CURTIME
-DATE
-DATE_ADD
-DATE_FORMAT
-DATE_SUB
-DATEDIFF
-DAYOFMONTH
-DAYOFWEEK
-DAYOFYEAR
-EXTRACT
-FROM_DAYS
-FROM_UNIXTIME
-GET_FORMAT
-HOUR
-LAST_DAY
-LOCALTIME
-LOCALTIMESTAMP
-MAKEDATE
-MAKETIME
-MICROSECOND
-MINUTE
-MONTH
-MONTHNAME
-NOW
-PERIOD_ADD
-PERIOD_DIFF
-QUARTER
-SEC_TO_TIME
-SECOND
-STR_TO_DATE
-SUBDATE
-SUBTIME
-SYSDATE
-TIME
-TIME_FORMAT
-TIME_TO_SEC
-TIME_TO_USEC
-TIMEDIFF
-TIMESTAMP
-TIMESTAMPADD
-TIMESTAMPDIFF
-TO_DAYS
-TO_SECONDS
-UNIX_TIMESTAMP
-USEC_TO_TIME
-UTC_DATE
-UTC_TIME
-UTC_TIMESTAMP
-WEEK
-WEEKDAY
-WEEKOFYEAR
-YEARWEEK
-YEAR
-ASCII
-BIN
-BIT_LENGTH
-CHAR
-CHAR_LENGTH
-CONCAT
-CONCAT_WS
-EXPORT_SET
-ELT
-FIELD
-FIND_IN_SET
-FORMAT
-HEX
-INSERT
-INSTR
-INT2IP
-IP2INT
-LCASE
-LEFT
-LENGTH
-LOCATE
-LOWER
-LPAD
-LTRIM
-MAKE_SET
-MID
-OCT
-ORD
-POSITION
-QUOTE
-REGEXP
-REGEXP_INSTR
-REGEXP_LIKE
-REGEXP_REPLACE
-REGEXP_SUBSTR
-REPEAT
-REPLACE
-REVERSE
-RIGHT
-RLIKE
-RPAD
-RTRIM
-SPACE
-STRCMP
-SUBSTR
-SUBSTRING
-SUBSTRING_INDEX
-TRIM
-UCASE
-UNHEX
-UPPER
-WEIGHT_STRING
-CAST
-CONVERT
-ABS
-ACOS
-ASIN
-ATAN
-ATAN2
-BIT_COUNT
-CEIL
-CEILING
-CONV
-COS
-COT
-CRC32
-DEGREES
-EXP
-FLOOR
-LN
-LOG
-LOG10
-LOG2
-MOD
-NEG
-PI
-POW
-POWER
-RADIANS
-RAND
-ROUND
-SIGN
-SIN
-SQRT
-TAN
-TRUNCATE
-GREATEST
-INTERVAL
-ISNULL
-LEAST
-IF
-IFNULL
-NULLIF
-ORA_DECODE
-APPROX_COUNT_DISTINCT
-AVG
-BIT_AND
-BIT_OR
-BIT_XOR
-COUNT
-GROUP_CONCAT
-GROUPING
-MAX
-MIN
-STD
-STDDEV
-STDDEV_POP
-STDDEV_SAMP
-SUM
-VAR_POP
-VAR_SAMP
-VARIANCE
-APPROX_COUNT_DISTINCT
-AVG
-COUNT
-CUME_DIST
-DENSE_RANK
-FIRST_VALUE
-LAG
-LAST_VALUE
-LEAD
-MAX
-MIN
-NTH_VALUE
-NTILE
-PERCENT_RANK
-RANK
-ROW_NUMBER
-STD
-STDDEV
-STDDEV_POP
-STDDEV_SAMP
-SUM
-VAR_POP
-VAR_SAMP
-VARIANCE
-AES_DECRYPT
-AES_ENCRYPT
-MD5
-BENCHMARK
-CHARSET
-COERCIBILITY
-COLLATION
-CONNECTION_ID
-CURRENT_USER
-DATABASE
-FOUND_ROWS
-LAST_INSERT_ID
-SCHEMA
-ROW_COUNT
-SESSION_USER
-SYSTEM_USER
-USER
-VERSION
-ANY_VALUE
-COALESCE
-DEFAULT
-INET_ATON
-INET_NTOA
-INET6_ATON
-INET6_NTOA
-IS_IPV4
-IS_IPV4_COMPAT
-IS_IPV4_MAPPED
-IS_IPV6
-NVL
-SLEEP
-UUID
-UUID_SHORT
-VALUES
-JSON_ARRAY
-JSON_OBJECT
-JSON_QUOTE
-JSON_CONTAINS
-JSON_CONTAINS_PATH
-JSON_EXTRACT
-JSON_KEYS
-JSON_OVERLAPS
-JSON_SEARCH
-JSON_VALUE
-MEMBER OF
-JSON_ARRAY_APPEND
-JSON_ARRAY_INSERT
-JSON_INSERT
-JSON_MERGE
-JSON_MERGE_PATCH
-JSON_MERGE_PRESERVE
-JSON_REMOVE
-JSON_REPLACE
-JSON_SET
-JSON_UNQUOTE
-JSON_DEPTH
-JSON_LENGTH
-JSON_TYPE
-JSON_VALID
-JSON_PRETTY
-JSON_STORAGE_SIZE
-JSON_ARRAYAGG
-JSON_OBJECTAGG
+[算术运算符]
++   :+      :加法
+–   :–      :减法
+/   :/      :除法
+*   :*      :乘法
+plus        :plus( expr1,expr2)        :加法
+minus       :minus( expr1,expr2)       :减法
+divide      :divide( expr1,expr2)      :除法
+times       :times( expr1,expr2)       :乘法
+[位逻辑函数]
+BITAND          :BITAND(int8_expr,int8_expr)            :位逻辑函数
+BITOR           :BITOR(int8_expr,int8_expr)             :位逻辑函数
+BITXOR          :BITXOR(int8_expr,int8_expr)            :位逻辑函数
+BITANDNOT       :BITANDNOT(int8_expr,int8_expr)         :位逻辑函数
+BITNOT          :BITNOT(int8_expr)                      :位逻辑函数
+[串联运算符]
+||  :   ||  :串联运算符是二元运算符，在 SQL 表达式 的通用图中展示其语法。您可使用串联运算符（||）来串联两个求值为字符数据类型或数值数据类型的两个表达式。
+[强制转型表达式]
+CAST        :CAST() :您可使用 CAST 和 AS 关键字或双冒号强制转型运算符（：： ）来将表达式强制转型为另一数据类型。
+：：          :：：:您可使用 CAST 和 AS 关键字或双冒号强制转型运算符（ ：： ）来将表达式强制转型为另一数据类型。
+[条件表达式]
+CASE    :CASE { WHEN Condition THEN expr|NULL }... [ELSE expr|NULL ] END    :通用的 CASE 表达式测试 WHEN 子句中为真的条件。如果它发现为真的条件，则它返回在THEN 子句中指定的结果。
+CASE    :CASE expr { WHEN expr THEN expr|NULL }... [ELSE expr|NULL ] END    :线性的 CASE 表达式将跟在 CASE 关键字之后的表达式的值与 WHEN 子句中的表达式作比较。
+ISNULL                  :ISNULL(expr1, expr2)                                               :ISNULL 表达式返回不同的结果，这取决于于它的第一个参数求值是否为 NULL。
+NVL                     :NVL(expr1, expr2)                                                  :NVL 表达式返回不同的结果，这依赖于它的第一个参数求值是否为 NULL。
+NULLIF                  :NULLIF(expr1, expr2)                                               :NULLIF 表达式返回不同的结果，这依赖于它的两个参数是否相等。
+DECODE                  :DECODE(expr, { WHEN_expr, then_expr|NULL },... [,NULL|else_expr]...) :DECODE 表达式类似于 CASE 表达式，它能够根据指定列中找到的值打印不同的结果。
+[常量表达式]
+CURRENT         :CURRENT        :从系统时钟返回当前的时间和日期。
+CURRENT_ROLE    :CURRENT_ROLE   :返回角色的名称（如果有的话），为当前用户启用其权限。
+CURRENT_USER    :CURRENT_USER   :是 USER 的同义词。
+DEFAULT_ROLE    :DEFAULT_ROLE   :返回角色的名称（如果有的话），是当前用户的缺省角色。
+DBSERVERNAME    :DBSERVERNAME   :返回当前数据库服务器的名称。
+SITENAME        :SITENAME       :是 DBSERVERNAME 的同义词。
+SYSDATE         :SYSDATE        :从系统时钟读取 DATETIME 值，像 CURRENT 运算符一样，但有不同的缺省精度。
+TODAY           :TODAY          :从系统时钟返回当前的日历日期。
+USER            :USER           :返回当前用户的登录名称（也称为授权标识符）。
+[NEXTVAL 和 CURRVAL 运算符]
+sequence.NEXTVAL    :sequence.NEXTVAL       :可在 SQL 语句中使用 NEXTVAL 或 CURRVAL 运算符来访问序列的值。
+sequence.CURRVAL    :sequence.CURRVAL       :可在 SQL 语句中使用 NEXTVAL 或 CURRVAL 运算符来访问序列的值。
+[构造函数表达式]
+ROW         :ROW(expression,...)            :使用 ROW 构造函数来生成 ROW 类型列的值。
+SET         :SET{[Expression,...]}          :使用集合构造函数来为集合列指定值。
+MULTISET    :MULTISET{[Expression,...]}     :使用集合构造函数来为集合列指定值。
+LIST        :LIST{[Expression,...]}         :使用集合构造函数来为集合列指定值。
+[NULL关键字]
+NULL    :NULL   :NULL关键字
+[代数函数]
+ABS                 :ABS( numeric )                     :Returns the absolute value of a specified value. The returned value is of the same data type as the parameter.
+CEIL                :CEIL (numeric)                     :Returns the smallest integer value that is greater than or equal to the argument. This method returns value of the same type as argument, but with scale set to 0 and adjusted precision, if applicable.
+FLOOR               :FLOOR(numeric)                     :Returns the largest integer value that is less than or equal to the argument. This method returns value of the same type as argument, but with scale set to 0 and adjusted precision, if applicable.
+GREATEST            :GREATEST(aValue, bValue [,...])    :Returns the largest value that is not NULL, or NULL if all values are NULL.
+LEAST               :LEAST(aValue, bValue [,...])       :Returns the smallest value that is not NULL, or NULL if all values are NULL.
+MOD                 :MOD(dividendNumeric, divisorNumeric) :The modulus expression.
+POWER               :POWER(base, exponent)              :See also Java Math.pow. This method returns a double.
+POW                 :POW(base, exponent)                :See also Java Math.pow. This method returns a double.
+ROOT                :ROOT(radicand [,{2|index}])        :ROOT 函数从它的第一个数值表达式参数 radicand 抽取正实数根值，返回为 FLOAT 数据类型。
+ROUND               :ROUND ({numeric|date_expression [,{0|factor}]}|{date_expression [,'DD|DAY|MONTH|YEAR']}|{datetime_expression [{,'DD|DAY|MONTH|YEAR'}|{,'DD'}]})      :Rounds to a number of fractional digits. This method returns value of the same type as argument, but with adjusted precision and scale, if applicable.
+TRUNC               :TRUNC ({numeric|date_expression [,{0|factor}]}|{date_expression [,'DD|DAY|MONTH|YEAR']}|{datetime_expression [{,'DD|DAY|MONTH|YEAR'}|{,'DD'}]})      :When a numeric argument is specified, truncates it to a number of digits (to the next value closer to 0) and returns value of the same type as argument, but with adjusted precision and scale, if applicable.
+SQRT                :SQRT(numeric)                      :See also Java Math.sqrt. This method returns a double.
+[CARDINALITY]
+CARDINALITY         :CARDINALITY(collection_col|collection_var)    :CARDINALITY函数返回集合列（SET、MULTISET、LIST）中元素的数目。
+[SQLCODE]
+SQLCODE             :SQLCODE    :SQLCODE 函数（SPL）
+[DBINFO函数]
+DBINFO  :DBINFO( {'dbspace', tblspace_num|expression}|{'sqlca.sqlerrd1'|'sqlca.sqlerrd2'}|'sessionid'|'cdrsession'|'dbname'|'dbhostname'|'serial8'|'bigserial'|'get_tz'|'utc_current'|{'utc_to_datetime', ute_value|table.column}|{'version', parameter} ) :DBINFO函数
+[指数和对数函数]
+EXP                 :EXP(float_expression)              :See also Java Math.exp. This method returns a double.
+LN                  :LN(float_expression)               :Calculates the natural (base e) logarithm as a double value. Argument must be a positive numeric value.
+LOG                 :LOG(float_expression)              :Calculates the logarithm with specified base as a double value. Argument and base must be positive numeric values. Base cannot be equal to 1.
+LOG10               :LOG10(float_expression)            :Calculates the base 10 logarithm as a double value. Argument must be a positive numeric value.
+LOGN                :LOGN(expr)                         :LOGN 函数返回数值参数的自然对数。
+NVL2                :NVL2(testValue, aValue, bValue)    :If the test value is null, then 'b' is returned. Otherwise, 'a' is returned. The data type of the returned value is the data type of 'a' if this is a text type.
+HEX                 :HEX(exp)	                        :将字符串的 exp 转换为十六进制字符串
+[长度函数]
+LENGTH                  :LENGTH ( quoted_string|variable_name|{[table.]column} )            :Returns the number of characters in a character string. This method returns a long.
+LEN                     :LEN ( quoted_string|variable_name|{[table.]column} )               :Returns the number of characters in a character string. This method returns a long.
+CHAR_LENGTH             :CHAR_LENGTH ( quoted_string|variable_name|{[table.]column} )       :Returns the number of characters in a character string. This method returns a long.
+CHARACTER_LENGTH        :CHARACTER_LENGTH ( quoted_string|variable_name|{[table.]column} )  :Returns the number of characters in a character string. This method returns a long.
+OCTET_LENGTH            :OCTET_LENGTH(quoted_string|variable_name|{[table.]column})         :Returns the number of bytes in a binary string. This method returns a long.
+[安全标签支持函数]
+SECLABEL_TO_CHAR        :SECLABEL_TO_CHAR('policy',column)                                      :函数返回一个安全标签字符串格式的安全标签。
+SECLABEL_BY_COMP        :SECLABEL_BY_COMP('policy', '{component|{(element[,...])}}[:...]')      :函数返回 IDSSECURITYLABEL 对象，其为它的内部编码的字符串格式的安全标签。此函数使得用户能够通过指定它的组件值直接地提供安全标签。
+SECLABEL_BY_NAME        :SECLABEL_BY_NAME('policy','label')                                     :函数使得用户能够通过指定安全标签的名称来直接提供它。
+[SIGN 函数]
+SIGN                    :SIGN(expression) :SIGN 函数返回参数的符号的指示符。
+[时间函数]
+DAY                     :DAY(date|dtime_expr)	                            :返回日期中的天数
+DATE                    :DATE(non_date_expr)	                            :返回 DATE 或DATETIME 值的表达式
+LAST_DAY                :LAST_DAY(date|dtime_expr)                          :返回输入日期所在月份最后一天的日期
+MONTH                   :MONTH(date|dtime_expr)	                            :返回日期中的月份分量
+QUARTER                 :QUARTER(date|dtime_expr)	                        :返回日期在所处年中的季节数
+WEEKDAY                 :WEEKDAY(date|dtime_expr)	                        :返回当前日期的星期值
+YEAR                    :YEAR(date|dtime_expr)	                            :返回日期的年分量
+extend                  :extend(date|dtime_expr [,first TO last])           :EXTEND 函数调整 DATETIME 或 DATE 值的精度。
+MDY                     :MDY(month, day, year)                              :从整数参数返回 DATE 值
+ADD_MONTHS              :ADD_MONTHS(date|dtime_expr,integer)	            :在输入日期上加上指定的几个月返回一个新日期
+MONTHS_BETWEEN          :MONTHS_BETWEEN(date|dtime_expr,date|dtime_expr)	:返回两个日期之间的月份数
+NEXT_DAY                :NEXT_DAY(date|dtime_expr,date|dtime_expr)	        :返回输入日期指定若干天后的日期
+GBASE_TO_CHAR           :GBASE_TO_CHAR(date|dtime_expr|num_expr [,format_string])   :GBASE_TO_CHAR 函数将一求值为 DATE、DATETIME 或数值值的表达式转换为字符串。
+TO_CHAR                 :TO_CHAR(date|dtime_expr|num_expr [,format_string]) :将日期数据类型 DATE 转换为一个在日期语法 fmt 中指定语法的 VARCHAR 类型字符串。
+GBASE_TO_DATE           :GBASE_TO_DATE(char_expr [,format_string])          :GBASE_TO_DATE 函数将字符串转换为 DATETIME 值。
+TO_DATE                 :TO_DATE(source_char,fmt) 	                        :字符串转换为日期时间数据类型
+[TO_NUMBER 函数]
+TO_NUMBER   :TO_NUMBER(char_expr|num_expr) :TO_NUMBER 函数可将表示数值值的数值或字符表达式转换为 DECIMAL 数据类型。
+[三角函数]
+COS                 :COS(radian_expr) :Calculate the trigonometric cosine. See also Java Math.cos. This method returns a double.
+COSH                :COSH(radian_expr) :Calculate the hyperbolic cosine. See also Java Math.cosh. This method returns a double.
+SIN                 :SIN(radian_expr) :Calculate the trigonometric sine. See also Java Math.sin. This method returns a double.
+SINH                :SINH(radian_expr) :Calculate the hyperbolic sine. See also Java Math.sinh. This method returns a double.
+TAN                 :TAN(radian_expr) :Calculate the trigonometric tangent. See also Java Math.tan. This method returns a double.
+TANH                :TANH(radian_expr) :Calculate the hyperbolic tangent. See also Java Math.tanh. This method returns a double.
+DEGREES             :DEGREES(radian_expr) :See also Java Math.toDegrees. This method returns a double.
+ASIN                :ASIN(numeric) :Calculate the arc sine. See also Java Math.asin. This method returns a double.
+ASINH               :ASINH(numeric) :Calculate the arc sine. See also Java Math.asin. This method returns a double.
+ACOS                :ACOS(numeric) :Calculate the arc cosine. See also Java Math.acos. This method returns a double.
+ACOSH               :ACOSH(numeric) :Calculate the arc cosine. See also Java Math.acos. This method returns a double.
+ATAN                :ATAN(numeric) :Calculate the arc tangent. See also Java Math.atan. This method returns a double.
+ATANH               :ATANH(numeric) :Calculate the arc tangent. See also Java Math.atan. This method returns a double.
+ATAN2               :ATAN2(Y, X) :Calculate the angle when converting the rectangular coordinates to polar coordinates. See also Java Math.atan2. This method returns a double.
+RADIANS             :RADIANS(degree_expr) :See also Java Math.toRadians. This method returns a double.
+[字符串操纵函数]
+CONCAT                  :CONCAT(expr1, expr2) :Combines strings. Unlike with the operator ||, NULL parameters are ignored, and do not cause the result to become NULL. If all parameters are NULL the result is an empty string. This method returns a string.
+ASCII                   :ASCII(char_expr) :Returns the ASCII value of the first character in the string. This method returns an int.
+TRIM                    :TRIM ( [ {LEADING | TRAILING | BOTH} [ pad_char ] FROM ] source_expression ) :Removes all leading spaces, trailing spaces, or spaces at both ends, from a string. Other characters can be removed as well.
+LTRIM                   :LTRIM(string [, pad_String]) :Removes all leading spaces or other specified characters from a string.
+RTRIM                   :RTRIM(string [, pad_String]) :Removes all trailing spaces or other specified characters from a string.
+SPACE                   :SPACE(expr1) :Returns a string consisting of a number of spaces.
+REVERSE                 :REVERSE(source_string)	                    :将字符串反序
+REPLACE                 :REPLACE(string, searchString [, replacementString]) :Replaces all occurrences of a search string in a text with another string. If no replacement is specified, the search string is removed from the original string. If any parameter is null, the result is null.
+LPAD                    :LPAD(string, int[, paddingString]) :Left pad the string to the specified length. If the length is shorter than the string, it will be truncated at the end. If the padding string is not set, spaces will be used.
+RPAD                    :RPAD(string, int[, paddingString]) :Right pad the string to the specified length. If the length is shorter than the string, it will be truncated. If the padding string is not set, spaces will be used.
+CHR                     :CHR ( expr1 ) :Returns the character that represents the ASCII value. This method returns a string.
+UPPER                   :UPPER ( string ) :Converts a string to uppercase.
+LOWER                   :LOWER ( string ) :Converts a string to lowercase.
+INITCAP                 :INITCAP  ( string ) :INITCAP 函数返回表达式的一个副本，其中表达式中每个词都以大写字母开头。
+CHARINDEX               :CHARINDEX(substring, source, [, startPosition])    :CHARINDEX 函数搜索字符串，找到目标子字符串的第一次出现，搜索从源字符串内指定的或缺省的字符位置开始。
+INSTR                   :INSTR(string, substring, [, startInt [,count]]) :Returns the location of a search string in a string. If a start position is used, the characters before it are ignored. If position is negative, the rightmost location is returned. 0 is returned if the search string is not found. Please note this function is case sensitive, even if the parameters are not.
+LEFT                    :LEFT(string, position) :Returns the leftmost number of characters.
+RIGHT                   :RIGHT(string, position) :Returns the rightmost number of characters.
+SUBSTR                  :SUBSTR(source,start_position [,length]) 	                :返回 char 中从字符位置 m 开始的 n 个字符
+SUBSTRB                 :SUBSTRB(source,start_position [,length])	                :SUBSTR 函数等价的单字节形式
+SUBSTRING               :SUBSTRING ( string FROM startInt [ FOR lengthInt ] )| { { SUBSTRING | SUBSTR } ( {string|bytes}, startInt [, lengthInt ] ) } :Returns a substring of a string starting at a position. If the start index is negative, then the start index is relative to the end of the string. The length is optional.
+SUBSTRING_INDEX         :SUBSTRING_INDEX(source, delim, count)	            :按关键字截取字符串，截取到指定分隔符出现指定次数位置之前
+FORMAT_UNITS            :FORMAT_UNITS([{'number units'} | {'number'|number,'units' [,'precision'|precision]}])   :FORMAT_UNITS 函数可解释指定内存或大量存储的单位的数目和缩写名称的字符串。
+[IFX_ALLOW_NEWLINE 函数]
+IFX_ALLOW_NEWLINE       :IFX_ALLOW_NEWLINE('t'|'f')    :IFX_ALLOW_NEWLINE 函数设置换行模式，在当前的会话内在用引号括起来的字符串中允许还是不允许换行字符。
+[正则表达式函数]
+REGEXP_COUNT            :REGEXP_COUNT(str,pattern[,position[,match_param]]) :根据 pattern 正则表达式，从 str 字符串的第 position 个字符开始查找符合正则表达式的子串的个数，并符合匹配参数 match_param
+REGEXP_INSTR          :REGEXP_INSTR(str,pattern[,position[, occurrence[,return_opt [, match_param [, subexpr]]]]])    :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合 subexpr 正则表达式的子串，如果 return_opt 为 0，返回第 occurrence 次出现的位置，如果 return_opt 为 大于 0，则返回该出现位置的下一个字符位置，并符合匹配参数。
+REGEXP_SUBSTR          :REGEXP_SUBSTR(str , pattern[,position occurrence[,match_param[,subexpr]]]])    :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合 subexpr 正则表达式的子串，返回第 occurrence 次出现的子串，并符合匹配参数 match_param
+REGEXP_REPLACE         :REGEXP_REPLACE(str,pattern[,replace_str[,position[,occurrence[,match_param]]]] )   :根据 pattern 正则表达式，从 str 字符串的第 position 个字 符开始查找符合正则表达式的子串，并用 replace_str 进行替换 第 occurrence 次出现的子串，并符合匹配参数 match_param
+[加密和解密函数]
+ENCRYPT_AES             :ENCRYPT_AES(data [,password [,hint]])   :ENCRYPT_AES 函数使用 AES（高级加密标准）算法进行加密。
+ENCRYPT_TDES            :ENCRYPT_TDES(data [,password [,hint]])   :ENCRYPT_TDES 函数使用 TDES（三重数据加密标准）算法进行加密。
+DECRYPT_CHAR            :DECRYPT_CHAR(encrypted_data [,password])   :DECRYPT_CHAR 函数是解密函数，函数的返回值为加密前的原始数据。
+GETHINT                 :GETHINT(encrypted_data)    :GETHINT 函数获取密码提示信息，返回值为加密函数设置的 hint 值或先前执行 SET ENCRYPTION PASSWORD 语句设置的 hint 值。
+MD5                     :MD5(expr)                  :MD5 函数生成并返回符合 MD5 算法的数据特征值。
+[汉字转拼音函数]
+GetHzFullPY             :GetHzFullPY(expr)          :GetHzFullPY 函数将汉字转换为全拼。
+GetHzPYCAP              :GetHzPYCAP(expr)           :GetHzPYCAP 函数将汉字转换为拼音首字母。
+GetHzFullPYsubstr       :GetHzFullPYsubstr(source,start_position [,length] )         :GetHzFullPYsubstr 函数将汉字转换为拼音后，提取指定个连续字符。
+SYS_GUID                :SYS_GUID()                 :SYS_GUID 函数生成并返回一个全球唯一标识符，它由 16 个字节组成。
+[列转行函数]
+WM_CONCAT               :WM_CONCAT(expr)            :WM_CONCAT 函数可以将结果集中指定列的数据合并成一行。
+WM_CONCAT_TEXT          :WM_CONCAT_TEXT(expr)     :WM_CONCAT_TEXT 函数可以将结果集中指定列的数据合并成一行。
+[AggregateFunctions]
+count				                :count(*)								:Returns the total number of retrieved rows, including rows containing NULL values.
+avg					                :avg()									    :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+avg                     			:avg([DISTINCT|ALL|UNIQUE ] ?)			    :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+avg                     		    :avg([ALL ]Subset of Expression)	        :Returns the average of the elements in the group or the average of the distinct values of the column in the group.
+COUNT                               :COUNT()							        :Returns the number of rows for which the supplied expression is non-NULL.
+COUNT                               :COUNT([DISTINCT|ALL|UNIQUE ] ?)	        :Returns the number of rows for which the supplied expression is non-NULL.
+COUNT                               :COUNT([ALL ]Subset of Expression)          :Returns the number of rows for which the supplied expression is non-NULL.
+max                                   :max()							            :Returns the maximum value of the column in the group.
+max                         		:max([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the maximum value of the column in the group.
+max                         	    :max([ALL ]Subset of Expression)            :Returns the maximum value of the column in the group.
+min                                   :min()							            :Returns the minimum of the column in the group.
+min                         		:min([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the minimum of the column in the group.
+min                         	    :min([ALL ]Subset of Expression)            :Returns the minimum of the column in the group.
+sum                                   :sum()							            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+sum                         		:sum([DISTINCT|ALL|UNIQUE ] ?)	            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+sum                         	    :sum([ALL ]Subset of Expression)            :Returns the sum of the elements in the group or the sum of the distinct values of the column in the group.
+range                               :range()							        :RANGE 函数返回数值列表达式参数的值的范围。
+range                   			:range([DISTINCT|ALL|UNIQUE ] ?)	        :RANGE 函数返回数值列表达式参数的值的范围。
+range                   		    :range([ALL ]Subset of Expression)          :RANGE 函数返回数值列表达式参数的值的范围。
+stdev                               :stdev()							        :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+stdev                       		:stdev([DISTINCT|ALL|UNIQUE ] ?)	        :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+stdev                       	    :stdev([ALL ]Subset of Expression)          :STDDEV 函数计算数据集的标准差，这是 VARIANCE 函数的平方根。
+variance                            :variance()							        :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+variance                            :variance([DISTINCT|ALL|UNIQUE ] ?)	        :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+variance                            :variance([ALL ]Subset of Expression)       :VARIANCE 函数返回总体方差的估计值，即标准差的平方。
+VAR_POP                             :VAR_POP(expr)                          : 返回 expr 的总体方差
+VAR_SAMP                            :VAR_SAMP(expr)                         :返回 expr 的样本方差
+COVAR_POP                           :COVAR_POP(expr1, expr2)                :COVAR_POP(expr1, expr2) 返回 expr1 和 expr2 的总体协方差
+COVAR_SAMP                          :COVAR_SAMP(expr1,expr2)                :返回 expr1 和 expr2 的样本协方差，如果 COUNT(NVL2(expr1,expr2, NULL)) expr 的行数为 1，则返回 NULL
+CORR                                :CORR(expr1, expr2)                     :返回 expr1 和 expr2 的相关系数，如果 expr 的 COUNT(NVL2(expr1,expr2, NULL)) −1 行数为 1，则返回 NULL。
+[OLAP window 表达式]
+ROW_NUMBER                          :ROW_NUMBER() OVER ( [window_partition_clause ][ window_order_clause])  :OLAP 编号函数表达式为单个查询的结果集中的每一行返回一序列的编号。
+ROWNUMBER                           :ROWNUMBER() OVER ( [window_partition_clause ][ window_order_clause])   :OLAP 编号函数表达式为单个查询的结果集中的每一行返回一序列的编号。
+LOG                                 :LOG() OVER ( [window_partition_clause ][ window_order_clause]) :LAG 和 LEAD 函数是 OLAP 分等级函数，在从当前 window 分区内的当前行的指定偏移量上，为该行返回它们的 expression 参数的值。
+LEAD                                :LEAD({ expression {RESPECT NULLS}|{IGNORE NULLS} [,offset [,default]] } | {expression [,offset [,default]] {RESPECT NULLS}|{IGNORE NULLS}}) OVER ( [window_partition_clause ][ window_order_clause])    :LAG 和 LEAD 函数是 OLAP 分等级函数，在从当前 window 分区内的当前行的指定偏移量上，为该行返回它们的 expression 参数的值。
+RANK                                :RANK() OVER ( [window_partition_clause ][ window_order_clause])    :RANK 函数是一个 OLAP 分等级函数，为 OLAP window 中的每一行计算分等级的值。
+DENSE_RANK                          :DENSE_RANK() OVER ( [window_partition_clause ][ window_order_clause])  :DENSE_RANK 函数是一个 OLAP 分等级函数，为 OLAP window 中的每一行计算等级值。
+PERCENT_RANK                        :PERCENT_RANK() OVER ( [window_partition_clause ][ window_order_clause])    :PERCENT_RANK 函数是一个 OLAP 分等级函数，为 OLAP window 中的每一行计算等级值，规格化为从 0 至 1 的范围。
+CUME_DIST                           :CUME_DIST() OVER ( [window_partition_clause ][ window_order_clause])   :CUME_DIST 函数是一个 OLAP 分等级函数，计算累计分布作为每一行的百分比等级。该等级表示为取值范围从 0 至 1 的实际值小数。
+NTILE                               :NTILE(unsigned) :NTILE 函数是一个 OLAP 分等级函数，将每一分区中的行划分成 N 等级的类别，称为片，每一类别包括大约相等的行数。
+[OLAP 聚集函数表达式]
+FIRST_VALUE                         :FIRST_VALUE(expression ) {RESPECT NULLS}|{IGNORE NULLS} OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])        :FIRST_VALUE window 聚集函数为每一 OLAP window 分区中的第一行返回指定的表达式的值。
+LAST_VALUE                          :LAST_VALUE(expression ) {RESPECT NULLS}|{IGNORE NULLS} OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])         :LAST_VALUE window 聚集函数为每一 OLAP window 分区中的最后一行返回指定的表达式的值。
+RATIO_TO_REPORT                     :RATIO_TO_REPORT() OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])    :RATIO_TO_REPORT 基于该函数的数值参数，计算每一行对于该 window 分区中剩余行的分数比率。
+RATIOTOREPORT                       :RATIO_TO_REPORT() OVER ( [window_partition_clause ][ window_order_clause [ window_frame_clause]])    :RATIO_TO_REPORT 基于该函数的数值参数，计算每一行对于该 window 分区中剩余行的分数比率。
+[关系运算符]
+<   :A < B		:NULL if A or B is NULL, TRUE if expression A is less than expression B, otherwise FALSE.
+<=  :A <= B		:NULL if A or B is NULL, TRUE if expression A is less than or equal to expression B, otherwise FALSE.
+>   :A > B		:NULL if A or B is NULL, TRUE if expression A is greater than expression B, otherwise FALSE.
+=   :A = B		:TRUE if expression A is equal to expression B otherwise FALSE.
+==  :A == B 	:A <=> B:Returns same result with EQUAL(=) operator for non-null operands, but returns TRUE if both are NULL, FALSE if one of the them is NULL. (As of version 0.9.0.)
+>=  :A >= B		:NULL if A or B is NULL, TRUE if expression A is greater than or equal to expression B, otherwise FALSE.
+<>  :A <> B		:NULL if A or B is NULL, TRUE if expression A is NOT equal to expression B, otherwise FALSE.
+!=  :A != B		:Synonym for the <> operator.

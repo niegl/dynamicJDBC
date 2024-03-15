@@ -26,8 +26,6 @@ import java.sql.SQLException;
 public class DBDialectDB2 extends DBDialect {
     public String getSchemaPattern(Connection conn) throws SQLException {
         return conn.getMetaData().getUserName().toUpperCase();
-//        return "jence_user";
-//        return null;
     }
 
     public String getTableNamePattern(Connection conn) throws SQLException {

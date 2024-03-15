@@ -17,6 +17,7 @@ package flowdesigner.jdbc.dialect.impl;
 
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.dialect.DBDialect;
+import flowdesigner.util.raw.kit.JdbcKit;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -29,38 +30,18 @@ import java.util.List;
  * @desc : 人大金仓Kinbbase方言
  */
 public class DBDialectKingbase extends DBDialect {
-    public List<TableEntity> getAllTables(Connection conn) throws SQLException {
-        DatabaseMetaData meta = conn.getMetaData();
 
-        String schemaPattern = getSchemaPattern(conn);
-        String tableNamePattern = getTableNamePattern(conn);
-        String catalog = conn.getCatalog();
-
-        ResultSet rs = meta.getTables(catalog, schemaPattern, tableNamePattern, new String[]{"TABLE"});
-        List<TableEntity> tableEntities = new ArrayList<TableEntity>();
-        while (rs.next()) {
-            String tableName = rs.getString("TABLE_NAME");
-            /**
-             *  SQL Server系统保留表
-             *  trace_xe_action_map,trace_xe_event_map
-             */
-            if (!tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
-                    && !tableName.equalsIgnoreCase("sysmac_compartment")
-                    && !tableName.equalsIgnoreCase("sysmac_label")
-                    && !tableName.equalsIgnoreCase("sysmac_level")
-                    && !tableName.equalsIgnoreCase("sysmac_obj")
-                    && !tableName.equalsIgnoreCase("sysmac_policy")
-                    && !tableName.equalsIgnoreCase("sysmac_policy_enforcement")
-                    && !tableName.equalsIgnoreCase("sysmac_user")
-                    && !tableName.equalsIgnoreCase("dual")){
-                TableEntity entity = createTableEntity(conn,rs);
-                if(entity != null){
-                    tableEntities.add(entity);
-                }
-            }else{
-                continue;
-            }
-        }
-        return tableEntities;
+    @Override
+    protected boolean isValidTable(String tableName) {
+        return !tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
+                && !tableName.equalsIgnoreCase("sysmac_compartment")
+                && !tableName.equalsIgnoreCase("sysmac_label")
+                && !tableName.equalsIgnoreCase("sysmac_level")
+                && !tableName.equalsIgnoreCase("sysmac_obj")
+                && !tableName.equalsIgnoreCase("sysmac_policy")
+                && !tableName.equalsIgnoreCase("sysmac_policy_enforcement")
+                && !tableName.equalsIgnoreCase("sysmac_user")
+                && !tableName.equalsIgnoreCase("dual");
     }
+
 }

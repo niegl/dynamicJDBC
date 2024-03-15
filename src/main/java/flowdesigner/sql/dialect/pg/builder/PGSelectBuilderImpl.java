@@ -1,4 +1,4 @@
-package flowdesigner.sql.dialect.pg;
+package flowdesigner.sql.dialect.pg.builder;
 
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLExpr;

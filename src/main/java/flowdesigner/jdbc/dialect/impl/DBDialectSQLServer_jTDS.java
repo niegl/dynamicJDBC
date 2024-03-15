@@ -16,6 +16,7 @@
 package flowdesigner.jdbc.dialect.impl;
 
 import flowdesigner.jdbc.command.model.ColumnField;
+import flowdesigner.jdbc.command.model.SchemaEntity;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.dialect.DBDialect;
 import flowdesigner.util.sql.ConnParseKit;
@@ -24,11 +25,13 @@ import flowdesigner.util.raw.kit.StringKit;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @desc : SQLServer数据库方言
  */
-public class DBDialectSQLServer extends DBDialect {
+public class DBDialectSQLServer_jTDS extends DBDialect {
 
     private String querySQL = "SELECT\n" +
             "\ttable_code =\n" +
@@ -90,51 +93,63 @@ public class DBDialectSQLServer extends DBDialect {
             "\ta.id,\n" +
             "\ta.colorder;";
 
-    public String getTableNamePattern(Connection conn) throws SQLException {
-        return "%";
+    @Override
+    public String getTableNamePattern(Connection conn, String tableNamePattern) throws SQLException {
+        if (StringKit.isBlank(tableNamePattern)) {
+            return "%";
+        }
+        return tableNamePattern;
     }
 
-    /**
-     * 将resultset,主键的resultset装到一个二元组中，并返回
-     * @param conn
-     * @param tableName
-     * @return
-     * @throws SQLException
-     */
-    public Pair getColumnAndPrimaryKeyResultSetPair(Connection conn, String tableName) throws SQLException {
-        DatabaseMetaData connMetaData = conn.getMetaData();
-        String schema = getSchemaPattern(conn);
-
-//        ResultSet rs = connMetaData.getColumns(conn.getCatalog(), schema,tableName, "%");
-//        ResultSet pkRs = connMetaData.getPrimaryKeys(conn.getCatalog(),schema,tableName);
-        ResultSet rs = connMetaData.getColumns(null,null,tableName,null);
-        ResultSet pkRs = connMetaData.getPrimaryKeys(null,null,tableName);
-
-        Pair<ResultSet,ResultSet> pair = Pair.of(rs,pkRs);
-
-        return pair;
+    protected boolean isValidTable(String tableName) {
+        return !tableName.equalsIgnoreCase("PDMAN_DB_VERSION")
+                && !tableName.equalsIgnoreCase("trace_xe_action_map")
+                && !tableName.equalsIgnoreCase("trace_xe_event_map")
+                && !tableName.equalsIgnoreCase("spt_monitor")
+                && !tableName.equalsIgnoreCase("spt_fallback_usg")
+                && !tableName.equalsIgnoreCase("spt_fallback_dev")
+                && !tableName.equalsIgnoreCase("spt_fallback_db")
+                && !tableName.equalsIgnoreCase("MSreplication_options")
+                ;
     }
 
+    @Override
+    public List<TableEntity> getAllTables(Connection conn, String catalog, String schemaPattern, String[] types) throws SQLException {
+        // SQLserver数据库默认只获取当前catalog下的表。要想获取全部表，需要制定catalog获取
+        ArrayList<TableEntity> tableEntities = new ArrayList<>();
+        List<SchemaEntity> allCatalogs = getAllCatalogs(conn);
+        for (SchemaEntity aCatalog: allCatalogs) {
+            String tableCat = aCatalog.getTABLE_CAT();
+            List<TableEntity> allTables = getAllTables(conn, tableCat, null, null, types);
+            tableEntities.addAll(allTables);
+        }
+        return tableEntities;
+    }
 
     @Override
     public void fillTableEntityNoColumn(TableEntity tableEntity, Connection conn, ResultSet rs) throws SQLException {
         super.fillTableEntityNoColumn(tableEntity,conn,rs);
         ResultSet nrs = getResultSet(conn,tableEntity.getTABLE_NAME());
-        if(nrs.next()){
-            String remarks = nrs.getString("table_comment");
+        try {
+            if (nrs.next()) {
+                String remarks = nrs.getString("table_comment");
 //            String defName = remarks;
 //            String comment = "";
 
-            //如果remark中有分号等分割符，则默认之后的就是注释说明文字
+                //如果remark中有分号等分割符，则默认之后的就是注释说明文字
 //            if(StringKit.isNotBlank(remarks)){
 //                Pair<String, String> pair = ConnParseKit.parseNameAndComment(remarks);
 //                defName = pair.getLeft();
 //                comment = pair.getRight();
 //            }
 //            tableEntity.setTABLE_NAME(defName);
-            tableEntity.setREMARKS(remarks);
+                tableEntity.setREMARKS(remarks);
+            }
+        } finally {
+            JdbcKit.close(nrs.getStatement());
+            JdbcKit.close(nrs);
         }
-        JdbcKit.close(nrs);
+
     }
 
     @Override
@@ -142,34 +157,37 @@ public class DBDialectSQLServer extends DBDialect {
         super.fillTableEntity(tableEntity, conn);
 
         ResultSet nrs = getResultSet(conn,tableEntity.getTABLE_NAME());
-        while(nrs.next()){
-            String columnName = nrs.getString("column_name");
-            String columnIsPrimaryKey = nrs.getString("column_is_primary_key");
-            String columnDataType = nrs.getString("column_data_type");
-            String columnDataLength = nrs.getString("column_data_length");
-            String columnDataScale = nrs.getString("column_data_scale");
-            String columnDataIsRequired = nrs.getString("column_data_is_required");
-            String columnDefaultValue = nrs.getString("column_default_value");
-            String columnComment = nrs.getString("column_comment");
-            ColumnField field = tableEntity.lookupField(columnName);
-            if(field != null){
-                String defName = columnComment;
-                String comment = "";
+        try {
+            while (nrs.next()) {
+                String columnName = nrs.getString("column_name");
+                String columnIsPrimaryKey = nrs.getString("column_is_primary_key");
+                String columnDataType = nrs.getString("column_data_type");
+                String columnDataLength = nrs.getString("column_data_length");
+                String columnDataScale = nrs.getString("column_data_scale");
+                String columnDataIsRequired = nrs.getString("column_data_is_required");
+                String columnDefaultValue = nrs.getString("column_default_value");
+                String columnComment = nrs.getString("column_comment");
+                ColumnField field = tableEntity.lookupField(columnName);
+                if (field != null) {
+                    String defName = columnComment;
+                    String comment = "";
 
-                //如果remark中有分号等分割符，则默认之后的就是注释说明文字
-                if(StringKit.isNotBlank(columnComment)){
-                    Pair<String, String> pair = ConnParseKit.parseNameAndComment(columnComment);
-                    defName = pair.getLeft();
-                    comment = pair.getRight();
+                    //如果remark中有分号等分割符，则默认之后的就是注释说明文字
+                    if (StringKit.isNotBlank(columnComment)) {
+                        Pair<String, String> pair = ConnParseKit.parseNameAndComment(columnComment);
+                        defName = pair.getLeft();
+                        comment = pair.getRight();
+                    }
+                    field.setDefName(defName);
+                    field.setComment(comment);
+                    field.setDefaultValue(columnDefaultValue);
                 }
-                field.setDefName(defName);
-                field.setComment(comment);
-                field.setDefaultValue(columnDefaultValue);
-            }
 
+            }
+        } finally {
+            JdbcKit.close(nrs);
         }
 
-        JdbcKit.close(nrs);
     }
 
 

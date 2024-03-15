@@ -16,6 +16,7 @@ import flowdesigner.sql.builder.SQLInsertBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBuilder {
@@ -69,6 +70,23 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
             insert.getColumns().add(expr);
         }
         return this;
+    }
+
+    @Override
+    public void addValueClause(ArrayList<String> columnValues) {
+
+        SQLInsertStatement statement = getSQLStatement();
+        List<SQLInsertStatement.ValuesClause> valueClauseList = statement.getValuesList();
+
+        List valueExprList = new ArrayList(columnValues.size());
+        SQLInsertStatement.ValuesClause values = new SQLInsertStatement.ValuesClause(valueExprList, statement);
+        for (String column : columnValues) {
+            SQLIdentifierExpr expr = new SQLIdentifierExpr(column);
+            expr.setParent(values);
+            valueExprList.add(expr);
+        }
+
+        valueClauseList.add(values);
     }
 
     /**
@@ -133,6 +151,8 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
 
         return this;
     }
+
+
 
     @Override
     public SQLInsertStatement getSQLStatement() {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d -- %msg%n</pattern>
+        </layout>
+    </appender>
+    <appender name="FILEINFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <!--格式化输出:-->
+            <pattern>%d -- %msg%n</pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志输出文件名-->
+            <fileNamePattern>${LOG_HOME}/info-%d{yyyy-MM}-%i.log</fileNamePattern>
+            <!--日志文件保留天数-->
+            <maxHistory>30</maxHistory>
+            <!--单文件大小-->
+            <maxFileSize>50MB</maxFileSize>
+            <!--用来指定日志文件的大小上限，到了这个值，就会删除旧的日志-->
+            <totalSizeCap>2GB</totalSizeCap>
+            <clearHistoryOnStart>true</clearHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+    <appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--添加 范围 过滤-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <!--格式化输出:-->
+            <pattern>%d -- %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志输出文件名-->
+            <fileNamePattern>${LOG_HOME}/error-%d{yyyy-MM}-%i.log</fileNamePattern>
+            <!--日志文件保留天数-->
+            <maxHistory>30</maxHistory>
+            <!--单文件大小-->
+            <maxFileSize>50MB</maxFileSize>
+            <!--用来指定日志文件的大小上限，到了这个值，就会删除旧的日志-->
+            <totalSizeCap>2GB</totalSizeCap>
+            <clearHistoryOnStart>true</clearHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+    <root level="info">
+        <appender-ref ref="CONSOLE" />
+<!--        <appender-ref ref="FILEINFO"/>-->
+        <appender-ref ref="FILEERROR"/>
+    </root>
+    <property name="LOG_HOME" value="./log"/>
+</configuration>

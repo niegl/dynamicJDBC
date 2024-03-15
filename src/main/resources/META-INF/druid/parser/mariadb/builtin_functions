@@ -1,46 +1,566 @@
-AVG
-COUNT
-MAX
-MIN
-SUM
-TIMESTAMPDIFF
-CONCAT
-CURDATE
-DATE
-CURTIME
-DATE_SUB
-DATEDIFF
-DATE_ADD
-EXTRACT
-NOW
-DATE_FORMAT
-TIME_FORMAT
-hour
-minute
-second
-LOCALTIME
-MICROSECOND
-TIMESTAMP
-TRUNCATE
-CEILING
-DEGREES
-DIV
-EXP
-FLOOR
-LN
-LOG
-SQRT
-INSTR
-RIGHT
-LENGTH
-LOCATE
-INSERT
-LEFT
-UPPER
-LOWER
-STRCMP
-REPLACE
-REVERSE
-REPEAT
-SUBSTRING
-TRIM
+[String Functions]
+[-->Regular Expressions Functions]
+NOT REGEXP      :expr NOT REGEXP pat                        :Same as NOT (expr REGEXP pat).
+NOT RLIKE       :expr NOT RLIKE pat                         :Same as NOT (expr REGEXP pat).
+REGEXP          :expr REGEXP pat                            :Performs pattern matching
+RLIKE           :expr RLIKE pat                              :Performs pattern matching
+REGEXP_INSTR    :REGEXP_INSTR(subject, pattern)             :Position of the first appearance of a regex.
+REGEXP_REPLACE  :REGEXP_REPLACE(subject, pattern, replace)  :Replaces all occurrences of a pattern.
+REGEXP_SUBSTR   :REGEXP_SUBSTR(subject,pattern)             :Returns the matching part of a string.
+RLIKE           :expr REGEXP pat, expr RLIKE pat            :Synonym for REGEXP
+[-->Dynamic Columns Functions]
+COLUMN_ADD                      :COLUMN_ADD(dyncol_blob, column_nr, value [as type], [column_nr, value [as type]]...)                 COLUMN_ADD(dyncol_blob, column_name, value [as type], [column_name, value [as type]]...);   :Adds or updates dynamic columns.
+COLUMN_ADD                      :COLUMN_ADD(dyncol_blob, column_name, value [as type], [column_name, value [as type]]...)   :Adds or updates dynamic columns.
+COLUMN_CHECK                    :COLUMN_CHECK(dyncol_blob)   :Checks if a dynamic column blob is valid
+COLUMN_CREATE                   :COLUMN_CREATE(column_nr, value [as type], [column_nr, value [as type]]...   :Returns a dynamic columns blob.
+COLUMN_CREATE                   :COLUMN_CREATE(column_name, value [as type], [column_name, value [as type]]...)   :Returns a dynamic columns blob.
+COLUMN_DELETE                   :COLUMN_DELETE(dyncol_blob, column_nr, column_nr...)        :Deletes a dynamic column.
+COLUMN_DELETE                   :COLUMN_DELETE(dyncol_blob, column_name, column_name...)    :Deletes a dynamic column.
+COLUMN_EXISTS                   :COLUMN_EXISTS(dyncol_blob, column_nr)          :Checks is a column exists.
+COLUMN_EXISTS                   :COLUMN_EXISTS(dyncol_blob, column_name)        :Checks is a column exists.
+COLUMN_GET                      :COLUMN_GET(dyncol_blob, column_nr as type)     :Gets a dynamic column value by name.
+COLUMN_GET                      :COLUMN_GET(dyncol_blob, column_name as type)   :Gets a dynamic column value by name.
+COLUMN_JSON                     :COLUMN_JSON(dyncol_blob)                       :Returns a JSON representation of dynamic column blob data
+COLUMN_LIST                     :COLUMN_LIST(dyncol_blob)                       :Returns comma-separated list of columns names.
+[String Functions]
+ASCII                       :ASCII(?)   :Numeric ASCII value of leftmost character.
+BIN                         :BIN(?)   :Returns binary value.
+BINARY Operator             :BINARY   :Casts to a binary string.
+BIT_LENGTH                  :BIT_LENGTH(?)   :Returns the length of a string in bits.
+CAST                        :CAST(? AS type)   :Casts a value of one type to another type.
+CHAR                        :CHAR(N,... [USING charset_name])   :Returns string based on the integer values for the individual characters.
+CHARACTER_LENGTH            :CHARACTER_LENGTH(?)   :Synonym for CHAR_LENGTH().
+CHAR_LENGTH                 :CHAR_LENGTH(?)   :Length of the string in characters.
+CHARACTER_LENGTH            :CHARACTER_LENGTH(?)  :Length of the string in characters.
+CHR                         :CHR(?)   :Returns string based on integer values of the individual characters.
+CONCAT                      :CONCAT(str1,str2,...)   :Returns concatenated string.
+CONCAT_WS                   :CONCAT_WS(separator,str1,str2,...)   :Concatenate with separator.
+CONVERT                     :CONVERT(?,type)        :Convert a value from one type to another type.
+CONVERT                     :CONVERT(? USING transcoding_name)   :Convert a value from one type to another type.
+ELT                         :CONVERT(?,type), CONVERT(expr USING transcoding_name)   :Returns the N'th element from a set of strings.
+ELT                         :CONVERT(? USING transcoding_name)   :Returns the N'th element from a set of strings.
+EXPORT_SET                  :EXPORT_SET(bits, on, off[, separator[, number_of_bits]])   :Returns an on string for every bit set, an off string for every bit not set.
+EXTRACTVALUE                :EXTRACTVALUE(xml_frag, xpath_expr)   :Returns the text of the first text node matched by the XPath expression.
+FIELD                       :FIELD(pattern, str1[,str2,...])   :Returns the index position of a string in a list.
+FIND_IN_SET                 :FIND_IN_SET(pattern, strlist)   :Returns the position of a string in a set of strings.
+FORMAT                      :FORMAT(?, decimal_position[, locale])   :Formats a number.
+FROM_BASE64                 :FROM_BASE64(?)   :Given a base-64 encoded string, returns the decoded result as a binary string.
+HEX                         :HEX(?)   :Returns hexadecimal value.
+INSERT                      :INSERT(str,pos,len,newstr)   :Replaces a part of a string with another string.
+INSTR                       :INSTR(str,substr)   :Returns the position of a string within a string.
+LCASE                       :LCASE(?)   :Synonym for LOWER().
+LEFT                        :LEFT(?,len)   :Returns the leftmost characters from a string.
+LENGTH                      :LENGTH(?)   :Length of the string in bytes.
+LENGTHB                     :LENGTHB(str)   :Length of the given string, in bytes.
+LIKE                        :expr LIKE pat [ESCAPE 'escape_char']   :Whether expression matches a pattern.
+LIKE                        :expr NOT LIKE pat [ESCAPE 'escape_char']   :Whether expression matches a pattern.
+LOAD_FILE                   :LOAD_FILE(file_name)   :Returns file contents as a string.
+LOCATE                      :LOCATE(substr,str[,pos])   :Returns the position of a substring in a string.
+LOWER                       :LOWER(str)   :Returns a string with all characters changed to lowercase.
+LPAD                        :LPAD(str, len [,padstr])   :Returns the string left-padded with another string to a given length.
+LTRIM                       :LTRIM(str)   :Returns the string with leading space characters removed.
+MAKE_SET                    :MAKE_SET(bits,str1,str2,...)   :Make a set of strings that matches a bitmask.
+MATCH AGAINST               :MATCH (col1,col2,...) AGAINST (expr [search_modifier])   :Perform a fulltext search on a fulltext index.
+MID                         :MID(str,pos,len)   :Synonym for SUBSTRING(str,pos,len).
+NATURAL_SORT_KEY            :NATURAL_SORT_KEY(str)   :Sorting that is closer to natural human sorting.
+NOT LIKE                    :expr NOT LIKE pat [ESCAPE 'escape_char']   :Same as NOT(expr LIKE pat [ESCAPE 'escape_char']).
+NOT REGEXP                  :expr NOT REGEXP pat   :Same as NOT (expr REGEXP pat).
+OCTET_LENGTH                :OCTET_LENGTH(str)   :Returns the length of the given string, in bytes.
+ORD                         :ORD(str)   :Return ASCII or character code.
+POSITION                    :POSITION(substr IN str)   :Returns the position of a substring in a string.
+QUOTE                       :QUOTE(str)   :Returns quoted, properly escaped string.
+REPEAT Function             :REPEAT(str,count)   :Returns a string repeated a number of times.
+REPLACE Function            :REPLACE(str,from_str,to_str)   :Replace occurrences of a string.
+REVERSE                     :REVERSE(str)   :Reverses the order of a string.
+RIGHT                       :RIGHT(str,len)   :Returns the rightmost N characters from a string.
+RPAD                        :RPAD(str, len [, padstr])   :Returns the string right-padded with another string to a given length.
+RTRIM                       :RTRIM(str)   :Returns the string with trailing space characters removed.
+SFORMAT                     :SFORMAT( input_string ,formatting_specification)   :Given a string and a formatting specification, returns a formatted string.
+SOUNDEX                     :SOUNDEX(str)   :Returns a string based on how the string sounds.
+SOUNDS LIKE                 :expr1 SOUNDS LIKE expr2   :SOUNDEX(expr1) = SOUNDEX(expr2).
+SPACE                       :SPACE(N)   :Returns a string of space characters.
+STRCMP                      :STRCMP(expr1,expr2)            :Compares two strings in sort order.
+SUBSTR                      :SUBSTR(?,pos)          :Returns a substring from string starting at a given position.
+SUBSTR                      :SUBSTR(?,pos,len)      :Returns a substring from string starting at a given position.
+SUBSTR                      :SUBSTR(? FROM pos)     :Returns a substring from string starting at a given position.
+SUBSTR                      :SUBSTR(? FROM pos FOR len)    :Returns a substring from string starting at a given position.
+SUBSTRING                   :SUBSTRING(?,pos)           :Returns a substring from string starting at a given position.
+SUBSTRING                   :SUBSTRING(?,pos,len)       :Returns a substring from string starting at a given position.
+SUBSTRING                   :SUBSTRING(? FROM pos)      :Returns a substring from string starting at a given position.
+SUBSTRING                   :SUBSTRING(? FROM pos FOR len)      :Returns a substring from string starting at a given position.
+SUBSTRING_INDEX             :SUBSTRING_INDEX(?,delim,count)     :Returns the substring from string before count occurrences of a delimiter.
+TO_BASE64                   :TO_BASE64(?)                       :Converts a string to its base-64 encoded form.
+TO_CHAR                     :TO_CHAR(?[, fmt])                  :Converts a date/time/timestamp type expression to a string.
+TRIM                        :TRIM([{BOTH | LEADING | TRAILING} [remstr] FROM] ?)    :Returns a string with all given prefixes or suffixes removed.
+TRIM                        :TRIM([remstr FROM] str)                                :Returns a string with all given prefixes or suffixes removed.
+UCASE                       :UCASE(?)   :Synonym for UPPER().
+UNCOMPRESS                  :UNCOMPRESS(?)   :Uncompresses string compressed with COMPRESS().
+UNCOMPRESSED_LENGTH         :UNCOMPRESSED_LENGTH(?)   :Returns length of a string before being compressed with COMPRESS().
+UNHEX                       :UNHEX(?)   :Interprets pairs of hex digits as numbers and converts to the character represented by the number.
+UPDATEXML                   :UpdateXML(xml_target, xpath_expr, new_xml)   :Replace XML.
+UPPER                       :UPPER(str)   :Changes string to uppercase.
+WEIGHT_STRING               :WEIGHT_STRING(str [AS {CHAR|BINARY}(N)] [LEVEL levels] [flags])   :Weight of the input string.
+[Date & Time Functions]
+ADD_MONTHS                  :ADD_MONTHS(date, months) :Adds a number of months to a date.
+ADDDATE                     :ADDDATE(date,INTERVAL expr unit) :Add days or another interval to a date.
+ADDDATE                     :ADDDATE(expr,days) :Add days or another interval to a date.
+ADDTIME                     :ADDTIME(expr1,expr2) :Adds a time to a time or datetime.
+CONVERT_TZ                  :CONVERT_TZ(dt,from_tz,to_tz) :Converts a datetime from one time zone to another.
+CURDATE                     :CURDATE() :Returns the current date.
+CURRENT_DATE                :CURRENT_DATE :Synonym for CURDATE().
+CURRENT_DATE              :CURRENT_DATE() :Synonym for CURDATE().
+CURRENT_TIME              :CURRENT_TIME([precision]) :Synonym for CURTIME().
+CURRENT_TIMESTAMP         :CURRENT_TIMESTAMP([precision]) :Synonym for NOW().
+CURTIME                   :CURTIME([precision]) :Returns the current time.
+DATE FUNCTION             :DATE(expr) :Extracts the date portion of a datetime.
+DATEDIFF                  :DATEDIFF(expr1,expr2) :Difference in days between two date/time values.
+DATE_ADD                  :DATE_ADD(date,INTERVAL expr unit) :Date arithmetic - addition.
+DATE_FORMAT               :DATE_FORMAT(date, format[, locale]) :Formats the date value according to the format string.
+DATE_SUB                  :DATE_SUB(date,INTERVAL expr unit) :Date arithmetic - subtraction.
+DAY                       :DAY(date) :Synonym for DAYOFMONTH().
+DAYNAME                   :DAYNAME(date) :Return the name of the weekday.
+DAYOFMONTH                :DAYOFMONTH(date) :Returns the day of the month.
+DAYOFWEEK                 :DAYOFWEEK(date) :Returns the day of the week index.
+DAYOFYEAR                 :DAYOFYEAR(date) :Returns the day of the year.
+EXTRACT                   :EXTRACT(unit FROM date) :Extracts a portion of the date.
+FROM_DAYS                 :FROM_DAYS(N) :Returns a date given a day.
+FROM_UNIXTIME             :FROM_UNIXTIME(unix_timestamp[,format]) :Returns a datetime from a Unix timestamp.
+GET_FORMAT                :GET_FORMAT({DATE|DATETIME|TIME}, {'EUR'|'USA'|'JIS'|'ISO'|'INTERNAL'}) :Returns a format string.
+HOUR                      :HOUR(time) :Returns the hour.
+LAST_DAY                  :LAST_DAY(date) :Returns the last day of the month.
+LOCALTIME                 :LOCALTIME([precision]) :Synonym for NOW().
+LOCALTIMESTAMP            :LOCALTIMESTAMP([precision]) :Synonym for NOW().
+MAKEDATE                  :MAKEDATE(year,dayofyear) :Returns a date given a year and day.
+MAKETIME                  :MAKETIME(hour,minute,second) :Returns a time.
+MICROSECOND               :MICROSECOND(expr) :Returns microseconds from a date or datetime.
+MINUTE                    :MINUTE(time) :Returns a minute from 0 to 59.
+MONTH                     :MONTH(date) :Returns a month from 1 to 12.
+MONTHNAME                 :MONTHNAME(date) :Returns the full name of the month.
+NOW                       :NOW([precision]) :Returns the current date and time.
+PERIOD_ADD                :PERIOD_ADD(P,N) :Add months to a period.
+PERIOD_DIFF               :PERIOD_DIFF(P1,P2) :Number of months between two periods.
+QUARTER                   :QUARTER(date) :Returns year quarter from 1 to 4.
+SECOND                    :SECOND(time) :Returns the second of a time.
+SEC_TO_TIME               :SEC_TO_TIME(seconds) :Converts a second to a time.
+STR_TO_DATE               :STR_TO_DATE(str,format) :Converts a string to date.
+SUBDATE                   :SUBDATE(date,INTERVAL expr unit) :Subtract a date unit or number of days.
+SUBDATE                   :SUBDATE(expr,days) :Subtract a date unit or number of days.
+SUBTIME                   :SUBTIME(expr1,expr2) :Subtracts a time from a date/time.
+SYSDATE                   :SYSDATE([precision]) :Returns the current date and time.
+TIME Function             :TIME(expr) :Extracts the time.
+TIMEDIFF                  :TIMEDIFF(expr1,expr2) :Returns the difference between two date/times.
+TIMESTAMP FUNCTION        :TIMESTAMP(expr1[,expr2]) :Return the datetime, or add a time to a date/time.
+TIMESTAMPADD              :TIMESTAMPADD(unit,interval,datetime_expr) :Add interval to a date or datetime.
+TIMESTAMPDIFF             :TIMESTAMPDIFF(unit,datetime_expr1,datetime_expr2) :Difference between two datetimes.
+TIME_FORMAT               :TIME_FORMAT(time,format) :Formats the time value according to the format string.
+TIME_TO_SEC               :TIME_TO_SEC(time) :Returns the time argument, converted to seconds.
+TO_DAYS                   :TO_DAYS(date) :Number of days since year 0.
+TO_SECONDS                :TO_SECONDS(expr) :Number of seconds since year 0.
+UNIX_TIMESTAMP            :UNIX_TIMESTAMP([date]) :Returns a Unix timestamp.
+UTC_DATE                  :UTC_DATE :Returns the current UTC date.
+UTC_TIME                  :UTC_TIME([precision]) :Returns the current UTC time.
+UTC_TIMESTAMP             :UTC_TIMESTAMP([precision]) :Returns the current UTC date and time.
+WEEK                      :WEEK(date[,mode]) :Returns the week number.
+WEEKDAY                   :WEEKDAY(date) :Returns the weekday index.
+WEEKOFYEAR                :WEEKOFYEAR(date) :Returns the calendar week of the date as a number in the range from 1 to 53.
+YEAR                      :YEAR(date) :Returns the year for the given date.
+YEARWEEK                  :YEARWEEK(date[,mode]) :Returns year and week for a date.
+[AggregateFunctions]
+AVG                   :AVG([DISTINCT] ?) :Returns the average value.
+BIT_AND               :BIT_AND(?) [over_clause] :Bitwise AND.
+BIT_OR                :BIT_OR(?) [over_clause] :Bitwise OR.
+BIT_XOR               :BIT_XOR(?) [over_clause] :Bitwise XOR.
+COUNT                 :COUNT(?) :Returns count of non-null values.
+COUNT DISTINCT        :COUNT(DISTINCT expr,[expr...]) :Returns count of number of different non-NULL values.
+GROUP_CONCAT          :GROUP_CONCAT(?) :Returns string with concatenated values from a group.
+JSON_ARRAYAGG         :JSON_ARRAYAGG(?) :Returns a JSON array containing an element for each value in a given set of JSON or SQL values.
+JSON_OBJECTAGG        :JSON_OBJECTAGG(key, value) :Returns a JSON object containing key-value pairs.
+MAX                   :MAX([DISTINCT] ?) :Returns the maximum value.
+MIN                   :MIN([DISTINCT] ?) :Returns the minimum value.
+STD                   :STD(?) :Population standard deviation.
+STDDEV                :STDDEV(?) :Population standard deviation.
+STDDEV_POP            :STDDEV_POP(?) :Returns the population standard deviation.
+STDDEV_SAMP           :STDDEV_SAMP(?) :Standard deviation.
+SUM                   :SUM([DISTINCT] ?) :Sum total.
+VARIANCE              :VARIANCE(?)  :Population standard variance.
+VAR_POP               :VAR_POP(?) :Population standard variance.
+VAR_SAMP              :VAR_SAMP(?) :Returns the sample variance.
+[Numeric Functions]
++               :+      :Addition.
+-               :-      :Subtraction and unary minus.
+/               :/      :Division.
+*               :*      :Multiplication.
+%               :N % M  :Modulo operator. Returns the remainder of N divided by M.
+DIV                                :DIV :Integer division.
+ABS                                :ABS(?) :Returns an absolute value.
+ACOS                               :ACOS(?) :Returns an arc cosine.
+ASIN                               :ASIN(?) :Returns the arc sine.
+ATAN                               :ATAN(?) :Returns the arc tangent.
+ATAN                               :ATAN(Y,X) :Returns the arc tangent.
+ATAN2                              :ATAN2(Y,X) :Returns the arc tangent of two variables.
+CEIL                               :CEIL(?) :Synonym for CEILING().
+CEILING                            :CEILING(?) :Returns the smallest integer not less than X.
+CONV                               :CONV(?,from_base,to_base) :Converts numbers between different number bases.
+COS                                :COS(?) :Returns the cosine.
+COT                                :COT(?) :Returns the cotangent.
+CRC32                              :CRC32(?) :Computes a cyclic redundancy check (CRC) value.
+CRC32C                             :CRC32C([par,]expr) :Computes a cyclic redundancy check (CRC) value using the Castagnoli polynomial.
+DEGREES                            :DEGREES(?) :Converts from radians to degrees.
+EXP                                :EXP(?) :e raised to the power of the argument.
+FLOOR                              :FLOOR(?) :Largest integer value not greater than the argument.
+GREATEST                           :GREATEST(value1,value2,...) :Returns the largest argument.
+LEAST                              :LEAST(value1,value2,...) :Returns the smallest argument.
+LN                                 :LN(?) :Returns natural logarithm.
+LOG                                :LOG([B,]?) :Returns the natural logarithm.
+LOG10                              :LOG10(?) :Returns the base-10 logarithm.
+LOG2                               :LOG2(?) :Returns the base-2 logarithm.
+MOD                               :MOD(N,M) :Modulo operation. Remainder of N divided by M.
+MOD                                :N MOD M :Modulo operation. Remainder of N divided by M.
+OCT                                :OCT(?) :Returns octal value.
+PI                                 :PI() :Returns the value of π (pi).
+POW                                :POW(X,Y) :Returns X raised to the power of Y.
+POWER                              :POWER(X,Y) :Synonym for POW().
+RADIANS                            :RADIANS(?) :Converts from degrees to radians.
+RAND                               :RAND([N]) :Random floating-point value.
+ROUND                              :ROUND(?[,D]) :Rounds a number.
+SIGN                               :SIGN(?) :Returns 1, 0 or -1.
+SIN                                :SIN(?) :Returns the sine.
+SQRT                               :SQRT(?) :Square root.
+TAN                                :TAN(?) :Returns the tangent.
+TRUNCATE                           :TRUNCATE(?,D) :The TRUNCATE function truncates a number to a specified number of decimal places.
+[Control Flow Functions]
+CASE                    :CASE value WHEN [compare_value] THEN result [WHEN [compare_value] THEN result ...] [ELSE result] END   :Returns the result where value=compare_value or for the first condition that is true.
+CASE                    :CASE WHEN [condition] THEN result [WHEN [condition] THEN result ...][ELSE result] END                  :Returns the result where value=compare_value or for the first condition that is true.
+DECODE                  :DECODE(crypt_str,pass_str)     :Decrypts a string encoded with ENCODE(), or, in Oracle mode, matches expressions.
+IF                      :IF(expr1,expr2,expr3)          :If expr1 is TRUE, returns expr2; otherwise it returns expr3.
+IFNULL                  :IFNULL(expr1,expr2)            :Check whether an expression is NULL.
+NULLIF                  :NULLIF(expr1,expr2)            :Returns NULL if expr1 = expr2.
+NVL                     :NVL(expr1,expr2)               :Synonym for IFNULL.
+NVL2                    :NVL2(expr1,expr2,expr3)        :Returns a value based on whether a specified expression is NULL or not.
+[Pseudo Columns]
+_rowid      :_rowid   :_rowid is an alias for the primary key column
+[Bit Functions and Operators]
+&                          :&   :Bitwise AND
+<<                         :value1 << value2    :Left shift
+>>                         :value1 >> value2    :Shift right
+BIT_COUNT                  :BIT_COUNT(N)        :Returns the number of set bits
+^                          :^                   :Bitwise XOR
+|                          :|                   :Bitwise OR
+~                          :~                   :Bitwise NOT
+[Encryption, Hashing and Compression Functions]
+AES_DECRYPT                :AES_DECRYPT(crypt_str,key_str) :Decryption data encrypted with AES_ENCRYPT
+AES_ENCRYPT                :AES_ENCRYPT(str,key_str) :Encrypts a string with the AES algorithm.
+COMPRESS                   :COMPRESS(string_to_compress) :Returns a binary, compressed string.
+DECODE                     :DECODE(crypt_str,pass_str) :Decrypts a string encoded with ENCODE(), or, in Oracle mode, matches expressions.
+DES_DECRYPT                :DES_DECRYPT(crypt_str[,key_str]) :Decrypts a string encrypted with DES_ENCRYPT().
+DES_ENCRYPT                :DES_ENCRYPT(str[,{key_num|key_str}]) :Encrypts a string using the Triple-DES algorithm.
+ENCODE                     :ENCODE(str,pass_str) :Encrypts a string.
+ENCRYPT                    :ENCRYPT(str[,salt]) :Encrypts a string with Unix crypt().
+MD5                        :MD5(str) :MD5 checksum.
+OLD_PASSWORD               :OLD_PASSWORD(str) :Pre MySQL 4.1 password implementation.
+PASSWORD                   :PASSWORD(str) :Calculates a password string.
+RANDOM_BYTES               :RANDOM_BYTES(length) :Generates a binary string of random bytes.
+SHA1                       :SHA1(str), SHA(str) :Calculates an SHA-1 checksum.
+SHA2                       :SHA2(str,hash_len) :Calculates an SHA-2 checksum.
+UNCOMPRESS                 :UNCOMPRESS(string_to_uncompress) :Uncompresses string compressed with COMPRESS().
+UNCOMPRESSED_LENGTH        :UNCOMPRESSED_LENGTH(compressed_string) :Returns length of a string before being compressed with COMPRESS().
+[Information Functions]
+BENCHMARK                   :BENCHMARK(count,expr)                              :Executes an expression repeatedly.
+BINLOG_GTID_POS             :BINLOG_GTID_POS(binlog_filename,binlog_offset)     :Returns a string representation of the corresponding GTID position.
+CHARSET                     :CHARSET(str)                                       :Returns the character set.
+COERCIBILITY                :COERCIBILITY(str)                                  :Returns the collation coercibility value.
+COLLATION                   :COLLATION(str)                                     :Collation of the string argument.
+CONNECTION_ID               :CONNECTION_ID()                                    :Connection ID.
+CURRENT_ROLE                :CURRENT_ROLE                                       :Current role name.
+CURRENT_ROLE              :CURRENT_ROLE()                                     :Current role name.
+CURRENT_USER                :CURRENT_USER                                       :Username/host that authenticated the current client.
+CURRENT_USER              :CURRENT_USER()                                     :Username/host that authenticated the current client.
+DATABASE                    :DATABASE()                                         :Current default database.
+DECODE_HISTOGRAM            :DECODE_HISTOGRAM(hist_type,histogram)              :Returns comma separated numerics corresponding to a probability distribution.
+DEFAULT                     :DEFAULT(col_name)                                  :Returns column default.
+FOUND_ROWS                  :FOUND_ROWS()                                       :Number of (potentially) returned rows.
+LAST_INSERT_ID              :LAST_INSERT_ID([expr])                             :Last inserted auto_increment value.
+LAST_VALUE                  :LAST_VALUE(expr,[expr,...])                        :Returns the last value in a list or set of values.
+PROCEDURE ANALYSE           :analyse([max_elements[,max_memory]])               :Suggests optimal data types for each column.
+ROWNUM                      :ROWNUM()                                           :Function that returns the number of accepted rows so far.
+ROW_COUNT                   :ROW_COUNT()                                        :Number of rows affected by previous statement.
+SCHEMA                      :SCHEMA()                                           :Synonym for DATABASE().
+SESSION_USER                :SESSION_USER()                                     :Synonym for USER().
+SYSTEM_USER                 :SYSTEM_USER()                                      :Synonym for USER().
+USER                        :USER()                                             :Current user/host.
+VERSION                     :VERSION()                                          :MariaDB server version.
+[Miscellaneous Functions]
+GET_LOCK                 :GET_LOCK(str,timeout) :Obtain LOCK.
+INET6_ATON               :INET6_ATON(?)         :Given an IPv6 or IPv4 network address, returns a VARBINARY numeric value.
+INET6_NTOA               :INET6_NTOA(?)         :Given an IPv6 or IPv4 network address, returns the address as a nonbinary string.
+INET_ATON                :INET_ATON(?)          :Returns numeric value of IPv4 address.
+INET_NTOA                :INET_NTOA(?)          :Returns dotted-quad representation of IPv4 address.
+IS_FREE_LOCK             :IS_FREE_LOCK(str)     :Checks whether lock is free to use.
+IS_IPV4                  :IS_IPV4(?)            :Whether or not an expression is a valid IPv4 address.
+IS_IPV4_COMPAT           :IS_IPV4_COMPAT(?)     :Whether or not an IPv6 address is IPv4-compatible.
+IS_IPV4_MAPPED           :IS_IPV4_MAPPED(?)     :Whether an IPv6 address is a valid IPv4-mapped address.
+IS_IPV6                  :IS_IPV6(?)            :Whether or not an expression is a valid IPv6 address.
+IS_USED_LOCK             :IS_USED_LOCK(str)     :Check if lock is in use.
+MASTER_GTID_WAIT         :MASTER_GTID_WAIT(gtid-list[, timeout) :Wait until slave reaches the GTID position.
+MASTER_POS_WAIT          :MASTER_POS_WAIT(log_name,log_pos[,timeout,["connection_name"]]) :Blocks until the replica has applied all specified updates.
+NAME_CONST               :NAME_CONST(name,value)    :Returns the given value.
+RELEASE_ALL_LOCKS        :RELEASE_ALL_LOCKS()       :Releases all named locks held by the current session.
+RELEASE_LOCK             :RELEASE_LOCK(str)         :Releases lock obtained with GET_LOCK().
+SLEEP                    :SLEEP(duration)           :Pauses for the given number of seconds.
+SYS_GUID                 :SYS_GUID()                :Returns a globally unique identifier (GUID).
+UUID                     :UUID()                    :Returns a Universal Unique Identifier.
+UUID_SHORT               :UUID_SHORT()              :Return short universal identifier.
+VALUE                   :VALUE(col_name)            :Refer to columns in INSERT ... ON DUPLICATE KEY UPDATE.
+VALUES                  :VALUES(col_name)           :Refer to columns in INSERT ... ON DUPLICATE KEY UPDATE.
+[Dynamic Columns Functions]
+COLUMN_ADD            :COLUMN_ADD(dyncol_blob, column_nr|column_name, value [as type], [column_nr|column_name, value [as type]]...); :Adds or updates dynamic columns.
+COLUMN_CHECK            :COLUMN_CHECK(dyncol_blob);                                                                            :Checks if a dynamic column blob is valid
+COLUMN_CREATE           :COLUMN_CREATE(column_nr|column_name, value [as type], [column_nr|column_name, value [as type]]...);   :Returns a dynamic columns blob.
+COLUMN_DELETE           :COLUMN_DELETE(dyncol_blob, column_nr|column_name, column_nr|column_name...);                          :Deletes a dynamic column.
+COLUMN_EXISTS           :COLUMN_EXISTS(dyncol_blob, column_nr|column_name);                                                    :Checks is a column exists.
+COLUMN_GET              :COLUMN_GET(dyncol_blob, column_nr|column_name as type);                                               :Gets a dynamic column value by name.
+COLUMN_JSON             :COLUMN_JSON(dyncol_blob)                                                                               :Returns a JSON representation of dynamic column blob data
+COLUMN_LIST             :COLUMN_LIST(dyncol_blob)                                                                               :Returns comma-separated list of columns names.
+[Galera Functions]
+WSREP_LAST_SEEN_GTID             :WSREP_LAST_SEEN_GTID() :Returns the Global Transaction ID of the most recent write transaction observed by the client.
+WSREP_LAST_WRITTEN_GTID          :WSREP_LAST_WRITTEN_GTID() :Returns the Global Transaction ID of the most recent write transaction performed by the client.
+WSREP_SYNC_WAIT_UPTO_GTID        :WSREP_SYNC_WAIT_UPTO_GTID(gtid[,timeout]) :Blocks the client until the transaction specified by the given GTID is applied and committed.
+[Geographic Functions]
+[-->Geometry Constructors]
+BUFFER                    :BUFFER(g1,r) :Synonym for ST_BUFFER.
+CONVEXHULL                :ConvexHull(g) :Synonym for ST_CONVEXHULL.
+GEOMETRYCOLLECTION        :GeometryCollection(g1,g2,...) :Constructs a WKB GeometryCollection.
+LINESTRING                :LineString(pt1,pt2,...) :Constructs a WKB LineString value from a number of WKB Point arguments.
+MULTILINESTRING           :MultiLineString(ls1,ls2,...) :Constructs a MultiLineString value.
+MULTIPOINT                :MultiPoint(pt1,pt2,...) :Constructs a WKB MultiPoint value.
+MULTIPOLYGON              :MultiPolygon(poly1,poly2,...) :Constructs a WKB MultiPolygon.
+POINT                     :Point(x,y) :Constructs a WKB Point.
+PointOnSurface            :PointOnSurface(g) :Synonym for ST_PointOnSurface.
+POLYGON                   :Polygon(ls1,ls2,...) :Constructs a WKB Polygon value from a number of WKB LineString arguments.
+ST_BUFFER                 :ST_BUFFER(g1,r) :A new geometry with a buffer added to the original geometry.
+ST_CONVEXHULL             :ST_ConvexHull(g) :The minimum convex geometry enclosing all geometries within the set.
+ST_INTERSECTION           :ST_INTERSECTION(g1,g2) :The intersection, or shared portion, of two geometries.
+ST_POINTONSURFACE         :ST_PointOnSurface(g) :Returns a POINT guaranteed to intersect a surface.
+ST_SYMDIFFERENCE          :ST_SYMDIFFERENCE(g1,g2) :Portions of two geometries that don't intersect.
+ST_UNION                  :ST_UNION(g1,g2) :Union of two geometries.
+[-->Geometry Properties]
+BOUNDARY                :BOUNDARY(g)            :Synonym for ST_BOUNDARY.
+DIMENSION               :Dimension(g)           :Synonym for ST_DIMENSION.
+ENVELOPE                :ENVELOPE(g)            :Synonym for ST_ENVELOPE.
+GeometryN               :GeometryN(gc,N)        :Synonym for ST_GeometryN.
+GeometryType            :GeometryType(g)        :Synonym for ST_GeometryType.
+IsClosed                :IsClosed(g)            :Synonym for ST_IsClosed.
+IsEmpty                 :IsEmpty(g)             :Synonym for ST_IsEmpty.
+IsRing                  :IsRing(g)              :Synonym for ST_IsRing.
+IsSimple                :IsSimple(g)            :Synonym for ST_IsSimple.
+NumGeometries           :NumGeometries(gc)      :Synonym for ST_NumGeometries.
+SRID                    :SRID(g)                :Synonym for ST_SRID.
+ST_BOUNDARY             :ST_BOUNDARY(g)         :Returns a geometry that is the closure of a combinatorial boundary.
+ST_DIMENSION            :ST_Dimension(g)        :Inherent dimension of a geometry value.
+ST_ENVELOPE             :ST_ENVELOPE(g)         :Returns the Minimum Bounding Rectangle for a geometry value.
+ST_GEOMETRYN            :ST_GeometryN(gc,N)     :Returns the N-th geometry in a GeometryCollection.
+ST_GEOMETRYTYPE         :ST_GeometryType(g)     :Returns name of the geometry type of which a given geometry instance is a member.
+ST_ISCLOSED             :ST_IsClosed(g)         :Returns true if a given LINESTRING's start and end points are the same.
+ST_ISEMPTY              :ST_IsEmpty(g)          :Indicated validity of geometry value.
+ST_IsRing               :ST_IsRing(g)           :Returns true if a given LINESTRING is both ST_IsClosed and ST_IsSimple.
+ST_IsSimple             :ST_IsSimple(g)         :Returns true if the given Geometry has no anomalous geometric points.
+ST_NUMGEOMETRIES        :ST_NumGeometries(gc)   :Number of geometries in a GeometryCollection.
+ST_RELATE               :ST_Relate(g1, g2, i)   :Returns true if two geometries are related
+ST_SRID                 :ST_SRID(g)             :Returns a Spatial Reference System ID.
+[-->Geometry Relations]
+CONTAINS                  :Contains(g1,g2) :Whether one geometry contains another.
+CROSSES                   :CROSSES(g1,g2) :Whether two geometries spatially cross
+DISJOINT                  :DISJOINT(g1,g2) :Whether the two elements do not intersect.
+EQUALS                    :EQUALS(g1,g2) :Indicates whether two geometries are spatially equal.
+INTERSECTS                :INTERSECTS(g1,g2) :Indicates whether two geometries spatially intersect.
+OVERLAPS                  :OVERLAPS(g1,g2) :Indicates whether two elements spatially overlap.
+ST_CONTAINS               :ST_CONTAINS(g1,g2) :Whether one geometry is contained by another.
+ST_CROSSES                :ST_CROSSES(g1,g2) :Whether two geometries spatially cross.
+ST_DIFFERENCE             :ST_DIFFERENCE(g1,g2) :Point set difference.
+ST_DISJOINT               :ST_DISJOINT(g1,g2) :Whether one geometry is spatially disjoint from another.
+ST_DISTANCE               :ST_DISTANCE(g1,g2) :The distance between two geometries.
+ST_DISTANCE_SPHERE        :ST_DISTANCE_SPHERE(g1,g2,[r]) :Spherical distance between two geometries (point or multipoint) on a sphere.
+ST_EQUALS                 :ST_EQUALS(g1,g2) :Whether two geometries are spatoially equal.
+ST_INTERSECTS             :ST_INTERSECTS(g1,g2) :Whether two geometries spatially intersect.
+ST_LENGTH                 :ST_LENGTH(ls) :Length of a LineString value.
+ST_OVERLAPS               :ST_OVERLAPS(g1,g2) :Whether two geometries overlap.
+ST_TOUCHES                :ST_TOUCHES(g1,g2) :Whether one geometry g1 spatially touches another.
+ST_WITHIN                 :ST_WITHIN(g1,g2) :Whether one geometry is within another.
+TOUCHES                   :TOUCHES(g1,g2) :Whether two geometries spatially touch.
+WITHIN                    :WITHIN(g1,g2) :Indicate whether a geographic element is spacially within another.
+[-->LineString Properties]
+ENDPOINT             :EndPoint(ls)          :Synonym for ST_ENDPOINT.
+GLENGTH              :GLength(ls)           :Length of a LineString value.
+NumPoints            :NUMPOINTS(ls)         :Synonym for ST_NumPoints.
+PointN               :PointN(ls,N)          :Synonym for PointN.
+STARTPOINT           :StartPoint(ls)        :Synonym for ST_StartPoint.
+ST_ENDPOINT          :ST_EndPoint(ls)       :Returns the endpoint of a LineString.
+ST_NUMPOINTS         :ST_NUMPOINTS(ls)      :Returns the number of Point objects in a LineString.
+ST_POINTN            :ST_PointN(ls,N)       :Returns the N-th Point in the LineString.
+ST_STARTPOINT        :ST_StartPoint(ls)     :Returns the start point of a LineString.
+[-->MBR (Minimum Bounding Rectangle)]
+MBRContains           :MBRContains(g1,g2) :Indicates one Minimum Bounding Rectangle contains another.
+MBRDisjoint           :MBRDisjoint(g1,g2) :Indicates whether the Minimum Bounding Rectangles of two geometries are disjoint.
+MBREqual              :MBREqual(g1,g2) :Whether the Minimum Bounding Rectangles of two geometries are the same.
+MBRIntersects         :MBRIntersects(g1,g2) :Indicates whether the Minimum Bounding Rectangles of the two geometries intersect.
+MBROverlaps           :MBROverlaps(g1,g2) :Whether the Minimum Bounding Rectangles of two geometries overlap.
+MBRTouches            :MBRTouches(g1,g2) :Whether the Minimum Bounding Rectangles of two geometries touch.
+MBRWithin             :MBRWithin(g1,g2) :Indicates whether one Minimum Bounding Rectangle is within another
+[-->Point Properties]
+ST_X        :ST_X(p) :X-coordinate value for a point.
+ST_Y        :ST_Y(p) :Y-coordinate for a point.
+X           :X(p) :Synonym for ST_X.
+Y           :Y(p) :Synonym for ST_Y.
+[-->Polygon Properties]
+AREA                       :AREA(poly)                  :Synonym for ST_AREA.
+CENTROID                   :CENTROID(mpoly)             :Synonym for ST_CENTROID.
+ExteriorRing               :ExteriorRing(poly)          :Synonym for ST_ExteriorRing.
+InteriorRingN              :InteriorRingN(poly,N)       :Synonym for ST_InteriorRingN.
+NumInteriorRings           :NumInteriorRings(poly)      :Synonym for NumInteriorRings.
+ST_AREA                    :ST_AREA(poly)               :Area of a Polygon.
+ST_CENTROID                :ST_CENTROID(mpoly)          :The mathematical centroid (geometric center) for a MultiPolygon.
+ST_ExteriorRing            :ST_ExteriorRing(poly)       :Returns the exterior ring of a Polygon as a LineString.
+ST_InteriorRingN           :ST_InteriorRingN(poly,N)    :Returns the N-th interior ring for a Polygon.
+ST_NumInteriorRings        :ST_NumInteriorRings(poly)   :Number of interior rings in a Polygon.
+[-->WKB]
+AsBinary                              :AsBinary(g) :Synonym for ST_AsBinary.
+AsWKB                                 :AsWKB(g)    :Synonym for ST_AsBinary.
+MLineFromWKB                          :MLineFromWKB(wkb[,srid]) :Constructs a MULTILINESTRING.
+MPointFromWKB                         :MPointFromWKB(wkb[,srid]) :Constructs a MULTIPOINT value using its WKB representation and SRID.
+MPolyFromWKB                          :MPolyFromWKB(wkb[,srid]) :Constructs a MULTIPOLYGON value using its WKB representation and SRID.
+GeomCollFromWKB                       :GeomCollFromWKB(wkb[,srid])           :Synonym for ST_GeomCollFromWKB.
+GeometryCollectionFromWKB             :GeometryCollectionFromWKB(wkb[,srid]) :Synonym for ST_GeomCollFromWKB.
+GeometryFromWKB                       :GeometryFromWKB(wkb[,srid])           :Synonym for ST_GeomFromWKB.
+GeomFromWKB                           :GeomFromWKB(wkb[,srid])               :Synonym for ST_GeomFromWKB.
+LineFromWKB                           :LineFromWKB(wkb[,srid])               :Synonym for ST_LineFromWKB.
+LineStringFromWKB                     :LineStringFromWKB(wkb[,srid])         :Synonym for ST_LineFromWKB.
+MultiLineStringFromWKB                :MultiLineStringFromWKB(wkb[,srid]) :A synonym for MLineFromWKB.
+MultiPointFromWKB                     :MultiPointFromWKB(wkb[,srid]) :Synonym for MPointFromWKB.
+MultiPolygonFromWKB                   :MultiPolygonFromWKB(wkb[,srid]) :Synonym for MPolyFromWKB.
+PointFromWKB                          :PointFromWKB(wkb[,srid])   :Synonym for PointFromWKB.
+PolyFromWKB                           :PolyFromWKB(wkb[,srid])    :Synonym for ST_PolyFromWKB.
+PolygonFromWKB                        :PolygonFromWKB(wkb[,srid]) :Synonym for ST_PolyFromWKB.
+ST_AsBinary                           :ST_AsBinary(g)                                       :Converts a value to its WKB representation.
+ST_AsWKB                              :ST_AsWKB(g)                                      :Synonym for ST_AsBinary.
+ST_GeomCollFromWKB                    :ST_GeomCollFromWKB(wkb[,srid])                   :Constructs a GEOMETRYCOLLECTION value from a WKB.
+ST_GeometryCollectionFromWKB          :ST_GeometryCollectionFromWKB(wkb[,srid])         :Synonym for ST_GeomCollFromWKB.
+ST_GeometryFromWKB                    :ST_GeometryFromWKB(wkb[,srid])                   :Synonym for ST_GeomFromWKB.
+ST_GeomFromWKB                        :ST_GeomFromWKB(wkb[,srid])                       :Constructs a geometry value using its WKB representation and SRID.
+ST_LineFromWKB                        :ST_LineFromWKB(wkb[,srid])                       :Constructs a LINESTRING using its WKB and SRID.
+ST_LineStringFromWKB                  :ST_LineStringFromWKB(wkb[,srid])                 :Synonym for ST_LineFromWKB.
+ST_PointFromWKB                       :ST_PointFromWKB(wkb[,srid])                      :Constructs POINT using its WKB and SRID.
+ST_PolyFromWKB                        :ST_PolyFromWKB(wkb[,srid])                       :Constructs POLYGON value using its WKB representation and SRID.
+ST_PolygonFromWKB                     :ST_PolygonFromWKB(wkb[,srid])                    :Synonym for ST_PolyFromWKB.
+[-->WKT]
+AsText                               :AsText(g)                                     :Synonym for ST_AsText.
+AsWKT                                :AsWKT(g)                                      :Synonym for ST_AsText.
+GeomCollFromText                     :GeomCollFromText(wkt[,srid])                  :Synonym for ST_GeomCollFromText.
+GeometryCollectionFromText           :GeometryCollectionFromText(wkt[,srid])        :Synonym for ST_GeomCollFromText.
+GeometryFromText                     :GeometryFromText(wkt[,srid])                  :Synonym for ST_GeomFromText.
+GeomFromText                         :GeomFromText(wkt[,srid])                      :Synonym for ST_GeomFromText.
+LineFromText                         :LineFromText(wkt[,srid])                      :Synonym for ST_LineFromText.
+LineStringFromText                   :LineStringFromText(wkt[,srid])                :Synonym for ST_LineFromText.
+MLineFromText                        :MLineFromText(wkt[,srid]) :Constructs MULTILINESTRING using its WKT representation and SRID.
+MPointFromText                       :MPointFromText(wkt[,srid]) :Constructs a MULTIPOINT value using its WKT and SRID.
+MPolyFromText                        :MPolyFromText(wkt[,srid]) :Constructs a MULTIPOLYGON value.
+MultiLineStringFromText              :MultiLineStringFromText(wkt[,srid]) :Synonym for MLineFromText.
+MultiPointFromText                   :MultiPointFromText(wkt[,srid]) :Synonym for MPointFromText.
+MultiPolygonFromText                 :MultiPolygonFromText(wkt[,srid]) :Synonym for MPolyFromText.
+PointFromText                        :PointFromText(wkt[,srid])                     :Synonym for ST_PointFromText.
+PolyFromText                         :PolyFromText(wkt[,srid])                      :Synonym for ST_PolyFromText.
+PolygonFromText                      :PolygonFromText(wkt[,srid])                   :Synonym for ST_PolyFromText.
+ST_AsText                            :ST_AsText(g)                                  :Converts a value to its WKT-Definition.
+ST_ASWKT                             :ST_AsWKT(g)                                   :Synonym for ST_ASTEXT().
+ST_GeomCollFromText                  :ST_GeomCollFromText(wkt[,srid])               :Constructs a GEOMETRYCOLLECTION value.
+ST_GeometryCollectionFromText        :ST_GeometryCollectionFromText(wkt[,srid])     :Synonym for ST_GeomCollFromText.
+ST_GeometryFromText                  :ST_GeometryFromText(wkt[,srid])               :Synonym for ST_GeomFromText.
+ST_GeomFromText                      :ST_GeomFromText(wkt[,srid])                   :Constructs a geometry value using its WKT and SRID.
+ST_LineFromText                      :ST_LineFromText(wkt[,srid])                   :Creates a linestring value.
+ST_LineStringFromText                :ST_LineStringFromText(wkt[,srid])             :Synonym for ST_LineFromText.
+ST_PointFromText                     :ST_PointFromText(wkt[,srid])                  :Constructs a POINT value.
+ST_PolyFromText                      :ST_PolyFromText(wkt[,srid])                   :Constructs a POLYGON value.
+ST_PolygonFromText                   :ST_PolygonFromText(wkt[,srid])                :Synonym for ST_PolyFromText.
+[JSON Functions]
+JSON_ARRAY                 :JSON_ARRAY([value[, value2] ...]) :Returns a JSON array containing the listed values.
+JSON_ARRAYAGG              :JSON_ARRAYAGG(column_or_expression) :Returns a JSON array containing an element for each value in a given set of JSON or SQL values.
+JSON_ARRAY_APPEND          :JSON_ARRAY_APPEND(json_doc, path, value[, path, value] ...) :Appends values to the end of the given arrays within a JSON document.
+JSON_ARRAY_INSERT          :JSON_ARRAY_INSERT(json_doc, path, value[, path, value] ...) :Inserts a value into a JSON document.
+JSON_COMPACT               :JSON_COMPACT(json_doc) :Removes all unnecessary spaces so the json document is as short as possible.
+JSON_CONTAINS              :JSON_CONTAINS(json_doc, val[, path]) :Whether a value is found in a given JSON document or at a specified path within the document.
+JSON_CONTAINS_PATH         :JSON_CONTAINS_PATH(json_doc, return_arg, path[, path] ...) :Indicates whether the given JSON document contains data at the specified path or paths.
+JSON_DEPTH                 :JSON_DEPTH(json_doc) :Maximum depth of a JSON document.
+JSON_DETAILED              :JSON_DETAILED(json_doc[, tab_size]) :Represents JSON in the most understandable way emphasizing nested structures.
+JSON_EQUALS                :JSON_EQUALS(json1, json2) :Checks if there is equality between two json objects.
+JSON_EXISTS                :JSON_EXISTS(json_doc,JSON_value) :Determines whether a specified JSON value exists in the given data.
+JSON_EXTRACT               :JSON_EXTRACT(json_doc, path[, path] ...) :Extracts data from a JSON document.
+JSON_INSERT                :JSON_INSERT(json_doc, path, val[, path, val] ...) :Inserts data into a JSON document.
+JSON_KEYS                  :JSON_KEYS(json_doc[, path]) :Returns keys from top-level value of a JSON object or top-level keys from the path.
+JSON_LENGTH                :JSON_LENGTH(json_doc[, path]) :Returns the length of a JSON document, or the length of a value within the document.
+JSON_LOOSE                 :JSON_LOOSE(json_doc) :Adds spaces to a JSON document to make it look more readable.
+JSON_MERGE                 :JSON_MERGE(json_doc, json_doc[, json_doc] ...) :Merges the given JSON documents.
+JSON_MERGE_PATCH           :JSON_MERGE_PATCH(json_doc, json_doc[, json_doc] ...) :RFC 7396-compliant merge of the given JSON documents.
+JSON_MERGE_PRESERVE        :JSON_MERGE_PRESERVE(json_doc, json_doc[, json_doc] ...) :Synonym for JSON_MERGE.
+JSON_NORMALIZE             :JSON_NORMALIZE(json) :Recursively sorts keys and removes spaces, allowing comparison of json documents for equality.
+JSON_OBJECT                :JSON_OBJECT([key, value[, key, value] ...]) :Returns a JSON object containing the given key/value pairs.
+JSON_OBJECTAGG             :JSON_OBJECTAGG(key, value) :Returns a JSON object containing key-value pairs.
+JSON_OVERLAPS              :JSON_OVERLAPS(json_doc1, json_doc2) :Returns true if two json documents have at least one key-value pair or array element in common.
+JSON_QUERY                 :JSON_QUERY(json_doc, path) :Given a JSON document, returns an object or array specified by the path.
+JSON_QUOTE                 :JSON_QUOTE(json_value) :Quotes a string as a JSON value.
+JSON_REMOVE                :JSON_REMOVE(json_doc, path[, path] ...) :Removes data from a JSON document.
+JSON_REPLACE               :JSON_REPLACE(json_doc, path, val[, path, val] ...) :Replaces existing values in a JSON document.
+JSON_SEARCH                :JSON_SEARCH(json_doc, return_arg, search_str[, escape_char[, path] ...]) :Returns the path to the given string within a JSON document.
+JSON_SET                   :JSON_SET(json_doc, path, val[, path, val] ...) :Updates or inserts data into a JSON document.
+JSON_TABLE                 :JSON_TABLE(json_doc, context_path COLUMNS (column_list)) [AS] alias :Given data from a JSON document, returns a representation of it as a relational table.
+JSON_TYPE                  :JSON_TYPE(json_val) :Returns the type of a JSON value.
+JSON_UNQUOTE               :JSON_UNQUOTE(val) :Unquotes a JSON value, returning a string.
+JSON_VALID                 :JSON_VALID(value) :Whether a value is a valid JSON document or not.
+JSON_VALUE                 :JSON_VALUE(json_doc, path) :Given a JSON document, returns the specified scalar.
+[SEQUENCE Functions]
+LASTVAL                                 :PREVIOUS VALUE FOR sequence_name :Synonym for PREVIOUS VALUE for sequence_name.
+NEXT VALUE for sequence_name            :NEXT VALUE FOR sequence :Generate next value for a SEQUENCE. Same as NEXTVAL().
+NEXTVAL                                 :NEXTVAL(sequence_name) :Synonym for NEXT VALUE for sequence_name.
+PREVIOUS VALUE FOR sequence_name        :PREVIOUS VALUE FOR sequence_name :Get last value generated from a SEQUENCE. Same as LASTVAL().
+SETVAL                                  :SETVAL(sequence_name, next_value, [is_used, [round]]) :Set the next value to be returned from a SEQUENCE.
+[Spider Functions]
+SPIDER_BG_DIRECT_SQL                :SPIDER_BG_DIRECT_SQL('sql', 'tmp_table_list', 'parameters') :Background SQL execution
+SPIDER_COPY_TABLES                  :SPIDER_COPY_TABLES(spider_table_name, source_link_id, destination_link_id_list [,parameters]) :Copy table data
+SPIDER_DIRECT_SQL                   :SPIDER_DIRECT_SQL('sql', 'tmp_table_list', 'parameters') :Execute SQL on the remote server
+SPIDER_FLUSH_TABLE_MON_CACHE        :SPIDER_FLUSH_TABLE_MON_CACHE() :Refreshing Spider monitoring server information
+[Window Functions]
+AVG                                            :AVG([DISTINCT] ?) :Returns the average value.
+BIT_AND                                        :BIT_AND(?) [over_clause] :Bitwise AND.
+BIT_OR                                         :BIT_OR(?) [over_clause] :Bitwise OR.
+BIT_XOR                                        :BIT_XOR(?) [over_clause] :Bitwise XOR.
+COUNT                                          :COUNT(?) :Returns count of non-null values.
+CUME_DIST                                      :CUME_DIST() OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ]) :Window function that returns the cumulative distribution of a given row.
+DENSE_RANK                                     :DENSE_RANK() OVER ([ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Rank of a given row with identical values receiving the same result, no skipping.
+FIRST_VALUE                                    :FIRST_VALUE(?) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Returns the first result from an ordered set.
+JSON_ARRAYAGG                                  :JSON_ARRAYAGG(column_or_expression) :Returns a JSON array containing an element for each value in a given set of JSON or SQL values.
+JSON_OBJECTAGG                                 :JSON_OBJECTAGG(key, value) :Returns a JSON object containing key-value pairs.
+LAG                                            :LAG (expr[, offset]) OVER ( [ PARTITION BY partition_expression ] < ORDER BY order_list >) :Accesses data from a previous row in the same result set without the need for a self-join.
+LAST_VALUE                                     :LAST_VALUE(expr,[expr,...]) :Returns the last value in a list or set of values.
+LAST_VALUE                                      :LAST_VALUE(?) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ]) :Returns the last value in a list or set of values.
+LEAD                                           :LEAD (?[, offset]) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Accesses data from a following row in the same result set without the need for a self-join.
+MAX                                            :MAX([DISTINCT] ?) :Returns the maximum value.
+MEDIAN                                         :MEDIAN(?) OVER ( [ PARTITION BY partition_expression ] ) :Window function that returns the median value of a range of values.
+MIN                                            :MIN([DISTINCT] ?) :Returns the minimum value.
+NTH_VALUE                                      :NTH_VALUE (?[, num_row]) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Returns the value evaluated at the specified row number of the window frame.
+NTILE                                          :NTILE (?) OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ]) :Returns an integer indicating which group a given row falls into.
+PERCENT_RANK                                   :PERCENT_RANK() OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Window function that returns the relative percent rank of a given row.
+PERCENTILE_CONT                                :PERCENTILE_CONT(given fraction) :Continuous percentile.
+PERCENTILE_DISC                                :PERCENTILE_DISC(specified fraction) :Discrete percentile.
+RANK                                           :RANK() OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Rank of a given row with identical values receiving the same result.
+ROW_NUMBER                                     :ROW_NUMBER() OVER ( [ PARTITION BY partition_expression ] [ ORDER BY order_list ])  :Row number of a given row with identical values receiving a different result.
+STD                                            :STD(?) :Population standard deviation.
+STDDEV                                         :STDDEV(?) :Population standard deviation.
+STDDEV_POP                                     :STDDEV_POP(?) :Returns the population standard deviation.
+STDDEV_SAMP                                    :STDDEV_SAMP(?) :Standard deviation.
+SUM                                            :SUM([DISTINCT]?) :Sum total.
+VAR_POP                                        :VAR_POP(?) :Population standard variance.
+VAR_SAMP                                       :VAR_SAMP(?) :Returns the sample variance.
+VARIANCE                                       :VARIANCE(?) :under: » MariaDB Server Documentation » Using MariaDB Server » SQL Statements & Structure » SQL Statements » Built-in Functions » Aggregate FunctionsPopulation standard variance.
+ColumnStore Window Functions                   :function_name ([expression [, expression ... ]]) OVER ( window_definition ) :Summary of window function use with the ColumnStore engine
+Window Frames                                  :{ROWS | RANGE} {frame_border | BETWEEN frame_border AND frame_border} :Some window functions operate on window frames.
+
+
+

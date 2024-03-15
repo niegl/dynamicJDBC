@@ -22,19 +22,43 @@ import java.util.stream.Collectors;
  */
 public class DbUtils {
 
-    public static Set<String> getDbKeywords(DbType dbType) {
-        Lexer lexer = SQLParserUtils.createLexer("select *", dbType);
-        return lexer.getKeywords().getKeywords().keySet();
-    }
-
     /**
      * 返回数据库关键字
      * @param dbType 数据库类型
      * @return 以逗号分隔的关键字列表
      */
     public static String getDbKeywordsAsString(DbType dbType) {
-        Set<String> keywords = getDbKeywords(dbType);
-        return StringUtils.join(keywords,",");
+
+        Set<String> keywords = new HashSet<>();
+
+        switch (dbType) {
+            case ads -> Utils.loadFromFile("META-INF/druid/parser/ads/builtin_keywords", keywords);
+            case dm -> Utils.loadFromFile("META-INF/druid/parser/dm/builtin_keywords", keywords);
+            case kingbase -> Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_keywords", keywords);
+            case mysql -> Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_keywords", keywords);
+            case oracle -> Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_keywords", keywords);
+            case hive -> Utils.loadFromFile("META-INF/druid/parser/hive/builtin_keywords", keywords);
+            case postgresql -> Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_keywords", keywords);
+            case db2 -> Utils.loadFromFile("META-INF/druid/parser/db2/builtin_keywords", keywords);
+            case mariadb -> Utils.loadFromFile("META-INF/druid/parser/mariadb/builtin_keywords", keywords);
+            case presto -> Utils.loadFromFile("META-INF/druid/parser/presto/builtin_keywords", keywords);
+            case sqlserver -> Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_keywords", keywords);
+            case sapdb -> Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_keywords", keywords);
+            case derby -> Utils.loadFromFile("META-INF/druid/parser/derby/builtin_keywords", keywords);
+            case elastic_search -> Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_keywords", keywords);
+            case h2 -> Utils.loadFromFile("META-INF/druid/parser/h2/builtin_keywords", keywords);
+            case hsql -> Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_keywords", keywords);
+            case blink -> Utils.loadFromFile("META-INF/druid/parser/blink/builtin_keywords", keywords);
+            case odps -> Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_keywords", keywords);
+            default -> {}
+        }
+
+        if (keywords.isEmpty()) {
+            Lexer lexer = SQLParserUtils.createLexer("select *", dbType);
+            keywords = lexer.getKeywords().getKeywords().keySet();
+        }
+
+        return StringUtils.join(keywords, ",");
     }
 
     /**
@@ -114,259 +138,39 @@ public class DbUtils {
     public static String getContextSetGrammar(DbType dbType) {
         String grammar = "SET ?= ?;";
 
-        switch (dbType) {
-
-            case other -> {
-            }
-            case jtds -> {
-            }
-            case hsql -> {
-            }
-            case db2 -> {
-            }
-            case postgresql -> {
-            }
-            case sqlserver -> {
-            }
-            case oracle -> {
-                grammar = " ?:= ?;";
-            }
-            case mysql -> {
-                grammar = "SET @?= ?;";
-            }
-            case mariadb -> {
-            }
-            case derby -> {
-            }
-            case hive -> {
-                grammar = "SET ?= ?;";
-            }
-            case h2 -> {
-            }
-            case dm -> {
-            }
-            case kingbase -> {
-            }
-            case gbase -> {
-            }
-            case oceanbase -> {
-            }
-            case informix -> {
-            }
-            case odps -> {
-            }
-            case teradata -> {
-            }
-            case phoenix -> {
-            }
-            case edb -> {
-            }
-            case kylin -> {
-            }
-            case sqlite -> {
-            }
-            case ads -> {
-            }
-            case presto -> {
-            }
-            case elastic_search -> {
-            }
-            case hbase -> {
-            }
-            case drds -> {
-            }
-            case clickhouse -> {
-            }
-            case blink -> {
-            }
-            case antspark -> {
-            }
-            case oceanbase_oracle -> {
-            }
-            case polardb -> {
-            }
-            case ali_oracle -> {
-            }
-            case mock -> {
-            }
-            case sybase -> {
-            }
-            case highgo -> {
-            }
-            case greenplum -> {
-            }
-            case gaussdb -> {
-            }
-            case trino -> {
-            }
-            case oscar -> {
-            }
-            case tidb -> {
-            }
-            case tydb -> {
-            }
-            case ingres -> {
-            }
-            case cloudscape -> {
-            }
-            case timesten -> {
-            }
-            case as400 -> {
-            }
-            case sapdb -> {
-            }
-            case kdb -> {
-            }
-            case log4jdbc -> {
-            }
-            case xugu -> {
-            }
-            case firebirdsql -> {
-            }
-            case JSQLConnect -> {
-            }
-            case JTurbo -> {
-            }
-            case interbase -> {
-            }
-            case pointbase -> {
-            }
-            case edbc -> {
-            }
-            case mimer -> {
-            }
-        }
+//        switch (dbType) {
+//            case oracle -> {
+//                grammar = " ?:= ?;";
+//            }
+//            case mysql -> {
+//                grammar = "SET @?= ?;";
+//            }
+//        }
 
         return grammar;
     }
+
     /**
-     * 环境变量的使用语法
+     * Dynamic Parameter Bindings
+     * You can use dynamic parameters and variables in your SQL queries. The parameter format is :name.
+     * Also, variables syntax could be used as ${varname}. When you execute a query that contains dynamic parameters,
+     * DBeaver displays a dialog box in which you can fill the parameter values.
      * @param dbType 数据库类型
      * @return 语法格式，变量用?代替
      */
     public static String getContextUseGrammar(DbType dbType) {
         String grammar = "${?}";
-        switch (dbType) {
 
-            case other -> {
-            }
-            case jtds -> {
-            }
-            case hsql -> {
-            }
-            case db2 -> {
-            }
-            case postgresql -> {
-            }
-            case sqlserver -> {
-            }
-            case oracle -> {
-            }
-            case mysql -> {
-                grammar = "@?";
-            }
-            case mariadb -> {
-            }
-            case derby -> {
-            }
-            case hive -> {
-                grammar = "${hiveconf:?}";
-            }
-            case h2 -> {
-            }
-            case dm -> {
-            }
-            case kingbase -> {
-            }
-            case gbase -> {
-            }
-            case oceanbase -> {
-            }
-            case informix -> {
-            }
-            case odps -> {
-            }
-            case teradata -> {
-            }
-            case phoenix -> {
-            }
-            case edb -> {
-            }
-            case kylin -> {
-            }
-            case sqlite -> {
-            }
-            case ads -> {
-            }
-            case presto -> {
-            }
-            case elastic_search -> {
-            }
-            case hbase -> {
-            }
-            case drds -> {
-            }
-            case clickhouse -> {
-            }
-            case blink -> {
-            }
-            case antspark -> {
-            }
-            case oceanbase_oracle -> {
-            }
-            case polardb -> {
-            }
-            case ali_oracle -> {
-            }
-            case mock -> {
-            }
-            case sybase -> {
-            }
-            case highgo -> {
-            }
-            case greenplum -> {
-            }
-            case gaussdb -> {
-            }
-            case trino -> {
-            }
-            case oscar -> {
-            }
-            case tidb -> {
-            }
-            case tydb -> {
-            }
-            case ingres -> {
-            }
-            case cloudscape -> {
-            }
-            case timesten -> {
-            }
-            case as400 -> {
-            }
-            case sapdb -> {
-            }
-            case kdb -> {
-            }
-            case log4jdbc -> {
-            }
-            case xugu -> {
-            }
-            case firebirdsql -> {
-            }
-            case JSQLConnect -> {
-            }
-            case JTurbo -> {
-            }
-            case interbase -> {
-            }
-            case pointbase -> {
-            }
-            case edbc -> {
-            }
-            case mimer -> {
-            }
-        }
+//        switch (dbType) {
+//            case mysql -> grammar = "@?";
+//            /**
+//             * There are three namespaces for variables – hiveconf, system, and env.
+//             * (Custom variables can also be created in a separate namespace with the define or hivevar option in Hive 0.8.0 and later releases.)
+//             * hiveconf 是默认的namespace
+//             */
+//            case hive -> grammar = "${hiveconf:?}";
+//
+//        }
 
         return  grammar;
     }
@@ -379,34 +183,21 @@ public class DbUtils {
         List<String> functions = new ArrayList<>();
 
         // 实际数据库中可能获取的不全，需要配置补充
-        if (dbType.equals(DbType.oracle)) {
-            Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_functions", functions);
-        } else if (dbType.equals(DbType.mysql)) {
-            Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_functions", functions);
-        } else if (dbType.equals(DbType.hive)) {
-            Utils.loadFromFile("META-INF/druid/parser/hive/builtin_functions", functions);
-        } else if (dbType.equals(DbType.postgresql)) {
-            Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_functions", functions);
-        } else if (dbType.equals(DbType.db2)) {
-            Utils.loadFromFile("META-INF/druid/parser/db2/builtin_functions", functions);
-        } else if (dbType.equals(DbType.mariadb)) {
-            Utils.loadFromFile("META-INF/druid/parser/maria/builtin_functions", functions);
-        } else if (dbType.equals(DbType.sqlserver)) {
-            Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_functions", functions);
-        } else if (dbType.equals(DbType.sybase)) {
-            Utils.loadFromFile("META-INF/druid/parser/sybase/builtin_functions", functions);
-        } else if (dbType.equals(DbType.derby)) {
-            Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
-        } else if (dbType.equals(DbType.h2)) {
-            Utils.loadFromFile("META-INF/druid/parser/h2/builtin_functions", functions);
-        } else if (dbType.equals(DbType.dm)) {
-            Utils.loadFromFile("META-INF/druid/parser/dm/builtin_functions", functions);
-        } else if (dbType.equals(DbType.kingbase)) {
-            Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_functions", functions);
-        } else if (dbType.equals(DbType.gbase)) {
-            Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_functions", functions);
-        } else if (dbType.equals(DbType.oceanbase)) {
-            Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_functions", functions);
+        switch (dbType) {
+            case oracle ->Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_functions", functions);
+            case mysql ->Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_functions", functions);
+            case hive ->Utils.loadFromFile("META-INF/druid/parser/hive/builtin_functions", functions);
+            case postgresql ->Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_functions", functions);
+            case db2 ->Utils.loadFromFile("META-INF/druid/parser/db2/builtin_functions", functions);
+            case mariadb ->Utils.loadFromFile("META-INF/druid/parser/maria/builtin_functions", functions);
+            case sqlserver ->Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_functions", functions);
+            case sapdb ->Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_functions", functions);
+            case derby ->Utils.loadFromFile("META-INF/druid/parser/derby/builtin_functions", functions);
+            case h2 ->Utils.loadFromFile("META-INF/druid/parser/h2/builtin_functions", functions);
+            case dm ->Utils.loadFromFile("META-INF/druid/parser/dm/builtin_functions", functions);
+            case kingbase ->Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_functions", functions);
+            case gbase ->Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_functions", functions);
+            case oceanbase ->Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_functions", functions);
         }
 
         /**
@@ -422,10 +213,15 @@ public class DbUtils {
 
         Set<FunctionInfo> functionInfos = new HashSet<>();
 
+        String subCatalog = "";
         String catalog = "";
         for (String function: functions) {
-            if (function.startsWith("[") && function.endsWith("]")) {
+            if (function.startsWith("[-->") && function.endsWith("]")) {
+                subCatalog = catalog + function.substring(1, function.lastIndexOf("]"));
+                continue;
+            } else if (function.startsWith("[") && function.endsWith("]")) {
                 catalog = function.substring(1, function.lastIndexOf("]"));
+                subCatalog = catalog;
                 continue;
             }
 
@@ -434,56 +230,29 @@ public class DbUtils {
                 separator = ":=";
             }
 
+            // 对内容中存在的':'或“:”做替换处理。以免拆分错误。
+            if (function.contains("':'")) {
+                function = function.replaceAll("':'","'：'");
+            }  else if (function.contains("\":\"")) {
+                function = function.replaceAll("\":\"","\"：\"");
+            }
+
             String[] split = function.split(separator);
             if (split.length < 2) {
                 continue;
             }
 
-            String name = split[0].trim();
-            String signature = split[1].trim();
-            String description = split.length == 3? split[2].trim():"" ;
+            // 替换后恢复
+            List<String> segments = Arrays.stream(split).map(c -> c.replaceAll("：", ":")).toList();
 
-            functionInfos.add(new FunctionInfo(name, catalog, signature));
+            String name = segments.get(0).trim();
+            String signature = segments.get(1).trim();
+            String description = segments.size() == 3? segments.get(2).trim():"" ;
+
+            functionInfos.add(new FunctionInfo(name, subCatalog, signature,description));
         }
 
         return functionInfos;
-    }
-
-
-    /**
-     * 获取函数的使用说明
-     * @param connection 当前数据库连接
-     * @param name 通过getSupportFunctions接口获取到的函数名称
-     * @return 函数描述
-     */
-    public static String getFunctionDescription(Connection connection, String name) {
-        String ret = "";
-
-        DbType dbType = DbTypeKit.getDbType(connection);
-
-        SQLDescribeStatement stmt = new SQLDescribeStatement();
-        stmt.setDbType(dbType);
-        stmt.setObject(new SQLIdentifierExpr("function"));
-        stmt.setColumn(new SQLIdentifierExpr(name));
-
-        DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(connection, stmt.toString());
-
-        if (exec.getStatus().equalsIgnoreCase(ExecResult.FAILED)) {
-            return ret;
-        }
-
-//        ResultSet rs = exec.getBody();
-//        while (true) {
-//            try {
-//                if (!rs.next()) break;
-//                ret = (rs.getString("tab_name"));
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-
-        return ret;
     }
 
     /**
@@ -494,56 +263,34 @@ public class DbUtils {
     public static Set<String> getDbTypes(DbType dbType) {
         HashSet<String> types = new HashSet<String>();
 
-        if (dbType.equals(DbType.oracle)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.mysql)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.hive)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hive/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.postgresql)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.db2)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/db2/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.mariadb)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/maria/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.sqlserver)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.sybase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sybase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.derby)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/derby/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.h2)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/h2/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.dm)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/dm/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.kingbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.gbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.oceanbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.edb)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/edb/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.elastic_search)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.firebirdsql)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/firebirdsql/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.hbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.hsql)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.informix)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/Informix/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.ingres)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/ingres/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.interbase)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/interbase/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.mimer)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/mimer/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.sqlite)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/sqlite/builtin_datatypes", types);
-        } else if (dbType.equals(DbType.teradata)) {
-            com.alibaba.druid.util.Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
+        switch (dbType) {
+            case oracle -> Utils.loadFromFile("META-INF/druid/parser/oracle/builtin_datatypes", types);
+            case mysql -> Utils.loadFromFile("META-INF/druid/parser/mysql/builtin_datatypes", types);
+            case hive -> Utils.loadFromFile("META-INF/druid/parser/hive/builtin_datatypes", types);
+            case postgresql -> Utils.loadFromFile("META-INF/druid/parser/postgresql/builtin_datatypes", types);
+            case db2 -> Utils.loadFromFile("META-INF/druid/parser/db2/builtin_datatypes", types);
+            case mariadb -> Utils.loadFromFile("META-INF/druid/parser/maria/builtin_datatypes", types);
+            case sqlserver -> Utils.loadFromFile("META-INF/druid/parser/sqlserver/builtin_datatypes", types);
+            case sapdb -> Utils.loadFromFile("META-INF/druid/parser/sapdb/builtin_datatypes", types);
+            case derby -> Utils.loadFromFile("META-INF/druid/parser/derby/builtin_datatypes", types);
+            case h2 -> Utils.loadFromFile("META-INF/druid/parser/h2/builtin_datatypes", types);
+            case blink -> Utils.loadFromFile("META-INF/druid/parser/blink/builtin_datatypes", types);
+            case dm -> Utils.loadFromFile("META-INF/druid/parser/dm/builtin_datatypes", types);
+            case kingbase -> Utils.loadFromFile("META-INF/druid/parser/kingbase/builtin_datatypes", types);
+            case gbase -> Utils.loadFromFile("META-INF/druid/parser/gbase/builtin_datatypes", types);
+            case oceanbase -> Utils.loadFromFile("META-INF/druid/parser/oceanbase/builtin_datatypes", types);
+            case edb -> Utils.loadFromFile("META-INF/druid/parser/edb/builtin_datatypes", types);
+            case elastic_search -> Utils.loadFromFile("META-INF/druid/parser/elastic_search/builtin_datatypes", types);
+            case firebirdsql -> Utils.loadFromFile("META-INF/druid/parser/firebirdsql/builtin_datatypes", types);
+            case hbase -> Utils.loadFromFile("META-INF/druid/parser/hbase/builtin_datatypes", types);
+            case hsql -> Utils.loadFromFile("META-INF/druid/parser/hsql/builtin_datatypes", types);
+            case informix -> Utils.loadFromFile("META-INF/druid/parser/Informix/builtin_datatypes", types);
+            case ingres -> Utils.loadFromFile("META-INF/druid/parser/ingres/builtin_datatypes", types);
+            case interbase -> Utils.loadFromFile("META-INF/druid/parser/interbase/builtin_datatypes", types);
+            case mimer -> Utils.loadFromFile("META-INF/druid/parser/mimer/builtin_datatypes", types);
+            case sqlite -> Utils.loadFromFile("META-INF/druid/parser/sqlite/builtin_datatypes", types);
+            case teradata -> Utils.loadFromFile("META-INF/druid/parser/teradata/builtin_datatypes", types);
+            case odps -> Utils.loadFromFile("META-INF/druid/parser/maxcompute/builtin_datatypes", types);
         }
 
         return types;
@@ -577,11 +324,16 @@ public class DbUtils {
         String name;
         String type;
         String signature;
+        String description;
 
         public FunctionInfo(String name, String type, String signature) {
+            this(name, type, signature, "");
+        }
+        public FunctionInfo(String name, String type, String signature, String description) {
             this.name = name;
             this.type = type;
             this.signature = signature;
+            this.description = description;
         }
     }
 
