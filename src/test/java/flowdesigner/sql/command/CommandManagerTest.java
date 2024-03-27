@@ -11,6 +11,7 @@ import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.impl.DBExecuteImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFunctionsImpl;
+import flowdesigner.jdbc.command.model.DataTypeEntity;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
@@ -575,11 +576,15 @@ class CommandManagerTest {
     @Test
     void testTypeInfo() throws SQLException {
         connection = getSQLServer();
-        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
-            put("dbType","sqlserver");
+        ExecResult<List<DataTypeEntity>> cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
+            put("dbType","SQLServer");
         }});
-        String s = JSON.toJSONString(cc);
-        System.out.println(s);
+//        String s = JSON.toJSONString(cc);
+//        System.out.println(s);
+        List<DataTypeEntity> body = cc.getBody();
+        for (DataTypeEntity entity: body) {
+            System.out.println("put(\"" + entity.getTYPE_NAME().toUpperCase() + "\"," + entity.getDATA_TYPE() + ");");
+        }
 
     }
 
