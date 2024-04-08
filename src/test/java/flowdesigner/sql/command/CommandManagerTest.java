@@ -41,11 +41,11 @@ class CommandManagerTest {
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
         properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-        properties.setProperty("url","jdbc:hive2://10.247.53.17:10000");
+        properties.setProperty("url","jdbc:hive2://172.30.224.36:10000");
 //        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
 //        properties.setProperty("url","jdbc:mysql://localhost:3306");
-        properties.setProperty("username","root");
-        properties.setProperty("password","123456");
+        properties.setProperty("username","admin");
+        properties.setProperty("password","admin");
         properties.setProperty("druid.failFast","true");
 //        properties.setProperty("connectTimeout","3000");
         dynamicDriver.set_propertyInfo(properties);
@@ -271,9 +271,10 @@ class CommandManagerTest {
     }
     @Test
     void testExecuteSelect() throws SQLException, InterruptedException {
+        connection = getHive();
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(0,connection, "SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm FROM std_pcode.t99_cala_stat_index_mapping");
+        var exec = dbExecute.exec(0,connection, "SELECT destination_participant_id FROM udms_sdata.cut_pi_exit_cms_filtered");
 
         String s = JSON.toJSONString(exec);
         System.out.println(s);
@@ -384,10 +385,10 @@ class CommandManagerTest {
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-            put("schemaPattern","bmws_pcode");
+            put("schemaPattern","bmnc_pcode");
             put("types","TABLE");
 //            put("schemaPattern","test");
-            put("tables","t99_stat_index_cd");
+            put("tables","calendar");
         }});
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(cc);
