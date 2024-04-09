@@ -262,7 +262,7 @@ class CommandManagerTest {
     void testExecuteUpdate() throws SQLException {
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(0,connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
+        var exec = dbExecute.exec(0,connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;",200);
 
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(exec);
@@ -274,7 +274,7 @@ class CommandManagerTest {
         connection = getHive();
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(0,connection, "SELECT destination_participant_id FROM udms_sdata.cut_pi_exit_cms_filtered");
+        var exec = dbExecute.exec(0,connection, "SELECT destination_participant_id FROM udms_sdata.cut_pi_exit_cms_filtered",200);
 
         String s = JSON.toJSONString(exec);
         System.out.println(s);

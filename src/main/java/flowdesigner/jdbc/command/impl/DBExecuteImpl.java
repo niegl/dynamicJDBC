@@ -40,6 +40,13 @@ public class DBExecuteImpl {
     private PreparedStatement stmt;
     private ResultSet rs;
 
+    /**
+     * 当前查询相关的信息
+     */
+    private int fetch ;
+    int appId;
+    int queryId;
+
     static {
         try {
             String dlljvmpath = System.getProperty("dlljvmpath");
@@ -61,11 +68,13 @@ public class DBExecuteImpl {
      * or (3) row data for SQL select statements
      * @throws SQLException
      */
-    public RunningStatus<Object> exec(int appId, @NotNull Connection conn, @NotNull String scripts) {
+    public RunningStatus<Object> exec(int appId, @NotNull Connection conn, @NotNull String scripts,int num) {
 
         log.info(scripts);
 
-        int queryId = count.incrementAndGet();
+        fetch = num;
+        this.appId = appId;
+        this.queryId = count.incrementAndGet();
 
         final RunningStatus<Object>[] runningStatus = new RunningStatus[]{new RunningStatus<>()};
         runningStatus[0].setStatus(ExecResult.SUCCESS);
@@ -170,7 +179,7 @@ public class DBExecuteImpl {
                 case WHO :
                 case WHOAMI :
                     rs = stmt.executeQuery();
-                    QueryData data = queryNext(200);
+                    QueryData data = queryNext(fetch);
                     runningStatus.setResult(data);
                     runningStatus.setHasQueryData(true);
                     break;
@@ -273,6 +282,18 @@ public class DBExecuteImpl {
 
     }
 
+    public RunningStatus<Object> queryNextStatus(int num) {
+        final RunningStatus<Object>[] runningStatus = new RunningStatus[]{new RunningStatus<>()};
+        runningStatus[0].setStatus(ExecResult.SUCCESS);
+        runningStatus[0].setQueryId(queryId);
+
+        QueryData data = queryNext(fetch);
+        runningStatus[0].setResult(data);
+        runningStatus[0].setHasQueryData(true);
+
+        return runningStatus[0];
+    }
+
     /**
      * 获取剩余查询结果
      * @param num 获取行数
@@ -286,6 +307,10 @@ public class DBExecuteImpl {
 
         try {
             int i = 0;
+
+            if (rs == null || rs.isClosed()) {
+                return new QueryData();
+            }
 
             // 获取元数据表头
             ResultSetMetaData rsMeta = rs.getMetaData();
@@ -377,6 +402,10 @@ public class DBExecuteImpl {
      * 用于将查询出来的数据进行header和data数据分离保存
      */
     public static class QueryData {
+        public QueryData() {
+
+        }
+
         public QueryData(List<String> head, List<String> type,List<List<Object>> data) {
             this.head = head;
             this.type = type;
@@ -389,6 +418,8 @@ public class DBExecuteImpl {
         List<String> type = new ArrayList<>();
         @Getter
         List<List<Object>> data = new ArrayList<>();
+
+
     }
 
 }
