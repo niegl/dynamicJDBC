@@ -80,21 +80,20 @@ public class DBExecuteImpl {
         runningStatus[0].setStatus(ExecResult.SUCCESS);
         runningStatus[0].setQueryId(queryId);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                     execute(conn, scripts, runningStatus[0]);
-                } catch (ParserException e) {
-                    runningStatus[0].setStatus(ExecResult.FAILED);
-                    runningStatus[0].setResult("SQL ParserException :" + e.getMessage());
-                } catch (SQLException | IllegalArgumentException e) {
-                    runningStatus[0].setStatus(ExecResult.FAILED);
-                    runningStatus[0].setResult(e.getMessage());
-                }
-
+        new Thread(() -> {
+            try {
+                execute(conn, scripts, runningStatus[0]);
                 String jsonString = JSON.toJSONString(runningStatus[0]);
                 nativeCallback(appId, queryId, jsonString);
+            } catch (ParserException e) {
+                runningStatus[0].setStatus(ExecResult.FAILED);
+                runningStatus[0].setResult("SQL ParserException :" + e.getMessage());
+            } catch (SQLException | IllegalArgumentException e) {
+                runningStatus[0].setStatus(ExecResult.FAILED);
+                runningStatus[0].setResult(e.getMessage());
+            } catch (UnsatisfiedLinkError e) {
+                runningStatus[0].setStatus(ExecResult.FAILED);
+                runningStatus[0].setResult(e.getMessage());
             }
         }).start();
 
@@ -299,7 +298,7 @@ public class DBExecuteImpl {
      * @param num 获取行数
      * @return
      */
-    public QueryData queryNext(int num) {
+    private QueryData queryNext(int num) {
 
         List<String> header = new ArrayList<>();
         List<String> type = new ArrayList<>();

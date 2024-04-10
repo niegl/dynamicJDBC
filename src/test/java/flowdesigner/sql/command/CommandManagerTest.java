@@ -279,7 +279,7 @@ class CommandManagerTest {
         String s = JSON.toJSONString(exec);
         System.out.println(s);
 
-        var exec1 =dbExecute.queryNext(200);
+        var exec1 =dbExecute.queryNextStatus(200);
         String s1 = JSON.toJSONString(exec1);
         System.out.println(s1);
 
