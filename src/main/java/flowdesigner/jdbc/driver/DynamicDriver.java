@@ -2,7 +2,6 @@ package flowdesigner.jdbc.driver;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
-import com.alibaba.druid.pool.GetConnectionTimeoutException;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.JdbcConstantKey;
 import lombok.Getter;
@@ -105,7 +104,7 @@ public class DynamicDriver {
     /**
      * 获取连接
      */
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         String errString = "java.net.ConnectException: Connection timed out: connect";
 
         if (_ds == null) {

@@ -4,7 +4,6 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson2.JSON;
-import flowdesigner.db.DbUtils;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
@@ -19,7 +18,6 @@ import flowdesigner.db.operators.SQLOperatorUtils;
 import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
@@ -29,7 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
-import java.sql.Types;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -50,13 +48,8 @@ class CommandManagerTest {
 //        properties.setProperty("connectTimeout","3000");
         dynamicDriver.set_propertyInfo(properties);
 
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
 
         DataSource dataSource = dynamicDriver.getDataSource();
@@ -82,13 +75,8 @@ class CommandManagerTest {
         properties.setProperty("druid.failFast","true");
         dynamicDriver.set_propertyInfo(properties);
 
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
         return connection;
     }
@@ -103,13 +91,8 @@ class CommandManagerTest {
         properties.setProperty("url","jdbc:impala://10.247.53.17:21050");
         dynamicDriver.set_propertyInfo(properties);
 
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
         return connection;
     }
@@ -130,13 +113,8 @@ class CommandManagerTest {
         properties.setProperty("password","P@ssw0rd01");
         dynamicDriver.set_propertyInfo(properties);
 
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         System.out.println(dynamicDriver.get_errMessage());
         assertNotNull(connection);
         return connection;
@@ -343,12 +321,8 @@ class CommandManagerTest {
         properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
         dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
 
     }

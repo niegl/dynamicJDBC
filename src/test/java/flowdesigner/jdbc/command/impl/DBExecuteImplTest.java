@@ -7,9 +7,8 @@ import flowdesigner.jdbc.driver.DynamicDriver;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +23,7 @@ class DBExecuteImplTest {
 
         switch (dbType) {
             case hive -> {
-                dynamicDriver = new DynamicDriver("C:\\test");
+                dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
                 Properties properties = new Properties();
                 properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
                 properties.setProperty("url","jdbc:hive2://172.30.224.36:10000");
@@ -41,14 +40,12 @@ class DBExecuteImplTest {
                 properties.setProperty("password","123456");
                 dynamicDriver.set_propertyInfo(properties);
             }
+            default -> {
+                return  null;
+            }
         }
 
-        try {
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
 
         return connection;
@@ -645,12 +642,37 @@ class DBExecuteImplTest {
     }
 
     @Test
+    void execCreateBucket() throws SQLException {
+        exec(DbType.hive,"CREATE TABLE udms_pddl.t80_od_dqc_result (\n" +
+                "\tod_id STRING COMMENT 'OD编号',\n" +
+                "\tdqc_type_cd STRING COMMENT '质量控制类型代码',\n" +
+                "\tcolumn1 STRING COMMENT '扩展字段1',\n" +
+                "\tcolumn2 STRING COMMENT '扩展字段2',\n" +
+                "\tcolumn3 STRING COMMENT '扩展字段2',\n" +
+                "\tdata_dt STRING\n" +
+                ")\n" +
+                "CLUSTERED BY ( \n" +
+                "  od_id) \n" +
+                "INTO 8 BUCKETS \n" +
+                "ROW FORMAT SERDE \n" +
+                "  'org.apache.hadoop.hive.ql.io.orc.OrcSerde' \n" +
+                "STORED AS INPUTFORMAT \n" +
+                "  'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' \n" +
+                "OUTPUTFORMAT \n" +
+                "  'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'");
+    }
+
+    @Test
     void execShowDatabases() throws SQLException {
         exec(DbType.hive,"show databases;");
     }
 
     void exec(DbType dbType,String scripts) throws SQLException {
         getConnection(dbType);
+
+//        PreparedStatement stmt  = connection.prepareStatement(scripts);
+//        int updateCount = stmt.executeUpdate();
+
         DBExecuteImpl dbExecute = new DBExecuteImpl();
         DBExecuteImpl.RunningStatus<Object> exec = dbExecute.exec(0,connection, scripts,200);
         String status = exec.getStatus();
@@ -660,7 +682,7 @@ class DBExecuteImplTest {
         }
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(100000000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
