@@ -81,17 +81,26 @@ public class DBExecuteImpl {
 
         new Thread(() -> {
             try {
+
                 execute(conn, scripts, runningStatus[0]);
-                String jsonString = JSON.toJSONString(runningStatus[0]);
-                nativeCallback(appId, queryId, jsonString);
+
             } catch (ParserException e) {
                 runningStatus[0].setStatus(ExecResult.FAILED);
                 runningStatus[0].setResult("SQL ParserException :" + e.getMessage());
                 log.info("SQL ParserException :{}", e.getMessage());
-            } catch (SQLException | IllegalArgumentException | UnsatisfiedLinkError e) {
+            } catch (SQLException | IllegalArgumentException e) {
                 runningStatus[0].setStatus(ExecResult.FAILED);
                 runningStatus[0].setResult(e.getMessage());
                 log.info(e.getMessage());
+            } finally {
+                try {
+                    String jsonString = JSON.toJSONString(runningStatus[0]);
+                    nativeCallback(appId, queryId, jsonString);
+                } catch (IllegalArgumentException | UnsatisfiedLinkError e) {
+                    runningStatus[0].setStatus(ExecResult.FAILED);
+                    runningStatus[0].setResult(e.getMessage());
+                    log.info(e.getMessage());
+                }
             }
         }).start();
 
