@@ -1666,14 +1666,19 @@ public class SQLTest {
     }
     @Test
     void testParseCreate() throws SQLSyntaxErrorException {
-        String sql = "CREATE TABLE IF NOT EXISTS `runoob_tbl`(\n" +
-                "   `runoob_id` INT UNSIGNED AUTO_INCREMENT,\n" +
-                "   `runoob_title` VARCHAR(100) NOT NULL,\n" +
-                "   `runoob_author` VARCHAR(40) NOT NULL,\n" +
-                "   `submission_date` DATE,\n" +
-                "   PRIMARY KEY ( `runoob_id` )\n" +
-                ")ENGINE=InnoDB DEFAULT CHARSET=utf8;";
-        parser(sql, "mysql");
+        String sql = "CREATE TABLE `udms_pddl.t98_od_route_dd`(\n" +
+                "  `od_id` string COMMENT 'OD编号', \n" +
+                "  `data_dt` string COMMENT '数据日期')\n" +
+                "CLUSTERED BY ( \n" +
+                "  od_id) \n" +
+                "INTO 8 BUCKETS\n" +
+                "ROW FORMAT SERDE \n" +
+                "  'org.apache.hadoop.hive.ql.io.orc.OrcSerde' \n" +
+                "STORED AS INPUTFORMAT \n" +
+                "  'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat' \n" +
+                "OUTPUTFORMAT \n" +
+                "  'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat';";
+        parser(sql, "hive");
     }
 
     @Test

@@ -3,10 +3,7 @@ package flowdesigner.jdbc.driver;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Properties;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class DynamicDriverTest {
 
@@ -24,12 +21,7 @@ class DynamicDriverTest {
         properties.setProperty("maxWait","3000");
         dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
-        try {
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
+        connection = dynamicDriver.getConnection();
         System.out.println(dynamicDriver.get_errMessage());
     }
 }

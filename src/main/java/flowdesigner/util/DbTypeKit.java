@@ -19,7 +19,6 @@ package flowdesigner.util;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.util.JdbcUtils;
 import flowdesigner.jdbc.driver.DynamicDriver;
-import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Connection;

@@ -32,13 +32,8 @@ class DynamicDriverTest {
         properties.setProperty("maxWait","3000");
         dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
 
         JdbcUtils.executeQuery(connection,"select 'x'", new ArrayList<>());
@@ -86,13 +81,8 @@ class DynamicDriverTest {
         properties.setProperty("maxWait","3000");
         dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
 
         assert connection != null;
         return dynamicDriver;
@@ -108,13 +98,8 @@ class DynamicDriverTest {
         properties.setProperty("maxWait","3000");
         dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
 
         assert connection != null;
         return dynamicDriver;
@@ -130,13 +115,8 @@ class DynamicDriverTest {
         properties.setProperty("maxWait","3000");
         dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
 
         assert connection != null;
         return dynamicDriver;

@@ -4,13 +4,13 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson2.JSON;
-import flowdesigner.db.DbUtils;
 import flowdesigner.jdbc.command.CommandKey;
 import flowdesigner.jdbc.command.CommandManager;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.jdbc.command.impl.DBExecuteImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFKReferenceImpl;
 import flowdesigner.jdbc.command.impl.DBReverseGetFunctionsImpl;
+import flowdesigner.jdbc.command.model.DataTypeEntity;
 import flowdesigner.jdbc.command.model.TableEntity;
 import flowdesigner.jdbc.driver.DynamicDriver;
 import flowdesigner.jdbc.command.model.FKColumnField;
@@ -18,7 +18,6 @@ import flowdesigner.db.operators.SQLOperatorUtils;
 import flowdesigner.util.raw.kit.StringKit;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
@@ -28,7 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
-import java.sql.Types;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
@@ -40,22 +39,17 @@ class CommandManagerTest {
 //        DynamicDriver dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
         Properties properties = new Properties();
         properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
-        properties.setProperty("url","jdbc:hive2://10.247.53.17:10000");
+        properties.setProperty("url","jdbc:hive2://172.30.224.36:10000");
 //        properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
 //        properties.setProperty("url","jdbc:mysql://localhost:3306");
-        properties.setProperty("username","root");
-        properties.setProperty("password","123456");
+        properties.setProperty("username","admin");
+        properties.setProperty("password","admin");
         properties.setProperty("druid.failFast","true");
 //        properties.setProperty("connectTimeout","3000");
         dynamicDriver.set_propertyInfo(properties);
 
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
 
         DataSource dataSource = dynamicDriver.getDataSource();
@@ -81,13 +75,8 @@ class CommandManagerTest {
         properties.setProperty("druid.failFast","true");
         dynamicDriver.set_propertyInfo(properties);
 
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
         return connection;
     }
@@ -102,13 +91,8 @@ class CommandManagerTest {
         properties.setProperty("url","jdbc:impala://10.247.53.17:21050");
         dynamicDriver.set_propertyInfo(properties);
 
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            System.out.println(dynamicDriver.get_errMessage());
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
         return connection;
     }
@@ -129,13 +113,8 @@ class CommandManagerTest {
         properties.setProperty("password","P@ssw0rd01");
         dynamicDriver.set_propertyInfo(properties);
 
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         System.out.println(dynamicDriver.get_errMessage());
         assertNotNull(connection);
         return connection;
@@ -261,7 +240,7 @@ class CommandManagerTest {
     void testExecuteUpdate() throws SQLException {
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(0,connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;");
+        var exec = dbExecute.exec(0,connection, "ALTER TABLE test.tb_emp6 DROP FOREIGN KEY fk_emp_dept1;",200);
 
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(exec);
@@ -270,14 +249,15 @@ class CommandManagerTest {
     }
     @Test
     void testExecuteSelect() throws SQLException, InterruptedException {
+        connection = getHive();
         long start = Instant.now().toEpochMilli();
         DBExecuteImpl dbExecute = new DBExecuteImpl();
-        var exec = dbExecute.exec(0,connection, "SELECT dectm_calc_stat_index_cd, dectime_stat_index_cd, move_time_type_cd, stat_index_type_cd, start_tm, end_tm, calc_stat_index_cd, stat_index_cd, stat_start_tm, stat_end_tm FROM std_pcode.t99_cala_stat_index_mapping");
+        var exec = dbExecute.exec(0,connection, "SELECT destination_participant_id FROM udms_sdata.cut_pi_exit_cms_filtered",200);
 
         String s = JSON.toJSONString(exec);
         System.out.println(s);
 
-        var exec1 =dbExecute.queryNext(200);
+        var exec1 =dbExecute.queryNextStatus(200);
         String s1 = JSON.toJSONString(exec1);
         System.out.println(s1);
 
@@ -341,12 +321,8 @@ class CommandManagerTest {
         properties.setProperty("url","jdbc:hive2://10.248.190.13:10000");
         dynamicDriver.set_propertyInfo(properties);
         Connection connection = null;
-        try {
-//            dynamicDriver.createDataSource();
-            connection = dynamicDriver.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        //            dynamicDriver.createDataSource();
+        connection = dynamicDriver.getConnection();
         assertNotNull(connection);
 
     }
@@ -383,10 +359,10 @@ class CommandManagerTest {
 
         long start = Instant.now().toEpochMilli();
         ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTableDDL,new HashMap<String,String>(){{
-            put("schemaPattern","bmws_pcode");
+            put("schemaPattern","bmnc_pcode");
             put("types","TABLE");
 //            put("schemaPattern","test");
-            put("tables","t99_stat_index_cd");
+            put("tables","calendar");
         }});
         long end = Instant.now().toEpochMilli();
         String s = JSON.toJSONString(cc);
@@ -575,11 +551,15 @@ class CommandManagerTest {
     @Test
     void testTypeInfo() throws SQLException {
         connection = getSQLServer();
-        ExecResult cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
-            put("dbType","sqlserver");
+        ExecResult<List<DataTypeEntity>> cc = CommandManager.exeCommand(connection, CommandKey.CMD_DBReverseGetTypeInfo,new HashMap<String,String>(){{
+            put("dbType","SQLServer");
         }});
-        String s = JSON.toJSONString(cc);
-        System.out.println(s);
+//        String s = JSON.toJSONString(cc);
+//        System.out.println(s);
+        List<DataTypeEntity> body = cc.getBody();
+        for (DataTypeEntity entity: body) {
+            System.out.println("put(\"" + entity.getTYPE_NAME().toUpperCase() + "\"," + entity.getDATA_TYPE() + ");");
+        }
 
     }
 

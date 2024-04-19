@@ -22,6 +22,13 @@ public class SQLExpreTest {
     }
 
     @org.junit.jupiter.api.Test
+    public void testCHAR_LITERAL(){
+        DbType dbType = JdbcConstants.HIVE;
+        SQLExpr expr = SQLUtils.toSQLExpr("CHAR 'abcd'", dbType);
+        System.out.println(expr);
+    }
+
+    @org.junit.jupiter.api.Test
     void testFuntions() throws SQLSyntaxErrorException {
         DbType dbType = JdbcConstants.HIVE;
         String sql = "to_date(CONCAT(SUBSTR(${TXDATE}, 1, 4), '-', SUBSTR(${TXDATE}, 5, 2), '-', SUBSTR(${TXDATE}, 7, 2)))";

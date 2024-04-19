@@ -3,8 +3,7 @@ package flowdesigner.jdbc.command.impl;
 import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.parser.ParserException;
-import com.alibaba.druid.sql.parser.SQLParserUtils;
+import com.alibaba.druid.sql.parser.*;
 import com.alibaba.druid.sql.parser.SQLType;
 import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.fastjson2.JSON;
@@ -14,6 +13,7 @@ import flowdesigner.util.DbTypeKit;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -40,6 +40,13 @@ public class DBExecuteImpl {
     private PreparedStatement stmt;
     private ResultSet rs;
 
+    /**
+     * 当前查询相关的信息
+     */
+    private int fetch ;
+    int appId;
+    int queryId;
+
     static {
         try {
             String dlljvmpath = System.getProperty("dlljvmpath");
@@ -61,31 +68,40 @@ public class DBExecuteImpl {
      * or (3) row data for SQL select statements
      * @throws SQLException
      */
-    public RunningStatus<Object> exec(int appId, @NotNull Connection conn, @NotNull String scripts) {
+    public RunningStatus<Object> exec(int appId, @NotNull Connection conn, @NotNull String scripts,int num) {
 
         log.info(scripts);
 
-        int queryId = count.incrementAndGet();
+        fetch = num;
+        this.appId = appId;
+        this.queryId = count.incrementAndGet();
 
         final RunningStatus<Object>[] runningStatus = new RunningStatus[]{new RunningStatus<>()};
         runningStatus[0].setStatus(ExecResult.SUCCESS);
         runningStatus[0].setQueryId(queryId);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
+            try {
+
+                execute(conn, scripts, runningStatus[0]);
+
+            } catch (ParserException e) {
+                runningStatus[0].setStatus(ExecResult.FAILED);
+                runningStatus[0].setResult("SQL ParserException :" + e.getMessage());
+                log.info("SQL ParserException :{}", e.getMessage());
+            } catch (SQLException | IllegalArgumentException e) {
+                runningStatus[0].setStatus(ExecResult.FAILED);
+                runningStatus[0].setResult(e.getMessage());
+                log.info(e.getMessage());
+            } finally {
                 try {
-                     execute(conn, scripts, runningStatus[0]);
-                } catch (ParserException e) {
-                    runningStatus[0].setStatus(ExecResult.FAILED);
-                    runningStatus[0].setResult("SQL ParserException :" + e.getMessage());
-                } catch (SQLException | IllegalArgumentException e) {
+                    String jsonString = JSON.toJSONString(runningStatus[0]);
+                    nativeCallback(appId, queryId, jsonString);
+                } catch (IllegalArgumentException | UnsatisfiedLinkError e) {
                     runningStatus[0].setStatus(ExecResult.FAILED);
                     runningStatus[0].setResult(e.getMessage());
+                    log.info(e.getMessage());
                 }
-
-                String jsonString = JSON.toJSONString(runningStatus[0]);
-                nativeCallback(appId, queryId, jsonString);
             }
         }).start();
 
@@ -109,168 +125,183 @@ public class DBExecuteImpl {
             throw new IllegalArgumentException("database is not supported");
         }
 
-        int i = 0;
-        List<SQLStatement> statements = SQLUtils.parseStatements(scripts, dbType);
-        for (SQLStatement statement: statements) {
-            statement.setAfterSemi(false);
-            String sql = statement.toString();
-            runningStatus.setStep(++i);
-
-            SQLType sqlType = SQLParserUtils.getSQLTypeV2(sql, dbType);
-            if (sqlType == SQLType.UNKNOWN || sqlType == SQLType.ERROR ) {
-                throw new SQLException(sql + ": SQLType is UNKNOWN or ERROR");
-            }
-
-            runningStatus.setStatementType(sqlType.name());
-
-            if (stmt != null) {
-                close(stmt);
-            }
-            if (rs != null) {
-                close(rs);
-            }
-
-            stmt = conn.prepareStatement(sql);
-            switch (sqlType) {
-
-                case SELECT:
-                case ANALYZE :
-                case EXPLAIN :
-                case SHOW :
-                case SHOW_TABLES :
-                case SHOW_USERS :
-                case SHOW_PARTITIONS :
-                case SHOW_CATALOGS :
-                case SHOW_FUNCTIONS :
-                case SHOW_ROLE :
-                case SHOW_ROLES :
-                case SHOW_PACKAGE :
-                case SHOW_PACKAGES :
-                case SHOW_CHANGELOGS :
-                case SHOW_ACL :
-                case SHOW_RECYCLEBIN :
-                case SHOW_VARIABLES :
-                case SHOW_HISTORY :
-                case SHOW_GRANT :
-                case SHOW_GRANTS :
-                case SHOW_CREATE_TABLE :
-                case SHOW_STATISTIC :
-                case SHOW_STATISTIC_LIST :
-                case SHOW_LABEL :
-                case DESC :
-                case DUMP_DATA :
-                case LIST :
-                case LIST_USERS :
-                case LIST_TABLES :
-                case LIST_ROLES :
-                case LIST_TENANT_ROLES :
-                case LIST_TRUSTEDPROJECTS :
-                case LIST_ACCOUNTPROVIDERS :
-                case LIST_TEMPORARY_OUTPUT :
-                case WHO :
-                case WHOAMI :
-                    rs = stmt.executeQuery();
-                    QueryData data = queryNext(200);
-                    runningStatus.setResult(data);
-                    runningStatus.setHasQueryData(true);
-                    break;
-                case UPDATE :
-                case INSERT_SELECT :
-                case INSERT_INTO_SELECT :
-                case INSERT_OVERWRITE_SELECT :
-                case INSERT_VALUES :
-                case INSERT_INTO_VALUES :
-                case INSERT_OVERWRITE_VALUES :
-                case INSERT :
-                case INSERT_INTO :
-                case INSERT_OVERWRITE :
-                case INSERT_MULTI :
-                case DELETE :
-                case MERGE :
-                case CREATE :
-                case ALTER :
-                case DROP :
-                case TRUNCATE :
-                case REPLACE :
-                case SET :
-                case SET_PROJECT :
-                case SET_LABEL :
-                case GRANT :
-                case REVOKE :
-                case COMMIT :
-                case ROLLBACK :
-                case USE :
-                case KILL :
-                case MSCK :
-                case ADD_USER :
-                case REMOVE_USER :
-                case REMOVE_RESOURCE :
-                case CREATE_USER :
-                case CREATE_TABLE :
-                case CREATE_TABLE_AS_SELECT :
-                case CREATE_VIEW :
-                case CREATE_FUNCTION :
-                case CREATE_ROLE :
-                case CREATE_PACKAGE :
-                case DROP_USER :
-                case DROP_TABLE :
-                case DROP_VIEW :
-                case DROP_MATERIALIZED_VIEW :
-                case DROP_FUNCTION :
-                case DROP_ROLE :
-                case DROP_RESOURCE :
-                case ALTER_USER :
-                case ALTER_TABLE :
-                case ALTER_VIEW :
-                case READ :
-                case ADD_TABLE :
-                case ADD_FUNCTION :
-                case ADD_RESOURCE :
-                case ADD_TRUSTEDPROJECT :
-                case ADD_VOLUME :
-                case ADD_STATISTIC :
-                case ADD_ACCOUNTPROVIDER :
-                case TUNNEL_DOWNLOAD :
-                case UPLOAD :
-                case SCRIPT :
-                case COUNT :
-                case ADD :
-                case CLONE :
-                case LOAD :
-                case INSTALL :
-                case UNLOAD :
-                case ALLOW :
-                case PURGE :
-                case RESTORE :
-                case EXSTORE :
-                case UNDO :
-                case REMOVE :
-                case EMPTY :
-                case ALTER_TABLE_ADD_PARTITION :
-                case ALTER_TABLE_MERGE_PARTITION :
-                case ALTER_TABLE_DROP_PARTITION :
-                case ALTER_TABLE_RENAME_PARTITION :
-                case ALTER_TABLE_SET_LIFECYCLE :
-                case ALTER_TABLE_ENABLE_LIFECYCLE :
-                case ALTER_TABLE_DISABLE_LIFECYCLE :
-                case ALTER_TABLE_RENAME :
-                case ALTER_TABLE_ADD_COLUMN :
-                case ALTER_TABLE_RENAME_COLUMN :
-                case ALTER_TABLE_ALTER_COLUMN :
-                case ALTER_TABLE_SET_TBLPROPERTIES :
-                case ALTER_TABLE_SET_COMMENT :
-                case ALTER_TABLE_TOUCH :
-                case ALTER_TABLE_CHANGE_OWNER :
-                case MULTI :
-                case WITH :
-                    int affected = JdbcUtils.executeUpdate(conn, sql, Collections.emptyList());
-                    runningStatus.setResult("Updated Rows:" + affected);
-                    break;
-                case SET_UNKNOWN :
-                    break;
-            }
+        // 删除最后一个分号;
+        if (scripts != null && !scripts.isEmpty() && scripts.charAt(scripts.length() - 1) == ';') {
+            scripts = scripts.substring(0, scripts.length() - 1);
         }
 
+        SQLType sqlType = SQLParserUtils.getSQLTypeV2(scripts, dbType);
+        if (sqlType == SQLType.UNKNOWN || sqlType == SQLType.ERROR ) {
+            throw new SQLException(scripts + ": SQLType is UNKNOWN or ERROR");
+        }
+
+        runningStatus.setStep(1);
+        runningStatus.setStatementType(sqlType.name());
+
+        if (stmt != null) {
+            close(stmt);
+        }
+        if (rs != null) {
+            close(rs);
+        }
+
+        stmt = conn.prepareStatement(scripts);
+        switch (sqlType) {
+
+            case SELECT:
+            case ANALYZE :
+            case EXPLAIN :
+            case SHOW :
+            case SHOW_TABLES :
+            case SHOW_USERS :
+            case SHOW_PARTITIONS :
+            case SHOW_CATALOGS :
+            case SHOW_FUNCTIONS :
+            case SHOW_ROLE :
+            case SHOW_ROLES :
+            case SHOW_PACKAGE :
+            case SHOW_PACKAGES :
+            case SHOW_CHANGELOGS :
+            case SHOW_ACL :
+            case SHOW_RECYCLEBIN :
+            case SHOW_VARIABLES :
+            case SHOW_HISTORY :
+            case SHOW_GRANT :
+            case SHOW_GRANTS :
+            case SHOW_CREATE_TABLE :
+            case SHOW_STATISTIC :
+            case SHOW_STATISTIC_LIST :
+            case SHOW_LABEL :
+            case DESC :
+            case DUMP_DATA :
+            case LIST :
+            case LIST_USERS :
+            case LIST_TABLES :
+            case LIST_ROLES :
+            case LIST_TENANT_ROLES :
+            case LIST_TRUSTEDPROJECTS :
+            case LIST_ACCOUNTPROVIDERS :
+            case LIST_TEMPORARY_OUTPUT :
+            case WHO :
+            case WHOAMI :
+                rs = stmt.executeQuery();
+                QueryData data = queryNext(fetch);
+                runningStatus.setResult(data);
+                runningStatus.setHasQueryData(true);
+                break;
+            case UPDATE :
+            case INSERT_SELECT :
+            case INSERT_INTO_SELECT :
+            case INSERT_OVERWRITE_SELECT :
+            case INSERT_VALUES :
+            case INSERT_INTO_VALUES :
+            case INSERT_OVERWRITE_VALUES :
+            case INSERT :
+            case INSERT_INTO :
+            case INSERT_OVERWRITE :
+            case INSERT_MULTI :
+            case DELETE :
+            case MERGE :
+            case CREATE :
+            case ALTER :
+            case DROP :
+            case TRUNCATE :
+            case REPLACE :
+            case SET :
+            case SET_PROJECT :
+            case SET_LABEL :
+            case GRANT :
+            case REVOKE :
+            case COMMIT :
+            case ROLLBACK :
+            case USE :
+            case KILL :
+            case MSCK :
+            case ADD_USER :
+            case REMOVE_USER :
+            case REMOVE_RESOURCE :
+            case CREATE_USER :
+            case CREATE_TABLE :
+            case CREATE_TABLE_AS_SELECT :
+            case CREATE_VIEW :
+            case CREATE_FUNCTION :
+            case CREATE_ROLE :
+            case CREATE_PACKAGE :
+            case DROP_USER :
+            case DROP_TABLE :
+            case DROP_VIEW :
+            case DROP_MATERIALIZED_VIEW :
+            case DROP_FUNCTION :
+            case DROP_ROLE :
+            case DROP_RESOURCE :
+            case ALTER_USER :
+            case ALTER_TABLE :
+            case ALTER_VIEW :
+            case READ :
+            case ADD_TABLE :
+            case ADD_FUNCTION :
+            case ADD_RESOURCE :
+            case ADD_TRUSTEDPROJECT :
+            case ADD_VOLUME :
+            case ADD_STATISTIC :
+            case ADD_ACCOUNTPROVIDER :
+            case TUNNEL_DOWNLOAD :
+            case UPLOAD :
+            case SCRIPT :
+            case COUNT :
+            case ADD :
+            case CLONE :
+            case LOAD :
+            case INSTALL :
+            case UNLOAD :
+            case ALLOW :
+            case PURGE :
+            case RESTORE :
+            case EXSTORE :
+            case UNDO :
+            case REMOVE :
+            case EMPTY :
+            case ALTER_TABLE_ADD_PARTITION :
+            case ALTER_TABLE_MERGE_PARTITION :
+            case ALTER_TABLE_DROP_PARTITION :
+            case ALTER_TABLE_RENAME_PARTITION :
+            case ALTER_TABLE_SET_LIFECYCLE :
+            case ALTER_TABLE_ENABLE_LIFECYCLE :
+            case ALTER_TABLE_DISABLE_LIFECYCLE :
+            case ALTER_TABLE_RENAME :
+            case ALTER_TABLE_ADD_COLUMN :
+            case ALTER_TABLE_RENAME_COLUMN :
+            case ALTER_TABLE_ALTER_COLUMN :
+            case ALTER_TABLE_SET_TBLPROPERTIES :
+            case ALTER_TABLE_SET_COMMENT :
+            case ALTER_TABLE_TOUCH :
+            case ALTER_TABLE_CHANGE_OWNER :
+            case MULTI :
+            case WITH :
+                int updateCount = 0;
+                try {
+                    updateCount = stmt.executeUpdate();
+                } finally {
+                    close((Statement)stmt);
+                }
+                runningStatus.setResult("Updated Rows:" + updateCount);
+                break;
+            case SET_UNKNOWN :
+                break;
+        }
+
+    }
+
+    public RunningStatus<Object> queryNextStatus(int num) {
+        final RunningStatus<Object>[] runningStatus = new RunningStatus[]{new RunningStatus<>()};
+        runningStatus[0].setStatus(ExecResult.SUCCESS);
+        runningStatus[0].setQueryId(queryId);
+
+        QueryData data = queryNext(fetch);
+        runningStatus[0].setResult(data);
+        runningStatus[0].setHasQueryData(true);
+
+        return runningStatus[0];
     }
 
     /**
@@ -278,7 +309,7 @@ public class DBExecuteImpl {
      * @param num 获取行数
      * @return
      */
-    public QueryData queryNext(int num) {
+    private QueryData queryNext(int num) {
 
         List<String> header = new ArrayList<>();
         List<String> type = new ArrayList<>();
@@ -286,6 +317,10 @@ public class DBExecuteImpl {
 
         try {
             int i = 0;
+
+            if (rs == null || rs.isClosed()) {
+                return new QueryData();
+            }
 
             // 获取元数据表头
             ResultSetMetaData rsMeta = rs.getMetaData();
@@ -377,6 +412,10 @@ public class DBExecuteImpl {
      * 用于将查询出来的数据进行header和data数据分离保存
      */
     public static class QueryData {
+        public QueryData() {
+
+        }
+
         public QueryData(List<String> head, List<String> type,List<List<Object>> data) {
             this.head = head;
             this.type = type;
@@ -389,6 +428,8 @@ public class DBExecuteImpl {
         List<String> type = new ArrayList<>();
         @Getter
         List<List<Object>> data = new ArrayList<>();
+
+
     }
 
 }
