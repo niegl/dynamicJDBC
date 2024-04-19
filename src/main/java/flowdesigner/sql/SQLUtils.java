@@ -4,8 +4,7 @@ import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
-import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
-import com.alibaba.druid.sql.ast.statement.SQLSetStatement;
+import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.ads.visitor.AdsOutputVisitor;
 import com.alibaba.druid.sql.dialect.antspark.visitor.AntsparkOutputVisitor;
 import com.alibaba.druid.sql.dialect.blink.vsitor.BlinkOutputVisitor;
@@ -242,11 +241,63 @@ public class SQLUtils {
     public static String checkSyntax(String sql, DbType dbType) {
         String result = "SUCCESS";
         try {
-            List<SQLStatement> list = com.alibaba.druid.sql.SQLUtils.parseStatements(sql, dbType);
-        } catch (com.alibaba.druid.sql.parser.ParserException exception) {
+            List<SQLStatement> list = parseStatements(sql, dbType);
+        } catch (ParserException exception) {
             result = exception.getMessage();
         }
 
         return result;
     }
+
+    public static String getFrom(String sql, String dbType) {
+        String result = null;
+        SQLTableSource tableSource = null;
+
+        try {
+            SQLStatement stmt = com.alibaba.druid.sql.SQLUtils.parseSingleStatement(sql, dbType, new SQLParserFeature[0]);
+            if (stmt instanceof SQLSelectStatement) {
+                SQLSelectStatement selectStatement = (SQLSelectStatement) stmt;
+                SQLSelect select = selectStatement.getSelect();
+
+                SQLSelectQuery query = select.getQuery();
+
+                while (tableSource == null) {
+                    // 考虑SelectQuery为 SQLSelectQueryBlock 和 SQLUnionQuery的情况
+                    if (query instanceof SQLSelectQueryBlock) {
+                        SQLSelectQueryBlock queryBlock = (SQLSelectQueryBlock) query;
+                        tableSource = queryBlock.getFrom();
+                    } else if (query instanceof SQLUnionQuery) {
+                        SQLUnionQuery unionQuery = (SQLUnionQuery) query;
+                        query = unionQuery.getLeft();
+                    }
+                }
+
+                while (result == null) {
+                    if (tableSource instanceof SQLExprTableSource
+//                        || tableSource instanceof SQLJoinTableSource
+//                        || tableSource instanceof SQLUnionQueryTableSource
+//                        || tableSource instanceof SQLValuesTableSource
+                    ) {
+                        SQLExprTableSource exprTableSource = (SQLExprTableSource) tableSource;
+                        result = exprTableSource.getTableName();
+                    } else if (tableSource instanceof SQLSubqueryTableSource) {
+                        SQLSubqueryTableSource sqlSubqueryTableSource = (SQLSubqueryTableSource) tableSource;
+                        result = sqlSubqueryTableSource.getAlias();
+                    } else if (tableSource instanceof SQLJoinTableSource) {
+                        SQLJoinTableSource joinTableSource = (SQLJoinTableSource) tableSource;
+                        tableSource = joinTableSource.getRight();
+                    } else {
+                        result = "";
+                    }
+                }
+            }
+
+
+        } catch (ParserException exception) {
+            result = exception.getMessage();
+        }
+
+        return result;
+    }
+
 }

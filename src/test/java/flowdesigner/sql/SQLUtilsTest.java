@@ -26,4 +26,10 @@ class SQLUtilsTest {
         String ret = SQLUtils.parseContextDefinitionASString("hive","a=1");
         System.out.println(ret);
     }
+
+    @Test
+    void getFrom() {
+        String ret = SQLUtils.getFrom("SELECT REC_SEQ, SACCCODE_ARR_DEP FROM  ${BMNC_SDATA}.cut_pi_exit_cms_filtered aa join a.bb on aa.a=bb.a", "hive");
+        System.out.println(ret);
+    }
 }
