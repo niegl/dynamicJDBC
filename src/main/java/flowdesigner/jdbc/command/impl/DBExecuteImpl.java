@@ -13,6 +13,7 @@ import flowdesigner.util.DbTypeKit;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -122,6 +123,11 @@ public class DBExecuteImpl {
         DbType dbType = DbTypeKit.getDbType(conn);
         if (dbType == null) {
             throw new IllegalArgumentException("database is not supported");
+        }
+
+        // 删除最后一个分号;
+        if (scripts != null && !scripts.isEmpty() && scripts.charAt(scripts.length() - 1) == ';') {
+            scripts = scripts.substring(0, scripts.length() - 1);
         }
 
         SQLType sqlType = SQLParserUtils.getSQLTypeV2(scripts, dbType);
