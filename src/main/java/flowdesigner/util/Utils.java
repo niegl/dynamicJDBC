@@ -105,4 +105,14 @@ public class Utils {
             e.printStackTrace();
         }
     }
+
+    public static String trimLastColon(String sql) {
+        // 删除最后一个分号;
+        if (sql != null && !sql.isEmpty() && sql.charAt(sql.length() - 1) == ';') {
+            sql = sql.substring(0, sql.length() - 1);
+        }
+
+        return sql;
+    }
+
 }

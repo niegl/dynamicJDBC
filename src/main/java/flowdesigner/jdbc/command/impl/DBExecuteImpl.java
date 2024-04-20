@@ -10,6 +10,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.annotation.JSONField;
 import flowdesigner.jdbc.command.ExecResult;
 import flowdesigner.util.DbTypeKit;
+import flowdesigner.util.Utils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -126,9 +127,7 @@ public class DBExecuteImpl {
         }
 
         // 删除最后一个分号;
-        if (scripts != null && !scripts.isEmpty() && scripts.charAt(scripts.length() - 1) == ';') {
-            scripts = scripts.substring(0, scripts.length() - 1);
-        }
+        scripts = Utils.trimLastColon(scripts);
 
         SQLType sqlType = SQLParserUtils.getSQLTypeV2(scripts, dbType);
         if (sqlType == SQLType.UNKNOWN || sqlType == SQLType.ERROR ) {

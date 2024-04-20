@@ -24,6 +24,7 @@ import com.alibaba.druid.sql.visitor.VisitorFeature;
 import flowdesigner.sql.dialect.db2.DB2OutputVisitorV2;
 import flowdesigner.sql.dialect.presto.visitor.PrestoOutputVisitorV2;
 import flowdesigner.sql.visitor.SQLASTOutputVisitorV2;
+import flowdesigner.util.Utils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLSyntaxErrorException;
@@ -252,6 +253,9 @@ public class SQLUtils {
     public static String getFrom(String sql, String dbType) {
         String result = null;
         SQLTableSource tableSource = null;
+
+        // 删除最后一个分号;
+        sql = Utils.trimLastColon(sql);
 
         try {
             SQLStatement stmt = com.alibaba.druid.sql.SQLUtils.parseSingleStatement(sql, dbType, new SQLParserFeature[0]);
