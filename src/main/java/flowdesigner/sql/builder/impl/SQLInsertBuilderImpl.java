@@ -73,6 +73,13 @@ public class SQLInsertBuilderImpl extends SQLBuilderImpl implements SQLInsertBui
     }
 
     @Override
+    public SQLInsertBuilder setOverwrite(boolean overwrite) {
+        SQLInsertStatement insert = getSQLStatement();
+        insert.setOverwrite(overwrite);
+        return this;
+    }
+
+    @Override
     public void addValueClause(ArrayList<String> columnValues) {
 
         SQLInsertStatement statement = getSQLStatement();

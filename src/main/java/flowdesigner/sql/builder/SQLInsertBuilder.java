@@ -13,6 +13,8 @@ public interface SQLInsertBuilder extends SQLBuilder {
     SQLInsertBuilder setInsertColumn(String column);
     SQLInsertBuilder setInsertColumns(String... columns);
 
+    SQLInsertBuilder setOverwrite(boolean overwrite);
+
     /**
      * 生成insert语句中的values部分，可多次调用，生成value_list[，value_list...]
      * @param columnValues value list值
