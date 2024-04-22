@@ -326,18 +326,18 @@ public class DBDialect {
         field.setTypeName(typeName);
         field.setDataType(dataType);
 
-        if(columnSize > 0){
+        if(columnSize > 0) {
             field.setLen(columnSize);
         }
-        if(decimalDigits<=0){
-            field.setScale(null);
+        if(decimalDigits < 0) {
+            field.setScale(-1);
         }else{
             field.setScale(decimalDigits);
         }
         //不需要长度的数据类型，把数据类型清除掉，防止部分数据库解析出有长度的情况
         if(withoutLenDataType(dataType)){
-            field.setLen(null);
-            field.setScale(null);
+            field.setLen(-1);
+            field.setScale(-1);
         }
 
 //        field.setPrimaryKey(pkSet.contains(colName));

@@ -49,29 +49,32 @@ public class ColumnField {
         StringBuffer buffer = new StringBuffer(typeName);
 
         Integer column_len = len;
-        // process String
-        if (Types.VARCHAR == dataType && column_len == Integer.MAX_VALUE) {
-            column_len = 0;
-        }
-        if(dbType == DbType.hive) {
-            if (Types.INTEGER == dataType && (
+
+
+        if (Types.VARCHAR == dataType ) {// 字符型
+            if (column_len == Integer.MAX_VALUE) {
+                column_len = 0;
+            }
+        } else if(Types.INTEGER == dataType) {//整型
+            if (dbType == DbType.hive && (
                     (Integer.BYTES == 4 && column_len == 10) || (Integer.BYTES == 8 && column_len == 19)    // 4bytes,len=10 or 8bytes,len=19
             )) {
                 column_len = 0;
             }
-        }
-        if (is_numeric_data() || is_datetime_data()) {
+        } else if (is_numeric_data() || is_datetime_data()) {//数字或日期类型
+            column_len = 0;
+        } else if(Types.DOUBLE == dataType) {//双精度类型
             column_len = 0;
         }
 
         if(column_len != null && column_len > 0) {
-
             buffer.append("(").append(column_len);
-            if(scale != null && scale > 0){
+            if (scale != null && scale >= 0) {
                 buffer.append(",").append(scale);
             }
             buffer.append(")");
         }
+
         typeFullName = buffer.toString();
 
         if(primaryKey == Boolean.TRUE) {
