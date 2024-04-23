@@ -318,8 +318,7 @@ class SQLSelectBuilderImplTest {
 
     @Test
     void testJoinWhere() {
-        builderEx.select("a/b","b")
-                .from("tablea");
+
         builderEx.where("tableB.a = 1").whereAnd("tablea.b=2").whereAnd("tableB.c=3");
         // 测试别名更改后是否应用于前面的where
         builderEx.join("COMMA","tableB","B",null,null,null);
@@ -344,5 +343,15 @@ class SQLSelectBuilderImplTest {
                 .whereAnd("unix_timestamp(to_date(t99_stat_station_cd_his.open_tm), 'yyyy-MM-dd') - unix_timestamp(to_date(now()), 'yyyy-MM-dd') <= 0")
                 .updateAlias("t99_stat_station_cd_his","stn");
                 ;
+    }
+
+    @Test
+    void addLateralView() {
+        ArrayList<String> objects = new ArrayList<>();
+        objects.add("line_d");
+        builderEx.select("a/b","b")
+                .from("tablea");
+        builderEx.addLateralView("explode(split(line_desc,'\\073'))","line_v1",objects);
+        System.out.println(builderEx);
     }
 }

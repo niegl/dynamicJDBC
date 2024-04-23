@@ -5,6 +5,7 @@ import com.alibaba.druid.sql.ast.statement.SQLSelect;
 import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.dialect.db2.ast.stmt.DB2SelectQueryBlock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface SQLSelectBuilder extends SQLBuilder {
@@ -26,6 +27,8 @@ public interface SQLSelectBuilder extends SQLBuilder {
     SQLSelectBuilder from(String table, String alias);
 
     SQLSelectBuilder from(SQLExpr expr, String alias);
+
+    void addLateralView(String udtf, String tableAlias, ArrayList<String> columnAlias);
 
     SQLSelectBuilder setDistionOption();
 

@@ -182,6 +182,91 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
     }
 
     /**
+     * 生成lateralView: LATERAL VIEW udtf(expression) tableAlias AS columnAlias (',' columnAlias)*
+     * 注意：需要首先调用from或join形成基础表，然后在调用该接口。即先生成FROM baseTable (lateralView)* 中的 baseTable
+     * @param udtf Built-in Table-Generating Functions (UDTF)
+     * @param tableAlias virtual table having the supplied table alias
+     * @param columnAlias supplied column alias
+     */
+    @Override
+    public void addLateralView(String udtf, String tableAlias, ArrayList<String> columnAlias) {
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        SQLTableSource tableSource = queryBlock.getFrom();
+
+        if (tableSource != null && udtf != null) {
+            SQLTableSource lateralView = createLateralView(tableSource, udtf, tableAlias, columnAlias);
+            queryBlock.setFrom(lateralView);
+        }
+    }
+
+    /**
+     * LATERAL VIEW udtf(expression) tableAlias AS columnAlias (',' columnAlias)*
+     * @param tableSource
+     * @param udtf
+     * @param alias
+     * @return
+     */
+    protected SQLTableSource createLateralView(SQLTableSource tableSource, String udtf, String tableAlias, ArrayList<String> columnAlias) {
+
+        if (tableSource != null) {
+            tableSource.setAlias(null);
+        }
+
+        SQLLateralViewTableSource lateralViewTabSrc = new SQLLateralViewTableSource();
+        lateralViewTabSrc.setTableSource(tableSource);
+
+//        if (lexer.token == Token.OUTER) {
+//            lateralViewTabSrc.setOuter(true);
+//            lexer.nextToken();
+//        }
+
+        if (udtf != null) {
+            SQLMethodInvokeExpr udtfExpr = (SQLMethodInvokeExpr) SQLUtils.toSQLExpr(udtf, dbType);
+            lateralViewTabSrc.setMethod(udtfExpr);
+        }
+
+        if (tableAlias != null) {
+            lateralViewTabSrc.setAlias(tableAlias);
+        }
+
+        if (columnAlias != null) {
+            addLateralViewAs(lateralViewTabSrc, columnAlias);
+        }
+
+//        if (lexer.token == Token.ON) {
+//            lexer.nextToken();
+//            lateralViewTabSrc.setOn(
+//                    this.exprParser.expr()
+//            );
+//        }
+
+        return lateralViewTabSrc; //parseTableSourceRest(lateralViewTabSrc);
+    }
+
+    /**
+     * 添加LATERAL VIEW udtf(expression) tableAlias AS columnAlias (',' columnAlias)* 中的columnAlias部分
+     * @param columnAlias 别名
+     */
+    public void addLateralViewAs(ArrayList<String> columnAlias) {
+        SQLSelectQueryBlock queryBlock = getQueryBlock();
+        SQLTableSource tableSource = queryBlock.getFrom();
+
+        if (tableSource instanceof SQLLateralViewTableSource) {
+            addLateralViewAs((SQLLateralViewTableSource) tableSource, columnAlias);
+        }
+
+    }
+
+    protected void addLateralViewAs(SQLLateralViewTableSource lateralViewTabSrc, ArrayList<String> columnAlias) {
+
+        for (String name: columnAlias) {
+            SQLName sqlName = new SQLIdentifierExpr(name);
+            sqlName.setParent(lateralViewTabSrc);
+            lateralViewTabSrc.getColumns().add(sqlName);
+        }
+    }
+
+    /**
      * select distinct
      * @return
      */

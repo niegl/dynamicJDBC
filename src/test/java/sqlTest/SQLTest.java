@@ -1793,4 +1793,17 @@ public class SQLTest {
         }
         return list.get(0);
     }
+
+    @org.junit.jupiter.api.Test
+    void test_statement_lateral_view() throws SQLSyntaxErrorException {
+        String sql = "select \n" +
+                "\t\tREC_SEQ,\n" +
+                "--\t\trow_sequence() as row_sequence,\n" +
+                "\t\tROW_NUMBER() OVER () as row_sequence\n" +
+                "\tfrom ${BMNC_SDATA}.cut_pi_exit_cms_filtered\n" +
+                "\tLATERAL view explode(split(line_desc,'\\073')) line_v1 as line_d";
+        parser(sql, DbType.hive);
+    }
+
+
 }
