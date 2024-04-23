@@ -203,7 +203,7 @@ public class SQLSelectBuilderImpl extends SQLBuilderImpl implements SQLSelectBui
      * LATERAL VIEW udtf(expression) tableAlias AS columnAlias (',' columnAlias)*
      * @param tableSource
      * @param udtf
-     * @param alias
+     * @param columnAlias
      * @return
      */
     protected SQLTableSource createLateralView(SQLTableSource tableSource, String udtf, String tableAlias, ArrayList<String> columnAlias) {
