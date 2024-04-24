@@ -107,6 +107,10 @@ public class Utils {
     }
 
     public static String trimLastColon(String sql) {
+        if (sql.indexOf("\r\n") != -1) {
+            // com.alibaba.druid.sql.parser.Lexer only recognizes Linux newline '\n'.
+            sql = sql.replace("\r\n", "\n");
+        }
         // 删除最后一个分号;
         if (sql != null && !sql.isEmpty() && sql.charAt(sql.length() - 1) == ';') {
             sql = sql.substring(0, sql.length() - 1);
