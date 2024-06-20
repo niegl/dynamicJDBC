@@ -1716,6 +1716,13 @@ public class SQLTest {
     }
 
     @org.junit.jupiter.api.Test
+    void test2() throws SQLSyntaxErrorException {
+        String sql = "select distinct name,age from (select name,age from test_tab1 join std_pcode.t20_index_code) A join B;select a;select b";
+        List<String> stringList = SQLParserUtils.split(sql, DbType.hive);
+        stringList.forEach(X->System.out.println(X));
+    }
+
+    @org.junit.jupiter.api.Test
     void testWhereWithFunction() throws SQLSyntaxErrorException {
         String sql = "SELECT stn.stat_station_id, stn.stat_station_nme\n" +
                 "FROM bmnc_pcode.t99_stat_station_cd_his stn\n" +
@@ -1756,6 +1763,12 @@ public class SQLTest {
                 "        BEGIN\n" +
                 "        END;\n" +
                 "    END CASE;";
+        parser(sql, DbType.mysql);
+    }
+
+    @org.junit.jupiter.api.Test
+    void test_alter_table_set_comment() throws SQLSyntaxErrorException {
+        String sql = "ALTER TABLE tbl_name COMMENT 'string'";
         parser(sql, DbType.mysql);
     }
 

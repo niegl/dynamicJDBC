@@ -5,10 +5,7 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.SQLStatement;
-import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
-import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
-import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
-import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
+import com.alibaba.druid.sql.ast.expr.*;
 import com.alibaba.druid.sql.ast.statement.*;
 import com.alibaba.druid.sql.dialect.mysql.ast.MySqlPrimaryKey;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlAlterTableChangeColumn;
@@ -19,6 +16,8 @@ import flowdesigner.sql.builder.SQLAlterTableBuilder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.alibaba.druid.sql.dialect.mysql.parser.MySqlExprParser.SINGLE_WORD_TABLE_OPTIONS;
 
 /**
  * 该类主要用于SQLAlterTable相关的操作。
@@ -61,6 +60,27 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
     public SQLAlterTableBuilder setName(String tableName) {
         SQLAlterTableStatement statement = getSQLStatement();
         statement.setName(new SQLIdentifierExpr(tableName));
+        return this;
+    }
+
+    /**
+     * 设置表注释
+     * @param comment 注释
+     * @return
+     */
+    @Override
+    public SQLAlterTableBuilder setComment(String comment) {
+        SQLAlterTableStatement statement = getSQLStatement();
+        List<SQLAssignItem> tableOptions = statement.getTableOptions();
+
+        SQLAssignItem assignItem = new SQLAssignItem(
+                new SQLIdentifierExpr(SINGLE_WORD_TABLE_OPTIONS[2]),
+                new SQLCharExpr(comment)
+        );
+
+        assignItem.setParent(statement);
+        tableOptions.add(assignItem);
+
         return this;
     }
 

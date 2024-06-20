@@ -63,11 +63,19 @@ class SQLInsertBuilderImplTest {
 
     @Test
     void addValueClause() {
-        insertBuilder.setInsertColumns("a","b");
+        insertBuilder.setTableSource("${BMNC_TEMP}.VT_T80_OD_DQC_RESULT");
         ArrayList<String> strings = new ArrayList<>();
         strings.add("value1");
         strings.add("value2");
         insertBuilder.addValueClause(strings);
+        System.out.println(insertBuilder);
+    }
+
+    @Test
+    void test_param_database() {
+        insertBuilder.setTableSource("${BMNC_TEMP}.VT_T80_OD_DQC_RESULT");
+        insertBuilder.setQuery("SELECT cut_pi_exit_cms_filtered.streaming_session_id, cut_pi_exit_cms_filtered.data_version\n" +
+                "FROM udms_sdata.cut_pi_exit_cms_filtered;");
         System.out.println(insertBuilder);
     }
 }

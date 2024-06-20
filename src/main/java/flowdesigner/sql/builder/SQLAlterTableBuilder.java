@@ -8,6 +8,8 @@ public interface SQLAlterTableBuilder extends SQLBuilder {
 
     SQLAlterTableBuilder setName(String tableName);
 
+    SQLAlterTableBuilder setComment(String comment);
+
     SQLAlterTableBuilder setSchema(String schemaName);
 
     SQLAlterTableBuilder renameTable(String toName);

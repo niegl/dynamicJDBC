@@ -227,4 +227,30 @@ class SQLAlterTableBuilderImplTest {
         return arguments.stream();
     }
 
+    @ParameterizedTest
+    @MethodSource()
+    void setComment(DbType dbType, String expected) throws SQLSyntaxErrorException {
+        alterTableBuilder = SQLBuilderFactory.createAlterTableBuilder(dbType);
+        alterTableBuilder.setName("db_name");
+
+        alterTableBuilder.setComment("string");
+
+        SQLTest.parser(expected, dbType);
+        Assertions.assertEquals(expected, alterTableBuilder.toString());
+    }
+    static Stream<Arguments> setComment() {
+        ArrayList<Arguments> arguments = new ArrayList<>();
+        for (DbType dbType : DbType.values()) {
+            String syntax =  switch (dbType) {
+                case hive -> "ALTER TABLE db_name\n" +
+                        "\tCOMMENT = 'string'";
+                default -> "ALTER TABLE db_name\n" +
+                        "\tCOMMENT = 'string'";
+            };
+            arguments.add(Arguments.of(dbType, syntax));
+        }
+
+        return arguments.stream();
+    }
+
 }
