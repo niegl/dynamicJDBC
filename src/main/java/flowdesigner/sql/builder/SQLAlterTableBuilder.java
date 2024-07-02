@@ -3,7 +3,7 @@ package flowdesigner.sql.builder;
 import java.util.List;
 import java.util.Map;
 
-public interface SQLAlterTableBuilder extends SQLBuilder {
+public interface SQLAlterTableBuilder extends SQLBuilder, SQLCommentBuilder {
 //    SQLAlterTableBuilder setType(DbType dbType);
 
     SQLAlterTableBuilder setName(String tableName);

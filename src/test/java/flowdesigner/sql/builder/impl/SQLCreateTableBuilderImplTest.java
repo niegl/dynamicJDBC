@@ -293,4 +293,11 @@ class SQLCreateTableBuilderImplTest {
         );
     }
 
+    @Test
+    void testAddColumn() {
+            createBuilder(DbType.mysql);
+            tableBuilder.addColumn("line_id","VARCHAR(10,0)","comment");
+            System.out.append(tableBuilder.toString());
+
+    }
 }

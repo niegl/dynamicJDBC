@@ -1768,10 +1768,18 @@ public class SQLTest {
 
     @org.junit.jupiter.api.Test
     void test_alter_table_set_comment() throws SQLSyntaxErrorException {
-        String sql = "ALTER TABLE tbl_name COMMENT 'string'";
-        parser(sql, DbType.mysql);
-    }
+//        String sql = "ALTER TABLE tbl_name COMMENT 'string'";
+        String sql = "COMMENT ON TABLE my_schema.employees IS 'This table stores employee information.';";
 
+        parser(sql, DbType.db2);
+    }
+    @org.junit.jupiter.api.Test
+    void test_alter_table_set_comment1() throws SQLSyntaxErrorException {
+//        String sql = "ALTER TABLE tbl_name COMMENT 'string'";
+        SQLUpdateSetItem updateSetItem = SQLUtils.toUpdateSetItem("a={a}", DbType.mysql);
+
+        System.out.println(updateSetItem);
+    }
     public static SQLStatement parser(String sql, String dbType) throws SQLSyntaxErrorException {
         return parser(sql,DbType.of(dbType));
     }

@@ -84,6 +84,11 @@ public class SQLAlterTableBuilderImpl extends SQLBuilderImpl implements SQLAlter
         return this;
     }
 
+    @Override
+    public void setOn(String on) {
+        this.setName(on);
+    }
+
     /**
      * 设置数据库名
      */
