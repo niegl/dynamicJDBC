@@ -23,7 +23,7 @@ class SQLUtilsTest {
 
     @Test
     void parseContextDefinitionASString() {
-        String ret = SQLUtils.parseContextDefinitionASString("hive","a=1");
+        String ret = SQLUtils.parseContextDefinitionASString("hive","set ngmr.furion.pool=DEFAULT");
         System.out.println(ret);
     }
 

@@ -67,7 +67,7 @@ public class SQLUtils {
                 .filter(s -> s instanceof SQLSetStatement)
                 .flatMap(s -> {
                     Collection<SQLAssignItem> items = ((SQLSetStatement) s).getItems();
-                    items.removeIf(i -> i.getTarget() instanceof SQLPropertyExpr);
+//                    items.removeIf(i -> i.getTarget() instanceof SQLPropertyExpr);
                     return items.stream().map(i -> i.getTarget().toString().replaceAll("@","") + "=" + i.getValue());
                 })
                 .toList();

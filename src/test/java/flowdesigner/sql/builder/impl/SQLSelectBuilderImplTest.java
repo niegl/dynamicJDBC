@@ -351,7 +351,7 @@ class SQLSelectBuilderImplTest {
         objects.add("line_d");
         builderEx.select("a/b","b")
                 .from("tablea");
-        builderEx.addLateralView("explode(split(line_desc,'\\073'))","line_v1",objects);
+        builderEx.addLateralView("line_desc","line_v1",objects);
         System.out.println(builderEx);
     }
 }

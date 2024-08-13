@@ -1,0 +1,36 @@
+[ARRAY Functions]
+ARRAY       :ARRAY<T> array(T, ...)     	:根据参数构造并返回array, 参数可以是多列或者常量
+ARRAY_MAX   :T array_max(ARRAY<T> array1)   :返回数组中最大的元素，数组中的NULL值会被跳过。空数组以及元素全为NULL值的数组，结果返回NULL值。
+ARRAY_MIN   :T array_min(ARRAY<T> array1)   :返回数组中最小的元素，数组中的NULL值会被跳过。空数组以及元素全为NULL值的数组，结果返回NULL值。
+ARRAY_MAP   :ARRAY<T> array_map(lambda, ARRAY<T> array1, ARRAY<T> array2)   :使用一个lambda表达式作为输入参数，对其他的输入ARRAY参数的内部数据做对应表达式计算。 在lambda表达式中输入的参数为1个或多个，必须和后面的输入array列数量一致。 在lambda中可以执行合法的标量函数，不支持聚合函数等。
+ARRAY_FILTER    :ARRAY<T> array_filter(lambda, ARRAY<T> arr)    :使用lambda表达式作为输入参数，计算筛选另外的输入参数ARRAY列的数据。 并过滤掉在结果中0和NULL的值。
+ARRAY_FILTER    :ARRAY<T> array_filter(ARRAY<T> arr, ARRAY<Bool> filter_column)    :使用lambda表达式作为输入参数，计算筛选另外的输入参数ARRAY列的数据。 并过滤掉在结果中0和NULL的值。
+ARRAY_AVG   :Array<T> array_avg(arr)    :返回数组中所有元素的平均值，数组中的NULL值会被跳过。空数组以及元素全为NULL值的数组，结果返回NULL值。
+ARRAY_SUM	:T array_sum(ARRAY<T> src, Array<T> key)				:返回数组中所有元素之和，数组中的NULL值会被跳过。空数组以及元素全为NULL值的数组，结果返回NULL值。
+ARRAY_SUM	:T array_sum(lambda, Array<T> arr1, Array<T> arr2 ....)	:返回数组中所有元素之和，数组中的NULL值会被跳过。空数组以及元素全为NULL值的数组，结果返回NULL值。
+SIZE		:BIGINT size(ARRAY<T> arr)	:返回数组中元素数量，如果输入数组为NULL，则返回NULL
+ARRAY_SIZE	:BIGINT array_size(ARRAY<T> arr) 	:返回数组中元素数量，如果输入数组为NULL，则返回NULL
+CARDINALITY	:BIGINT cardinality(ARRAY<T> arr)	:返回数组中元素数量，如果输入数组为NULL，则返回NULL
+ARRAY_REMOVE	:ARRAY<T> array_remove(ARRAY<T> arr, T val)	:返回移除所有的指定元素后的数组，如果输入参数为NULL，则返回NULL
+ARRAY_SLICE	:ARRAY<T> array_slice(ARRAY<T> arr, BIGINT off, BIGINT len)	:返回一个子数组，包含所有从指定位置开始的指定长度的元素，如果输入参数为NULL，则返回NULL
+ARRAY_SORT	:ARRAY<T> array_sort(ARRAY<T> arr)	:返回按升序排列后的数组，如果输入数组为NULL，则返回NULL。 如果数组元素包含NULL, 则输出的排序数组会将NULL放在最前面。
+ARRAY_REVERSE_SORT	:ARRAY<T> array_reverse_sort(ARRAY<T> arr)	:返回按降序排列后的数组，如果输入数组为NULL，则返回NULL。 如果数组元素包含NULL, 则输出的排序数组会将NULL放在最后面。
+ARRAY_SORTBY	:ARRAY<T> array_sortby(ARRAY<T> src,Array<T> key)	:首先将key列升序排列，然后将src列按此顺序排序后的对应列做为结果返回; 如果输入数组src为NULL，则返回NULL。 如果输入数组key为NULL，则直接返回src数组。 如果输入数组key元素包含NULL, 则输出的排序数组会将NULL放在最前面。
+ARRAY_SORTBY	:ARRAY<T> array_sortby(lambda,array....)	:首先将key列升序排列，然后将src列按此顺序排序后的对应列做为结果返回; 如果输入数组src为NULL，则返回NULL。 如果输入数组key为NULL，则直接返回src数组。 如果输入数组key元素包含NULL, 则输出的排序数组会将NULL放在最前面。
+ARRAY_SPLIT	:ARRAY<ARRAY<T>> array_split(ARRAY<T> arg, Array<Boolean> cond)	:传入两个长度相等的 ARRAY 且第二个为 Array<Boolean>，则按照 cond 中为 true 的位置左侧作为分割点，分割 arg
+ARRAY_SPLIT	:ARRAY<ARRAY<T>> array_split(lambda, ARRAY<T0> arg0...)	:传入一个 lambda 表达式和至少一个 ARRAY arg0，则按照 lambda 表达式运算得到的 Array<Boolean> 结果，其中为 true 的位置左侧作为分割点，分割 arg0
+ARRAY_REVERSE_SPLIT	:ARRAY<ARRAY<T>> array_reverse_split(ARRAY<T> arg, Array<Boolean> cond)	:传入两个长度相等的 ARRAY 且第二个为 Array<Boolean>，按照 cond 中为 true 的位置右侧作为分割点，分割 arg
+ARRAY_REVERSE_SPLIT	:ARRAY<ARRAY<T>> array_reverse_split(lambda, ARRAY<T0> arg0...)	:传入一个 lambda 表达式和至少一个 ARRAY arg0，则按照 lambda 表达式运算得到的 Array<Boolean> 结果，其中为 true 的位置右侧作为分割点，分割 arg0 。
+ARRAY_POSITION	:BIGINT array_position(ARRAY<T> arr, T value)	:返回value在数组中第一次出现的位置/索引。
+ARRAY_CONTAINS	:BOOLEAN array_contains(ARRAY<T> arr, T value)	:判断数组中是否包含value。
+ARRAY_EXCEPT	:ARRAY<T> array_except(ARRAY<T> array1, ARRAY<T> array2)	:返回一个数组，包含所有在array1内但不在array2内的元素，不包含重复项，如果输入参数为NULL，则返回NULL.
+ARRAY_PRODUCT	:T array_product(ARRAY<T> arr)	:返回数组中所有元素的乘积，数组中的NULL值会被跳过。空数组以及元素全为NULL值的数组，结果返回NULL值。
+ARRAY_INTERSECT	:ARRAY<T> array_intersect(ARRAY<T> array1, ARRAY<T> array2)	:返回一个数组，包含array1和array2的交集中的所有元素，不包含重复项，如果输入参数为NULL，则返回NULL.
+ARRAY_RANGE	:ARRAY<Int> array_range(Int end)	:参数均为正整数 start 默认为 0, step 默认为 1。 最终返回一个数组，从start 到 end - 1, 步长为 step。
+ARRAY_RANGE	:ARRAY<Int> array_range(Int start, Int end)	:参数均为正整数 start 默认为 0, step 默认为 1。 最终返回一个数组，从start 到 end - 1, 步长为 step。
+ARRAY_RANGE	:ARRAY<Int> array_range(Int start, Int end, Int step)	:参数均为正整数 start 默认为 0, step 默认为 1。 最终返回一个数组，从start 到 end - 1, 步长为 step。
+ARRAY_RANGE	:ARRAY<Datetime> array_range(Datetime start_datetime, Datetime end_datetime)	:生成日期时间数组： 至少取两个参数。 前两个参数都是datetimev2，第三个是正整数。 如果缺少第三部分，则INTERVAL 1 DAY将为默认值。 UNIT 支持年/月/周/日/小时/分钟/秒。 返回 start_datetime 和最接近 end_datetime 之间的 datetimev2 数组（按 Interval_step UNIT 计算）。
+ARRAY_RANGE	:ARRAY<Datetime> array_range(Datetime start_datetime, Datetime end_datetime, INTERVAL Int interval_step UNIT)	:生成日期时间数组： 至少取两个参数。 前两个参数都是datetimev2，第三个是正整数。 如果缺少第三部分，则INTERVAL 1 DAY将为默认值。 UNIT 支持年/月/周/日/小时/分钟/秒。 返回 start_datetime 和最接近 end_datetime 之间的 datetimev2 数组（按 Interval_step UNIT 计算）。
+
+
+

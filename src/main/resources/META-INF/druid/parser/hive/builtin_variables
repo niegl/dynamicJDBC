@@ -2106,3 +2106,6 @@ system:yarn.home.dir=/opt/cloudera/parcels/CDH-6.3.2-1.cdh6.3.2.p0.1605554/lib/h
 system:yarn.log.dir=/usr/bin/../logs
 system:yarn.log.file=hadoop.log
 system:yarn.root.logger=INFO,console
+ngmr.furion.pool=DEFAULT
+mapred.max.split.size=256000000
+hive.enforce.bucketing=true
