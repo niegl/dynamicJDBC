@@ -23,7 +23,7 @@ class DBExecuteImplTest {
 
         switch (dbType) {
             case hive -> {
-                dynamicDriver = new DynamicDriver("C:\\文档\\项目\\北京能耗\\能耗资料\\new\\new\\05.代码实现及单元测试\\lib");
+                dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\remote\\timveil\\hive-jdbc-uber-jar\\releases\\download\\v1.9-2.6.5");
                 Properties properties = new Properties();
                 properties.setProperty("driverClassName","org.apache.hive.jdbc.HiveDriver");
                 properties.setProperty("url","jdbc:hive2://172.30.224.36:10000");
@@ -129,7 +129,7 @@ class DBExecuteImplTest {
         }
 
         try {
-            Thread.sleep(100000000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

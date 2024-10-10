@@ -1826,5 +1826,15 @@ public class SQLTest {
         parser(sql, DbType.hive);
     }
 
+    @org.junit.jupiter.api.Test
+    void test_gaussdb_selectdot() throws SQLSyntaxErrorException {
+        String sql = "CREATE TABLE ${AUTO_TEMPDB}.T10_PTY_CONT_INFOR_HIS_T\n" +
+                "(\n" +
+                "    LIKE ${AUTO_PDDLDB}.T10_PTY_CONT_INFOR_HIS INCLUDING\n" +
+                "        ALL\n" +
+                "        EXCLUDING PARTITION EXCLUDING RELOPTIONS EXCLUDING DISTRIBUTION\n" +
+                ") DISTRIBUTE BY HASH ( Pty_ID );";
+        parser(sql, DbType.postgresql);
+    }
 
 }
