@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.alibaba.druid.util.JdbcConstants.MYSQL;
 import static com.alibaba.druid.util.JdbcUtils.close;
 
 
@@ -45,8 +46,12 @@ public class DBExecuteImpl {
      * 当前查询相关的信息
      */
     private int fetch ;
+    private int offset = 0;
     int appId;
     int queryId;
+    // limit 参数是否在前面
+    boolean limitahead = true;
+    boolean limitneeded = true;
 
     static {
         try {
@@ -116,7 +121,7 @@ public class DBExecuteImpl {
      * @throws SQLException 异常
      * @return
      */
-    private void execute(Connection conn, String scripts,RunningStatus<Object> runningStatus) throws ParserException,SQLException {
+    private void execute(Connection conn, String scripts, RunningStatus<Object> runningStatus) throws ParserException,SQLException {
 
         if (conn == null || conn.isClosed()) {
             throw new IllegalArgumentException("please connect to database first!");
@@ -134,6 +139,90 @@ public class DBExecuteImpl {
             throw new SQLException(scripts + ": SQLType is UNKNOWN or ERROR");
         }
 
+        limitahead = true;
+        limitneeded = true;
+        String additionalOffset = "";
+        if ( sqlType == SQLType.SELECT) {
+            switch (dbType) {
+                case mysql:
+                case mariadb:
+                case oceanbase:
+                case xugu:
+                case taosdata:
+                case postgresql:
+                case greenplum:
+                case edb:
+                case polardb:
+                case hsql:
+                case derby:
+                case h2:
+                case sqlite:
+                case hive:
+                case presto:
+                case clickhouse:
+                case phoenix:
+                case tydb:
+                case starrocks:
+                case odps:
+                    additionalOffset = " LIMIT ? OFFSET ?";
+                    limitahead = true;
+                    break;
+                case firebirdsql:
+                    additionalOffset = " FIRST ? SKIP ?";
+                    limitahead = true;
+                    break;
+                case oracle:
+                case sqlserver:
+                case jtds:
+                case sybase:
+                case highgo:
+                case dm:
+                case kingbase:
+                case gbase:
+                case oceanbase_oracle:
+                case ali_oracle:
+                case as400:
+                case sapdb:
+                case interbase:
+                case pointbase:
+                case edbc:
+                case db2:
+                case gaussdb:
+                case trino:
+                case teradata:
+                    additionalOffset = " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+                    limitahead = false;
+                    break;
+                case informix:
+                    additionalOffset = " SKIP ? FIRST ?";
+                    limitahead = false;
+                    break;
+                // 以下数据库类型不适用上述分页语法，可能需要特殊处理或不支持分页
+                case elastic_search:
+                case hbase:
+                case drds:
+                case blink:
+                case antspark:
+                case mock:
+                case log4jdbc:
+                case kdb:
+                case mimer:
+                case oscar:
+                case tidb:
+                case goldendb:
+                case ingres:
+                case cloudscape:
+                case timesten:
+                    limitneeded = false;
+                    break;
+                default:
+                    // 对于未知的数据库类型，不添加分页语句
+                    limitneeded = false;
+                    break;
+
+            }
+        }
+
         runningStatus.setStep(1);
         runningStatus.setStatementType(sqlType.name());
 
@@ -144,10 +233,33 @@ public class DBExecuteImpl {
             close(rs);
         }
 
-        stmt = conn.prepareStatement(scripts);
+//        stmt = conn.prepareStatement(scripts);
+        QueryData data;
         switch (sqlType) {
 
             case SELECT:
+                // 正则表达式匹配 LIMIT 数字 OFFSET 数字
+                String limitOffsetPattern = "\\bLIMIT\\s+(\\d+)\\s+OFFSET\\s+(\\d+)\\b";
+                String offsetFetchNextPattern = "\\bOFFSET\\s+(\\d+)\\s+ROWS\\s+FETCH\\s+NEXT\\s+(\\d+)\\s+ROWS\\s+ONLY\\b";
+                String skipFirstPattern = "\\bSKIP\\s+(\\d+)\\s+FIRST\\s+(\\d+)\\b";
+                String offsetFetchNextPatternAlt = "\\bFETCH\\s+NEXT\\s+(\\d+)\\s+ROWS\\s+ONLY\\s+OFFSET\\s+(\\d+)\\s+ROWS\\b";
+                if (scripts.toUpperCase().matches(".*" + limitOffsetPattern + ".*")
+                || scripts.toUpperCase().matches(".*" + offsetFetchNextPattern + ".*")
+                || scripts.toUpperCase().matches(".*" + skipFirstPattern + ".*")
+                || scripts.toUpperCase().matches(".*" + offsetFetchNextPatternAlt + ".*")) {
+                    limitneeded = false;
+                }
+                if (limitneeded) {
+                    scripts += additionalOffset;
+                }
+                stmt = conn.prepareStatement(scripts);
+//                stmt.setInt(1, fetch);
+//                stmt.setInt(2, offset);
+//                rs = stmt.executeQuery();
+                data = queryNext(fetch);
+                runningStatus.setResult(data);
+                runningStatus.setHasQueryData(true);
+                break;
             case ANALYZE :
             case EXPLAIN :
             case SHOW :
@@ -183,8 +295,9 @@ public class DBExecuteImpl {
             case LIST_TEMPORARY_OUTPUT :
             case WHO :
             case WHOAMI :
-                rs = stmt.executeQuery();
-                QueryData data = queryNext(fetch);
+                stmt = conn.prepareStatement(scripts);
+//                rs = stmt.executeQuery();
+                data = queryNext(fetch);
                 runningStatus.setResult(data);
                 runningStatus.setHasQueryData(true);
                 break;
@@ -279,6 +392,7 @@ public class DBExecuteImpl {
             case WITH :
                 int updateCount = 0;
                 try {
+                    stmt = conn.prepareStatement(scripts);
                     updateCount = stmt.executeUpdate();
                 } finally {
                     close((Statement)stmt);
@@ -296,7 +410,7 @@ public class DBExecuteImpl {
         runningStatus[0].setStatus(ExecResult.SUCCESS);
         runningStatus[0].setQueryId(queryId);
 
-        QueryData data = queryNext(fetch);
+        QueryData data = queryNext(num);
         runningStatus[0].setResult(data);
         runningStatus[0].setHasQueryData(true);
 
@@ -315,6 +429,21 @@ public class DBExecuteImpl {
         List<List<Object>> rows = new ArrayList<>();
 
         try {
+            if (stmt == null || stmt.isClosed()) {
+                return new QueryData();
+            }
+            stmt.clearParameters(); // 清除之前的参数设置
+            if (limitneeded) {
+                if (limitahead) {
+                    stmt.setInt(1, num);
+                    stmt.setInt(2, offset);
+                } else {
+                    stmt.setInt(1, offset);
+                    stmt.setInt(2, num);
+                }
+            }
+            rs = stmt.executeQuery();
+
             int i = 0;
 
             if (rs == null || rs.isClosed()) {
@@ -352,6 +481,7 @@ public class DBExecuteImpl {
             log.error(e.getMessage());
         }
 
+        offset +=num;
         return new QueryData(header, type, rows);
     }
 

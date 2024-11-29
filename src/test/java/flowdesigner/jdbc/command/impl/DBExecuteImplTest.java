@@ -35,9 +35,18 @@ class DBExecuteImplTest {
                 dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\AppData\\Roaming\\DBeaverData\\drivers\\maven\\maven-central\\mysql");
                 Properties properties = new Properties();
                 properties.setProperty("driverClassName","com.mysql.cj.jdbc.Driver");
-                properties.setProperty("url","jdbc:mysql://localhost:3306");
-                properties.setProperty("username","root");
-                properties.setProperty("password","123456");
+                properties.setProperty("url","jdbc:mysql://172.30.224.20:3306");
+                properties.setProperty("username","data4u");
+                properties.setProperty("password","Jtyyj@#O120");
+                dynamicDriver.set_propertyInfo(properties);
+            }
+            case gaussdb -> {
+                dynamicDriver = new DynamicDriver("C:\\Users\\nieguangling\\Downloads\\openGauss-5.0.2-JDBC");
+                Properties properties = new Properties();
+                properties.setProperty("driverClassName","org.postgresql.Driver");
+                properties.setProperty("url","jdbc:postgresql://172.30.224.34:8887/postgres");
+                properties.setProperty("username","gaussdb");
+                properties.setProperty("password","Enmo@123");
                 dynamicDriver.set_propertyInfo(properties);
             }
             default -> {
@@ -53,7 +62,49 @@ class DBExecuteImplTest {
 
     @Test
     void execSelect() throws SQLException {
-        exec(DbType.hive,"SELECT data_dt from udms_sdata.cut_pi_exit_cms_filtered");
+        exec(DbType.gaussdb,"select * from bmnc_pcode.t99_abn_trip_type_cd LIMIT 100 OFFSET 100;");
+    }
+
+    @Test
+    void execGaussWithSlash() throws SQLException {
+        exec(DbType.gaussdb,"CREATE LOCAL TEMPORARY TABLE VT_OD_ROUTE_TMP00\n" +
+                "\t( \n" +
+                "\t OD_ID VARCHAR( 100 )\n" +
+                "\t,TXN_DATE_TIME TIMESTAMP ( 0 )\n" +
+                "\t,Route_Seq_Num INTEGER\n" +
+                "\t,Station_CD INTEGER\n" +
+                "\t,Train_Entry_Time TIMESTAMP ( 0 )\n" +
+                "\t,Train_Deptr_Time TIMESTAMP ( 0 )\n" +
+                "\t,EXCEPTION_LIST VARCHAR( 480 )\n" +
+                "\t,FLAG NUMERIC ( 1 ,0 )\n" +
+                "\t,Load_File_Type_Cd CHAR( 2 ) \n" +
+                "\t) WITH ( ORIENTATION = COLUMN ) ON COMMIT PRESERVE ROWS ;\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\\if ${ERROR}\n" +
+                "\t\\goto ERROR_DEAL\n" +
+                "\\endif\n" +
+                "\n" +
+                "\n" +
+                "CREATE LOCAL TEMPORARY TABLE VT_OD_ROUTE_TMP01 \n" +
+                "\t(\n" +
+                "\t OD_ID VARCHAR( 100 )\n" +
+                "     ,TXN_DATE_TIME TIMESTAMP (0)\n" +
+                "     ,Route_Seq_Num INTEGER\n" +
+                "     ,Station_ID VARCHAR( 30 )\n" +
+                "     ,Train_Entry_Time TIMESTAMP (0)\n" +
+                "     ,Train_Deptr_Time TIMESTAMP (0)\n" +
+                "     ,EXCEPTION_LIST VARCHAR( 480 )\n" +
+                "     ,FLAG NUMERIC (1,0)\n" +
+                "     ,Load_File_Type_Cd CHAR( 2 )\n" +
+                "     ) WITH (ORIENTATION = COLUMN ) ON COMMIT PRESERVE ROWS ;\n" +
+                "\n" +
+                "\n" +
+                "\n" +
+                "\\if ${ERROR}\n" +
+                "\t\\goto ERROR_DEAL\n" +
+                "\\endif");
     }
 
     @Test
@@ -129,7 +180,8 @@ class DBExecuteImplTest {
         }
 
         try {
-            Thread.sleep(100);
+            dbExecute.queryNextStatus(200);
+            Thread.sleep(10000000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
